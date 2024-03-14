@@ -43,7 +43,7 @@ class TagController extends Controller
         try {
             $element = getElementSchema('tag');
             $activity = $this->tagService->getActivityData($id);
-            $form = $this->tagService->formGenerator($id);
+            $form = $this->tagService->formGenerator($id, $activity->default_field_values ?? []);
             $data = ['title' => $element['label'], 'name' => 'tag'];
 
             return view('admin.activity.tag.edit', compact('form', 'activity', 'data'));

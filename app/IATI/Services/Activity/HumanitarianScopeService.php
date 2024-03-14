@@ -85,13 +85,13 @@ class HumanitarianScopeService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues): Form
     {
         $element = getElementSchema('humanitarian_scope');
         $model['humanitarian_scope'] = $this->getHumanitarianScopeData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.humanitarian-scope.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues);
     }
 
     /**

@@ -109,12 +109,12 @@ class RecipientRegionService
      *
      * @return Form
      */
-    public function formGenerator($id, $element): Form
+    public function formGenerator($id, $element, $activityDefaultFieldValues): Form
     {
         $model['recipient_region'] = $this->getRecipientRegionData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.recipient-region.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues);
     }
 
     /**

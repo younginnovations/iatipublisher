@@ -178,7 +178,7 @@ class OrganizationBaseRequest extends FormRequest
             }
 
             if (count($languages) === count(array_unique($languages))) {
-                if (in_array('', $languages, true) && in_array($defaultLanguage, $languages, true)) {
+                if ((in_array('', $languages, true) || in_array(null, $languages, true)) && in_array($defaultLanguage, $languages, true)) {
                     $check = false;
                 }
             }
@@ -194,12 +194,14 @@ class OrganizationBaseRequest extends FormRequest
      * @param $formBase
      *
      * @return array
+     * @throws \JsonException
      */
     public function getWarningForNarrative($formFields, $formBase): array
     {
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
+
         $validLanguages = implode(',', array_keys(getCodeList('Language', 'Activity', false)));
 
         foreach ($formFields as $narrativeIndex => $narrative) {

@@ -51,7 +51,8 @@ class BudgetController extends Controller
         try {
             $element = getElementSchema('budget');
             $activity = $this->activityService->getActivity($id);
-            $form = $this->budgetService->formGenerator($id);
+
+            $form = $this->budgetService->formGenerator($id, $activity->default_field_values ?? []);
             $data = [
                 'title'  => $element['label'],
                 'name'   => 'budget',

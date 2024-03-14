@@ -212,7 +212,7 @@ class ActivityBaseRequest extends FormRequest
             $activity = app()->make(ActivityService::class)->getActivity($parameters['id']);
         }
 
-        return $activity->default_field_values;
+        return $activity->default_field_values ?? [];
     }
 
     /**
@@ -236,7 +236,7 @@ class ActivityBaseRequest extends FormRequest
             $validator->addReplacer(
                 'unique_default_lang',
                 function ($message) use ($validator, $defaultLanguage) {
-                    return str_replace(':language', getCodeList('Languages', 'Activity')[$defaultLanguage], $message);
+                    return str_replace(':language', getCodeList('Language', 'Activity')[$defaultLanguage], $message);
                 }
             );
 
@@ -335,6 +335,8 @@ class ActivityBaseRequest extends FormRequest
      * @param      $formBase
      *
      * @return array
+     *
+     * @throws \JsonException
      */
     public function getErrorsForNarrative($formFields, $formBase): array
     {

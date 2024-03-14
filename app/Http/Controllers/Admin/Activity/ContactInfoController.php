@@ -44,7 +44,7 @@ class ContactInfoController extends Controller
         try {
             $element = getElementSchema('contact_info');
             $activity = $this->contactInfoService->getActivityData($id);
-            $form = $this->contactInfoService->formGenerator($id);
+            $form = $this->contactInfoService->formGenerator($id, $activity->default_field_values ?? []);
             $data = [
                 'title' => $element['label'],
                 'name' => 'contact_info',

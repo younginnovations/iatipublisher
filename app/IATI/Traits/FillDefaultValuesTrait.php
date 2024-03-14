@@ -165,13 +165,13 @@ trait FillDefaultValuesTrait
      *
      * @param $id
      * @param $data
-     * @param $refillDefaultValues
+     * @param bool $refillDefaultValues
      *
      * @inheritDoc
      *
      * @return bool
      */
-    public function update($id, $data, $refillDefaultValues = false): bool
+    public function update($id, $data, bool $refillDefaultValues = false): bool
     {
         $defaultFieldValues = $this->getDefaultValuesFromActivity($id, $this->getModel());
 

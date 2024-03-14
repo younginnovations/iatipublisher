@@ -43,7 +43,8 @@ class DefaultAidTypeController extends Controller
         try {
             $element = getElementSchema('default_aid_type');
             $activity = $this->defaultAidTypeService->getActivityData($id);
-            $form = $this->defaultAidTypeService->formGenerator($id);
+            $form = $this->defaultAidTypeService->formGenerator($id, $activity->default_field_values ?? []);
+
             $data = [
                 'title' => $element['label'],
                 'name' => 'default_aid_type',
@@ -51,7 +52,7 @@ class DefaultAidTypeController extends Controller
 
             return view('admin.activity.defaultAidType.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering default-aid-type form.');
         }

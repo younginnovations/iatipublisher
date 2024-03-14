@@ -43,7 +43,7 @@ class PolicyMarkerController extends Controller
         try {
             $element = getElementSchema('policy_marker');
             $activity = $this->policyMarkerService->getActivityData($id);
-            $form = $this->policyMarkerService->formGenerator($id);
+            $form = $this->policyMarkerService->formGenerator($id, $activity->default_field_values ?? []);
             $data = ['title' => $element['label'], 'name' => 'policy_marker'];
 
             return view('admin.activity.policyMarker.edit', compact('form', 'activity', 'data'));

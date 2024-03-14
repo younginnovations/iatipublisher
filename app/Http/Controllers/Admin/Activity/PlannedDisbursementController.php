@@ -44,7 +44,7 @@ class PlannedDisbursementController extends Controller
         try {
             $element = getElementSchema('planned_disbursement');
             $activity = $this->plannedDisbursementService->getActivityData($id);
-            $form = $this->plannedDisbursementService->formGenerator($id);
+            $form = $this->plannedDisbursementService->formGenerator($id, $activity->default_field_values ?? []);
             $data = ['title' => $element['label'], 'name' => 'planned_disbursement'];
 
             return view('admin.activity.plannedDisbursement.edit', compact('form', 'activity', 'data'));

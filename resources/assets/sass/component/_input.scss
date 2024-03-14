@@ -87,7 +87,7 @@ textarea.form__input {
 
   .multiselect-placeholder::after {
     content: '';
-    @apply absolute right-0 top-3 h-6 w-7 bg-white;
+    @apply absolute right-0 top-3 h-6 w-7 bg-[transparent];
   }
 
   .multiselect.is-open {
@@ -118,7 +118,7 @@ textarea.form__input {
   }
 
   .vue__select {
-    @apply mb-2 border border-n-30 py-1  text-sm leading-6 outline-none duration-300;
+    @apply mb-2 border border-n-30   text-sm leading-6 outline-none duration-300;
 
     // @media screen and (min-width: 640px) {
     //   padding: 16px 0px 16px 55px;
@@ -215,4 +215,110 @@ textarea.form__input {
 }
 input[type='radio'] {
   accent-color: #155366;
+}
+
+.mark-email-spam {
+  opacity: 0;
+  position: absolute;
+  z-index: 2;
+  width: 18px;
+  height: 18px;
+}
+
+.spam-pseudo-checkbox {
+  height: 18px;
+  width: 18px;
+  position: relative; /* Changed to relative */
+  border: 2px solid #d5dcde;
+  opacity: 1;
+  background-color: white;
+  border-radius: 4px;
+}
+
+.spam-ticked-svg {
+  position: absolute;
+  opacity: 0;
+  height: 16px;
+  width: 18px;
+  transform: scale(0.7);
+}
+
+.mark-email-spam:checked ~ .spam-pseudo-checkbox {
+  border-color: rgb(var(--spring-50));
+}
+
+.mark-email-spam:checked ~ .spam-ticked-svg {
+  opacity: 1;
+}
+
+label {
+  cursor: pointer;
+}
+
+select.select2.default-value-indicator
+  + .select2
+  .selection
+  .select2-selection:not(:focus) {
+  border: 2px solid #3f9a7c;
+  background-color: #3f9a7c15;
+}
+
+select.select2.default-value-indicator
+  + .select2
+  .selection
+  .select2-selection:not(:focus) {
+  border: 2px solid #3f9a7c;
+  background-color: #3f9a7c15;
+}
+
+select.select2.default-value-indicator
+  + .select2
+  .selection
+  .select2-selection
+  .select2-selection__placeholder {
+  color: var(--bluecoral-50);
+}
+
+select.select2.default-value-indicator
+  + .select2.select2-container--open
+  .selection
+  .select2-selection {
+  border: 1px solid #a6b5ba;
+  background-color: transparent;
+}
+
+select.select2.default-value-indicator
+  + .select2
+  .selection
+  .select2-selection.select2-selection--clearable {
+  border: 1px solid #a6b5ba;
+  background-color: transparent;
+}
+
+.multiselect.vue__select.default-value-indicator {
+  .multiselect-wrapper {
+    // padding: 15px 0;
+  }
+}
+
+.default-value-indicator {
+  input.multiselect-search {
+    border: 1px solid #3f9a7c;
+    background-color: #3f9a7c15;
+  }
+
+  .multiselect-placeholder::after {
+    background-color: transparent;
+  }
+}
+
+.default-value-indicator.is-open,
+.default-value-indicator:has(.multiselect-single-label) {
+  input.multiselect-search {
+    border: 1px solid #a6b5ba;
+    background-color: #ffffff;
+  }
+  .multiselect-placeholder::after {
+    background-color: transparent !important;
+  }
 }

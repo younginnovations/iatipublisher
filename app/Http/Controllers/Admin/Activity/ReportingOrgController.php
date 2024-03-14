@@ -44,7 +44,7 @@ class ReportingOrgController extends Controller
             $element = getElementSchema('reporting_org');
             $activity = $this->reportingOrgService->getActivityData($id);
 
-            $form = $this->reportingOrgService->formGenerator($id);
+            $form = $this->reportingOrgService->formGenerator($id, $activity->default_field_values ?? []);
             $data = ['title' => $element['label'], 'name' => 'reporting_org'];
 
             return view('admin.activity.reportingOrg.edit', compact('form', 'activity', 'data'));

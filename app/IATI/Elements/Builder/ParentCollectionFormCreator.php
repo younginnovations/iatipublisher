@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Elements\Builder;
 
+use App\IATI\Services\Setting\SettingService;
 use Kris\LaravelFormBuilder\Form;
 use Kris\LaravelFormBuilder\FormBuilder;
 
@@ -23,13 +24,19 @@ class ParentCollectionFormCreator
     protected FormBuilder $formBuilder;
 
     /**
+     * @var SettingService
+     */
+    protected SettingService $settingService;
+
+    /**
      * ParentCollectionFormCreator constructor.
      *
      * @param FormBuilder $formBuilder
      */
-    public function __construct(FormBuilder $formBuilder)
+    public function __construct(FormBuilder $formBuilder, SettingService $settingService)
     {
         $this->formBuilder = $formBuilder;
+        $this->settingService = $settingService;
     }
 
     /**
@@ -38,12 +45,25 @@ class ParentCollectionFormCreator
      * @param array $model
      * @param       $formData
      * @param       $method
-     * @param       $parent_url
+     * @param string $parent_url
+     * @param array $overRideDefaultFieldValue
      *
      * @return Form
      */
-    public function editForm(array $model, $formData, $method, string $parent_url): Form
+    public function editForm(array $model, $formData, $method, string $parent_url, array $overRideDefaultFieldValue = []): Form
     {
+        $formData['overRideDefaultFieldValue'] = $overRideDefaultFieldValue;
+        $settingsDefaultValue = ($this->settingService->getSetting()->default_values ?? []) + ($this->settingService->getSetting()->activity_default_values ?? []);
+
+        if (!empty($overRideDefaultFieldValue) && count($overRideDefaultFieldValue)) {
+            foreach ($overRideDefaultFieldValue as $key => $value) {
+                if (!empty($value)) {
+                    $settingsDefaultValue[$key] = $value;
+                }
+            }
+        }
+        $formData['overRideDefaultFieldValue'] = $settingsDefaultValue;
+
         return $this->formBuilder->create(
             'App\IATI\Elements\Forms\ParentCollectionForm',
             [

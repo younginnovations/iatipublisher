@@ -43,7 +43,7 @@ class ConditionController extends Controller
         try {
             $element = getElementSchema('conditions');
             $activity = $this->conditionService->getActivityData($id);
-            $form = $this->conditionService->formGenerator($id);
+            $form = $this->conditionService->formGenerator($id, $activity->default_field_values ?? []);
             $data = [
                 'title' => $element['label'],
                 'name' => 'conditions',

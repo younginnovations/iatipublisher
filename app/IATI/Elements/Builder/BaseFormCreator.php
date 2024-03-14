@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Elements\Builder;
 
+use App\IATI\Services\Setting\SettingService;
 use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 use Kris\LaravelFormBuilder\FormBuilder;
@@ -24,13 +25,19 @@ class BaseFormCreator
     protected FormBuilder $formBuilder;
 
     /**
+     * @var SettingService
+     */
+    protected SettingService $settingService;
+
+    /**
      * BaseFormCreator constructor.
      *
      * @param FormBuilder $formBuilder
      */
-    public function __construct(FormBuilder $formBuilder)
+    public function __construct(FormBuilder $formBuilder, SettingService $settingService)
     {
         $this->formBuilder = $formBuilder;
+        $this->settingService = $settingService;
     }
 
     /**
@@ -42,11 +49,24 @@ class BaseFormCreator
      * @param string $parent_url
      * @param bool $showCancelOrSaveButton
      * @param array $additonalInfo
+     * @param array $overRideDefaultFieldValue
      *
      * @return Form
      */
-    public function editForm(array $model, $formData, $method, string $parent_url, bool $showCancelOrSaveButton = true, array $additonalInfo = []): Form
+    public function editForm(array $model, $formData, $method, string $parent_url, bool $showCancelOrSaveButton = true, array $additonalInfo = [], $overRideDefaultFieldValue = []): Form
     {
+        $formData['overRideDefaultFieldValue'] = $overRideDefaultFieldValue;
+        $settingsDefaultValue = ($this->settingService->getSetting()->default_values ?? []) + ($this->settingService->getSetting()->activity_default_values ?? []);
+
+        if (!empty($overRideDefaultFieldValue) && count($overRideDefaultFieldValue)) {
+            foreach ($overRideDefaultFieldValue as $key => $value) {
+                if (!empty($value)) {
+                    $settingsDefaultValue[$key] = $value;
+                }
+            }
+        }
+        $formData['overRideDefaultFieldValue'] = $settingsDefaultValue;
+
         $form = $this->formBuilder->create(
             'App\IATI\Elements\Forms\BaseForm',
             [

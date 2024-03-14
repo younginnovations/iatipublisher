@@ -44,7 +44,7 @@ class ParticipatingOrganizationController extends Controller
         try {
             $element = getElementSchema('participating_org');
             $activity = $this->participatingOrganizationService->getActivityData($id);
-            $form = $this->participatingOrganizationService->formGenerator($id);
+            $form = $this->participatingOrganizationService->formGenerator($id, $activity->default_field_values ?? []);
             $data = ['title' => $element['label'], 'name' => 'participating_org'];
 
             return view('admin.activity.participatingOrganization.edit', compact('form', 'activity', 'data'));

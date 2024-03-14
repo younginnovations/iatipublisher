@@ -83,6 +83,10 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    defaultLanguage: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     interface ActivitiesInterface {
@@ -377,6 +381,7 @@ export default defineComponent({
     provide('closeModel', closeModel as Ref);
     provide('activities', publishingActivities as Ref);
     provide('completed', uploadComplete);
+    provide('defaultLanguage', props.defaultLanguage);
 
     return {
       activities,
