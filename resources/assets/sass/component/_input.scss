@@ -216,3 +216,41 @@ textarea.form__input {
 input[type='radio'] {
   accent-color: #155366;
 }
+
+.mark-email-spam {
+  opacity: 0;
+  position: absolute;
+  z-index: 2;
+  width: 18px;
+  height: 18px;
+}
+
+.spam-pseudo-checkbox {
+  height: 18px;
+  width: 18px;
+  position: relative; /* Changed to relative */
+  border: 2px solid #d5dcde;
+  opacity: 1;
+  background-color: white;
+  border-radius: 4px;
+}
+
+.spam-ticked-svg {
+  position: absolute;
+  opacity: 0;
+  height: 16px;
+  width: 18px;
+  transform: scale(0.7);
+}
+
+.mark-email-spam:checked ~ .spam-pseudo-checkbox {
+  border-color: rgb(var(--spring-50));
+}
+
+.mark-email-spam:checked ~ .spam-ticked-svg {
+  opacity: 1;
+}
+
+label {
+  cursor: pointer;
+}
