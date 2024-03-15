@@ -80,13 +80,13 @@ class CollaborationTypeService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues): Form
     {
         $element = getElementSchema('collaboration_type');
         $model['collaboration_type'] = $this->getCollaborationTypeData($id);
         $this->baseFormCreator->url = route('admin.activity.collaboration-type.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, overRideDefaultFieldValue: $activityDefaultFieldValues);
     }
 
     /**

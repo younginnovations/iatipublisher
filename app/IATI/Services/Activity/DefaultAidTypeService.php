@@ -82,13 +82,13 @@ class DefaultAidTypeService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues): Form
     {
         $element = getElementSchema('default_aid_type');
         $model['default_aid_type'] = $this->getDefaultAidTypeData($id);
         $this->baseFormCreator->url = route('admin.activity.default-aid-type.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, overRideDefaultFieldValue: $activityDefaultFieldValues);
     }
 
     /**

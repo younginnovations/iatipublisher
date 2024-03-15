@@ -85,13 +85,13 @@ class ParticipatingOrganizationService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues): Form
     {
         $element = getElementSchema('participating_org');
         $model['participating_org'] = $this->getParticipatingOrganizationData($id) ?: [];
         $this->parentCollectionFormCreator->url = route('admin.activity.participating-org.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues);
     }
 
     /**

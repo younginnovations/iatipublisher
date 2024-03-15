@@ -69,10 +69,11 @@
                   class="vue__select"
                   :class="{
                     error__input: errorData.language != '',
+                    'default-value-indicator': defaultLanguage,
                   }"
                   :searchable="true"
                   :options="languages"
-                  placeholder="Select language"
+                  :placeholder="defaultLanguage ?? 'Select language'"
                 />
 
                 <span
@@ -191,7 +192,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, onMounted } from 'vue';
+import { defineComponent, reactive, ref, onMounted, inject } from 'vue';
 import Modal from '../../components/PopupModal.vue';
 import BtnComponent from '../../components/ButtonComponent.vue';
 import Multiselect from '@vueform/multiselect';
@@ -276,6 +277,8 @@ export default defineComponent({
         });
     }
 
+    const defaultLanguage = inject('defaultLanguage');
+
     return {
       props,
       formData,
@@ -285,6 +288,7 @@ export default defineComponent({
       organization,
       closeModal,
       storeActivity,
+      defaultLanguage,
     };
   },
 });

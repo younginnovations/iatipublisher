@@ -107,7 +107,7 @@ class ResultController extends Controller
         try {
             $element = getElementSchema('result');
             $activity = $this->activityService->getActivity($id);
-            $form = $this->resultService->createFormGenerator($id);
+            $form = $this->resultService->createFormGenerator($id, $activity->default_field_values ?? []);
             $data = ['title' => $element['label'], 'name' => 'result'];
 
             return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
@@ -193,7 +193,7 @@ class ResultController extends Controller
         try {
             $element = getElementSchema('result');
             $activity = $this->activityService->getActivity($activityId);
-            $form = $this->resultService->editFormGenerator($resultId, $activityId);
+            $form = $this->resultService->editFormGenerator($resultId, $activityId, $activity->default_field_values ?? []);
             $data = ['title' => $element['label'], 'name' => 'result'];
 
             return view('admin.activity.result.edit', compact('form', 'activity', 'data'));

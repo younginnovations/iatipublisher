@@ -41,21 +41,31 @@
 </head>
 <body  class="overflow-x-hidden" >
     <div id="app">
+
+
+
+
+
         @if (isSuperAdmin() && Auth::user()->organization)
             <admin-bar :name="{{ json_encode(Auth::user()->full_name, JSON_THROW_ON_ERROR) }}"
                 :organization-name="{{ json_encode(Auth::user()->organization?->publisher_name, JSON_THROW_ON_ERROR) }}">
             </admin-bar>
         @endif
         @if (isSuperAdmin())
+        
             <loggedin-header :user="{{ Auth::user() }}"
                 has-admin-bar = "{{ isSuperAdmin() && Auth::user()->organization }}"
                 :languages="{{ json_encode(getCodeList('Language', 'Activity'), JSON_THROW_ON_ERROR) }}"
-                v-bind:super-admin="{{ isSuperAdminRoute() ? 1 : 0 }}"> </loggedin-header>
+                v-bind:super-admin="{{ isSuperAdminRoute() ? 1 : 0 }}"
+                :default-language="{{ json_encode(getSettingDefaultLanguage()) }}"
+            > </loggedin-header>
         @else
             <loggedin-header
                 :user="{{ Auth::user() }}" :organization="{{ Auth::user()->organization }}"
                 :languages="{{ json_encode(getCodeList('Language', 'Activity'), JSON_THROW_ON_ERROR) }}"
-                v-bind:super-admin="{{ isSuperAdminRoute() ? 1 : 0 }}"></loggedin-header>
+                v-bind:super-admin="{{ isSuperAdminRoute() ? 1 : 0 }}"
+                :default-language="{{ json_encode(getSettingDefaultLanguage()) }}"
+            ></loggedin-header>
         @endif
         <main>
             @yield('content')

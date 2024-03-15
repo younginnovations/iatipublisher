@@ -54,7 +54,7 @@ class RecipientCountryController extends Controller
         try {
             $activity = $this->recipientCountryService->getActivityData($id);
             $element = $this->activityService->getRecipientRegionOrCountryManipulatedElementSchema($activity, 'recipient_country');
-            $form = $this->recipientCountryService->formGenerator($id, $element);
+            $form = $this->recipientCountryService->formGenerator($id, $element, $activity->default_field_values ?? []);
             $data = ['title' => $element['label'], 'name' => 'recipient_country'];
 
             return view('admin.activity.recipientCountry.edit', compact('form', 'activity', 'data'));

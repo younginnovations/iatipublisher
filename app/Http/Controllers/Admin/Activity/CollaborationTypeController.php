@@ -43,7 +43,7 @@ class CollaborationTypeController extends Controller
         try {
             $element = getElementSchema('collaboration_type');
             $activity = $this->collaborationTypeService->getActivityData($id);
-            $form = $this->collaborationTypeService->formGenerator($id);
+            $form = $this->collaborationTypeService->formGenerator($id, $activity->default_field_values ?? []);
             $data = [
                 'title' => $element['label'],
                 'name' => 'collaboration_type',
