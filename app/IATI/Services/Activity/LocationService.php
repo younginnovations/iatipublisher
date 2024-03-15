@@ -87,13 +87,13 @@ class LocationService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues): Form
     {
         $element = getElementSchema('location');
         $model['location'] = $this->getLocationData($id) ?: [];
         $this->parentCollectionFormCreator->url = route('admin.activity.location.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues);
     }
 
     /**

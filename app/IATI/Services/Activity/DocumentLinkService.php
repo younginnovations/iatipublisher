@@ -120,7 +120,7 @@ class DocumentLinkService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues): Form
     {
         $element = getElementSchema('document_link');
         $activity = $this->getActivityData($id);
@@ -137,7 +137,7 @@ class DocumentLinkService
 
         $this->parentCollectionFormCreator->url = route('admin.activity.document-link.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues);
     }
 
     /**

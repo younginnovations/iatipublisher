@@ -85,13 +85,13 @@ class OtherIdentifierService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues): Form
     {
         $element = getElementSchema('other_identifier');
         $model['other_identifier'] = $this->getOtherIdentifierData($id) ?: [];
         $this->parentCollectionFormCreator->url = route('admin.activity.other-identifier.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues);
     }
 
     /**

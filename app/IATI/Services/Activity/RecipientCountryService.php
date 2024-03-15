@@ -109,12 +109,12 @@ class RecipientCountryService
      *
      * @return Form
      */
-    public function formGenerator($id, $element): Form
+    public function formGenerator($id, $element, $activityDefaultFieldValues): Form
     {
         $model['recipient_country'] = $this->getRecipientCountryData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.recipient-country.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues);
     }
 
     /**

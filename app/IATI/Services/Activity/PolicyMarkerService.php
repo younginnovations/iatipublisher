@@ -85,13 +85,13 @@ class PolicyMarkerService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues): Form
     {
         $element = getElementSchema('policy_marker');
         $model['policy_marker'] = $this->getPolicyMarkerData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.policy-marker.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues);
     }
 
     /**

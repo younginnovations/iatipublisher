@@ -963,6 +963,7 @@ if (!function_exists('getTimestampFromSingleXml')) {
     }
 }
 
+<<<<<<< HEAD
 if (!function_exists('getJsonFromSource')) {
     /**
      * Returns json string from either cache or public except for OrganizationRegistrationAgency.json.
@@ -989,5 +990,35 @@ if (!function_exists('getJsonFromSource')) {
         }
 
         return file_get_contents(public_path($completePath));
+=======
+if (!function_exists('getDefaultValue')) {
+    /**
+     * Returns Default value.
+     *
+     * @param $defaultValueList
+     * @param $selectDefaultValueKey
+     *
+     * @return string|null
+     */
+    function getDefaultValue($defaultValueList, $selectDefaultValueKey, $location = []): ?string
+    {
+        $defaultValueKeys = [
+            'language'  => 'default_language',
+            'currency'  => 'default_currency',
+            'default_aid_type'   => 'default_aid_type',
+        ];
+
+        if (isset($defaultValueKeys[$selectDefaultValueKey]) && isset($defaultValueList[$defaultValueKeys[$selectDefaultValueKey]])) {
+            $explodedLocation = explode('/', $location);
+            $type = $explodedLocation[0];
+            $jsonFile = str_replace('.json', '', $explodedLocation[1]);
+            $codeList = getCodeList($jsonFile, $type);
+            $defaultValue = $defaultValueList[$defaultValueKeys[$selectDefaultValueKey]];
+
+            return $codeList[$defaultValue] ?? null;
+        }
+
+        return null;
+>>>>>>> d634e0b6 (feat: showing default value in the input field)
     }
 }

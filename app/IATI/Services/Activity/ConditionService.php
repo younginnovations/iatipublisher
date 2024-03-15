@@ -91,13 +91,13 @@ class ConditionService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues): Form
     {
         $element = getElementSchema('conditions');
         $model = $this->getConditionData($id) ?: [];
         $this->multilevelSubElementFormCreator->url = route('admin.activity.conditions.update', [$id]);
 
-        return $this->multilevelSubElementFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->multilevelSubElementFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, overRideDefaultFieldValue: $activityDefaultFieldValues);
     }
 
     /**

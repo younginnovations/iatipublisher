@@ -20,6 +20,7 @@ class BaseForm extends Form
     public function buildCollection($field): void
     {
         $element = $this->getData();
+
         if (!Arr::get($field, 'type', null) && array_key_exists('sub_elements', $field) && Arr::get(
             $field,
             'wrapper_collection',
@@ -104,6 +105,7 @@ class BaseForm extends Form
                                 ) === 'narrative' ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
                                 : 'subelement rounded-tl-lg border-l border-spring-50 mb-6') . (Arr::get($field, 'read_only', false) ? ' freeze' : ''),
                         ],
+                        'overRideDefaultFieldValue' => $element['overRideDefaultFieldValue'] ?? [],
                     ],
                 ]
             );

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Elements\Builder;
 
+use App\IATI\Services\Setting\SettingService;
 use Kris\LaravelFormBuilder\Form;
 use Kris\LaravelFormBuilder\FormBuilder;
 
@@ -23,13 +24,19 @@ class ParentCollectionFormCreator
     protected FormBuilder $formBuilder;
 
     /**
+     * @var SettingService
+     */
+    protected SettingService $settingService;
+
+    /**
      * ParentCollectionFormCreator constructor.
      *
      * @param FormBuilder $formBuilder
      */
-    public function __construct(FormBuilder $formBuilder)
+    public function __construct(FormBuilder $formBuilder, SettingService $settingService)
     {
         $this->formBuilder = $formBuilder;
+        $this->settingService = $settingService;
     }
 
     /**
@@ -42,15 +49,22 @@ class ParentCollectionFormCreator
      *
      * @return Form
      */
-    public function editForm(array $model, $formData, $method, string $parent_url): Form
+    public function editForm(array $model, $formData, $method, string $parent_url, $overRideDefaultFieldValue = []): Form
     {
+        $formData['overRideDefaultFieldValue'] = $overRideDefaultFieldValue;
+
+        if (!empty($overRideDefaultFieldValue) && count($overRideDefaultFieldValue)) {
+            $settingsDefaultValue = $this->settingService->getSetting()->default_values;
+            $formData['overRideDefaultFieldValue'] = array_replace($settingsDefaultValue, $overRideDefaultFieldValue);
+        }
+
         return $this->formBuilder->create(
             'App\IATI\Elements\Forms\ParentCollectionForm',
             [
-                'method' => $method,
-                'model'  => $model,
-                'url'    => $this->url,
-                'data'   => $formData,
+                'method'                    => $method,
+                'model'                     => $model,
+                'url'                       => $this->url,
+                'data'                      => $formData,
             ]
         )->add('buttons', 'buttongroup', [
             'wrapper' => [

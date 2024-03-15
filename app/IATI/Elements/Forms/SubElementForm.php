@@ -31,6 +31,7 @@ class SubElementForm extends Form
 
             foreach ($attributes as $attribute) {
                 if (is_array($attribute)) {
+                    $attribute['overRideDefaultFieldValue'] = $data['overRideDefaultFieldValue'] ?? [];
                     $this->buildFields($attribute, true);
                 }
             }
@@ -77,7 +78,7 @@ class SubElementForm extends Form
 
         if (array_key_exists('type', $field) && $field['type'] == 'select') {
             $options['attr']['class'] = 'select2';
-            $options['attr']['data-placeholder'] = Arr::get($field, 'placeholder', '');
+            $options['attr']['data-placeholder'] = getDefaultValue($field['overRideDefaultFieldValue'], $field['name'], $field['choices'] ?? []) ?? Arr::get($field, 'placeholder', '');
             $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
             $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
             $options['default_value'] = $field['default'] ?? '';

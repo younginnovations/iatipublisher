@@ -153,11 +153,11 @@ class TransactionService
      *
      * @return Form
      */
-    public function createFormGenerator($activityId, $element): Form
+    public function createFormGenerator($activityId, $element, $activityDefaultFieldValues): Form
     {
         $this->transactionElementFormCreator->url = route('admin.activity.transaction.store', $activityId);
 
-        return $this->transactionElementFormCreator->editForm([], $element, 'POST', '/activity/' . $activityId);
+        return $this->transactionElementFormCreator->editForm([], $element, 'POST', '/activity/' . $activityId, overRideDefaultFieldValue: $activityDefaultFieldValues);
     }
 
     /**

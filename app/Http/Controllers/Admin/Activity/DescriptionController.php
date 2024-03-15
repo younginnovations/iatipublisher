@@ -43,7 +43,8 @@ class DescriptionController extends Controller
         try {
             $element = getElementSchema('description');
             $activity = $this->descriptionService->getActivityData($id);
-            $form = $this->descriptionService->formGenerator($id);
+            $form = $this->descriptionService->formGenerator($id, $activity->default_field_values);
+
             $data = ['title' => $element['label'], 'name' => 'description'];
 
             return view('admin.activity.description.edit', compact('form', 'activity', 'data'));

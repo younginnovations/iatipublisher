@@ -283,12 +283,12 @@ class ResultService
      * @return Form
      * @throws \JsonException
      */
-    public function createFormGenerator($activityId): Form
+    public function createFormGenerator($activityId, $activityDefaultFieldValues): Form
     {
         $element = getElementSchema('result');
         $this->resultElementFormCreator->url = route('admin.activity.result.store', $activityId);
 
-        return $this->resultElementFormCreator->editForm([], $element, 'POST', '/activity/' . $activityId);
+        return $this->resultElementFormCreator->editForm([], $element, 'POST', '/activity/' . $activityId, overRideDefaultFieldValue : $activityDefaultFieldValues);
     }
 
     /**
@@ -300,13 +300,13 @@ class ResultService
      * @return Form
      * @throws \JsonException
      */
-    public function editFormGenerator($resultId, $activityId): Form
+    public function editFormGenerator($resultId, $activityId, $activityDefaultFieldValues): Form
     {
         $element = getElementSchema('result');
         $activityResult = $this->getResult($resultId);
         $this->resultElementFormCreator->url = route('admin.activity.result.update', [$activityId, $resultId]);
 
-        return $this->resultElementFormCreator->editForm($activityResult->result, $element, 'PUT', '/activity/' . $activityId);
+        return $this->resultElementFormCreator->editForm($activityResult->result, $element, 'PUT', '/activity/' . $activityId, overRideDefaultFieldValue: $activityDefaultFieldValues);
     }
 
     /**

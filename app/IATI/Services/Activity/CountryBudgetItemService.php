@@ -91,13 +91,13 @@ class CountryBudgetItemService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues): Form
     {
         $element = getElementSchema('country_budget_items');
         $model = $this->getCountryBudgetItemData($id) ?: [];
         $this->multilevelSubElementFormCreator->url = route('admin.activity.country-budget-items.update', [$id]);
 
-        return $this->multilevelSubElementFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->multilevelSubElementFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, overRideDefaultFieldValue: $activityDefaultFieldValues);
     }
 
     /**

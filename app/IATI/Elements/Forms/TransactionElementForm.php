@@ -46,10 +46,17 @@ class TransactionElementForm extends BaseForm
                     $dynamicWrapperClass .= ' freeze';
                 }
 
+                $addProperty = $this->addProperty($name, $dynamicWrapperClass);
+
+                if ($name === 'value') {
+                    ['name' => $fieldName, 'choices' => $fieldChoice, 'placeholder' => $fieldPlaceHolder] = $addProperty['options']['data']['attributes']['currency'];
+                    $addProperty['options']['data']['attributes']['currency']['placeholder'] = getDefaultValue($this->getData()['overRideDefaultFieldValue'], $fieldName, $fieldChoice ?? []) ?? $fieldPlaceHolder;
+                }
+
                 $this->add(
                     $this->getData(sprintf('sub_elements.%s.name', $name)),
                     'collection',
-                    $this->addProperty($name, $dynamicWrapperClass)
+                    $addProperty
                 );
 
                 if (Arr::get($sub_element, 'add_more', false) || Arr::get($sub_element, 'add_more_attributes', false)) {
