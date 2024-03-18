@@ -81,13 +81,13 @@ class DefaultFlowTypeService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues): Form
     {
         $element = getElementSchema('default_flow_type');
         $model['default_flow_type'] = $this->getDefaultFlowTypeData($id);
         $this->baseFormCreator->url = route('admin.activity.default-flow-type.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, overRideDefaultFieldValue: $activityDefaultFieldValues);
     }
 
     /**

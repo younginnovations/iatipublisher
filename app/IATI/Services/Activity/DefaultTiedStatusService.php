@@ -81,13 +81,13 @@ class DefaultTiedStatusService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues): Form
     {
         $element = getElementSchema('default_tied_status');
         $model['default_tied_status'] = $this->getDefaultTiedStatusData($id);
         $this->baseFormCreator->url = route('admin.activity.default-tied-status.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, overRideDefaultFieldValue: $activityDefaultFieldValues);
     }
 
     /**

@@ -116,8 +116,10 @@ class WrapperCollection extends Form
         ];
 
         if (array_key_exists('type', $field) && $field['type'] == 'select') {
+            $defaultValue = getDefaultValue($field['overRideDefaultFieldValue'], $field['name'], $field['choices'] ?? []);
             $options['attr']['class'] = 'select2';
-            $options['attr']['data-placeholder'] = Arr::get($field, 'placeholder', '');
+            $options['attr']['class'] .= !empty($defaultValue) ? ' default-value-indicator' : '';
+            $options['attr']['data-placeholder'] = $defaultValue ?? Arr::get($field, 'placeholder', '');
             $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
             $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
             $options['default_value'] = $field['default'] ?? '';

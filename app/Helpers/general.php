@@ -1006,6 +1006,10 @@ if (!function_exists('getDefaultValue')) {
             'language'  => 'default_language',
             'currency'  => 'default_currency',
             'default_aid_type'   => 'default_aid_type',
+            'collaboration_type'    => 'default_collaboration_type',
+            'default_flow_type'     => 'default_flow_type',
+            'default_finance_type'  => 'default_finance_type',
+            'default_tied_status'   => 'default_tied_status',
         ];
 
         if (isset($defaultValueKeys[$selectDefaultValueKey]) && isset($defaultValueList[$defaultValueKeys[$selectDefaultValueKey]])) {

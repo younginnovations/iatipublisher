@@ -137,6 +137,7 @@ class BaseForm extends Form
     {
         $this->setClientValidationEnabled(false);
         $element = $this->getData();
+
         $attributes = Arr::get($element, 'attributes', null);
         $sub_elements = Arr::get($element, 'sub_elements', null);
 
@@ -245,8 +246,11 @@ class BaseForm extends Form
         }
 
         if ($field['type'] === 'select') {
+            $overRideDefaultFieldValue = $this->getData()['overRideDefaultFieldValue'] ?? [];
+            $defaultValue = getDefaultValue($overRideDefaultFieldValue, $field['name'], $field['choices'] ?? []);
             $options['attr']['class'] = 'select2';
-            $options['attr']['data-placeholder'] = Arr::get($field, 'placeholder', '');
+            $options['attr']['class'] .= !empty($defaultValue) ? ' default-value-indicator' : '';
+            $options['attr']['data-placeholder'] = $defaultValue ?? Arr::get($field, 'placeholder', '');
             $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
             $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
             $options['default_value'] = $field['default'] ?? '';

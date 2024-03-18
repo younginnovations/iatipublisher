@@ -54,8 +54,14 @@ class ParentCollectionFormCreator
         $formData['overRideDefaultFieldValue'] = $overRideDefaultFieldValue;
 
         if (!empty($overRideDefaultFieldValue) && count($overRideDefaultFieldValue)) {
-            $settingsDefaultValue = $this->settingService->getSetting()->default_values;
-            $formData['overRideDefaultFieldValue'] = array_replace($settingsDefaultValue, $overRideDefaultFieldValue);
+            $settingsDefaultValue = $this->settingService->getSetting()->default_values + $this->settingService->getSetting()->activity_default_values;
+
+            foreach ($overRideDefaultFieldValue as $key => $value) {
+                if (!empty($value)) {
+                    $settingsDefaultValue[$key] = $value;
+                }
+            }
+            $formData['overRideDefaultFieldValue'] = $settingsDefaultValue;
         }
 
         return $this->formBuilder->create(
