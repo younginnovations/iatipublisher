@@ -254,3 +254,11 @@ input[type='radio'] {
 label {
   cursor: pointer;
 }
+
+select.select2.default-value-indicator
++ .select2
+.selection
+.select2-selection {
+  border: 2px solid #386dd3;
+  background-color: #e8f0fe;
+}
