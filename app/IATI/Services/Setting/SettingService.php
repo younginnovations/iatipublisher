@@ -102,7 +102,9 @@ class SettingService
 
         return [
             'default_status'   => $setting && $this->defaultSettingsCompleted($setting->default_values, $setting->activity_default_values),
-            'publisher_status' => $setting && $setting['publishing_info'] ? ($setting['publishing_info']['api_token'] && $setting['publishing_info']['token_verification'] ? true : false) : false,
+            'publisher_status' => $setting && $setting['publishing_info']
+                ? ($setting['publishing_info']['api_token'] && $setting['publishing_info']['token_verification'] ? true : false)
+                : false,
             'token_status' => Arr::get($setting, 'publishing_info.token_verification', false),
         ];
     }
@@ -121,12 +123,33 @@ class SettingService
             return false;
         }
 
-        unset($activity_default_values['budget_not_provided']);
+        $propertiesThatDoNotAffectCompletion = [
+            'default_collaboration_type',
+            'budget_not_provided',
+            'linked_data_uri',
+        ];
 
-        return !in_array(null, array_values($default_values), true) &&
-               !in_array('', array_values($default_values), true) &&
-               !in_array(null, array_values($activity_default_values), true) &&
-               !in_array('', array_values($activity_default_values), true);
+        $propertiesThatAffectCompletion = [
+            'hierarchy',
+            'default_flow_type',
+            'default_finance_type',
+            'default_aid_type',
+            'default_tied_status',
+            'humanitarian',
+        ];
+
+        $activity_default_values = Arr::except($activity_default_values, $propertiesThatDoNotAffectCompletion);
+
+        $completeLanguageAndCurrency = Arr::get($default_values, 'default_language', false) && Arr::get($default_values, 'default_currency', false);
+        $completeActivityDefaults = Arr::has($activity_default_values, $propertiesThatAffectCompletion)
+            && !empty($activity_default_values['hierarchy'])
+            && !empty($activity_default_values['default_flow_type'])
+            && !empty($activity_default_values['default_finance_type'])
+            && !empty($activity_default_values['default_aid_type'])
+            && !empty($activity_default_values['default_tied_status'])
+            && isset($activity_default_values['humanitarian']);
+
+        return $completeLanguageAndCurrency && $completeActivityDefaults;
     }
 
     /**

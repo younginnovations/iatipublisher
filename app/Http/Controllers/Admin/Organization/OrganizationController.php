@@ -182,11 +182,12 @@ class OrganizationController extends Controller
                 'data' => ['publisher_active' => $status],
             ]);
         } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
+                'message' => 'Encountered issue when checking publisher state on registry.',
+                'data'    => ['publisher_active' => false],
             ]);
         }
     }
