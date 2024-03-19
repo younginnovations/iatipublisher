@@ -38,9 +38,10 @@ class TestWriteFileInPublic extends Command
 
         $filename = "WRITE_$createDate.json";
 
-        $count = file_put_contents(public_path('AppData/' . $filename), $content);
+        $path = public_path('AppData/' . $filename);
+        $count = file_put_contents($path, $content);
 
-        logger('$count after writing:');
-        logger($count);
+        logger('Path being written at: ' . $path);
+        logger("$count after writing: " . $count);
     }
 }

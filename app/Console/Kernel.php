@@ -18,7 +18,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('command:FetchOrganisationRegistrationAgency')->dailyAt('00:00');
-        $schedule->command('command:TestWriteFileInPublic')->dailyAt('00:15');
+        $schedule->command('command:TestWriteFileInPublic')->everyFiveMinutes();
     }
 
     /**
