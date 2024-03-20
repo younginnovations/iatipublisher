@@ -72,6 +72,7 @@ class FetchOrganisationRegistrationAgency extends Command
                 $filePath = 'AppData/Data/Organization/OrganizationRegistrationAgency.json';
 
                 if (awsUploadFile($filePath, $newJsonString)) {
+                    file_put_contents(public_path($filePath), $newJsonString);
                     Cache::put($filePath, $newJsonString, now()->addHours(24));
 
                     $this->info(' Completed.');
