@@ -58,7 +58,7 @@ if (!function_exists('readElementGroup')) {
     {
         $completePath = 'AppData/Data/Activity/ElementGroup.json';
 
-        return json_decode(Cache::get($completePath) ?? file_get_contents(public_path($completePath)), true);
+        return json_decode(getJsonFromSource($completePath), true);
     }
 }
 
@@ -365,7 +365,7 @@ if (!function_exists('getCodeList')) {
     function getCodeList($listName, $listType, bool $code = true): array
     {
         $completePath = "AppData/Data/$listType/$listName.json";
-        $codeListFromFile = Cache::get($completePath) ?? file_get_contents(public_path($completePath));
+        $codeListFromFile = getJsonFromSource($completePath);
         $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
         $codeList = $codeLists[$listName];
         $data = [];
@@ -391,7 +391,7 @@ if (!function_exists('getCodeListArray')) {
     function getCodeListArray($listName, $listType, bool $code = true): array
     {
         $completePath = "AppData/Data/$listType/$listName.json";
-        $content = Cache::get($completePath) ?? file_get_contents(public_path($completePath));
+        $content = getJsonFromSource($completePath);
         $codeListFromFile = json_decode($content);
         $data = [];
 
@@ -416,7 +416,7 @@ if (!function_exists('getList')) {
     function getList(string $filePath, bool $code = true): array
     {
         $completePath = "AppData/Data/$filePath";
-        $codeListFromFile = Cache::get($completePath) ?? file_get_contents(public_path($completePath));
+        $codeListFromFile = getJsonFromSource($completePath);
         $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
         $codeList = last($codeLists);
         $data = [];
@@ -588,7 +588,7 @@ if (!function_exists('getTableConfig')) {
             'organisation' => [
                 'orderBy'   => ['updated_at', 'all_activities_count', 'name', 'registered_on', 'publisher_type', 'data_license', 'country', 'last_logged_in'],
                 'direction' => ['asc', 'desc'],
-                'filters'=>[
+                'filters' => [
                     'completeness'      => 'single',
                     'registration_type' => 'single',
                     'country'           => 'multiple',
@@ -865,7 +865,7 @@ if (!function_exists('getAllocatedPercentageOfRecipientRegion')) {
      *
      * @return float
      */
-    function getAllocatedPercentageOfRecipientRegion($activity):float
+    function getAllocatedPercentageOfRecipientRegion($activity): float
     {
         $data = $activity->recipient_region;
         $groupedRegion = [];
@@ -1016,5 +1016,34 @@ if (!function_exists('getTimestampFromSingleXml')) {
         }
 
         return $activity->updated_at->toIso8601String();
+    }
+}
+
+if (!function_exists('getJsonFromSource')) {
+    /**
+     * Returns json string from either cache or public except for OrganizationRegistrationAgency.json.
+     * Returns json string for OrganizationRegistrationAgency.json from s3.
+     *
+     * @param string $completePath
+     *
+     * @return string
+     */
+    function getJsonFromSource(string $completePath): string
+    {
+        $jsonString = Cache::get($completePath);
+
+        if ($jsonString) {
+            return $jsonString;
+        }
+
+        if ($completePath === 'AppData/Data/Organization/OrganizationRegistrationAgency.json') {
+            $jsonString = awsGetFile($completePath);
+
+            if ($jsonString) {
+                return $jsonString;
+            }
+        }
+
+        return file_get_contents(public_path($completePath));
     }
 }
