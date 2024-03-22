@@ -4,16 +4,29 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Organization;
 
+use App\Constants\Enums;
+use App\Exceptions\PublisherIdChangeByIatiAdminException;
+use App\IATI\Models\Activity\ActivityPublished;
 use App\IATI\Models\Organization\Organization;
+use App\IATI\Models\Organization\OrganizationPublished;
+use App\IATI\Models\Setting\Setting;
 use App\IATI\Repositories\ApiLog\ApiLogRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
+use App\IATI\Services\Publisher\PublisherService;
+use App\IATI\Services\Setting\SettingService;
 use App\IATI\Traits\OrganizationXmlBaseElements;
+use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use JsonException;
+use function PHPUnit\Framework\isInstanceOf;
 
 /**
  * Class OrganizationService.
@@ -152,7 +165,7 @@ class OrganizationService
      * Returns array of dropdown elements in organization.
      *
      * @return array
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getOrganizationTypes(): array
     {
@@ -283,12 +296,204 @@ class OrganizationService
     }
 
     /**
-     * @param LengthAwarePaginator|null $rawPaginatedData
+     * Update organisation element to null. (basically deleting the element).
      *
+     * @param $id
+     * @param $element
+     *
+     * @return bool
+     */
+    public function deleteElement($id, $element): bool
+    {
+        return $this->organizationRepo->update($id, [$element => null]);
+    }
+
+    /**
+     * @param array $settingData
+     * @throws BindingResolutionException
+     * @throws GuzzleException
+     * @throws JsonException
+     * @throws PublisherIdChangeByIatiAdminException
+     */
+    public function updateBySuperadmin(array $settingData): void
+    {
+        $organization = $this->organizationRepo->find($settingData['organization_id']);
+        $oldOrgInstance = clone $organization;
+        $dbField = $organization->getFillable();
+        $organizationData = Arr::only($settingData, $dbField);
+
+        $organization->fill($organizationData);
+
+        $publisherIdHasChanged = $organization->isDirty('publisher_id');
+
+        if ($publisherIdHasChanged) {
+            $this->beginPublisherIdChangeWorkflow($organizationData, $settingData, $oldOrgInstance, $organization);
+        } else {
+            $settings = $organization->settings;
+            $publishingInfo = $settings->publishing_info;
+            $publishingInfo['publisher_id'] = $settingData['publisher_id'];
+            $publishingInfo['api_token'] = $settingData['api_token'];
+            $publishingInfo['token_verification'] = $settingData['token_verification'];
+
+            $settings->publishing_info = $publishingInfo;
+            $settings->timestamps = false;
+            $settings->updateQuietly();
+        }
+
+        $organization->timestamps = false;
+        $organization->updateQuietly();
+    }
+
+    /**
+     * @param array $orgData
+     * @param array $settingsData
+     * @param Organization $oldOrgInstance
+     * @param Organization $org
+     *
+     * @throws BindingResolutionException
+     * @throws GuzzleException
+     * @throws JsonException
+     * @throws PublisherIdChangeByIatiAdminException
+     */
+    private function beginPublisherIdChangeWorkflow(array $orgData, array $settingsData, Organization $oldOrgInstance, Organization $org): void
+    {
+        $oldPublisherId = $oldOrgInstance->publisher_id;
+        $settings = $org->settings;
+        $publisherId = $orgData['publisher_id'];
+        $orgApiToken = Arr::get($settingsData, 'api_token', '');
+        $publisherData = [
+            'publisher_id' => $publisherId,
+            'api_token' => $orgApiToken,
+        ];
+
+        $this->verifyPublisherAndToken($publisherData);
+
+        $publishingInfo = $settings->publishing_info;
+        $publishingInfo['publisher_id'] = $publisherId;
+        $publishingInfo['api_token'] = $orgApiToken;
+        $publishingInfo['token_verification'] = $settingsData['token_verification'];
+
+        $settings->publishing_info = $publishingInfo;
+        $settings->timestamps = false;
+        $settings->updateQuietly();
+
+        if (($org->status === 'published')) {
+            $oldOrgFilename = "$oldPublisherId-organisation.xml";
+            $newOrgFilename = "$publisherId-organisation.xml";
+            $oldOrgFilenameMappedToNewOrgFilename = [$oldOrgFilename => $newOrgFilename];
+
+            $this->renameOldFilesInS3($oldOrgFilenameMappedToNewOrgFilename, Enums::ORG_XML_BASE_PATH);
+
+            $orgPublished = $org->organizationPublished;
+
+            $orgPublished->timestamps = false;
+            $orgPublished->filename = $newOrgFilename;
+            $orgPublished->updateQuietly();
+
+            $this->linkNewOrgFileOnRegistry($org, $settings, $orgPublished);
+            $this->linkNewOrgFileOnRegistry($org, $settings, $orgPublished);
+        }
+
+        $activityPublished = $org->publishedFiles;
+
+        if (count($activityPublished)) {
+            $activityPublished = $activityPublished[0];
+            $newMergedFilename = "$publisherId-activities.xml";
+            $oldXmlFilenamesMappedToNewXmlFilenames = $this->getOldXmlMappedToNewXml($activityPublished, $publisherId);
+            $oldMergedFilenameMappedToNewMergedFilename = [$activityPublished->filename => $newMergedFilename];
+
+            $this->renameOldFilesInS3($oldXmlFilenamesMappedToNewXmlFilenames, Enums::ACTIVITY_XML_BASE_PATH);
+            $this->renameOldFilesInS3($oldMergedFilenameMappedToNewMergedFilename, Enums::MERGED_XML_BASE_PATH);
+
+            $activityPublished->timestamps = false;
+            $activityPublished->filename = $newMergedFilename;
+            $activityPublished->published_activities = array_values($oldXmlFilenamesMappedToNewXmlFilenames);
+            $activityPublished->updateQuietly();
+
+            $this->linkNewMergedFileOnRegistry($org, $settings, $activityPublished);
+            $this->linkNewMergedFileOnRegistry($org, $settings, $activityPublished);
+        }
+    }
+
+    /**
+     * Renames old files in Amazon S3.
+     *
+     * @param array<string, string> $fromMappedToTo An associative array where keys represent old file names and values represent new file names.
+     * @param string $basePath The base path in Amazon S3 where the files are located.
+     *
+     * @return void
+     */
+    protected function renameOldFilesInS3(array $fromMappedToTo, string $basePath): void
+    {
+        foreach ($fromMappedToTo as $from => $to) {
+            awsMoveFile("$basePath/$from", "$basePath/$to");
+        }
+    }
+
+    /**
+     * @param ActivityPublished $activityPublished
+     * @param string $publisherId
+     *
+     * @return array<string, string> An associative array where keys represent old file names and values represent new file names.
+     */
+    protected function getOldXmlMappedToNewXml(ActivityPublished $activityPublished, string $publisherId): array
+    {
+        $returnMap = [];
+        $publishedActivities = $activityPublished->published_activities;
+
+        foreach ($publishedActivities as $oldActivityFilename) {
+            $activityId = getFileIdentifier($oldActivityFilename);
+            $newActivityFilename = "$publisherId-$activityId.xml";
+
+            $returnMap[$oldActivityFilename] = $newActivityFilename;
+        }
+
+        return $returnMap;
+    }
+
+    protected function changeUrlsInRegistry()
+    {
+        // need to publish merged file and org file without making much error
+
+        //org file
+
+        // merged unpubli 1-> merged X .
+    }
+
+    /**
+     * @param array $publisherData
+     *
+     * @return bool
+     *
+     * @throws BindingResolutionException
+     * @throws GuzzleException
+     * @throws JsonException
+     * @throws PublisherIdChangeByIatiAdminException
+     */
+    protected function verifyPublisherAndToken(array $publisherData): bool
+    {
+        try {
+            /** @var SettingService $settingService */
+            $settingService = app()->make(SettingService::class);
+
+            $publisherVerificationResponse = $settingService->verifyPublisher($publisherData);
+
+            return (bool) $publisherVerificationResponse;
+        } catch (Exception $e) {
+            if (isInstanceOf(ClientException::class) && $e->getCode() === 404) {
+                throw new PublisherIdChangeByIatiAdminException();
+            }
+
+            throw $e;
+        }
+    }
+
+    /**
+     * @param LengthAwarePaginator|null $rawPaginatedData
      *
      * @return LengthAwarePaginator|null
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function resolvePaginatedOrganizationData(?LengthAwarePaginator $rawPaginatedData): ?LengthAwarePaginator
     {
@@ -306,15 +511,49 @@ class OrganizationService
     }
 
     /**
-     * Update organisation element to null. (basically deleting the element).
-     *
-     * @param $id
-     * @param $element
-     *
-     * @return bool
+     * @throws BindingResolutionException
+     * @throws Exception
      */
-    public function deleteElement($id, $element): bool
+    private function unlinkOldFilesFromRegistry(string $oldPublisherId, string $orgApiToken, string $filetype): bool
     {
-        return $this->organizationRepo->update($id, [$element => null]);
+        /** @var PublisherService $publisherService */
+        $publisherService = app()->make(PublisherService::class);
+        $files = ["$oldPublisherId-$filetype"];
+
+        return $publisherService->unlink($orgApiToken, $files);
+    }
+
+    /**
+     * @throws BindingResolutionException
+     */
+    private function linkNewOrgFileOnRegistry(Organization $org, Setting $settings, OrganizationPublished $orgPublished): void
+    {
+        /** @var PublisherService $publisherService */
+        $publisherService = app()->make(PublisherService::class);
+        $publisherService->publishOrganizationFile(
+            $settings->publishing_info,
+            $orgPublished,
+            $org,
+            false
+        );
+    }
+
+    /**
+     * @param Organization $org
+     * @param ActivityPublished $activityPublished
+     * @param Setting $settings
+     * @return void
+     * @throws BindingResolutionException
+     */
+    private function linkNewMergedFileOnRegistry(Organization $org, Setting $settings, ActivityPublished $activityPublished)
+    {
+        /** @var PublisherService $publisherService */
+        $publisherService = app()->make(PublisherService::class);
+        $publisherService->publishFile(
+            $settings->publishing_info,
+            $activityPublished,
+            $org,
+            false
+        );
     }
 }

@@ -124,7 +124,6 @@ class OrganizationController extends Controller
      */
     public function update(Request $request, Organization $organization): void
     {
-        //
     }
 
     /**

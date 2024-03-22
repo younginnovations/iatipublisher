@@ -131,6 +131,16 @@ class Organization extends Model implements Auditable
     }
 
     /**
+     * Organization has Organization Published file.
+     *
+     * @return HasOne
+     */
+    public function organizationPublished(): HasOne
+    {
+        return $this->hasOne(OrganizationPublished::class, 'organization_id', 'id');
+    }
+
+    /**
      * Returns complete status of reporting_org.
      *
      * @return bool
