@@ -28,14 +28,15 @@
             </div>
             <input
               id="publisher-id"
-              class="register__input mb-2 hover:cursor-not-allowed"
+              v-model="publisherId"
+              class="register__input mb-2"
               :class="{
                 error__input: publishingError.publisher_id,
+                'hover:cursor-not-allowed': !isSuperadmin,
               }"
               type="text"
               placeholder="Type Publisher ID here"
-              :value="organization.publisher_id"
-              disabled="true"
+              :disabled="!isSuperadmin"
               @input="updateStore('publisher_id')"
             />
           </div>
@@ -64,7 +65,7 @@
                 :class="{
                   error__input: publishingError.api_token,
                 }"
-                :disabled="userRole !== 'admin' ? true : false"
+                :disabled="userRole !== 'admin'"
                 type="text"
                 placeholder="Type API Token here"
                 @input="updateStore('api_token')"
@@ -75,7 +76,7 @@
               />
             </div>
             <span
-              v-if="publishingInfo.isVerificationRequested"
+              v-if="showTag && publishingInfo.isVerificationRequested"
               :class="{
                 tag__correct: publishingForm.token_status === 'Correct',
                 tag__pending: publishingForm.token_status === 'Pending',
@@ -101,7 +102,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, computed, inject } from 'vue';
+import { defineComponent, ref, computed, inject, watch } from 'vue';
 import { useStore } from '../../store';
 import { ActionTypes } from '../../store/setting/actions';
 import HoverText from './../../components/HoverText.vue';
@@ -121,6 +122,10 @@ export default defineComponent({
       type: Boolean,
       required: false,
     },
+    showTag: {
+      type: Boolean,
+      require: false,
+    },
   },
   emits: ['submitPublishing'],
 
@@ -128,6 +133,18 @@ export default defineComponent({
     const tab = ref('publish');
     const store = useStore();
     const userRole = inject('userRole');
+    const isSuperadmin = inject('isSuperadmin');
+    const publisherId = ref(props.organization.publisher_id);
+
+    watch(
+      () => publisherId.value,
+      (publisherId) => {
+        store.dispatch(ActionTypes['UPDATE_PUBLISHING_FORM'], {
+          key: 'publisher_id',
+          value: publisherId,
+        });
+      }
+    );
 
     interface ObjectType {
       [key: string]: string;
@@ -174,6 +191,8 @@ export default defineComponent({
       toggleTab,
       updateStore,
       autoVerify,
+      isSuperadmin,
+      publisherId,
     };
   },
 });

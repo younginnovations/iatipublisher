@@ -46,6 +46,7 @@
           v-if="tab === 'publish'"
           :organization="props.organization"
           :initial-api-call-completed="initialApiCallCompleted"
+          :show-tag="showTokenTag"
           @keyup.enter="submitForm"
           @submit-publishing="submitForm"
         />
@@ -122,7 +123,7 @@ export default defineComponent({
       required: true,
     },
     organization: {
-      type: [String, Object],
+      type: [Object],
       required: true,
     },
     budgetNotProvided: {
@@ -153,6 +154,10 @@ export default defineComponent({
       type: [String, Object],
       required: true,
     },
+    isSuperadmin: {
+      type: Boolean,
+      required: false,
+    },
   },
 
   setup(props) {
@@ -175,6 +180,8 @@ export default defineComponent({
 
     const defaultError = computed(() => store.state.defaultError);
 
+    const showTokenTag = ref(false);
+
     function updateStore(
       name: keyof typeof ActionTypes,
       key: string,
@@ -186,10 +193,25 @@ export default defineComponent({
       });
     }
 
+    updateStore(
+      ActionTypes.UPDATE_PUBLISHING_FORM,
+      'publisher_id',
+      props.organization.publisher_id
+    );
+
     onMounted(async () => {
       const { data } = await axios.get('/setting/data');
       initialApiCallCompleted.value = true;
       const settingData = data.data;
+
+      updateStore(
+        'UPDATE_PUBLISHING_FORM',
+        'organization_id',
+        props.organization.id
+      );
+
+      const errors = data.errors ?? {};
+      setErrors(errors);
 
       if (settingData) {
         const defaultValues = settingData.default_values
@@ -235,6 +257,18 @@ export default defineComponent({
         }
       }
     });
+
+    function setErrors(errors: object) {
+      if (Object.keys(errors).length > 0) {
+        for (const key in errors) {
+          updateStore('UPDATE_PUBLISHING_ERROR', key, errors[key]);
+        }
+
+        showTokenTag.value = false;
+      } else {
+        showTokenTag.value = true;
+      }
+    }
 
     function toggleTab(page: string) {
       toastVisibility.value = false;
@@ -293,19 +327,23 @@ export default defineComponent({
         })
         .then((res) => {
           const response = res.data;
+          const errors = response.errors ?? {};
+
+          setErrors(errors);
+
           toastType.value = response.success;
+
+          updateStore(
+            'UPDATE_PUBLISHER_INFO',
+            'token_verification',
+            response.data.token_verification ?? false
+          );
 
           if (response.success) {
             updateStore(
               'UPDATE_PUBLISHER_INFO',
               'publisher_verification',
               response.data.publisher_verification
-            );
-
-            updateStore(
-              'UPDATE_PUBLISHER_INFO',
-              'token_verification',
-              response.data.token_verification
             );
 
             updateStore(
@@ -360,6 +398,7 @@ export default defineComponent({
     }
 
     provide('userRole', props.userRole);
+    provide('isSuperadmin', props.isSuperadmin);
 
     return {
       props,
@@ -374,6 +413,7 @@ export default defineComponent({
       toggleTab,
       submitForm,
       initialApiCallCompleted,
+      showTokenTag,
     };
   },
 });
