@@ -153,6 +153,10 @@ export default defineComponent({
       type: [String, Object],
       required: true,
     },
+    isSuperadmin: {
+      type: Boolean,
+      required: false,
+    },
   },
 
   setup(props) {
@@ -166,6 +170,9 @@ export default defineComponent({
     const toastType = ref<boolean | string>(false);
 
     const publishingForm = computed(() => store.state.publishingForm);
+
+    console.log('publishingForm');
+    console.log(publishingForm);
 
     const publishingInfo = computed(() => store.state.publishingInfo);
 
@@ -191,6 +198,12 @@ export default defineComponent({
       initialApiCallCompleted.value = true;
       const settingData = data.data;
 
+      updateStore(
+        'UPDATE_PUBLISHING_FORM',
+        'organization_id',
+        settingData.organization_id
+      );
+
       if (settingData) {
         const defaultValues = settingData.default_values
           ? settingData.default_values
@@ -204,6 +217,8 @@ export default defineComponent({
 
         if (publisherInfo) {
           for (const key in publisherInfo) {
+            console.log('key');
+            console.log(key);
             updateStore(
               typeof publisherInfo[key] === 'string'
                 ? 'UPDATE_PUBLISHING_FORM'
@@ -295,17 +310,17 @@ export default defineComponent({
           const response = res.data;
           toastType.value = response.success;
 
+          updateStore(
+            'UPDATE_PUBLISHER_INFO',
+            'token_verification',
+            response.data.token_verification ?? false
+          );
+
           if (response.success) {
             updateStore(
               'UPDATE_PUBLISHER_INFO',
               'publisher_verification',
               response.data.publisher_verification
-            );
-
-            updateStore(
-              'UPDATE_PUBLISHER_INFO',
-              'token_verification',
-              response.data.token_verification
             );
 
             updateStore(
@@ -360,6 +375,7 @@ export default defineComponent({
     }
 
     provide('userRole', props.userRole);
+    provide('isSuperadmin', props.isSuperadmin);
 
     return {
       props,

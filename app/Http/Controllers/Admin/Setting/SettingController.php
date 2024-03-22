@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Setting;
 
+use App\Exceptions\PublisherIdChangeByIatiAdminException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Setting\DefaultFormRequest;
 use App\Http\Requests\Setting\PublisherFormRequest;
@@ -11,6 +12,7 @@ use App\IATI\Models\Organization\Organization;
 use App\IATI\Services\ApiLog\ApiLogService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
@@ -22,7 +24,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use JsonException;
 use function PHPUnit\Framework\isInstanceOf;
+use Throwable;
 
 /**
  * Class SettingController.
@@ -31,7 +35,7 @@ class SettingController extends Controller
 {
     protected OrganizationService $organizationService;
     protected SettingService $settingService;
-    protected ApiLogService $apiLogService;
+
     protected DatabaseManager $db;
 
     /**
@@ -39,14 +43,12 @@ class SettingController extends Controller
      *
      * @param OrganizationService $organizationService
      * @param SettingService      $settingService
-     * @param ApiLogService   $apiLogService
      * @param DatabaseManager     $db
      */
-    public function __construct(OrganizationService $organizationService, SettingService $settingService, ApiLogService $apiLogService, DatabaseManager $db)
+    public function __construct(OrganizationService $organizationService, SettingService $settingService, DatabaseManager $db)
     {
         $this->organizationService = $organizationService;
         $this->settingService = $settingService;
-        $this->apiLogService = $apiLogService;
         $this->db = $db;
     }
 
@@ -70,7 +72,7 @@ class SettingController extends Controller
             $userRole = Auth::user()->role->role;
 
             return view('admin.settings.index', compact('currencies', 'languages', 'humanitarian', 'budgetNotProvided', 'userRole', 'defaultCollaborationType', 'defaultFlowType', 'defaultFinanceType', 'defaultAidType', 'defaultTiedStatus'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.index')->with('error', 'Error while rendering setting page');
@@ -79,7 +81,6 @@ class SettingController extends Controller
 
     /**
      * @return JsonResponse
-     * @throws GuzzleException
      */
     public function getSetting(): JsonResponse
     {
@@ -102,7 +103,7 @@ class SettingController extends Controller
             $setting->save();
 
             return response()->json(['success' => true, 'message' => 'Settings fetched successfully', 'data' => $setting]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
@@ -115,15 +116,11 @@ class SettingController extends Controller
      * @param PublisherFormRequest $request
      *
      * @return JsonResponse
-     * @throws GuzzleException
      */
     public function verify(PublisherFormRequest $request): JsonResponse
     {
         try {
             $publisherData = $request->all();
-
-            $publisherData['publisher_id'] = Auth::user()->organization->publisher_id;
-
             $verifyPublisherInfo = $this->verifyPublisher($publisherData);
             $verifyApiInfo = $this->verifyApi($publisherData);
 
@@ -134,10 +131,15 @@ class SettingController extends Controller
             $publisherData['token_status'] = $tokenStatus;
 
             return response()->json(['success' => true, 'message' => $message, 'data' => $publisherData]);
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+        } catch (Exception $e) {
+            $publisherData['publisher_verification'] = false;
+            $publisherData['token_verification'] = false;
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while verify publisher']);
+            if (isInstanceOf(GuzzleException::class) && $e->getCode() === 404) {
+                return response()->json(['success' => false, 'message' => 'Publisher does not exist in registry.', 'data' => $publisherData]);
+            }
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while verify publisher', 'data' => $publisherData]);
         }
     }
 
@@ -147,12 +149,26 @@ class SettingController extends Controller
      * @param PublisherFormRequest $request
      *
      * @return JsonResponse
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function storePublishingInfo(PublisherFormRequest $request): JsonResponse
     {
+        $this->db->beginTransaction();
+
         try {
             $publisherData = $request->all();
+
+            if (isSuperAdmin()) {
+                $this->organizationService->updateBySuperadmin($publisherData);
+                $this->db->commit();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Publisher setting stored successfully',
+                    'data' => $publisherData,
+                ]);
+            }
+
             $publisherData['publisher_id'] = Auth::user()->organization->publisher_id;
 
             $verifyPublisherInfo = $this->verifyPublisher($publisherData);
@@ -162,8 +178,6 @@ class SettingController extends Controller
                 [$tokenStatus, $_] = $this->getTokenStatusAndMessage($verifyPublisherInfo, $verifyApiInfo);
                 $publisherData['token_status'] = $tokenStatus;
 
-                $this->db->beginTransaction();
-
                 $this->settingService->storePublishingInfo($publisherData);
 
                 $this->db->commit();
@@ -171,18 +185,26 @@ class SettingController extends Controller
                 return response()->json(['success' => true, 'message' => 'Publisher setting stored successfully', 'data' => $publisherData]);
             }
 
-            return response()->json(
-                [
+            return response()->json([
                     'success' => false,
                     'message' => 'Error occurred while verifying data',
                     'data'    => $publisherData,
                     'error'   => ['token' => $verifyApiInfo, 'publisher_verification' => $verifyPublisherInfo],
-                ]
-            );
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            ]);
+        } catch (Exception $e) {
+            $publisherData['publisher_verification'] = false;
+            $publisherData['token_verification'] = false;
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while storing setting']);
+            logger($e);
+            if (isInstanceOf(PublisherIdChangeByIatiAdminException::class)) {
+                return response()->json(['success' => false, 'message' => 'Publisher Id or API Token incorrect.', 'data' => $publisherData]);
+            }
+
+            if (isInstanceOf(GuzzleException::class) && $e->getCode() === 404) {
+                return response()->json(['success' => false, 'message' => 'Publisher does not exist in registry.', 'data' => $publisherData]);
+            }
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while verify publisher', 'data' => $publisherData]);
         }
     }
 
@@ -192,7 +214,7 @@ class SettingController extends Controller
      * @param DefaultFormRequest $request
      *
      * @return JsonResponse
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function storeDefaultForm(DefaultFormRequest $request): JsonResponse
     {
@@ -204,7 +226,7 @@ class SettingController extends Controller
             $this->db->commit();
 
             return response()->json(['success' => true, 'message' => 'Default setting stored successfully', 'data' => $setting]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->db->rollBack();
             logger()->error($e->getMessage());
 
@@ -219,42 +241,13 @@ class SettingController extends Controller
      *
      * @return array
      * @throws GuzzleException
+     * @throws JsonException
      */
     public function verifyPublisher(array $data): array
     {
-        try {
-            $client = new Client(
-                [
-                    'base_uri' => env('IATI_API_ENDPOINT'),
-                    'headers' => [
-                        'X-CKAN-API-Key' => env('IATI_API_KEY'),
-                    ],
-                ]
-            );
+        $response = $this->settingService->verifyPublisher($data);
 
-            $requestOption = [
-                'auth' => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
-                'query' => ['id' => $data['publisher_id']],
-                'connect_timeout' => 500,
-            ];
-
-            $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOption);
-            $this->apiLogService->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOption, $res));
-            $responseJson = $res->getBody()->getContents();
-            $result = json_decode($responseJson, false, 512, JSON_THROW_ON_ERROR)->result;
-            $state = $result ? $result->state : 'approval_needed';
-
-            return ['success' => true, 'validation' => (bool) $result, 'state' => $state];
-        } catch (\Exception $e) {
-            if (isInstanceOf(ClientException::class) && $e->getCode() === 403) {
-                /* This means that the api token is incorrect */
-                return ['success' => false, 'validation' => false, 'state' => 'approval_needed'];
-            }
-
-            logger()->error($e);
-
-            return ['success' => 'error', 'message' => $e->getMessage()];
-        }
+        return ['success' => true, 'validation' => (bool) $response];
     }
 
     /**
@@ -264,38 +257,17 @@ class SettingController extends Controller
      *
      * @return array
      * @throws GuzzleException
+     * @throws JsonException
      */
     public function verifyApi(array $data): array
     {
-        try {
-            if ($data['api_token']) {
-                $client = new Client(
-                    [
-                        'base_uri' => env('IATI_API_ENDPOINT'),
-                        'headers'  => [
-                            'X-CKAN-API-Key' => $data['api_token'],
-                        ],
-                    ]
-                );
-                $requestOptions = [
-                    'auth'            => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
-                    'connect_timeout' => 500,
-                ];
+        if ($data['api_token']) {
+            $response = $this->settingService->verifyApi($data);
 
-                $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', $requestOptions);
-                $this->apiLogService->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', $requestOptions, $res));
-                $responseJson = $res->getBody()->getContents();
-                $response = json_decode($responseJson, false, 512, JSON_THROW_ON_ERROR)->result;
-
-                return ['success' => true, 'validation' => in_array($data['publisher_id'], array_column($response, 'name'), true)];
-            }
-
-            return ['success' => false, 'validation' => false];
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return ['success' => false, 'message' => $e->getMessage()];
+            return ['success' => true, 'validation' => in_array($data['publisher_id'], array_column($response, 'name'), true)];
         }
+
+        return ['success' => true, 'validation' => false];
     }
 
     /**
@@ -313,7 +285,7 @@ class SettingController extends Controller
                 'message' => 'Setting status successfully retrieved.',
                 'data' => $status,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json([

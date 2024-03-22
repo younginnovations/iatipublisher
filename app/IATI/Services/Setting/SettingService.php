@@ -6,6 +6,9 @@ namespace App\IATI\Services\Setting;
 
 use App\IATI\Models\Setting\Setting;
 use App\IATI\Repositories\Setting\SettingRepository;
+use App\IATI\Services\ApiLog\ApiLogService;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -18,24 +21,29 @@ class SettingService
     /**
      * @var SettingRepository
      */
-    private $settingRepo;
+    private SettingRepository $settingRepo;
+
+    /**
+     * @var ApiLogService
+     */
+    private ApiLogService $apiLogService;
 
     /**
      * Sett constructor.
      *
      * @param SettingRepository $settingRepo
+     * @param ApiLogService $apiLogService
      */
-    public function __construct(SettingRepository $settingRepo)
+    public function __construct(SettingRepository $settingRepo, ApiLogService $apiLogService)
     {
         $this->settingRepo = $settingRepo;
+        $this->apiLogService = $apiLogService;
     }
 
     /**
      * Store user.
      *
-     * @param array $data
-     *
-     * @return Setting
+     * @return Setting|null
      */
     public function getSetting(): ?Setting
     {
@@ -163,5 +171,56 @@ class SettingService
     public function create($data): Model
     {
         return $this->settingRepo->store($data);
+    }
+
+    /**
+     * @throws GuzzleException
+     * @throws \JsonException
+     */
+    public function verifyPublisher(array $data)
+    {
+        $client = new Client(
+            [
+                'base_uri' => env('IATI_API_ENDPOINT'),
+                'headers'  => [
+                    'X-CKAN-API-Key' => env('IATI_API_KEY'),
+                ],
+            ]
+        );
+        $requestOption = [
+            'auth'            => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
+            'query'           => ['id' => $data['publisher_id']],
+            'connect_timeout' => 500,
+        ];
+
+        $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOption);
+        $this->apiLogService->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOption, $res));
+
+        return json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
+    }
+
+    /**
+     * @throws GuzzleException
+     * @throws \JsonException
+     */
+    public function verifyApi(array $data)
+    {
+        $client = new Client(
+            [
+                'base_uri' => env('IATI_API_ENDPOINT'),
+                'headers'  => [
+                    'X-CKAN-API-Key' => $data['api_token'],
+                ],
+            ]
+        );
+        $requestOptions = [
+            'auth'            => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
+            'connect_timeout' => 500,
+        ];
+
+        $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', $requestOptions);
+        $this->apiLogService->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', $requestOptions, $res));
+
+        return json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
     }
 }

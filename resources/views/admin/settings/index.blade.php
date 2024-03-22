@@ -9,5 +9,6 @@
         :default-aid-type='{{ json_encode($defaultAidType)  }}'
         :default-tied-status='{{ json_encode($defaultTiedStatus) }}'
         :budget-not-provided="{{ json_encode($budgetNotProvided) }}" user-role="{{ $userRole }}"
+        :is-superadmin="{{json_encode(isSuperAdmin())}}"
     ></setting-page>
 @endsection

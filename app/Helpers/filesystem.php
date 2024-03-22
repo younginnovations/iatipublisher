@@ -131,6 +131,21 @@ if (!function_exists('awsFilePath')) {
     }
 }
 
+if (!function_exists('awsMoveFile')) {
+    /**
+     * Moves file.
+     *
+     * @param $from
+     * @param $to
+     *
+     * @return bool
+     */
+    function awsMoveFile($from, $to): bool
+    {
+        return Storage::disk('s3')->move($from, $to);
+    }
+}
+
 if (!function_exists('localHasFile')) {
     /**
      * Checks if $filePath exists for local disk.

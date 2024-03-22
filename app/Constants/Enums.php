@@ -81,9 +81,9 @@ abstract class Enums
      *
      * @var array
      */
-    const ORGANIZATION_REGISTRATION_METHOD = [
-        'new_org'=>'New org',
-        'existing_org'=>'Existing org',
+    public const ORGANIZATION_REGISTRATION_METHOD = [
+        'new_org' => 'New org',
+        'existing_org' => 'Existing org',
     ];
 
     /**
@@ -91,7 +91,7 @@ abstract class Enums
      *
      * @var array
      */
-    const LANGUAGE_PREFERENCE = [
+    public const LANGUAGE_PREFERENCE = [
         'en',
         'fr',
         'es',
@@ -156,11 +156,17 @@ abstract class Enums
     /*
      * Enums for organisation-registration-agency that are not country dependent
      */
-    const UNCATEGORIZED_ORGANISATION_AGENCY_PREFIX = [
+    public const UNCATEGORIZED_ORGANISATION_AGENCY_PREFIX = [
         'XM',
         'XI',
         'XR',
     ];
 
-    const IATI_XML_VERSION = '2.03';
+    public const IATI_XML_VERSION = '2.03';
+
+    public const ACTIVITY_XML_BASE_PATH = 'xml/activityXmlFiles';
+
+    public const MERGED_XML_BASE_PATH = 'xml/mergedActivityXml';
+
+    public const ORG_XML_BASE_PATH = 'organizationXmlFiles';
 }

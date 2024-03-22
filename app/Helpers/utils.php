@@ -289,3 +289,22 @@ if (!function_exists('removeSingleActivityXmlFromMergedActivitiesXml')) {
         return $mergedXml;
     }
 }
+
+if (!function_exists('getFileIdentifier')) {
+    /**
+     * @param string $filename
+     * @return string
+     */
+    function getFileIdentifier(string $filename): string
+    {
+        $lastHyphenPosition = strrpos($filename, '-');
+        $dotXmlPosition = strpos($filename, '.xml');
+        $fileIdentifier = '';
+
+        if ($lastHyphenPosition !== false && $dotXmlPosition !== false) {
+            $fileIdentifier = substr($filename, $lastHyphenPosition + 1, $dotXmlPosition - $lastHyphenPosition - 1);
+        }
+
+        return $fileIdentifier;
+    }
+}

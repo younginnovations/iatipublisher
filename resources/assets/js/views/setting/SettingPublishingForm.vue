@@ -28,14 +28,15 @@
             </div>
             <input
               id="publisher-id"
-              class="register__input mb-2 hover:cursor-not-allowed"
+              v-model="publishingForm.publisher_id"
+              class="register__input mb-2"
               :class="{
                 error__input: publishingError.publisher_id,
+                'hover:cursor-not-allowed': !isSuperadmin,
               }"
               type="text"
               placeholder="Type Publisher ID here"
-              :value="organization.publisher_id"
-              disabled="true"
+              :disabled="!isSuperadmin"
               @input="updateStore('publisher_id')"
             />
           </div>
@@ -128,6 +129,10 @@ export default defineComponent({
     const tab = ref('publish');
     const store = useStore();
     const userRole = inject('userRole');
+    const isSuperadmin = inject('isSuperadmin');
+
+    console.log('userRole');
+    console.log(userRole);
 
     interface ObjectType {
       [key: string]: string;
@@ -174,6 +179,7 @@ export default defineComponent({
       toggleTab,
       updateStore,
       autoVerify,
+      isSuperadmin,
     };
   },
 });
