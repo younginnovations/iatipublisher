@@ -6,8 +6,10 @@ namespace App\Http\Controllers\Admin\Organization;
 
 use App\Constants\Enums;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DeleteOrganizationRequest;
 use App\IATI\Models\Organization\Organization;
 use App\IATI\Services\Organization\OrganizationService;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\View\View;
@@ -91,7 +93,7 @@ class OrganizationController extends Controller
             $userRole = Auth::user()->role->role;
 
             return view('admin.organisation.index', compact('elements', 'elementGroups', 'progress', 'organization', 'toast', 'types', 'mandatoryCompleted', 'status', 'userRole'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while opening organization detail page.');
@@ -126,13 +128,51 @@ class OrganizationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Organization $organization
-     *
-     * @return void
+     * @param DeleteOrganizationRequest $request
+     * @param string $orgId
+     * @return array
      */
-    public function destroy(Organization $organization): void
+    public function destroy(DeleteOrganizationRequest $request, string $orgId): array
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $markAsSpam = $request->query->get('markAsSpam');
+            $organization = $this->organizationService->getOrganizationData($orgId);
+
+            $organization->organizationPublished()->delete();
+            $organization->activityPublished()->delete();
+            $organization->settings()->delete();
+
+            $activities = $organization->activities;
+            $users = $organization->users;
+
+            foreach ($activities as $activity) {
+                $activity->delete();
+            }
+
+            foreach ($users as $user) {
+                if ($markAsSpam) {
+                    $this->markEmailAsSpam($user->email);
+                }
+
+                $user->organization()->dissociate();
+                $user->save();
+                $user->delete();
+            }
+
+            $organization->delete();
+
+            DB::commit();
+
+            return ['success' => true, 'message' => 'Organisation deleted successfully.'];
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            logger()->error($e->getMessage());
+
+            return ['success' => false, 'message' => 'Error occurred while deleting organisation.'];
+        }
     }
 
     /**
@@ -180,7 +220,7 @@ class OrganizationController extends Controller
                 'message' => 'Publisher status successfully retrieved.',
                 'data' => ['publisher_active' => $status],
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e);
 
             return response()->json([
@@ -217,11 +257,21 @@ class OrganizationController extends Controller
             Session::put('success', $message);
 
             return response(['status' => true, 'message' => $message]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
             return response(['status' => false, 'message' => 'Error has occurred while deleting organisation element.']);
         }
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return bool
+     */
+    private function markEmailAsSpam(string $email): bool
+    {
+        return true;
     }
 }
