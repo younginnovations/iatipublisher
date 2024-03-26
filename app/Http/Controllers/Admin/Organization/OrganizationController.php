@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DeleteOrganizationRequest;
 use App\IATI\Models\Organization\Organization;
 use App\IATI\Services\Organization\OrganizationService;
+use App\SpamEmail;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -268,10 +269,14 @@ class OrganizationController extends Controller
     /**
      * @param string $email
      *
-     * @return bool
+     * @return void
      */
-    private function markEmailAsSpam(string $email): bool
+    private function markEmailAsSpam(string $email): void
     {
-        return true;
+        $existingEmail = SpamEmail::where('email', $email)->first();
+
+        if (!$existingEmail) {
+            SpamEmail::create(['email' => $email]);
+        }
     }
 }
