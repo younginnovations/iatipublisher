@@ -3,9 +3,12 @@
 namespace App\Providers;
 
 use App\Database\PostgresConnection;
+use App\SpamEmail;
 use Illuminate\Database\Connection;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Horizon\Horizon;
+use URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,8 +31,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Validator::extend('not_in_spam_emails', function ($attribute, $value, $parameters, $validator) {
+            return !SpamEmail::where('email', $value)->exists();
+        });
+
         if (config('app.env') === 'production' || config('app.env') === 'staging') {
-            \URL::forceScheme('https');
+            URL::forceScheme('https');
             // return true;
         }
 

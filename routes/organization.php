@@ -24,13 +24,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/organisation/agency/{country?}', [OrganizationController::class, 'getRegistrationAgency'])->name('organisation.get.agency');
+
 Route::group(['middleware' => ['can:view_organization']], static function () {
     Route::get('/organisation', [OrganizationController::class, 'show'])->name('organisation.index');
     Route::get('organisation/status', [OrganizationController::class, 'getPublisherStatus'])->name('organisation.status');
 });
 
 Route::group(['middleware' => ['can:crud_organization']], static function () {
-    Route::get('/organisation/agency/{country?}', [OrganizationController::class, 'getRegistrationAgency'])->name('organisation.get.agency');
     Route::get('organisation/name', [NameController::class, 'edit'])->name('organisation.name.edit');
     Route::get('organisation/name', [NameController::class, 'edit'])->name('organisation.name.edit');
     Route::put('organisation/name', [NameController::class, 'update'])->name('organisation.name.update');
