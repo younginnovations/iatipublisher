@@ -228,6 +228,7 @@ return [
             'rule-name' => 'custom-message',
         ],
     ],
+    'not_in_spam_emails' => 'This email has been flagged as spam and cannot be used.',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes
