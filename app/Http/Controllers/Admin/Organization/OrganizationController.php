@@ -148,7 +148,7 @@ class OrganizationController extends Controller
 
             if ($organizationPublished) {
                 $this->unlinkOldFilesFromRegistry($publisherId, $apiToken, 'organisation');
-                $organization->delete();
+                $organizationPublished->delete();
             }
 
             $activityPublished = $organization->activityPublished;
@@ -158,11 +158,7 @@ class OrganizationController extends Controller
                 $activityPublished->delete();
             }
 
-            $settings = $organization->settings;
-
-            if ($settings) {
-                $settings->delete();
-            }
+            $organization->settings()->delete();
 
             $activities = $organization->activities;
             $users = $organization->users;
@@ -178,7 +174,7 @@ class OrganizationController extends Controller
 
                 $user->organization()->dissociate();
                 $user->save();
-                $user->forceDelete;
+                $user->destroy($user->id);
             }
 
             $organization->delete();

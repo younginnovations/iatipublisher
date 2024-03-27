@@ -726,7 +726,6 @@ export default defineComponent({
     };
 
     const deleteOrg = async (orgId) => {
-      markAsSpam.value = false;
       showLoader.value = true;
 
       const response = await axios.delete(
@@ -735,6 +734,7 @@ export default defineComponent({
 
       showLoader.value = false;
       deleteModal.value = false;
+      markAsSpam.value = false;
       toastMessage.message = response.data.message;
       toastMessage.type = response.data.success;
       toastMessage.visibility = true;
