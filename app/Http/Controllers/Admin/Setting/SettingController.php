@@ -9,12 +9,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Setting\DefaultFormRequest;
 use App\Http\Requests\Setting\PublisherFormRequest;
 use App\IATI\Models\Organization\Organization;
-use App\IATI\Services\ApiLog\ApiLogService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
 use Exception;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -94,7 +91,7 @@ class SettingController extends Controller
 
             $verifyPublisherInfo = $this->verifyPublisher($publisherData);
             $verifyApiInfo = $this->verifyApi($publisherData);
-            [$tokenStatus, $_] = $this->getTokenStatusAndMessage($verifyPublisherInfo, $verifyApiInfo);
+            [$tokenStatus] = $this->getTokenStatusAndMessage($verifyPublisherInfo, $verifyApiInfo);
 
             $publishing_info = $setting->publishing_info;
             $publishing_info['token_status'] = $tokenStatus;
@@ -175,7 +172,7 @@ class SettingController extends Controller
             $verifyApiInfo = $this->verifyApi($publisherData);
 
             if (isset($verifyApiInfo['success'])) {
-                [$tokenStatus, $_] = $this->getTokenStatusAndMessage($verifyPublisherInfo, $verifyApiInfo);
+                [$tokenStatus] = $this->getTokenStatusAndMessage($verifyPublisherInfo, $verifyApiInfo);
                 $publisherData['token_status'] = $tokenStatus;
 
                 $this->settingService->storePublishingInfo($publisherData);
@@ -245,9 +242,10 @@ class SettingController extends Controller
      */
     public function verifyPublisher(array $data): array
     {
-        $response = $this->settingService->verifyPublisher($data);
+        $result = $this->settingService->verifyPublisher($data);
+        $state = $result ? $result->state : 'approval_needed';
 
-        return ['success' => true, 'validation' => (bool) $response];
+        return ['success' => true, 'validation' => (bool) $result, 'state' => $state];
     }
 
     /**
