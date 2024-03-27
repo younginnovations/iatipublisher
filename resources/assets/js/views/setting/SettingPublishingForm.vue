@@ -56,26 +56,33 @@
               </button>
             </div>
 
-            <input
-              id="api-token"
-              v-model="publishingForm.api_token"
-              class="register__input mb-2"
-              :class="{
-                error__input: publishingError.api_token,
-              }"
-              :disabled="userRole !== 'admin' ? true : false"
-              type="text"
-              placeholder="Type API Token here"
-              @input="updateStore('api_token')"
-            />
+            <div class="relative">
+              <input
+                id="api-token"
+                v-model="publishingForm.api_token"
+                class="register__input mb-2"
+                :class="{
+                  error__input: publishingError.api_token,
+                }"
+                :disabled="userRole !== 'admin' ? true : false"
+                type="text"
+                placeholder="Type API Token here"
+                @input="updateStore('api_token')"
+              />
+              <ShimmerLoading
+                v-if="!initialApiCallCompleted"
+                class="!absolute top-[50%] !m-0 !ml-2 !h-8 !w-[96%] -translate-y-1/2"
+              />
+            </div>
             <span
               v-if="publishingInfo.isVerificationRequested"
               :class="{
-                tag__correct: publishingInfo.token_verification,
-                tag__incorrect: !publishingInfo.token_verification,
+                tag__correct: publishingForm.token_status === 'Correct',
+                tag__pending: publishingForm.token_status === 'Pending',
+                tag__incorrect: publishingForm.token_status === 'Incorrect',
               }"
             >
-              {{ publishingInfo.token_verification ? 'Correct' : 'Incorrect' }}
+              {{ publishingForm.token_status }}
             </span>
           </div>
           <span v-if="publishingError.api_token" class="error" role="alert">
@@ -98,15 +105,21 @@ import { defineComponent, ref, computed, inject } from 'vue';
 import { useStore } from '../../store';
 import { ActionTypes } from '../../store/setting/actions';
 import HoverText from './../../components/HoverText.vue';
+import ShimmerLoading from 'Components/ShimmerLoading.vue';
 
 export default defineComponent({
   components: {
+    ShimmerLoading,
     HoverText,
   },
   props: {
     organization: {
       type: Object,
       required: true,
+    },
+    initialApiCallCompleted: {
+      type: Boolean,
+      required: false,
     },
   },
   emits: ['submitPublishing'],

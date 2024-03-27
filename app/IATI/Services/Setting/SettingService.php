@@ -58,6 +58,7 @@ class SettingService
                 'api_token' => $data['api_token'],
                 'publisher_verification' => $data['publisher_verification'],
                 'token_verification' => $data['token_verification'],
+                'token_status' => $data['token_status'],
             ],
         ]);
     }

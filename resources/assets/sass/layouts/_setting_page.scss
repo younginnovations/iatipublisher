@@ -46,6 +46,11 @@
           @apply absolute right-2 top-10 flex h-5 cursor-pointer items-center justify-center rounded bg-salmon-50 text-center text-xs text-white;
           width: 61px;
         }
+
+        .tag__pending {
+          @apply bg-organeish absolute right-2 top-10 flex h-5 cursor-pointer items-center justify-center rounded text-center text-xs text-white;
+          width: 61px;
+        }
       }
       .verify-btn {
         width: 120px;

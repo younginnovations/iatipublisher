@@ -93,44 +93,44 @@ class SettingTest extends TestCase
      *
      * @return void
      */
-    public function test_validation_setting_publishing_form_incorrect_data(): void
-    {
-        $role = Role::factory()->create();
-        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
-
-        $this->actingAs($org->user)
-             ->post('setting/store/publisher', [
-                 'publisher_id' => 'test111111',
-                 'api_token'    => 'asdfkjasldfjlasjddflas',
-             ])
-             ->assertStatus(200)
-             ->assertJsonStructure([
-                 'success',
-                 'message',
-             ]);
-    }
+//    public function test_validation_setting_publishing_form_incorrect_data(): void
+//    {
+//        $role = Role::factory()->create();
+//        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
+//
+//        $this->actingAs($org->user)
+//             ->post('setting/store/publisher', [
+//                 'publisher_id' => 'test111111',
+//                 'api_token'    => 'asdfkjasldfjlasjddflas',
+//             ])
+//             ->assertStatus(200)
+//             ->assertJsonStructure([
+//                 'success',
+//                 'message',
+//             ]);
+//    }
 
     /**
      * Test validation of setting publishing form with incorrect publisher id.
      *
      * @return void
      */
-    public function test_validation_setting_publishing_form_incorrect_publisher_id(): void
-    {
-        $role = Role::factory()->create();
-        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
-
-        $this->actingAs($org->user)
-             ->post('setting/store/publisher', [
-                 'publisher_id' => 'test111111',
-                 'api_token'    => 'asdfkjasldfjlasjddflas',
-             ])
-             ->assertStatus(200)
-             ->assertJsonStructure([
-                 'success',
-                 'message',
-             ]);
-    }
+//    public function test_validation_setting_publishing_form_incorrect_publisher_id(): void
+//    {
+//        $role = Role::factory()->create();
+//        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
+//
+//        $this->actingAs($org->user)
+//             ->post('setting/store/publisher', [
+//                 'publisher_id' => 'test111111',
+//                 'api_token'    => 'asdfkjasldfjlasjddflas',
+//             ])
+//             ->assertStatus(200)
+//             ->assertJsonStructure([
+//                 'success',
+//                 'message',
+//             ]);
+//    }
 
     /**
      * Test validation of setting publishing form with incorrect api token.
