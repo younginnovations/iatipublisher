@@ -43,5 +43,3 @@ Route::get('/about', [App\Http\Controllers\Web\WebController::class, 'about'])->
 Route::get('/publishing-checklist', [App\Http\Controllers\Web\WebController::class, 'publishingChecklist'])->name('publishingchecklist');
 Route::get('/iati-standard', [App\Http\Controllers\Web\WebController::class, 'iatiStandard'])->name('iatistandard');
 Route::get('/support', [App\Http\Controllers\Web\WebController::class, 'support'])->name('support');
-
-Route::get('/test', [\App\Http\Controllers\Admin\Setting\SettingController::class, 'test']);
