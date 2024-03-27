@@ -963,7 +963,6 @@ if (!function_exists('getTimestampFromSingleXml')) {
     }
 }
 
-<<<<<<< HEAD
 if (!function_exists('getJsonFromSource')) {
     /**
      * Returns json string from either cache or public except for OrganizationRegistrationAgency.json.
@@ -990,7 +989,9 @@ if (!function_exists('getJsonFromSource')) {
         }
 
         return file_get_contents(public_path($completePath));
-=======
+    }
+}
+
 if (!function_exists('getDefaultValue')) {
     /**
      * Returns Default value.
@@ -1023,6 +1024,5 @@ if (!function_exists('getDefaultValue')) {
         }
 
         return null;
->>>>>>> d634e0b6 (feat: showing default value in the input field)
     }
 }
