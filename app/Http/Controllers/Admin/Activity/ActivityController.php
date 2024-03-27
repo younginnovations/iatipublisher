@@ -12,6 +12,7 @@ use App\IATI\Services\Activity\ResultService;
 use App\IATI\Services\Activity\TransactionService;
 use App\IATI\Services\ImportActivityError\ImportActivityErrorService;
 use App\IATI\Services\Organization\OrganizationService;
+use App\IATI\Services\Setting\SettingService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use Exception;
 use Illuminate\Contracts\View\View;
@@ -64,15 +65,21 @@ class ActivityController extends Controller
     private OrganizationService $organizationService;
 
     /**
+     * @var SettingService
+     */
+    protected SettingService $settingService;
+
+    /**
      * ActivityController Constructor.
      *
-     * @param ActivityService                  $activityService
-     * @param DatabaseManager                  $db
-     * @param ResultService                    $resultService
-     * @param TransactionService               $transactionService
+     * @param ActivityService $activityService
+     * @param DatabaseManager $db
+     * @param ResultService $resultService
+     * @param TransactionService $transactionService
      * @param ActivityValidatorResponseService $activityValidatorResponseService
-     * @param ImportActivityErrorService       $importActivityErrorService
-     * @param OrganizationService              $organizationService
+     * @param ImportActivityErrorService $importActivityErrorService
+     * @param OrganizationService $organizationService
+     * @param SettingService $settingService
      */
     public function __construct(
         ActivityService $activityService,
@@ -81,7 +88,8 @@ class ActivityController extends Controller
         TransactionService $transactionService,
         ActivityValidatorResponseService $activityValidatorResponseService,
         ImportActivityErrorService $importActivityErrorService,
-        OrganizationService $organizationService
+        OrganizationService $organizationService,
+        SettingService $settingService
     ) {
         $this->activityService = $activityService;
         $this->db = $db;
@@ -90,6 +98,7 @@ class ActivityController extends Controller
         $this->activityValidatorResponseService = $activityValidatorResponseService;
         $this->importActivityErrorService = $importActivityErrorService;
         $this->organizationService = $organizationService;
+        $this->settingService = $settingService;
     }
 
     /**
@@ -102,8 +111,10 @@ class ActivityController extends Controller
         try {
             $languages = getCodeList('Language', 'Activity');
             $toast = generateToastData();
+            $settingsDefaultValue = $this->settingService->getSetting()->default_values ?? [];
+            $defaultLanguage = getDefaultValue($settingsDefaultValue, 'language', 'Activity/Language.json' ?? []);
 
-            return view('admin.activity.index', compact('languages', 'toast'));
+            return view('admin.activity.index', compact('languages', 'toast', 'defaultLanguage'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 

@@ -66,13 +66,13 @@
 
                 <Multiselect
                   v-model="formData.language"
-                  class="vue__select"
+                  class="vue__select default-value-indicator"
                   :class="{
                     error__input: errorData.language != '',
                   }"
                   :searchable="true"
                   :options="languages"
-                  placeholder="Select language"
+                  :placeholder="defaultLanguage"
                 />
 
                 <span
@@ -191,7 +191,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, onMounted } from 'vue';
+import { defineComponent, reactive, ref, onMounted, inject } from 'vue';
 import Modal from '../../components/PopupModal.vue';
 import BtnComponent from '../../components/ButtonComponent.vue';
 import Multiselect from '@vueform/multiselect';
@@ -276,6 +276,8 @@ export default defineComponent({
         });
     }
 
+    const defaultLanguage = inject('defaultLanguage');
+
     return {
       props,
       formData,
@@ -285,6 +287,7 @@ export default defineComponent({
       organization,
       closeModal,
       storeActivity,
+      defaultLanguage,
     };
   },
 });

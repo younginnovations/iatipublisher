@@ -236,7 +236,7 @@ class ActivityBaseRequest extends FormRequest
             $validator->addReplacer(
                 'unique_default_lang',
                 function ($message) use ($validator, $defaultLanguage) {
-                    return str_replace(':language', getCodeList('Languages', 'Activity')[$defaultLanguage], $message);
+                    return str_replace(':language', getCodeList('Language', 'Activity')[$defaultLanguage], $message);
                 }
             );
 

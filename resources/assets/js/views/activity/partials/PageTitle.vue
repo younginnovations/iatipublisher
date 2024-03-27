@@ -98,7 +98,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from 'vue';
+import { inject, defineProps } from 'vue';
 import DownloadActivityButton from './DownloadActivityButton.vue';
 import AddActivityButton from './AddActivityButton.vue';
 import Toast from 'Components/ToastMessage.vue';
@@ -121,6 +121,8 @@ interface ToastInterface {
   message: string;
   type: boolean;
 }
+
+const props = defineProps(['defaultValue']);
 
 const refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
 const toastMessage = inject('toastData') as ToastInterface;
