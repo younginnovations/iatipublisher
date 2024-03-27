@@ -6,8 +6,10 @@ namespace App\IATI\Repositories\Activity;
 
 use App\Constants\Enums;
 use App\IATI\Models\Activity\Activity;
+use App\IATI\Models\Organization\Organization;
 use App\IATI\Repositories\Repository;
 use App\IATI\Services\Activity\ActivityService;
+use App\IATI\Services\ElementCompleteService;
 use App\IATI\Traits\FillDefaultValuesTrait;
 use Auth;
 use Carbon\Carbon;
@@ -18,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use JsonException;
 
 /**
  * Class ActivityRepository.
@@ -187,7 +190,7 @@ class ActivityRepository extends Repository
      *
      * @return Builder|Model|bool
      *
-     * @throws \JsonException | BindingResolutionException
+     * @throws JsonException | BindingResolutionException
      */
     public function importXmlActivities($activity_id, array $mappedActivity): Builder|Model|bool
     {
@@ -764,87 +767,37 @@ class ActivityRepository extends Repository
     }
 
     /**
-     * Note By: PG-Momik.
-     *
-     * Summary:
-     *  Sync Organization identifier for 'draft' activities.
-     *  Basically we need to update N activities and update their 'iati_identifier' column.
-     *  But the problem is that there is no simple way to bulk update same column but with different values.
-     *  We can update via a foreach loop, but that will just result N update queries being fired. Not optimal solution.
-     *  So we leverage, SQL's CASE WHEN statement to add conditions when updating .
-     *  By using that we can bulk update in 1 query. Optimal solution.
-     *  'upsert()' will not work in this case.
-     *
-     * The idea here is to:
-     *  Prepare the new data for each activity
-     *  Use case when id = $id and set update value.
-     *  Execute update command.
-     *
-     * Weird syntax:
-     *  A1. Apparently I need to use 'jsonb_set' to set each json property individually. Syntax constraint.
-     *  A2. Values need to be wrapped in double inverted commas. Syntax constraint.
-     *  A3. Need to use query params (?) just to avoid sql injection. Security constraint.
-     *
-     * Example raw query:
-     *  EX1. UPDATE activities
-     *    SET iati_identifier =
-     *      CASE
-     *         WHEN id = 1 THEN jsonb_set('{}'::jsonb, '{activity_identifier}', '"momik"') || jsonb_set('{}'::jsonb, '{iati_identifier_text}', '"Example-org-identifier-momik"') || jsonb_set('{}'::jsonb, '{present_organization_identifier}', '"Example-org-identifier"') || jsonb_set('{}'::jsonb, '{updated_at}', '"2024-01-19 07:17:00"')
-     *         WHEN id = 2 THEN jsonb_set('{}'::jsonb, '{activity_identifier}', '"shr"') || jsonb_set('{}'::jsonb, '{iati_identifier_text}', '"Example-org-identifier-shr"') || jsonb_set('{}'::jsonb, '{present_organization_identifier}', '"Example-org-identifier"') || jsonb_set('{}'::jsonb, '{updated_at}', '"2024-01-19 07:17:00"')
-     *      END
-     *    WHERE id IN (1, 2);
-     *
      * @param $organization
      *
      * @return bool
+     *
+     * @throws JsonException
      */
     public function syncActivityIdentifierForNeverPublishedActivities($organization): bool
     {
-        $baseQueryForOrganizationActivities = $this->model->where('org_id', $organization->id);
-        $queryForNeverPublishedActivities = function ($query) {
-            $query->where('has_ever_been_published', false);
-        };
+        $activities = $this->model
+            ->where('org_id', $organization->id)
+            ->where('has_ever_been_published', false)
+            ->get();
 
-        $syncableActivitiesCount = $baseQueryForOrganizationActivities
-            ->where($queryForNeverPublishedActivities)
-            ->count();
+        if (count($activities) > 0) {
+            foreach ($activities as $index => $activity) {
+                $rawActivity = $activity->getAttributes();
+                $rawActivity['iati_identifier'] = json_decode($rawActivity['iati_identifier'], true, 512, JSON_THROW_ON_ERROR);
+                $activityIdentifier = $rawActivity['iati_identifier']['activity_identifier'];
 
-        if ($syncableActivitiesCount > 0) {
-            $activities = $baseQueryForOrganizationActivities
-                ->where($queryForNeverPublishedActivities)
-                ->get(['id', 'iati_identifier'])
-                ->pluck('iati_identifier', 'id');
+                $rawActivity['iati_identifier'] = [
+                    'activity_identifier'             => $activityIdentifier,
+                    'iati_identifier_text'            => $organization->identifier . '-' . $activityIdentifier,
+                    'present_organization_identifier' => $organization->identifier,
+                ];
 
-            $cases = [];
-            $params = [];
-            $ids = [];
-            $now = Carbon::now()->toDateTimeString();
+                $rawActivity['iati_identifier'] = json_encode($rawActivity['iati_identifier'], JSON_THROW_ON_ERROR);
 
-            foreach ($activities as $id => $iatiIdentifier) {
-                $id = (int) $id;
-
-                /*
-                 * Note By: PG-Momik
-                 *
-                 * DO NOT CHANGE THE ORDER OF ASSIGNMENT
-                 * Since we're using unnamed query param placeholders (?), order is needed.
-                 */
-                $params[] = $id;
-                /*A2*/ $params[] = '"' . $iatiIdentifier['activity_identifier'] . '"';
-                /*A2*/ $params[] = '"' . $organization->identifier . '-' . $iatiIdentifier['activity_identifier'] . '"';
-                /*A2*/ $params[] = '"' . $organization->identifier . '"';
-                /*A2*/ $params[] = '"' . $now . '"';
-
-                /*A1, A3, EX1*/ $case = "WHEN id = ? THEN jsonb_set('{}'::jsonb, '{activity_identifier}', ?) || jsonb_set('{}'::jsonb, '{iati_identifier_text}', ?) || jsonb_set('{}'::jsonb, '{present_organization_identifier}', ?) || jsonb_set('{}'::jsonb, '{updated_at}', ?)";
-                $cases[] = $case;
-                $ids[] = $id;
+                $activities[$index] = $rawActivity;
             }
 
-            $ids = implode(',', $ids);
-            $cases = implode(' ', $cases);
-            $query = "UPDATE activities SET iati_identifier = CASE $cases END WHERE id IN ($ids)";
-
-            return (bool) DB::update($query, $params);
+            return (bool) $this->model->upsert($activities->toArray(), 'id', ['iati_identifier']);
         }
 
         return true;
@@ -879,5 +832,50 @@ class ActivityRepository extends Repository
             ->whereDate('activities.created_at', '>=', $queryParams['start_date'])
             ->whereDate('activities.created_at', '<=', $queryParams['end_date'])
             ->get()->toArray();
+    }
+
+    /**
+     * @param Organization $organization
+     * @param array $appendableOtherIdentifier
+     *
+     * @return bool
+     *
+     * @throws BindingResolutionException
+     * @throws JsonException
+     */
+    public function syncOtherIdentifierOfOrganizationActivities(Organization $organization, array $appendableOtherIdentifier): bool
+    {
+        /** @var ElementCompleteService $elementCompleteService */
+        $elementCompleteService = app()->make(ElementCompleteService::class);
+
+        $activities = $this->model
+            ->where('org_id', $organization->id)
+            ->get();
+
+        if (count($activities) > 0) {
+            foreach ($activities as $index => $activity) {
+                $rawActivity = $activity->getAttributes();
+
+                if ($rawActivity['other_identifier']) {
+                    $rawActivity['other_identifier'] = json_decode($rawActivity['other_identifier'], true, 512, JSON_THROW_ON_ERROR);
+                } else {
+                    $rawActivity['other_identifier'] = [];
+                }
+
+                $rawActivity['other_identifier'][] = $appendableOtherIdentifier;
+                $rawActivity['other_identifier'] = json_encode($rawActivity['other_identifier'], JSON_THROW_ON_ERROR);
+
+                $elementStatus = $activity['element_status'];
+                $activity['other_identifier'] = json_decode($rawActivity['other_identifier'], false, 512, JSON_THROW_ON_ERROR);
+                $elementStatus['other_identifier'] = $elementCompleteService->isOtherIdentifierElementCompleted($activity);
+
+                $rawActivity['element_status'] = json_encode($elementStatus, JSON_THROW_ON_ERROR);
+                $activities[$index] = $rawActivity;
+            }
+
+            return (bool) $this->model->upsert($activities->toArray(), 'id', ['other_identifier', 'element_status']);
+        }
+
+        return true;
     }
 }
