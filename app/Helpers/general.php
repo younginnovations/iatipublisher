@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Constants\CoreElements;
 use App\IATI\Models\User\Role;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -207,34 +208,6 @@ if (!function_exists('getDefaultOrganizationElementStatus')) {
     }
 }
 
-if (!function_exists('getCoreElements')) {
-    /**
-     * Returns Core Elements.
-     *
-     * @return array
-     */
-    function getCoreElements(): array
-    {
-        return [
-            'reporting_org',
-            'iati_identifier',
-            'title',
-            'description',
-            'participating_org',
-            'activity_status',
-            'activity_date',
-            'recipient_country',
-            'recipient_region',
-            'sector',
-            'collaboration_type',
-            'default_flow_type',
-            'default_finance_type',
-            'default_aid_type',
-            'budget',
-            'transactions',
-        ];
-    }
-}
 if (!function_exists('getMandatoryElements')) {
     /**
      * Returns Core Elements.
@@ -253,35 +226,6 @@ if (!function_exists('getMandatoryElements')) {
             'recipient_country_budget',
             'recipient_region_budget',
             'document_link',
-        ];
-    }
-}
-
-if (!function_exists('getCoreElementsWithTrueValue')) {
-    /**
-     * Returns Core Elements with true value.
-     *
-     * @return array
-     */
-    function getCoreElementsWithTrueValue(): array
-    {
-        return [
-            'reporting_org' => true,
-            'iati_identifier' => true,
-            'title' => true,
-            'description' => true,
-            'participating_org' => true,
-            'activity_status' => true,
-            'activity_date' => true,
-            'recipient_country' => true,
-            'recipient_region' => true,
-            'sector' => true,
-            'collaboration_type' => true,
-            'default_flow_type' => true,
-            'default_finance_type' => true,
-            'default_aid_type' => true,
-            'budget' => true,
-            'transactions' => true,
         ];
     }
 }
@@ -318,7 +262,7 @@ if (!function_exists('isCoreElementCompleted')) {
      */
     function isCoreElementCompleted($elementStatus): bool
     {
-        return empty(array_diff_assoc(getCoreElementsWithTrueValue(), $elementStatus));
+        return empty(array_diff_assoc(CoreElements::getCoreElementsWithTrueValue(), $elementStatus));
     }
 }
 
@@ -551,7 +495,7 @@ if (!function_exists('isCoreElement')) {
      */
     function isCoreElement($element): bool
     {
-        return in_array($element, getCoreElements(), true);
+        return in_array($element, CoreElements::all(), true);
     }
 }
 

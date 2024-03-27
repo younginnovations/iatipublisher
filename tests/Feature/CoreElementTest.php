@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Constants\CoreElements;
 use Tests\Feature\Element\ElementCompleteTest;
 
 /**
@@ -15,10 +16,12 @@ class CoreElementTest extends ElementCompleteTest
      * Tests core element.
      *
      * @return void
+     * @throws \JsonException
      */
     public function test_core_elements(): void
     {
-        $actualCoreElements = [
+        $actualCoreElements = CoreElements::all();
+        $currentCoreElements = [
             'reporting_org',
             'iati_identifier',
             'title',
@@ -29,7 +32,7 @@ class CoreElementTest extends ElementCompleteTest
             'recipient_country',
             'recipient_region',
             'sector',
-            'collaboration_type',
+            'default_tied_status',
             'default_flow_type',
             'default_finance_type',
             'default_aid_type',
@@ -37,64 +40,46 @@ class CoreElementTest extends ElementCompleteTest
             'transactions',
         ];
 
-        $this->assertTrue($this->arrayStructure($actualCoreElements, getCoreElements()));
+        $this->assertTrue($this->arrayStructure($currentCoreElements, $actualCoreElements));
     }
 
     /**
-     * Test core element is not completed.
-     *
-     * @return void
+     * @throws \JsonException
      */
-    public function test_core_element_not_completed(): void
+    public function testCompleteStatusForAllCoreElementInIteration(): void
     {
-        $actualElements = [
-            'reporting_org'        => true,
-            'iati_identifier'      => true,
-            'title'                => true,
-            'description'          => true,
-            'participating_org'    => true,
-            'activity_status'      => true,
-            'activity_date'        => true,
-            'recipient_country'    => true,
-            'recipient_region'     => true,
-            'sector'               => true,
-            'collaboration_type'   => true,
-            'default_flow_type'    => true,
-            'default_finance_type' => true,
-            'default_aid_type'     => true,
-            'budget'               => true,
-            'transactions'         => false,
-        ];
+        $allElements = CoreElements::getCoreElementsWithTrueValue();
 
-        $this->assertFalse(isCoreElementCompleted($actualElements));
+        foreach ($allElements as $element => $completenessStatus) {
+            $allElements[$element] = false;
+            $this->testCoreCompletionIsIncomplete($allElements, $element);
+            $allElements[$element] = true;
+        }
+
+        $allElements = CoreElements::getCoreElementsWithTrueValue();
+
+        foreach ($allElements as $element => $completenessStatus) {
+            $this->testCoreCompletionIsComplete($allElements, $element);
+        }
     }
 
-    /**
-     * Test core element is completed.
-     *
-     * @return void
-     */
-    public function test_core_element_completed(): void
+    public function testCoreCompletionIsIncomplete($elementStatusArray = [], $element = ''): void
     {
-        $actualElements = [
-            'reporting_org'        => true,
-            'iati_identifier'      => true,
-            'title'                => true,
-            'description'          => true,
-            'participating_org'    => true,
-            'activity_status'      => true,
-            'activity_date'        => true,
-            'recipient_country'    => true,
-            'recipient_region'     => true,
-            'sector'               => true,
-            'collaboration_type'   => true,
-            'default_flow_type'    => true,
-            'default_finance_type' => true,
-            'default_aid_type'     => true,
-            'budget'               => true,
-            'transactions'         => true,
-        ];
+        if (count($elementStatusArray) > 0 && $element) {
+            $this->assertFalse(isCoreElementCompleted($elementStatusArray), "Failed assertion for $element when marked as incomplete.");
+        } else {
+            /* True assertion when this method is called by the test class, and not testCompleteStatusForAllCoreElementInIteration() **/
+            $this->assertTrue(true);
+        }
+    }
 
-        $this->assertTrue(isCoreElementCompleted($actualElements));
+    public function testCoreCompletionIsComplete($elementStatusArray = [], $element = ''): void
+    {
+        if (count($elementStatusArray) > 0 && $element) {
+            $this->assertTrue(isCoreElementCompleted($elementStatusArray), "Failed assertion for $element when marked as complete.");
+        } else {
+            /* True assertion when this method is called by the test class, and not testCompleteStatusForAllCoreElementInIteration() **/
+            $this->assertTrue(true);
+        }
     }
 }

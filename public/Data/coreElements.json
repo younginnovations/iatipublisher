@@ -1,0 +1,18 @@
+{
+  "reporting_org":  true,
+  "iati_identifier": true,
+  "title":  true,
+  "description": true,
+  "participating_org":  true,
+  "activity_status": true,
+  "activity_date":  true,
+  "recipient_country": true,
+  "recipient_region":  true,
+  "sector": true,
+  "default_tied_status":  true,
+  "default_flow_type": true,
+  "default_finance_type":  true,
+  "default_aid_type": true,
+  "budget":  true,
+  "transactions": true
+}

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\Constants\CoreElements;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
@@ -250,7 +251,7 @@ class ActivityService
      */
     public function activityPublishingProgress($activity): float|int
     {
-        $core_elements = getCoreElements();
+        $core_elements = CoreElements::all();
         $completed_core_element_count = 0;
 
         foreach ($core_elements as $core_element) {

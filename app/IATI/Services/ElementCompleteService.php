@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services;
 
+use App\Constants\CoreElements;
 use App\IATI\Services\Activity\RecipientRegionService;
 use App\IATI\Traits\ElementCompleteServiceTrait;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -1057,10 +1058,12 @@ class ElementCompleteService
      * @param $element_status
      *
      * @return float
+     *
+     * @throws JsonException
      */
     public function calculateCompletePercentage($element_status): float
     {
-        $core_elements = getCoreElements();
+        $core_elements = CoreElements::all();
         $completed_core_element_count = 0;
 
         foreach ($core_elements as $core_element) {
