@@ -26,19 +26,25 @@
                 />
               </button>
             </div>
-            <input
-              id="publisher-id"
-              v-model="publishingForm.publisher_id"
-              class="register__input mb-2"
-              :class="{
-                error__input: publishingError.publisher_id,
-                'hover:cursor-not-allowed': !isSuperadmin,
-              }"
-              type="text"
-              placeholder="Type Publisher ID here"
-              :disabled="!isSuperadmin"
-              @input="updateStore('publisher_id')"
-            />
+            <div class="relative">
+              <input
+                id="publisher-id"
+                v-model="publishingForm.publisher_id"
+                class="register__input mb-2"
+                :class="{
+                  error__input: publishingError.publisher_id,
+                  'hover:cursor-not-allowed': !isSuperadmin,
+                }"
+                type="text"
+                placeholder="Type Publisher ID here"
+                :disabled="!isSuperadmin"
+                @input="updateStore('publisher_id')"
+              />
+              <ShimmerLoading
+                v-if="!initialApiCallCompleted"
+                class="!absolute top-[50%] !m-0 !ml-2 !h-8 !w-[96%] -translate-y-1/2"
+              />
+            </div>
           </div>
           <span v-if="publishingError.publisher_id" class="error" role="alert">
             {{ publishingError.publisher_id }}
