@@ -9,8 +9,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DeleteOrganizationRequest;
 use App\IATI\Models\Organization\Organization;
 use App\IATI\Services\Organization\OrganizationService;
+use App\IATI\Services\Publisher\PublisherService;
+use App\IATI\Services\Workflow\OrganizationWorkflowService;
 use App\SpamEmail;
 use Exception;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\View\View;
@@ -21,6 +24,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use JsonException;
 
 /**
  * Class OrganizationController.
@@ -31,30 +35,27 @@ class OrganizationController extends Controller
      * @var OrganizationService
      */
     protected OrganizationService $organizationService;
+    /**
+     * @var OrganizationWorkflowService
+     */
+    protected OrganizationWorkflowService $organizationWorkflowService;
 
     /**
      * OrganizationController Constructor.
+     *
      * @param OrganizationService $organizationService
+     * @param OrganizationWorkflowService $organizationWorkflowService
      */
-    public function __construct(OrganizationService $organizationService)
+    public function __construct(OrganizationService $organizationService, OrganizationWorkflowService $organizationWorkflowService)
     {
         $this->organizationService = $organizationService;
+        $this->organizationWorkflowService = $organizationWorkflowService;
     }
 
     /**
      * Display a listing of the resource.
      */
     public function index(): void
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return void
-     */
-    public function create(): void
     {
         //
     }
@@ -116,7 +117,7 @@ class OrganizationController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request      $request
+     * @param Request $request
      * @param Organization $organization
      *
      * @return void
@@ -141,9 +142,27 @@ class OrganizationController extends Controller
             $markAsSpam = $request->query->get('markAsSpam');
             $organization = $this->organizationService->getOrganizationData($orgId);
 
-            $organization->organizationPublished()->delete();
-            $organization->activityPublished()->delete();
-            $organization->settings()->delete();
+            $publisherId = $organization->publisher_id;
+            $apiToken = $organization->settings?->publishing_info['api_token'] ?? false;
+            $organizationPublished = $organization->organizationPublished;
+
+            if ($organizationPublished) {
+                $this->unlinkOldFilesFromRegistry($publisherId, $apiToken, 'organisation');
+                $organization->delete();
+            }
+
+            $activityPublished = $organization->activityPublished;
+
+            if ($activityPublished) {
+                $this->unlinkOldFilesFromRegistry($publisherId, $apiToken, 'activities');
+                $activityPublished->delete();
+            }
+
+            $settings = $organization->settings;
+
+            if ($settings) {
+                $settings->delete();
+            }
 
             $activities = $organization->activities;
             $users = $organization->users;
@@ -159,7 +178,7 @@ class OrganizationController extends Controller
 
                 $user->organization()->dissociate();
                 $user->save();
-                $user->delete();
+                $user->forceDelete;
             }
 
             $organization->delete();
@@ -177,13 +196,55 @@ class OrganizationController extends Controller
     }
 
     /**
+     * @param string $publisherId
+     * @param string $orgApiToken
+     * @param string $filetype
+     *
+     * @return bool
+     *
+     * @throws BindingResolutionException
+     */
+    private function unlinkOldFilesFromRegistry(string $publisherId, string $orgApiToken, string $filetype): bool
+    {
+        /** @var PublisherService $publisherService */
+        $publisherService = app()->make(PublisherService::class);
+        $files = ["$publisherId-$filetype"];
+
+        return $publisherService->unlink($orgApiToken, $files);
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return void
+     */
+    private function markEmailAsSpam(string $email): void
+    {
+        $existingEmail = SpamEmail::where('email', $email)->first();
+
+        if (!$existingEmail) {
+            SpamEmail::create(['email' => $email]);
+        }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return void
+     */
+    public function create(): void
+    {
+        //
+    }
+
+    /**
      * Returns list of registration agency specific to a country.
      *
      * @param bool|string $country_code
      *
      * @return array
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getRegistrationAgency(bool|string $country_code = false): array
     {
@@ -227,7 +288,7 @@ class OrganizationController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Encountered issue when checking publisher state on registry.',
-                'data'    => ['publisher_active' => false],
+                'data' => ['publisher_active' => false],
             ]);
         }
     }
@@ -263,20 +324,6 @@ class OrganizationController extends Controller
             logger()->error($e->getMessage());
 
             return response(['status' => false, 'message' => 'Error has occurred while deleting organisation element.']);
-        }
-    }
-
-    /**
-     * @param string $email
-     *
-     * @return void
-     */
-    private function markEmailAsSpam(string $email): void
-    {
-        $existingEmail = SpamEmail::where('email', $email)->first();
-
-        if (!$existingEmail) {
-            SpamEmail::create(['email' => $email]);
         }
     }
 }

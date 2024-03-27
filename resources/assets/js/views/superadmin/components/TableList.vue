@@ -1,5 +1,4 @@
 <template>
-  <SpinnerLoader v-if="showLoader" />
   <div class="filters mb-4 flex flex-wrap justify-between gap-2">
     <!--Filter options start-->
     <div class="select filters inline-flex items-center space-x-2">
@@ -621,16 +620,19 @@
     <p class="rounded-lg bg-rose p-4">
       Are you sure you want to delete <b> {{ deleteOrgName }}</b> ?
     </p>
-    <p class="px-2">
-      <input type="checkbox" v-model="markAsSpam" /> Mark associated emails as
-      spam.
+    <p class="flex items-center gap-2 px-2">
+      <label class="checkbox">
+        <input v-model="markAsSpam" type="checkbox" id="markAsSpam" />
+        <span class="checkmark" />
+      </label>
+      <label for="markAsSpam"> Mark associated emails as spam.</label>
     </p>
     <div class="mt-6 flex justify-end space-x-2">
       <button class="secondary-btn font-bold" @click="toggleDeleteConfirmation">
         Cancel
       </button>
       <button class="primary-btn !px-10" @click="deleteOrg(deleteId)">
-        Delete
+        Delete <SpinnerLoader v-if="showLoader"></SpinnerLoader>
       </button>
     </div>
   </PopupModal>
@@ -724,11 +726,13 @@ export default defineComponent({
     };
 
     const deleteOrg = async (orgId) => {
+      markAsSpam.value = false;
       showLoader.value = true;
+
       const response = await axios.delete(
         `/organization/${orgId}?markAsSpam=${markAsSpam.value}`
       );
-      console.log(response);
+
       showLoader.value = false;
       deleteModal.value = false;
       toastMessage.message = response.data.message;
