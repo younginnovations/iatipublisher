@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Organization\OrganizationController;
 use App\Http\Controllers\ApiLog\ApiLogController;
 use App\Http\Controllers\SuperAdmin\SuperAdminController;
 use Illuminate\Support\Facades\Route;
@@ -20,4 +21,5 @@ Route::group(['namespace' => 'SuperAdmin', 'middleware' => ['can:list_organizati
     Route::get('/proxy-organisation/{userId}', [SuperAdminController::class, 'proxyOrganization'])->name('proxyOrganization');
     Route::get('/system-version', [SuperAdminController::class, 'listSystemVersion'])->name('systemVersion');
     Route::get('/api-log', [ApiLogController::class, 'getData'])->name('getData');
+    Route::delete('/organization/{orgId}', [OrganizationController::class, 'destroy'])->name('organisation.deleteOrganization');
 });

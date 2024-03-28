@@ -220,7 +220,7 @@ class RegisterController extends Controller
         $validator = Validator::make($request->all(), [
             'username'              => ['required', 'max:255', 'string', 'unique:users,username'],
             'full_name'             => ['required', 'string', 'max:255'],
-            'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,}$/ix', 'max:255', 'unique:users,email'],
+            'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,}$/ix', 'max:255', 'unique:users,email', 'not_in_spam_emails'],
             'publisher_id'          => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
             'password'              => ['required', 'string', 'min:8', 'max:255', 'confirmed'],
             'password_confirmation' => ['required', 'string', 'min:8', 'max:255'],
