@@ -100,6 +100,7 @@
                     :name="field.label"
                   />
                 </div>
+
                 <input
                   v-if="isTextField(field.type, field.name)"
                   :id="field.id"
@@ -257,6 +258,7 @@ import HoverText from './../../components/HoverText.vue';
 import Multiselect from '@vueform/multiselect';
 import Loader from '../../components/Loader.vue';
 import encrypt from 'Composable/encryption';
+import { generateUsername } from 'Composable/utils';
 
 export default defineComponent({
   components: {
@@ -350,6 +352,13 @@ export default defineComponent({
           : formData.registration_number;
       },
       { deep: true }
+    );
+
+    watch(
+      () => formData.full_name,
+      () => {
+        formData.username = generateUsername(formData.full_name);
+      }
     );
 
     const registration_agency = computed(() => {
@@ -599,6 +608,26 @@ export default defineComponent({
         description:
           'Provide your information to create an admin account here on IATI Publisher and IATI Registry at once.',
         fields: {
+          full_name: {
+            label: 'Full Name',
+            name: 'full_name',
+            placeholder: 'Type your full name here',
+            id: 'full-name',
+            hover_text: '',
+            required: true,
+            type: 'text',
+            class: 'mb-4 lg:mb-2',
+          },
+          email: {
+            label: 'Email Address',
+            name: 'email',
+            placeholder: 'Type valid email here',
+            id: 'email',
+            required: true,
+            hover_text: '',
+            type: 'email',
+            class: 'col-start-1 mb-4 lg:mb-2',
+          },
           username: {
             label: 'Username',
             name: 'username',
@@ -610,26 +639,6 @@ export default defineComponent({
             type: 'text',
             class: 'mb-4 lg:mb-2',
             help_text: '',
-          },
-          full_name: {
-            label: 'Full Name',
-            name: 'full_name',
-            placeholder: 'Type your full name here',
-            id: 'full-name',
-            hover_text: '',
-            required: true,
-            type: 'text',
-            class: 'col-start-1 mb-4 lg:mb-2',
-          },
-          email: {
-            label: 'Email Address',
-            name: 'email',
-            placeholder: 'Type valid email here',
-            id: 'email',
-            required: true,
-            hover_text: '',
-            type: 'email',
-            class: 'mb-4 lg:mb-2',
           },
           password: {
             label: 'Password',
