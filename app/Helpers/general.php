@@ -991,3 +991,36 @@ if (!function_exists('getJsonFromSource')) {
         return file_get_contents(public_path($completePath));
     }
 }
+
+if (!function_exists('getTimestampFromOrganizationXml')) {
+    /**
+     * Returns timestamp from xml file or last updated at if xml not exists.
+     *
+     * @param string $publisherId
+     *
+     * @return string
+     */
+    function getTimestampFromOrganizationXml(string $publisherId, App\IATI\Models\Organization\Organization $organization): string
+    {
+        $xmlName = "$publisherId-organisation.xml";
+        $xmlPath = "organizationXmlFiles/$xmlName";
+
+        if (awsHasFile($xmlPath)) {
+            $xmlString = awsGetFile($xmlPath);
+
+            if ($xmlString) {
+                $xmlContent = new SimpleXMLElement($xmlString);
+
+                $lastUpdatedDatetime = (string) $xmlContent->xpath('//iati-organisation/@last-updated-datetime')[0];
+
+                if ($lastUpdatedDatetime) {
+                    $carbonDate = Carbon::parse($lastUpdatedDatetime);
+
+                    return $carbonDate->toIso8601String();
+                }
+            }
+        }
+
+        return $organization->updated_at->toIso8601String();
+    }
+}
