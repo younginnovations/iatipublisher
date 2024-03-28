@@ -717,6 +717,7 @@ export default defineComponent({
     function toggleDeleteConfirmation() {
       deleteModal.value = !deleteModal.value;
       markAsSpam.value = false;
+      showLoader.value = false;
     }
 
     const openDeleteModal = (organization) => {
@@ -729,7 +730,7 @@ export default defineComponent({
       showLoader.value = true;
 
       const response = await axios.delete(
-        `/organization/${orgId}?markAsSpam=${markAsSpam.value}`
+        `/organization/${orgId}` + (markAsSpam.value ? '?markAsSpam=true' : '')
       );
 
       showLoader.value = false;

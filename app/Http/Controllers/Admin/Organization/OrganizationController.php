@@ -139,7 +139,8 @@ class OrganizationController extends Controller
         DB::beginTransaction();
 
         try {
-            $markAsSpam = $request->query->get('markAsSpam');
+            $markAsSpam = $request->query->get('markAsSpam', false);
+            $markAsSpam = $markAsSpam === 'true';
             $organization = $this->organizationService->getOrganizationData($orgId);
 
             $publisherId = $organization->publisher_id;
@@ -161,11 +162,12 @@ class OrganizationController extends Controller
             $organization->settings()->delete();
 
             $activities = $organization->activities;
-            $users = $organization->users;
 
             foreach ($activities as $activity) {
                 $activity->delete();
             }
+
+            $users = $organization->users;
 
             foreach ($users as $user) {
                 if ($markAsSpam) {
@@ -174,7 +176,7 @@ class OrganizationController extends Controller
 
                 $user->organization()->dissociate();
                 $user->save();
-                $user->destroy($user->id);
+                $user->forceDelete();
             }
 
             $organization->delete();
