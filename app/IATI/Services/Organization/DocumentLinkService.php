@@ -152,6 +152,12 @@ class DocumentLinkService
                             'iso-date' => Arr::get($documentLink, 'document_date.0.date', null),
                         ],
                     ],
+                    'recipient-country' => [
+                        '@attributes' => [
+                            'code' => Arr::get($documentLink, 'recipient_country.0.code', null),
+                        ],
+                        'narrative' => $this->buildNarrative(Arr::get($documentLink, 'recipient_country.0.narrative', [])),
+                    ],
                 ];
             }
         }
