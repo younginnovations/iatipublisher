@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Constants\Enums;
+use App\IATI\Models\Activity\Activity;
+use App\IATI\Models\Organization\Organization;
 use Illuminate\Support\Arr;
 
 if (!function_exists('trimInput')) {
@@ -272,18 +275,30 @@ if (!function_exists('removeSingleActivityXmlFromMergedActivitiesXml')) {
     /**
      * Given mergedXml and iati-identifier of undesired(to be unpublished) activity, it removes corresponding activity from mergedXml and return the mergedXml.
      *
-     * @param $mergedXml
+     * @param SimpleXMLElement $mergedXml
      * @param $targetedIatiIdentifier
      *
-     * @return object
+     * @return SimpleXMLElement
      */
-    function removeSingleActivityXmlFromMergedActivitiesXml($mergedXml, $targetedIatiIdentifier): object
+    function removeSingleActivityXmlFromMergedActivitiesXml(SimpleXMLElement $mergedXml, $targetedIatiIdentifier): SimpleXMLElement
     {
-        $matchingActivity = $mergedXml->xpath("//iati-activity[normalize-space(iati-identifier) = '$targetedIatiIdentifier']");
+        $matchingActivitiesUntrimmed = $mergedXml->xpath("//iati-activity[normalize-space(iati-identifier) = '$targetedIatiIdentifier']");
 
-        if (!empty($matchingActivity)) {
-            $dom = dom_import_simplexml($matchingActivity[0]);
-            $dom->parentNode->removeChild($dom);
+        if (!empty($matchingActivitiesUntrimmed)) {
+            foreach ($matchingActivitiesUntrimmed as $matchingActivity) {
+                $dom = dom_import_simplexml($matchingActivity);
+                $dom->parentNode->removeChild($dom);
+            }
+        }
+
+        $trimmedTargetIdentifierText = trim($targetedIatiIdentifier);
+        $matchingActivitiesTrimmed = $mergedXml->xpath("//iati-activity[normalize-space(iati-identifier) = '$trimmedTargetIdentifierText']");
+
+        if (!empty($matchingActivitiesTrimmed)) {
+            foreach ($matchingActivitiesTrimmed as $matchingActivity) {
+                $dom = dom_import_simplexml($matchingActivity);
+                $dom->parentNode->removeChild($dom);
+            }
         }
 
         return $mergedXml;
@@ -306,5 +321,72 @@ if (!function_exists('getFileIdentifier')) {
         }
 
         return $fileIdentifier;
+    }
+}
+
+if (!function_exists('removeClosingIatiActivitiesTag')) {
+    /**
+     * Remove the last '</iati-activities>' from merged xml.
+     *
+     * @param string $xmlContent
+     *
+     * @return string
+     */
+    function removeClosingIatiActivitiesTag(string $xmlContent): string
+    {
+        $lastPos = strrpos($xmlContent, '</iati-activities>');
+
+        if ($lastPos !== false) {
+            $xmlContent = substr_replace($xmlContent, '', $lastPos, strlen('</iati-activities>'));
+        }
+
+        return trim($xmlContent);
+    }
+}
+
+if (!function_exists('getOldActivityIdentifierTexts')) {
+    /**
+     * Generates all possible old activity identifiers if $organization->old_identifier is not empty.
+     *
+     * @param Organization $organization
+     * @param Activity $activity
+     *
+     * @return array
+     */
+    function getOldActivityIdentifierTexts(Organization $organization, Activity $activity): array
+    {
+        $oldActivityIdentifiers = [];
+        $oldOrgIdentifiers = $organization->old_identifiers;
+
+        if (empty($oldOrgIdentifiers)) {
+            return $oldActivityIdentifiers;
+        }
+
+        foreach ($oldOrgIdentifiers as $oldOrgIdentifier) {
+            $orgIdentifier = $oldOrgIdentifier['identifier'];
+            $activityIdentifier = $activity->iati_identifier['activity_identifier'];
+            $oldActivityIdentifiers[] = "$orgIdentifier-$activityIdentifier";
+        }
+
+        return $oldActivityIdentifiers;
+    }
+
+    function preventMalformedXmlIfNoActivityNode(string $xmlContent): string
+    {
+        $hasNoActivity = strpos($xmlContent, '<iati-activity') === false;
+
+        if ($hasNoActivity) {
+            return getEmptyIatiActivitiesXml();
+        }
+
+        return $xmlContent;
+    }
+
+    function getEmptyIatiActivitiesXml(): string
+    {
+        return "<?xml version='1.0' encoding='UTF-8'?>
+                    <iati-activities version='" . Enums::IATI_XML_VERSION . "' generated-datetime='" . gmdate('c') . "' >
+                    </iati-activities>
+        ";
     }
 }

@@ -6,6 +6,7 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Repositories\Activity\BulkPublishingStatusRepository;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 /**
  * Class BulkPublishingStatusService.
@@ -43,7 +44,7 @@ class BulkPublishingStatusService
                 $this->bulkPublishingStatusRepository->store([
                    'organization_id' => $organizationId,
                     'activity_id' => $activity->id,
-                    'activity_title' => Arr::get($activity->title, '0.narrative', 'Not Available') ?: 'Not Available',
+                    'activity_title' => Str::limit(trim(Arr::get($activity->title, '0.narrative', 'Not Available')), 250),
                     'status' => 'created',
                     'job_batch_uuid' => $uuid,
                 ]);
