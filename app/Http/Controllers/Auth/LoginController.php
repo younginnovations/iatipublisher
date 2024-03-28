@@ -15,6 +15,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use JsonException;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -53,7 +54,17 @@ class LoginController extends Controller
     protected UserService $userService;
 
     /**
-     * Create a new controller instance.
+     * @var string
+     */
+    private string $field;
+
+    /**
+     * Create a new LoginController instance.
+     *
+     * Initialize Services.
+     * Check middleware to only allow guest request.
+     * Resolve actual field( either email or username).
+     * Update request and set value for the resolved field.
      *
      * @param AuditService $auditService
      * @param UserService $userService
@@ -64,16 +75,34 @@ class LoginController extends Controller
         $this->userService = $userService;
 
         $this->middleware('guest')->except('logout');
+
+        $this->resolveField();
+        request()?->merge([$this->field => request()?->input('emailOrUsername')]);
+    }
+
+    /**
+     * Set $field.
+     *
+     * @return void
+     */
+    private function resolveField(): void
+    {
+        $this->field = filter_var(request()?->input('emailOrUsername'), FILTER_VALIDATE_EMAIL)
+            ? 'email'
+            : 'username';
     }
 
     /**
      * Get the login username to be used by the controller.
      *
+     * IMPORTANT: Do not rename this method.
+     * Multiple functions within the AuthenticatesUsers and other traits expects a username() method.
+     *
      * @return string
      */
     public function username(): string
     {
-        return 'username';
+        return $this->field;
     }
 
     /**
@@ -85,8 +114,16 @@ class LoginController extends Controller
      */
     protected function validateLogin(Request $request): void
     {
+        $emailOrUsernameValidation = 'required|string';
+
+        if ($this->field === 'email') {
+            // Also add other validation here later when its an email.
+            // Need to add 'not_in_spam_emails' rule here after 1384 is merged
+            $emailOrUsernameValidation .= '|email';
+        }
+
         $request->validate([
-            $this->username() => 'required|string',
+            'emailOrUsername' => $emailOrUsernameValidation,
             'password' => 'required|string',
         ]);
     }
@@ -125,7 +162,7 @@ class LoginController extends Controller
      * @return Response
      *
      * @throws ValidationException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function login(Request $request): Response
     {
@@ -138,37 +175,51 @@ class LoginController extends Controller
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
-        if (Auth::attempt(['username' => $request['username'], 'password' => $request['password'], 'deleted_at' => null])) {
-            if (!Auth::attempt(['username' => $request['username'], 'password' => $request['password'], 'deleted_at' => null, 'status' => 1])) {
-                throw ValidationException::withMessages([
-                    $this->username() => [trans('auth.inactive_user')],
-                ]);
-            }
 
-            if (
-                method_exists($this, 'hasTooManyLoginAttempts') &&
-                $this->hasTooManyLoginAttempts($request)
-            ) {
-                $this->fireLockoutEvent($request);
+        $fieldMappedToValue = $request->only('email', 'username');
+        $credentials = [
+            ...$fieldMappedToValue,
+            'password' => $request->input('password'),
+            'deleted_at' => null,
+        ];
 
-                return $this->sendLockoutResponse($request);
-            }
+        if (!Auth::attempt($credentials)) {
+            throw ValidationException::withMessages([
+                'emailOrUsername' => [trans('auth.failed')],
+            ]);
+        }
 
-            if ($this->attemptLogin($request)) {
-                if ($request->hasSession()) {
-                    $request->session()->put('auth.password_confirmed_at', time());
-                    $request->session()->put('role_id', auth()->user()->role_id);
+        $credentials['status'] = 1;
 
-                    if (in_array(auth()->user()->role_id, [app(Role::class)->getSuperAdminId(), app(Role::class)->getIatiAdminId()], true)) {
-                        $request->session()->put('superadmin_user_id', auth()->user()->id);
-                    }
+        if (!Auth::attempt($credentials)) {
+            throw ValidationException::withMessages([
+                'emailOrUsername' => [trans('auth.inactive_user')],
+            ]);
+        }
+
+        if (
+            method_exists($this, 'hasTooManyLoginAttempts') &&
+            $this->hasTooManyLoginAttempts($request)
+        ) {
+            $this->fireLockoutEvent($request);
+
+            return $this->sendLockoutResponse($request);
+        }
+
+        if ($this->attemptLogin($request)) {
+            if ($request->hasSession()) {
+                $request->session()->put('auth.password_confirmed_at', time());
+                $request->session()->put('role_id', auth()->user()->role_id);
+
+                if (in_array(auth()->user()->role_id, [app(Role::class)->getSuperAdminId(), app(Role::class)->getIatiAdminId()], true)) {
+                    $request->session()->put('superadmin_user_id', auth()->user()->id);
                 }
-
-                $this->auditService->auditEvent(Auth::user(), 'signin', '');
-                $this->userService->update(Auth::user()->id, ['last_logged_in' => now()]);
-
-                return $this->sendLoginResponse($request);
             }
+
+            $this->auditService->auditEvent(Auth::user(), 'signin', '');
+            $this->userService->update(Auth::user()->id, ['last_logged_in' => now()]);
+
+            return $this->sendLoginResponse($request);
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts
