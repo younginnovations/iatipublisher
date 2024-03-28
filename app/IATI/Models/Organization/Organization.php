@@ -248,4 +248,12 @@ class Organization extends Model implements Auditable
     {
         return $this->hasMany(User::class, 'organization_id', 'id')->withTrashed();
     }
+
+    /**
+     * @return HasOne
+     */
+    public function activityPublished(): HasOne
+    {
+        return $this->hasOne(ActivityPublished::class, 'organization_id', 'id');
+    }
 }
