@@ -256,6 +256,7 @@ class XmlGenerator
         $publisherId = Arr::get($publishingInfo, 'publisher_id', 'Not Available');
         $publishedActivity = sprintf('%s-%s.xml', $publisherId, $activity->id);
         $xml = $this->getXml($activity, $transaction, $result, $settings, $organization);
+
         $result = awsUploadFile(
             sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $publishedActivity),
             $xml->saveXML()

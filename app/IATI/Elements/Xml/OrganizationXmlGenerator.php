@@ -117,7 +117,6 @@ class OrganizationXmlGenerator
         $filename = sprintf('%s-%s.xml', $publisherId, 'organisation');
         $publishedOrganization = sprintf('%s-%s.xml', $publisherId, $organization->id);
         $xml = $this->getXml($settings, $organization, $refreshTimestamp);
-
         $result = Storage::disk('s3')->put(
             sprintf('%s/%s', 'organizationXmlFiles', $filename),
             $xml->saveXML(),
