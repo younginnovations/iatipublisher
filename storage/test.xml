@@ -1,130 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<iati-activities version="2.03" generated-datetime="2024-02-13T06:43:05+00:00">
-  <iati-activity last-updated-datetime="2024-02-13T06:43:06+00:00" xml:lang="en" default-currency="DKK" hierarchy="1">
-    <iati-identifier>DK-CVR-18243717-MALI-SPAII-PILOT-2022</iati-identifier>
-    <reporting-org type="21" ref="DK-CVR-18243717" secondary-reporter="0">
-      <narrative xml:lang="en">ActionAid Denmark (Mellemfolkeligt Samvirke)</narrative>
+<iati-activities version="2.03" generated-datetime="2024-04-01T09:40:44+00:00">
+  <iati-activity last-updated-datetime="2024-04-01T09:40:44+00:00" xml:lang="en" default-currency="USD" hierarchy="1">
+    <iati-identifier>AD-COA-ct18-20thmarchtry909-test</iati-identifier>
+    <reporting-org type="22" ref="AD-COA-ct18-20thmarchtry909">
+      <narrative xml:lang="ae">asd</narrative>
+      <narrative xml:lang="ab">other identifier</narrative>
     </reporting-org>
     <title>
-      <narrative xml:lang="en">Missing transaction test</narrative>
+      <narrative xml:lang="en">test activity</narrative>
+      <narrative xml:lang="ne">test activity</narrative>
+      <narrative xml:lang="en">test activity</narrative>
+      <narrative xml:lang="en">test activity</narrative>
     </title>
-    <description type="2">
-      <narrative xml:lang="en">Young people, especially marginalised young women, enjoy basic human and democratic rights and improved livelihoods through access to public services and alternatives that build resilience to climate shocks and protection in fragile situations, disasters and protracted crises</narrative>
-    </description>
-    <participating-org ref="DK-CVR-18243717" type="21" role="1">
-      <narrative xml:lang="en">ActionAid Denmark (Mellemfolkeligt Samvirke)</narrative>
+    <participating-org ref="test org" type="11" role="1" activity-id="12" crs-channel-code="11000">
+      <narrative xml:lang="ab">jk</narrative>
+      <narrative xml:lang="en">0a</narrative>
     </participating-org>
-    <participating-org ref="DK-CVR-18243717" type="21" role="2">
-      <narrative xml:lang="en">ActionAid Denmark (Mellemfolkeligt Samvirke)</narrative>
-    </participating-org>
-    <participating-org type="21" role="4">
-      <narrative xml:lang="en">ActionAid International</narrative>
-    </participating-org>
-    <activity-status code="2"/>
-    <activity-date type="1" iso-date="2022-01-01"/>
-    <activity-date type="3" iso-date="2025-12-31"/>
-    <recipient-country code="ML" percentage="100"/>
-    <sector code="15123" vocabulary="1"/>
-    <default-flow-type code="10"/>
-    <default-finance-type code="110"/>
-    <default-aid-type code="B03" vocabulary="1"/>
-    <default-tied-status code="5"/>
-    <budget type="1" status="2">
-      <period-start iso-date="2022-01-01"/>
-      <period-end iso-date="2022-12-31"/>
-      <value currency="DKK" value-date="2022-01-01">900000</value>
-    </budget>
-    <transaction ref="AA Mali Q1 2022">
+    <other-identifier ref="AL-QKB-ct18-20thmarchtry8" type="B1"/>
+    <tag code="j" vocabulary="1">
+      <narrative xml:lang="en">as</narrative>
+      <narrative xml:lang="ab">ad</narrative>
+    </tag>
+    <tag code="2" vocabulary="2">
+      <narrative xml:lang="en">alks</narrative>
+    </tag>
+    <collaboration-type code="4"/>
+    <transaction ref="test" humanitarian="TRUE">
       <transaction-type code="3"/>
-      <transaction-date iso-date="2022-01-31"/>
-      <value currency="DKK" value-date="2022-01-31">367101.08</value>
-      <description>
-        <narrative xml:lang="en">AA Mali Q1 2022</narrative>
-      </description>
-      <provider-org ref="DK-CVR-18243717" provider-activity-id="DK-CVR-18243717-SPAII-2022-2025" type="21">
-        <narrative xml:lang="en">ActionAid Denmark (Mellemfolkeligt Samvirke)</narrative>
-      </provider-org>
-      <receiver-org receiver-activity-id="DK-CVR-18243717-MALI-SPAII-PILOT-2022" type="21">
-        <narrative xml:lang="en">ActionAid International</narrative>
-      </receiver-org>
+      <transaction-date iso-date="2023-04-15"/>
+      <value currency="USD" value-date="2023-04-07">2747982934</value>
+      <recipient-country code="AX">
+        <narrative xml:lang="en">wer</narrative>
+      </recipient-country>
     </transaction>
-    <transaction ref="AA Mali Q2 2022">
+    <transaction ref="test" humanitarian="TRUE">
       <transaction-type code="3"/>
-      <transaction-date iso-date="2022-04-30"/>
-      <value currency="DKK" value-date="2022-04-30">293356.95</value>
-      <description>
-        <narrative xml:lang="en">AA Mali Q2 2022</narrative>
-      </description>
-      <provider-org ref="DK-CVR-18243717" provider-activity-id="DK-CVR-18243717-SPAII-2022-2025" type="21">
-        <narrative xml:lang="en">ActionAid Denmark (Mellemfolkeligt Samvirke)</narrative>
-      </provider-org>
-      <receiver-org receiver-activity-id="DK-CVR-18243717-MALI-SPAII-PILOT-2022" type="21">
-        <narrative xml:lang="en">ActionAid International</narrative>
-      </receiver-org>
+      <transaction-date iso-date="2023-04-15"/>
+      <value currency="USD" value-date="2023-04-07">2747982934</value>
+      <recipient-country code="AX">
+        <narrative xml:lang="en">wer</narrative>
+        <narrative xml:lang="en">wer</narrative>
+        <narrative xml:lang="en">wer</narrative>
+        <narrative xml:lang="en">wer</narrative>
+        <narrative xml:lang="en">wer</narrative>
+        <narrative xml:lang="en">wer</narrative>
+      </recipient-country>
     </transaction>
-    <transaction ref="AA Mali Q3 2022">
-      <transaction-type code="3"/>
-      <transaction-date iso-date="2022-07-31"/>
-      <value currency="DKK" value-date="2022-07-31">240631.03</value>
-      <description>
-        <narrative xml:lang="en">AA Mali Q3 2022</narrative>
-      </description>
-      <provider-org ref="DK-CVR-18243717" provider-activity-id="DK-CVR-18243717-SPAII-2022-2025" type="21">
-        <narrative xml:lang="en">ActionAid Denmark (Mellemfolkeligt Samvirke)</narrative>
-      </provider-org>
-      <receiver-org receiver-activity-id="DK-CVR-18243717-MALI-SPAII-PILOT-2022" type="21">
-        <narrative xml:lang="en">ActionAid International</narrative>
-      </receiver-org>
-    </transaction>
-    <transaction ref="AA Mali Q4 2022">
-      <transaction-type code="3"/>
-      <transaction-date iso-date="2022-10-31"/>
-      <value currency="DKK" value-date="2022-10-31">34639.47</value>
-      <description>
-        <narrative xml:lang="en">AA Mali Q4 2022</narrative>
-      </description>
-      <provider-org ref="DK-CVR-18243717" provider-activity-id="DK-CVR-18243717-SPAII-2022-2025" type="21">
-        <narrative xml:lang="en">ActionAid Denmark (Mellemfolkeligt Samvirke)</narrative>
-      </provider-org>
-      <receiver-org receiver-activity-id="DK-CVR-18243717-MALI-SPAII-PILOT-2022" type="21">
-        <narrative xml:lang="en">ActionAid International</narrative>
-      </receiver-org>
-    </transaction>
-    <transaction ref="AA Mali - Unallocated 2022">
-      <transaction-type code="3"/>
-      <transaction-date iso-date="2022-10-31"/>
-      <value currency="DKK" value-date="2022-10-31">66956.52</value>
-      <description>
-        <narrative xml:lang="en">AA Mali - Unallocated 2022</narrative>
-      </description>
-    </transaction>
-    <transaction ref="AA Mali SPA II Q4" humanitarian="0">
-      <transaction-type code="3"/>
-      <transaction-date iso-date="2023-11-15"/>
-      <value currency="EUR" value-date="2023-11-15">69402</value>
-      <description>
-        <narrative xml:lang="en">AA Mali SPA II Q4</narrative>
-      </description>
-      <provider-org ref="DK-CVR-18243717" provider-activity-id="DK-CVR-18243717-SPAII-2022-2025" type="21">
-        <narrative xml:lang="en">ActionAid Denmark (Mellemfolkeligt Samvirke)</narrative>
-      </provider-org>
-      <receiver-org receiver-activity-id="DK-CVR-18243717-MALI-SPAII-PILOT-2022" type="22">
-        <narrative xml:lang="en">ActionAid Mali</narrative>
-      </receiver-org>
-    </transaction>
-    <transaction ref="AA Mali SPA II Q4">
-      <transaction-type code="3"/>
-      <transaction-date iso-date="2023-12-14"/>
-      <value currency="EUR" value-date="2023-12-14">27011</value>
-      <provider-org ref="DK-CVR-18243717" provider-activity-id="DK-CVR-18243717-SPAII-2022-2025" type="21">
-        <narrative xml:lang="en">ActionAid Denmark</narrative>
-      </provider-org>
-      <receiver-org ref="ActionAid Mali" receiver-activity-id="DK-CVR-18243717-MALI-SPAII-PILOT-2022" type="22"/>
-      <flow-type code="10"/>
-      <finance-type code="110"/>
-      <aid-type vocabulary="1"/>
-      <tied-status code="5"/>
-    </transaction>
-    <related-activity ref="DK-CVR-18243717-SPAII-2022-2025" type="1"/>
   </iati-activity>
 </iati-activities>
