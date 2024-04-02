@@ -32,7 +32,7 @@ class UserUpdateRequest extends FormRequest
         $role = Auth::user()->role->role;
 
         $rules = [
-            'username' => ['required', 'max:255', 'string', sprintf('unique:users,username,%d', $id)],
+            'username' => ['required', 'max:255', 'string', sprintf('unique:users,username,%d', $id), 'regex:/^[a-z]([0-9a-z-_])*$/'],
             'full_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,}$/ix', 'max:255', sprintf('unique:users,email,%d', $id), 'not_in_spam_emails'],
         ];
