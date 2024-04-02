@@ -226,6 +226,10 @@ class RegisterController extends Controller
             'password_confirmation' => ['required', 'string', 'min:8', 'max:255'],
         ]);
 
+        $validator->setCustomMessages([
+            'username.regex' => 'The username is invalid. Username must be purely lowercase alphabets followed by alphanumeric(ascii) characters and these symbols:-_',
+        ]);
+
         if ($validator->fails()) {
             return response()->json(['success' => false, 'errors' => $validator->errors()]);
         }
