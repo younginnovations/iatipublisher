@@ -133,6 +133,18 @@ class DocumentLinkService
                     ];
                 }
 
+                $recipientCountries = [];
+
+                foreach (Arr::get($documentLink, 'recipient_country', []) as $recipient_country) {
+                    $recipientCountries[] = [
+                        '@attributes' => [
+                            'code'       => Arr::get($recipient_country, 'code', null),
+                            'percentage' => Arr::get($recipient_country, 'percentage', null),
+                        ],
+                        'narrative'   => $this->buildNarrative(Arr::get($recipient_country, 'narrative', null)),
+                    ];
+                }
+
                 $organizationData[] = [
                     '@attributes'   => [
                         'url'    => Arr::get($documentLink, 'url', null),
@@ -152,6 +164,7 @@ class DocumentLinkService
                             'iso-date' => Arr::get($documentLink, 'document_date.0.date', null),
                         ],
                     ],
+                    'recipient-country' => $recipientCountries,
                 ];
             }
         }

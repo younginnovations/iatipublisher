@@ -105,18 +105,18 @@ class OrganizationXmlGenerator
      *
      * @param $settings
      * @param $organization
+     * @param bool $refreshTimestamp
      *
      * @return void
      */
-    public function generateOrganizationXml($settings, $organization)
+    public function generateOrganizationXml($settings, $organization, bool $refreshTimestamp = true): void
     {
         $publishingInfo = $settings->publishing_info;
 
         $publisherId = Arr::get($publishingInfo, 'publisher_id', 'Not Available');
         $filename = sprintf('%s-%s.xml', $publisherId, 'organisation');
         $publishedOrganization = sprintf('%s-%s.xml', $publisherId, $organization->id);
-        $xml = $this->getXml($settings, $organization);
-
+        $xml = $this->getXml($settings, $organization, $refreshTimestamp);
         $result = Storage::disk('s3')->put(
             sprintf('%s/%s', 'organizationXmlFiles', $filename),
             $xml->saveXML(),
@@ -155,20 +155,20 @@ class OrganizationXmlGenerator
      *
      * @return \DomDocument
      */
-    public function getXml($settings, $organization): ?\DomDocument
+    public function getXml($settings, $organization, bool $refreshTimestamp = true): ?\DomDocument
     {
         $this->setServices();
         $xmlData = [];
         $xmlData['@attributes'] = [
             'version' => '2.03',
-            'generated-datetime' => gmdate('c'),
+            'generated-datetime' => $refreshTimestamp ? gmdate('c') : getTimestampFromOrganizationXml($organization->publisher_id, $organization),
         ];
         $default_values = $settings->default_values;
         $activity_default_values = $settings->activity_default_values;
 
         $xmlData['iati-organisation'] = $this->getXmlData($organization);
         $xmlData['iati-organisation']['@attributes'] = [
-            'last-updated-datetime' => gmdate('c', time()),
+            'last-updated-datetime' => $refreshTimestamp ? gmdate('c', time()) : getTimestampFromOrganizationXml($organization->publisher_id, $organization),
             'xml:lang'              => Arr::get($default_values, 'default_language', null),
             'default-currency'      => Arr::get($default_values, 'default_currency', null),
         ];
