@@ -233,24 +233,6 @@
           Are you sure you want to delete <b> {{ deleteUsername }}</b
           >?
         </p>
-
-        <div class="mt-6 flex items-center justify-start space-x-2">
-          <input
-            class="mark-email-spam"
-            v-model="deleteUserModal.marked_email_spam"
-            value="true"
-            type="checkbox"
-          />
-          <span class="spam-pseudo-checkbox"></span>
-          <svg-vue
-            class="spam-ticked-svg text-spring-50"
-            icon="ticked"
-          ></svg-vue>
-          <label for="mark-email-spam" class="cursor-pointer"
-            >Mark as spam</label
-          >
-        </div>
-
         <div class="mt-6 flex justify-end space-x-2">
           <button
             class="secondary-btn font-bold"
@@ -816,11 +798,6 @@ const formError = reactive({
   password: '',
   password_confirmation: '',
 });
-
-const deleteUserModal = reactive({
-  marked_email_spam: '',
-});
-
 import { kebabCaseToSnakecase } from 'Composable/utils';
 
 const isFilterApplied = computed(() => {
@@ -1115,27 +1092,17 @@ function deleteUser(id: number) {
   deleteModal.value = false;
   window.scrollTo(0, 0);
 
-  let data = {
-    marked_email_spam: deleteUserModal.marked_email_spam,
-  };
-  axios
-    .delete(`/user/${id}`, {
-      data,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    .then((res) => {
-      if (res.data.message) {
-        toastData.visibility = true;
-        toastData.message = res.data.message;
-        toastData.type = res.data.success;
-      }
+  axios.delete(`/user/${id}`).then((res) => {
+    if (res.data.message) {
+      toastData.visibility = true;
+      toastData.message = res.data.message;
+      toastData.type = res.data.success;
+    }
 
-      if (res.data.success) {
-        fetchUsersList(usersData['current_page']);
-      }
-    });
+    if (res.data.success) {
+      fetchUsersList(usersData['current_page']);
+    }
+  });
 }
 
 const sort = (param) => {
