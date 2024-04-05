@@ -377,14 +377,14 @@ class OrganizationService
         $settings->timestamps = false;
         $settings->updateQuietly();
 
-        if (($org->status === 'published')) {
+        $orgPublished = $org->organizationPublished;
+
+        if ($org->is_published || count($orgPublished)) {
             $oldOrgFilename = "$oldPublisherId-organisation.xml";
             $newOrgFilename = "$publisherId-organisation.xml";
             $oldOrgFilenameMappedToNewOrgFilename = [$oldOrgFilename => $newOrgFilename];
 
             $this->renameOldFilesInS3($oldOrgFilenameMappedToNewOrgFilename, Enums::ORG_XML_BASE_PATH);
-
-            $orgPublished = $org->organizationPublished;
 
             $orgPublished->timestamps = false;
             $orgPublished->filename = $newOrgFilename;

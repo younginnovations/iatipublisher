@@ -307,7 +307,7 @@ if (!function_exists('removeSingleActivityXmlFromMergedActivitiesXml')) {
 
 if (!function_exists('getFileIdentifier')) {
     /**
-     * Returns the suffix of filename if syntax is: publisher_identifier-SUFFIX.xml
+     * Returns the suffix of filename if syntax is: publisher_identifier-SUFFIX.xml.
      *
      * @param string $filename
      * @return string

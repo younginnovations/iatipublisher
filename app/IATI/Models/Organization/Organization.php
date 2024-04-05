@@ -252,14 +252,6 @@ class Organization extends Model implements Auditable
     /**
      * @return HasOne
      */
-    public function organizationPublished(): HasOne
-    {
-        return $this->hasOne(OrganizationPublished::class, 'organization_id', 'id');
-    }
-
-    /**
-     * @return HasOne
-     */
     public function activityPublished(): HasOne
     {
         return $this->hasOne(ActivityPublished::class, 'organization_id', 'id');

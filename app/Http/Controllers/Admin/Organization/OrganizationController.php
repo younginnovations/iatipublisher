@@ -160,7 +160,7 @@ class OrganizationController extends Controller
 
             $organization->settings()->delete();
 
-            $activities = $organization->activities;
+            $activities = $organization->allActivities;
 
             foreach ($activities as $activity) {
                 $activity->delete();
