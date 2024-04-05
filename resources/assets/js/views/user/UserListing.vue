@@ -501,7 +501,7 @@
                 <span>Email</span>
               </th>
 
-              <th id="title" scope="col">
+              <th v-if="isSuperadmin" id="title" scope="col">
                 <span class="inline-flex items-center">
                   <span
                     v-if="
@@ -612,7 +612,7 @@
                   {{ user['email'] }}
                 </span>
               </td>
-              <td v-if="userRole === 'superadmin' || userRole === 'iati_admin'">
+              <td v-if="isSuperadmin">
                 <div class="ellipsis relative">
                   <p
                     class="w-32 overflow-x-hidden overflow-ellipsis whitespace-nowrap"
@@ -674,7 +674,7 @@
                   </span>
                 </p>
               </td>
-              <td>
+              <td class="space-2">
                 <span class="relative h-5 w-5"
                   ><input
                     v-model="checklist"
@@ -769,7 +769,11 @@ const currentpageData = ref([]);
 const clearDate = ref(false);
 const editUserId = ref('');
 const dateType = ref('All Time');
+const isSuperadmin = ref(false);
+isSuperadmin.value =
+  props.userRole === 'superadmin' || props.userRole === 'iati_admin';
 
+console.log(props.userRole);
 const dropdownRange = {
   created_at: 'User created date',
   last_logged_in: 'Last login date',

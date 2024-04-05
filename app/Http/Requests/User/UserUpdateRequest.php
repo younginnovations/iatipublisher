@@ -34,7 +34,7 @@ class UserUpdateRequest extends FormRequest
         $rules = [
             'username' => ['required', 'max:255', 'string', sprintf('unique:users,username,%d', $id)],
             'full_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,}$/ix', 'max:255', sprintf('unique:users,email,%d', $id)],
+            'email' => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,}$/ix', 'max:255', sprintf('unique:users,email,%d', $id), 'not_in_spam_emails'],
         ];
 
         if (!empty(Arr::get($request, 'password', null))) {
