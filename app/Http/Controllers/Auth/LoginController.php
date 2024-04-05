@@ -117,9 +117,7 @@ class LoginController extends Controller
         $emailOrUsernameValidation = 'required|string';
 
         if ($this->field === 'email') {
-            // Also add other validation here later when its an email.
-            // Need to add 'not_in_spam_emails' rule here after 1384 is merged
-            $emailOrUsernameValidation .= '|email';
+            $emailOrUsernameValidation .= '|email|not_in_spam_emails';
         }
 
         $request->validate([
