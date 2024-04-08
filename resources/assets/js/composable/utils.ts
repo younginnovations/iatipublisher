@@ -77,3 +77,16 @@ export function truncateText(text, maxLength) {
   }
   return text;
 }
+
+export function generateUsername(fullname: string) {
+  if (fullname.length > 0) {
+    const snakeCaseString = fullname.toLowerCase().replace(/\s+/g, '_');
+    const randomDigits = Math.floor(Math.random() * 100)
+      .toString()
+      .padStart(2, '0');
+
+    return snakeCaseString + '_' + randomDigits;
+  }
+
+  return '';
+}

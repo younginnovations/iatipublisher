@@ -719,6 +719,7 @@ import moment from 'moment';
 import Pagination from 'Components/TablePagination.vue';
 import { watchIgnorable } from '@vueuse/core';
 import DateRangeWidget from 'Components/DateRangeWidget.vue';
+import { generateUsername, kebabCaseToSnakecase } from 'Composable/utils';
 
 const props = defineProps({
   organizations: { type: Object, required: true },
@@ -798,7 +799,6 @@ const formError = reactive({
   password: '',
   password_confirmation: '',
 });
-import { kebabCaseToSnakecase } from 'Composable/utils';
 
 const isFilterApplied = computed(() => {
   return (
@@ -811,6 +811,13 @@ const isFilterApplied = computed(() => {
 const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
   flush: 'sync',
 });
+
+watch(
+  () => formData.full_name,
+  (fullname) => {
+    formData.username = generateUsername(fullname);
+  }
+);
 
 watch(
   () => toastData.visibility,
