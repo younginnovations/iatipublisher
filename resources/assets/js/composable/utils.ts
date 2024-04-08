@@ -1,4 +1,5 @@
 import Location from 'Interfaces/utils';
+import { customAlphabet } from 'nanoid';
 
 export function getLocation(data: Location[]) {
   let locations: string[] = [];
@@ -76,4 +77,15 @@ export function truncateText(text, maxLength) {
     return text.substring(0, maxLength) + '...';
   }
   return text;
+}
+
+export function generateUsername(fullname: string) {
+  if (fullname.length > 0) {
+    const snakeCaseString = fullname.toLowerCase().replace(/\s+/g, '_');
+    const randomDigits = customAlphabet('0123456789', 2);
+
+    return snakeCaseString + '_' + parseInt(randomDigits());
+  }
+
+  return '';
 }

@@ -58,7 +58,7 @@ class IatiRegisterFormRequest extends FormRequest
                 break;
             case '4':
                 $rules = [
-                    'username'              => ['required', 'max:255', 'string', 'regex:/^[a-z]([0-9a-z-_])*$/', 'unique:users,username'],
+                    'username'              => ['required', 'max:255', 'string', 'unique:users,username', 'regex:/^[a-z]([0-9a-z-_])*$/'],
                     'full_name'             => ['required', 'string', 'max:255'],
                     'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,}$/ix', 'max:255', 'unique:users,email', 'not_in_spam_emails'],
                     'password'              => ['required', 'string', 'min:6', 'max:255', 'confirmed'],
