@@ -11,3 +11,4 @@ resources:
 - webserver/deployment.yaml
 - webserver/service.yaml
 # - cron/fix-storage-permission.yaml
+# !todo uncomment them
