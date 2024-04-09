@@ -139,6 +139,21 @@ trait FillDefaultValuesTrait
     {
         $defaultFieldValues = $this->resolveDefaultValues($data);
         $data = $this->populateDefaultFields($data, $defaultFieldValues);
+
+        if (
+            Arr::get($data, 'migrated_from_aidstream', false) &&
+            !$this->model->getModel() instanceof Activity
+        ) {
+            foreach ($data as $key => $datum) {
+                $this->model->{$key} = $datum;
+            }
+
+            $this->model->setTouchedRelations([]);
+            $this->model->save();
+
+            return $this->model;
+        }
+
         $data['default_field_values'] = $defaultFieldValues;
 
         return $this->model->create($data);

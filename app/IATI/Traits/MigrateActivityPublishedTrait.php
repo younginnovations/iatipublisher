@@ -361,7 +361,7 @@ trait MigrateActivityPublishedTrait
                 $existingContents = $this->replaceDocumentLinkInXml($existingContents, $iatiOrganization->id);
                 awsUploadFile($iatiMergedFile, $existingContents);
             } else {
-                $this->xmlGenerator->getMergeXml($publishedFiles, $iatiMergedFilename);
+                $this->xmlGenerator->getMergeXml($publishedFiles, $iatiMergedFilename, $activityPublished);
                 $mergedContents = awsGetFile($iatiMergedFile);
                 $mergedContents = $this->replaceDocumentLinkInXml($mergedContents, $iatiOrganization->id);
                 awsUploadFile($iatiMergedFile, $mergedContents);
