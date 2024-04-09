@@ -4,11 +4,10 @@ resources:
 - common/service-account.yaml
 - fpm/deployment.yaml
 - fpm/service.yaml
-# - cron/cronjob.yaml
-# - cron/clear-laravel-logs.yaml
-# - cron/custom-command-cron.yaml
+- cron/cronjob.yaml
+- cron/clear-laravel-logs.yaml
+- cron/custom-command-cron.yaml
 - queue-workers/deployment.yaml
 - webserver/deployment.yaml
 - webserver/service.yaml
-# - cron/fix-storage-permission.yaml
-# !todo uncomment them
+- cron/fix-storage-permission.yaml
