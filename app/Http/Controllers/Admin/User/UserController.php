@@ -169,7 +169,7 @@ class UserController extends Controller
 
             return response()->json(['success' => false, 'message' => 'The user cannot be deleted.']);
         } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while deleting user.']);
         }

@@ -69,12 +69,11 @@ trait MigrateUserTrait
      */
     public function migrateUsersIfNeeded($iatiOrganization, $aidstreamUsers, $aidStreamOrganization): void
     {
-        $iatiUsers = $iatiOrganization->usersIncludingDeleted;
         $iatiNonDeletedUsers = $iatiOrganization->users;
 
-        $iatiEmails = ($iatiUsers && count($iatiUsers)) ? $iatiUsers->pluck('email')->toArray() : [];
+        $iatiEmails = [];
         $iatiNonDeletedEmails = ($iatiNonDeletedUsers && count($iatiNonDeletedUsers)) ? $iatiNonDeletedUsers->pluck('email')->toArray() : [];
-        $iatiUsernames = ($iatiUsers && count($iatiUsers)) ? $iatiUsers->pluck('username')->toArray() : [];
+        $iatiUsernames = [];
         $iatiNonDeletedUsernames = ($iatiNonDeletedUsers && count($iatiNonDeletedUsers)) ? $iatiNonDeletedUsers->pluck('username')->toArray() : [];
 
         if (count($aidstreamUsers)) {

@@ -229,7 +229,7 @@ class IatiRegisterController extends Controller
 
             return response()->json(['success' => true, 'message' => 'User registered successfully']);
         } catch (Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error has occured while trying to register user. Please try again later.']);
         }
@@ -279,7 +279,7 @@ class IatiRegisterController extends Controller
 
             return ['success' => true, 'user' => $user];
         } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
         }
     }
 

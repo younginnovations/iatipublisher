@@ -61,6 +61,11 @@ class Audit extends Model implements AuditContract
                         $model->new_values = $tempNewValues;
                     }
                 }
+
+                $authUser = auth()->user();
+
+                $model->full_name = $authUser->full_name ?? null;
+                $model->email = $authUser->email ?? null;
             }
         );
     }
