@@ -41,6 +41,8 @@ class DescriptionRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
+     *
+     * @throws \JsonException
      */
     public function getErrorsForDescription(array $formFields): array
     {

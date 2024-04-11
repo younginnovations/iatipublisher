@@ -336,6 +336,7 @@ import {
   onMounted,
   computed,
   onUnmounted,
+  provide,
   Ref,
 } from 'vue';
 import { detailStore } from 'Store/activities/show';
@@ -358,6 +359,7 @@ const props = defineProps({
   },
   superAdmin: { type: Boolean, required: true },
   hasAdminBar: { type: Number || Boolean, default: false },
+  defaultLanguage: { type: String, default: '' },
 });
 
 const showUserDropdown = ref(false);
@@ -577,6 +579,8 @@ const redirectProfile = () => {
 onUnmounted(() => {
   localStorage.removeItem('openAddModel');
 });
+
+provide('defaultLanguage', props.defaultLanguage);
 </script>
 
 <style src="@vueform/multiselect/themes/default.css"></style>

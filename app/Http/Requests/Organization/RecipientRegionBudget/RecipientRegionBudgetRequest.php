@@ -128,6 +128,7 @@ class RecipientRegionBudgetRequest extends OrganizationBaseRequest
             $rules[sprintf('%s.vocabulary_uri', $recipientRegionForm)] = 'nullable|url';
             $rules[sprintf('%s.region_vocabulary', $recipientRegionForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('RegionVocabulary', 'Activity', false))));
             $rules[sprintf('%s.code', $recipientRegionForm)] = 'nullable';
+
             $narrativeRules = $this->getWarningForNarrative($recipientRegion['narrative'], $recipientRegionForm);
 
             foreach ($narrativeRules as $key => $item) {

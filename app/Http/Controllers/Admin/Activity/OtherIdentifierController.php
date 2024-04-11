@@ -43,7 +43,7 @@ class OtherIdentifierController extends Controller
         try {
             $element = getElementSchema('other_identifier');
             $activity = $this->otherIdentifierService->getActivityData($id);
-            $form = $this->otherIdentifierService->formGenerator($id);
+            $form = $this->otherIdentifierService->formGenerator($id, $activity->default_field_values ?? []);
             $data = ['title' => $element['label'], 'name' => 'other_identifier'];
 
             return view('admin.activity.otherIdentifier.edit', compact('form', 'activity', 'data'));

@@ -94,13 +94,13 @@ class ContactInfoService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues): Form
     {
         $element = getElementSchema('contact_info');
         $model['contact_info'] = $this->getContactInfoData($id) ?: [];
         $this->parentCollectionFormCreator->url = route('admin.activity.contact-info.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues);
     }
 
     /**

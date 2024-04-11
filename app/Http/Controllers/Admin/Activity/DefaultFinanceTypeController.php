@@ -43,7 +43,7 @@ class DefaultFinanceTypeController extends Controller
         try {
             $element = getElementSchema('default_finance_type');
             $activity = $this->defaultFinanceTypeService->getActivityData($id);
-            $form = $this->defaultFinanceTypeService->formGenerator($id);
+            $form = $this->defaultFinanceTypeService->formGenerator($id, $activity->default_field_values ?? []);
             $data = [
                 'title' => $element['label'],
                 'name' => 'default_finance_type',

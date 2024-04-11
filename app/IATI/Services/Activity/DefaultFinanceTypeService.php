@@ -81,13 +81,13 @@ class DefaultFinanceTypeService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues): Form
     {
         $element = getElementSchema('default_finance_type');
         $model['default_finance_type'] = $this->getDefaultFinanceTypeData($id);
         $this->baseFormCreator->url = route('admin.activity.default-finance-type.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, overRideDefaultFieldValue: $activityDefaultFieldValues);
     }
 
     /**

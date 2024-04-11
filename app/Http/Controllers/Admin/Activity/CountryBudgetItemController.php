@@ -43,7 +43,7 @@ class CountryBudgetItemController extends Controller
         try {
             $element = getElementSchema('country_budget_items');
             $activity = $this->countryBudgetItemService->getActivityData($id);
-            $form = $this->countryBudgetItemService->formGenerator($id);
+            $form = $this->countryBudgetItemService->formGenerator($id, $activity->default_field_values ?? []);
             $data = [
                 'title'  => $element['label'],
                 'name'   => 'country_budget_items',

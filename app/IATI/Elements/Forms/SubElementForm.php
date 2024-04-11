@@ -20,6 +20,7 @@ class SubElementForm extends Form
     public function buildForm():void
     {
         $data = $this->getData();
+
         $this->setClientValidationEnabled(false);
 
         if (Arr::get($data, 'type', null)) {
@@ -31,6 +32,14 @@ class SubElementForm extends Form
 
             foreach ($attributes as $attribute) {
                 if (is_array($attribute)) {
+                    $attribute['overRideDefaultFieldValue'] = $data['overRideDefaultFieldValue'] ?? [];
+
+                    if (strtolower($data['label']) === 'language' &&
+                        strtolower($data['name']) === 'language' &&
+                        (isset($attribute['name']) &&
+                        strtolower($attribute['name']) === 'language' && $attribute['label'] === 'code')) {
+                        $attribute['overRideDefaultFieldValue'] = [];
+                    }
                     $this->buildFields($attribute, true);
                 }
             }
@@ -76,8 +85,10 @@ class SubElementForm extends Form
         ];
 
         if (array_key_exists('type', $field) && $field['type'] == 'select') {
+            $defaultValue = getDefaultValue($field['overRideDefaultFieldValue'], $field['name'], $field['choices'] ?? []);
             $options['attr']['class'] = 'select2';
-            $options['attr']['data-placeholder'] = Arr::get($field, 'placeholder', '');
+            $options['attr']['class'] .= !empty($defaultValue) ? ' default-value-indicator' : '';
+            $options['attr']['data-placeholder'] = $defaultValue ?? Arr::get($field, 'placeholder', '');
             $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
             $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
             $options['default_value'] = $field['default'] ?? '';

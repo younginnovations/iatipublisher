@@ -43,7 +43,7 @@ class HumanitarianScopeController extends Controller
         try {
             $element = getElementSchema('humanitarian_scope');
             $activity = $this->humanitarianScopeService->getActivityData($id);
-            $form = $this->humanitarianScopeService->formGenerator($id);
+            $form = $this->humanitarianScopeService->formGenerator($id, $activity->default_field_values ?? []);
             $data = ['title' => $element['label'], 'name' => 'humanitarian_scope'];
 
             return view('admin.activity.humanitarianScope.edit', compact('form', 'activity', 'data'));

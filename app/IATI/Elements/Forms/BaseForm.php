@@ -20,13 +20,13 @@ class BaseForm extends Form
     public function buildCollection($field): void
     {
         $element = $this->getData();
+
         if (!Arr::get($field, 'type', null) && array_key_exists('sub_elements', $field) && Arr::get(
             $field,
             'wrapper_collection',
             true
         )) {
             $field['parent'] = $element['name'];
-
             $this->add(
                 $field['name'],
                 'collection',
@@ -104,6 +104,7 @@ class BaseForm extends Form
                                 ) === 'narrative' ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
                                 : 'subelement rounded-tl-lg border-l border-spring-50 mb-6') . (Arr::get($field, 'read_only', false) ? ' freeze' : ''),
                         ],
+                        'overRideDefaultFieldValue' => $element['overRideDefaultFieldValue'] ?? [],
                     ],
                 ]
             );
@@ -135,6 +136,7 @@ class BaseForm extends Form
     {
         $this->setClientValidationEnabled(false);
         $element = $this->getData();
+
         $attributes = Arr::get($element, 'attributes', null);
         $sub_elements = Arr::get($element, 'sub_elements', null);
 
@@ -243,8 +245,11 @@ class BaseForm extends Form
         }
 
         if ($field['type'] === 'select') {
+            $overRideDefaultFieldValue = $this->getData()['overRideDefaultFieldValue'] ?? [];
+            $defaultValue = getDefaultValue($overRideDefaultFieldValue, $field['name'], $field['choices'] ?? []);
             $options['attr']['class'] = 'select2';
-            $options['attr']['data-placeholder'] = Arr::get($field, 'placeholder', '');
+            $options['attr']['class'] .= !empty($defaultValue) ? ' default-value-indicator' : '';
+            $options['attr']['data-placeholder'] = $defaultValue ?? Arr::get($field, 'placeholder', '');
             $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
             $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
             $options['default_value'] = $field['default'] ?? '';

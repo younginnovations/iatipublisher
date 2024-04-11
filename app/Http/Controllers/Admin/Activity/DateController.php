@@ -43,7 +43,7 @@ class DateController extends Controller
         try {
             $element = getElementSchema('activity_date');
             $activity = $this->dateService->getActivityData($id);
-            $form = $this->dateService->formGenerator($id);
+            $form = $this->dateService->formGenerator($id, $activity->default_field_values ?? []);
             $data = [
                 'title' => $element['label'],
                 'name' => 'activity_date',
