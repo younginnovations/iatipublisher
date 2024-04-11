@@ -190,7 +190,6 @@ onMounted(async () => {
 
 const proceedValidation = () => {
   showBulkpublishLoader.value = true;
-  console.log('proceed validation', showBulkpublishLoader.value);
 
   cancelValidationPolling();
 };
@@ -243,7 +242,6 @@ watch(
 watch(
   () => store?.state?.startBulkPublish,
   (value) => {
-    console.log('fron watcher');
     showBulkpublish.value = value;
   },
   { deep: true }
@@ -320,7 +318,6 @@ watch(
   () => [store.state.startValidation, validationRunning.value],
   () => {
     if (store.state.startValidation || validationRunning.value) {
-      console.log('start validation');
       showBulkpublish.value = false;
     }
   }
@@ -498,18 +495,9 @@ const completeActivityCount = computed(() => {
 });
 const hideBulkpublishLoader = () => {
   showBulkpublishLoader.value = false;
-  console.log('emitted');
 };
 
 const handleActivityPublishedData = (data) => {
   activityPublishedData.value = data;
 };
-
-watch(
-  () => showBulkpublishLoader.value,
-  (value) => {
-    console.log(value, 'watcher');
-  },
-  { deep: true }
-);
 </script>

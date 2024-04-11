@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -94,8 +93,7 @@ class UserRepository extends Repository
                     email_verified_at
                     "
                 )
-            )
-            ->where('users.id', '!=', Auth::user()->id);
+            );
 
         if (!empty($queryParams)) {
             $query = $this->filterUsers($query, $queryParams);
