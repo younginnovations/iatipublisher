@@ -104,6 +104,7 @@ class SetAppDataJsonCache extends Command
             'Organization' => [
                 'Country.json',
                 'Currency.json',
+                'DocumentCategory.json',
                 'Language.json',
                 'OrganisationElements.json',
                 'OrganisationElementsGroup.json',
