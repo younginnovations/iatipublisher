@@ -26,7 +26,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use JsonException;
-use function PHPUnit\Framework\isInstanceOf;
 
 /**
  * Class OrganizationService.
@@ -278,7 +277,7 @@ class OrganizationService
     }
 
     /**
-     * Returns array containing publisher type.
+     * Returns array containing Organisation Type.
      *
      * @param $queryParams
      * @param $type
@@ -480,7 +479,7 @@ class OrganizationService
 
             return (bool) $publisherVerificationResponse;
         } catch (Exception $e) {
-            if (isInstanceOf(ClientException::class) && $e->getCode() === 404) {
+            if ($e instanceof ClientException && $e->getCode() === 404) {
                 throw new PublisherIdChangeByIatiAdminException();
             }
 

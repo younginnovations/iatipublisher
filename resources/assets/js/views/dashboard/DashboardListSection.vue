@@ -701,7 +701,7 @@ const activityNavList = [
   { label: 'Activity Completion', apiParams: 'completeness' },
 ];
 const publisherNavList = [
-  { label: 'Publisher Type', apiParams: 'publisher-type' },
+  { label: 'Organisation Type', apiParams: 'publisher-type' },
   { label: 'Data Licence', apiParams: 'data-license' },
   { label: 'Country', apiParams: 'country' },
   { label: 'Registration Type', apiParams: 'registration-type' },
@@ -713,7 +713,7 @@ const filter = ref({ orderBy: '', sort: '' });
 const sortElement = ref({ label: '', apiParams: '' });
 const userNavlist = [{ label: 'user', apiParams: '' }];
 const currentItem = ref({
-  label: 'Publisher Type',
+  label: 'Organisation Type',
   apiParams: 'publisher-type',
 });
 const currentNavList = ref(publisherNavList);
@@ -749,7 +749,7 @@ watch(
       currentNavList.value = activityNavList;
     } else if (value === 'publisher') {
       currentItem.value = {
-        label: 'Publisher Type',
+        label: 'Organisation Type',
         apiParams: 'publisher-type',
       };
 

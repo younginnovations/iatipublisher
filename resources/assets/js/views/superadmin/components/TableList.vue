@@ -63,7 +63,7 @@
         <div
           class="flex h-full w-full justify-between align-middle text-xs font-bold uppercase text-bluecoral"
         >
-          <span>Publisher Type</span>
+          <span>Organisation Type</span>
           <span class="flex items-center">
             <span
               v-if="filter.publisher_type.length"
@@ -96,7 +96,7 @@
           >
             <MultiSelectWithSearch
               class="relative !z-[1000]"
-              header="Publisher Type"
+              header="Organisation Type"
               :list-items="publisherTypes"
               @change-selected-publisher="setSelectedPublisher"
               @close="showMultiSelectWithSearch = false"
@@ -106,13 +106,13 @@
       </div> -->
       <span
         class="multiselect-label-wrapper"
-        :style="generateLabel('publisher type')"
+        :style="generateLabel('Organisation Type')"
       >
         <Multiselect
           id="publisher-type"
           v-model="filter.publisher_type"
           :options="publisherTypes"
-          placeholder="PUBLISHER TYPE"
+          placeholder="Organisation Type"
           mode="multiple"
           :taggable="true"
           :close-on-select="true"
@@ -229,7 +229,7 @@
         :key="index"
         class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
       >
-        <span class="text-n-40">Publisher type:</span>
+        <span class="text-n-40">Organisation Type:</span>
         <span
           class="max-w-[500px] overflow-x-hidden text-ellipsis whitespace-nowrap"
           >{{ publisherTypes[item] }}
@@ -427,7 +427,7 @@
                     }-arrow`"
                   />
                 </span>
-                <span>Publisher Type</span>
+                <span>Organisation Type</span>
               </a>
             </th>
             <th id="data_licence" scope="col" style="width: 173px">
