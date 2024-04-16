@@ -649,18 +649,24 @@
                 v-if="userRole !== 'general_user'"
                 class="flex h-full items-center space-x-6"
               >
-                <p @click="editUser(user)">
+                <p v-if="currentUserId !== user['id']" @click="editUser(user)">
                   <svg-vue
                     class="cursor-pointer text-base"
                     icon="edit-action"
                   />
                 </p>
                 <!-- <p @click="deleteUser(user['id'])"> -->
-                <p @click="openDeletemodel(user)">
+                <p
+                  v-if="currentUserId !== user['id']"
+                  @click="openDeletemodel(user)"
+                >
                   <svg-vue class="cursor-pointer text-base" icon="delete" />
                 </p>
 
-                <p @click="openStatusModel(user)">
+                <p
+                  v-if="currentUserId !== user['id']"
+                  @click="openStatusModel(user)"
+                >
                   <span
                     :class="user['status'] ? 'bg-spring-50' : 'bg-n-40'"
                     class="relative block h-4 w-7 cursor-pointer rounded-full"
@@ -675,7 +681,9 @@
                 </p>
               </td>
               <td class="space-2">
-                <span class="relative h-5 w-5"
+                <span
+                  v-if="currentUserId !== user['id']"
+                  class="relative h-5 w-5"
                   ><input
                     v-model="checklist"
                     class="user-checklist"
@@ -725,6 +733,7 @@ const props = defineProps({
   organizations: { type: Object, required: true },
   status: { type: Object, required: true },
   roles: { type: Object, required: true },
+  currentUserId: { type: Object, required: true },
   userRole: { type: String, required: true },
   oldestDates: { type: String, required: true },
 });
@@ -774,7 +783,6 @@ const isSuperadmin = ref(false);
 isSuperadmin.value =
   props.userRole === 'superadmin' || props.userRole === 'iati_admin';
 
-console.log(props.userRole);
 const dropdownRange = {
   created_at: 'User created date',
   last_logged_in: 'Last login date',

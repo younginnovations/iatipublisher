@@ -377,7 +377,6 @@ const completedActivities = computed(() => {
       count++;
     }
   }
-  console.log('computed activitites', count);
 
   return count;
 });

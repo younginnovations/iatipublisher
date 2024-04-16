@@ -1,6 +1,6 @@
 /*!
- * ApexCharts v3.42.0
- * (c) 2018-2023 ApexCharts
+ * ApexCharts v3.45.2
+ * (c) 2018-2024 ApexCharts
  * Released under the MIT License.
  */
 
@@ -24,6 +24,13 @@
  */
 
 /*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <http://feross.org>
+ * @license  MIT
+ */
+
+/*!
  * jQuery JavaScript Library v3.6.1
  * https://jquery.com/
  *
@@ -42,6 +49,8 @@
  * (c) 2022 Evan You
  * @license MIT
  */
+
+/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
 /*! svg.draggable.js - v2.2.2 - 2019-01-08
 * https://github.com/svgdotjs/svg.draggable.js
