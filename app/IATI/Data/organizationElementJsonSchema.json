@@ -1449,7 +1449,7 @@
             "label": "code",
             "type": "select",
             "multiSelect": false,
-            "choices": "Activity/DocumentCategory.json",
+            "choices": "Organization/DocumentCategory.json",
             "placeholder": "Select code",
             "required": true,
             "criteria": "mandatory",

@@ -123,7 +123,7 @@ class DocumentLinkRequest extends OrganizationBaseRequest
         $rules[sprintf('%s.category', $formIndex)] = 'unique_category';
 
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
-            $rules[sprintf('%s.category.%s.code', $formIndex, $documentCategoryIndex)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('DocumentCategory', 'Activity'))));
+            $rules[sprintf('%s.category.%s.code', $formIndex, $documentCategoryIndex)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('DocumentCategory', 'Organization'))));
         }
 
         return $rules;

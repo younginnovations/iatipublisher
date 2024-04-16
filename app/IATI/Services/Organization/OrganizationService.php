@@ -159,7 +159,7 @@ class OrganizationService
         return [
             'budgetType' => getCodeList('BudgetStatus', 'Activity', false),
             'languages' => getCodeList('Language', 'Organization', false),
-            'documentCategory' => getCodeList('DocumentCategory', 'Activity', false),
+            'documentCategory' => getCodeList('DocumentCategory', 'Organization', false),
             'organizationType' => getCodeList('OrganizationType', 'Organization', false),
             'country' => getCodeList('Country', 'Organization', false),
             'regionVocabulary' => getCodeList('RegionVocabulary', 'Activity', false),
