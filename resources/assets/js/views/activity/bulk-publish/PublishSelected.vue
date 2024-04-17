@@ -4,7 +4,7 @@
     <BtnComponent
       v-if="store.state.selectedActivities.length > 0"
       type="secondary"
-      text="Publish Selected"
+      :text="`Publish Selected (${store.state.selectedActivities.length})`"
       icon="approved-cloud"
       @click="checkPublish"
     />
@@ -209,14 +209,14 @@
 
         <div class="mt-4 flex justify-between space-x-4">
           <button
-            class="rounded py-3 px-5 font-semibold uppercase text-n-40 hover:bg-bluecoral hover:text-white"
+            class="rounded px-5 py-3 font-semibold uppercase text-n-40 hover:bg-bluecoral hover:text-white"
             @click="cancelOtherBulkPublish"
           >
             Cancel previous bulk publish
           </button>
 
           <button
-            class="rounded bg-bluecoral py-3 px-5 font-semibold uppercase text-white"
+            class="rounded bg-bluecoral px-5 py-3 font-semibold uppercase text-white"
             @click="closeCancelConfirmationModal"
           >
             Wait for completion
@@ -235,13 +235,13 @@
       </div>
       <div class="my-3 flex justify-between">
         <button
-          class="rounded py-3 px-5 font-semibold uppercase text-n-40 hover:bg-bluecoral hover:text-white"
+          class="rounded px-5 py-3 font-semibold uppercase text-n-40 hover:bg-bluecoral hover:text-white"
           @click="closeCancelledDetailsPopup"
         >
           Continue Selecting
         </button>
         <button
-          class="rounded bg-bluecoral py-3 px-5 font-semibold uppercase text-white"
+          class="rounded bg-bluecoral px-5 py-3 font-semibold uppercase text-white"
           @click="publishAfterCancel"
         >
           Publish

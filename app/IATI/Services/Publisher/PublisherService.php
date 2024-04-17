@@ -9,6 +9,7 @@ use App\IATI\Services\Activity\ActivityPublishedService;
 use App\IATI\Services\Organization\OrganizationPublishedService;
 use App\IATI\Services\Workflow\RegistryApiHandler;
 use App\IATI\Traits\RegistryApiInvoker;
+use Carbon\Carbon;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -200,6 +201,8 @@ class PublisherService extends RegistryApiHandler
     protected function generatePayload($organization, $filename): string
     {
         $code = $this->getCode($filename);
+        logger('$code');
+        logger($code);
         $key = $this->getKey($code);
         $fileType = $this->getFileType($code);
         $title = $this->extractTitle($organization, $fileType);
@@ -220,6 +223,8 @@ class PublisherService extends RegistryApiHandler
     protected function generateOrganizationPayload($organization, $filename): string
     {
         $code = $this->getCode($filename);
+        logger('$code for org payload');
+        logger($code);
         $key = $this->getKey($code);
         $fileType = $this->getFileType($code);
         $title = $this->extractTitle($organization, $fileType);
@@ -331,11 +336,16 @@ class PublisherService extends RegistryApiHandler
             ],
             'filetype'     => 'organisation',
             $key           => ($code == 'activities' || $code == 'organisation') ? '' : $code,
-            'data_updated' => $publishedFile->updated_at->toDateTimeString(),
+            'data_updated' => is_string($publishedFile->updated_at)
+                ? (Carbon::parse($publishedFile->updated_at))->toDateTimeString()
+                : $publishedFile->updated_at->toDateTimeString(),
             'language'     => 'en',
             'verified'     => 'no',
             'state'        => 'active',
         ];
+
+        logger('$data in formatOrganizationHeaders()');
+        logger($data);
 
         return json_encode($data);
     }
@@ -369,7 +379,9 @@ class PublisherService extends RegistryApiHandler
             ],
             'filetype'     => ($code != 'organisation') ? 'activity' : $code,
             $key           => ($code == 'activities' || $code == 'organisation') ? '' : $code,
-            'data_updated' => $publishedFile->updated_at->toDateTimeString(),
+            'data_updated' => is_string($publishedFile->updated_at)
+                ? (Carbon::parse($publishedFile->updated_at))->toDateTimeString()
+                : $publishedFile->updated_at->toDateTimeString(),
             'language'     => 'en',
             'verified'     => 'no',
             'state'        => 'active',
@@ -378,6 +390,9 @@ class PublisherService extends RegistryApiHandler
         if ($code != 'organisation') {
             $data['activity_count'] = count($publishedFile->published_activities);
         }
+
+        logger('$data in formatHeaders()');
+        logger($data);
 
         return json_encode($data);
     }

@@ -35,11 +35,13 @@
             <span class="hidden">Publish</span>
           </th>
           <th id="cb" scope="col">
-            <span
-              class="cursor-pointer"
-              @click="toggleSelectAll(data.data, selectAllValue)"
-            >
-              <svg-vue icon="checkbox" />
+            <span>
+              <span
+                class="cursor-pointer"
+                @click="toggleSelectAll(data.data, selectAllValue)"
+              >
+                <svg-vue icon="checkbox" />
+              </span>
             </span>
           </th>
         </tr>

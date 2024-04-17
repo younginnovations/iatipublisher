@@ -9,6 +9,7 @@
       <div class="overflow-hidden" :class="{ 'bg-white': isEmpty }">
         <ErrorMessage :is-empty="isEmpty"></ErrorMessage>
         <EmptyActivity v-if="isEmpty" />
+
         <TableLayout
           v-if="!isEmpty"
           :data="activities"
@@ -346,6 +347,8 @@ export default defineComponent({
       });
       tableLoader.value = false;
     }
+
+    console.log(activities, 'activities');
 
     const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
       flush: 'sync',

@@ -124,7 +124,6 @@ class OrganizationController extends Controller
      */
     public function update(Request $request, Organization $organization): void
     {
-        //
     }
 
     /**
@@ -161,7 +160,7 @@ class OrganizationController extends Controller
 
             $organization->settings()->delete();
 
-            $activities = $organization->activities;
+            $activities = $organization->allActivities;
 
             foreach ($activities as $activity) {
                 $activity->delete();

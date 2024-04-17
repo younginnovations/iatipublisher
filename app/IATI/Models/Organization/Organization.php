@@ -131,6 +131,16 @@ class Organization extends Model implements Auditable
     }
 
     /**
+     * Organization has Organization Published file.
+     *
+     * @return HasOne
+     */
+    public function organizationPublished(): HasOne
+    {
+        return $this->hasOne(OrganizationPublished::class, 'organization_id', 'id');
+    }
+
+    /**
      * Returns complete status of reporting_org.
      *
      * @return bool
@@ -237,14 +247,6 @@ class Organization extends Model implements Auditable
     public function usersIncludingDeleted(): HasMany
     {
         return $this->hasMany(User::class, 'organization_id', 'id')->withTrashed();
-    }
-
-    /**
-     * @return HasOne
-     */
-    public function organizationPublished(): HasOne
-    {
-        return $this->hasOne(OrganizationPublished::class, 'organization_id', 'id');
     }
 
     /**
