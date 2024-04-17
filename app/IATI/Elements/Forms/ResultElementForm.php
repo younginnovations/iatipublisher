@@ -79,10 +79,7 @@ class ResultElementForm extends BaseForm
 
                 if (Arr::get($sub_element, 'add_more', false) || Arr::get($sub_element, 'add_more_attributes', false)) {
                     $this->add('add_to_collection_' . $sub_element['name'], 'button', [
-                        'label' => sprintf(
-                            'add additional %s',
-                            str_replace('_', ' ', $this->getData(sprintf('sub_elements.%s.name', $name)))
-                        ),
+                        'label' => generateAddAdditionalLabel($sub_element['name'], $this->getData(sprintf('sub_elements.%s.name', $name))),
                         'attr'  => [
                             'class'     => 'add_to_parent add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
                             'form_type' => $sub_element['name'],

@@ -103,7 +103,7 @@ class UserService
             'registration_type'   => 'existing_org',
             'identifier'          => $data['registration_agency'] . '-' . $data['registration_number'],
             'iati_status'         => 'pending',
-            'name'                => [['narrative' => $data['publisher_name'], 'language' => null]],
+            'name'                => [['narrative' => $data['publisher_name'], 'language' => $data['default_language']]],
             'reporting_org'       => [[
                 'ref'                => $data['registration_agency'] . '-' . $data['registration_number'],
                 'type'               => '',
@@ -167,7 +167,7 @@ class UserService
             'publisher_type'      => $data['publisher_type'],
             'identifier'          => $data['registration_agency'] . '-' . $data['registration_number'],
             'iati_status'         => 'pending',
-            'name'                => [['narrative' => $data['publisher_name'], 'language' => null]],
+            'name'                => [['narrative' => $data['publisher_name'], 'language' => $data['default_language']]],
             'reporting_org'       => [[
                 'type'               => $data['publisher_type'],
                 'ref'                => $data['identifier'],

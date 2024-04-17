@@ -77,7 +77,7 @@ class WrapperCollectionForm extends Form
 
                 if (isset($field['add_more']) && $field['add_more']) {
                     $this->add('add_to_collection_' . $name, 'button', [
-                        'label' => sprintf('Add additional %s', str_replace('_', ' ', Arr::get($data, 'attributes', null) ? $field['name'] : $data['name'])),
+                        'label' => generateAddAdditionalLabel($data['name'], Arr::get($data, 'attributes', null) ? $field['name'] : $data['name']),
                         'attr'  => [
                             'class'     => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
                             'form_type' => $data['parent'] . '_' . $data['name'] . '_' . $field['name'],
@@ -216,7 +216,7 @@ class WrapperCollectionForm extends Form
 
         if (isset($field['add_more']) && $field['add_more']) {
             $this->add('add_to_collection_' . $field['name'], 'button', [
-                'label' => sprintf('Add additional %s', str_replace('_', ' ', $field['name'])),
+                'label' => generateAddAdditionalLabel($element['name'], $field['name']),
                 'attr'  => [
                     'class'     => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ',
                     'form_type' =>  $field['name'],

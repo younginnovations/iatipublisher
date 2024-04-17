@@ -1,8 +1,8 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-#php artisan command:SetAppDataJsonCache && \
-#php artisan test && \
+php artisan command:SetAppDataJsonCache && \
+php artisan test && \
 npx stylelint "resources/**/*.scss" --fix && \
 npm run lint && \
 npx lint-staged && \
