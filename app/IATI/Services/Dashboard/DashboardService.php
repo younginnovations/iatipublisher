@@ -63,7 +63,7 @@ class DashboardService
     }
 
     /**
-     * Returns array containing publisher type.
+     * Returns array containing Organisation Type.
      *
      * @param $queryParams
      * @param $type
@@ -254,7 +254,7 @@ class DashboardService
     }
 
     /**
-     * Returns array containing publisher type.
+     * Returns array containing Organisation Type.
      *
      * @param $queryParams
      * @param $type

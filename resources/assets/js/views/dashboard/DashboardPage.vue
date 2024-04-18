@@ -85,7 +85,7 @@ interface tableDaypeteType {
 }
 
 const currentNav = ref({
-  label: 'Publisher Type',
+  label: 'Organisation Type',
   apiParams: 'publisher-type',
 });
 const tableData = ref<tableDaypeteType>({});

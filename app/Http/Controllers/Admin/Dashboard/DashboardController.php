@@ -589,7 +589,7 @@ class DashboardController extends Controller
             $params = $this->getQueryParams($request);
             $params = $this->dashboardService->resolveStartDateAndEndDate($request, $params, 'organizations');
 
-            $headers = ['organization', 'identifier', 'publisher_type', 'country', 'registration_type', 'data_license', 'publisher setting', 'default values', 'created_at', 'updated_at'];
+            $headers = ['organization', 'identifier', 'organisation_type', 'country', 'registration_type', 'data_license', 'publisher setting', 'default values', 'created_at', 'updated_at'];
 
             $organizations = $this->dashboardService->getOrganizationToDownload($params);
 

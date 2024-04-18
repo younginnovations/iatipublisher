@@ -8,7 +8,6 @@ use App\Exceptions\PublisherIdChangeByIatiAdminException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Setting\DefaultFormRequest;
 use App\Http\Requests\Setting\PublisherFormRequest;
-use App\IATI\Models\Organization\Organization;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
 use Exception;
@@ -22,7 +21,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use JsonException;
-use function PHPUnit\Framework\isInstanceOf;
 use Throwable;
 
 /**
@@ -107,7 +105,7 @@ class SettingController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            if (isInstanceOf(GuzzleException::class) && $e->getCode() === 404) {
+            if ($e instanceof GuzzleException && $e->getCode() === 404) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Publisher does not exist in registry.',
@@ -150,7 +148,7 @@ class SettingController extends Controller
             $publisherData['publisher_verification'] = false;
             $publisherData['token_verification'] = false;
 
-            if (isInstanceOf(GuzzleException::class) && $e->getCode() === 404) {
+            if ($e instanceof GuzzleException && $e->getCode() === 404) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Publisher does not exist in registry.',
@@ -221,11 +219,11 @@ class SettingController extends Controller
             $settingData['publisher_verification'] = false;
             $settingData['token_verification'] = false;
 
-            if (isInstanceOf(PublisherIdChangeByIatiAdminException::class)) {
+            if ($e instanceof PublisherIdChangeByIatiAdminException) {
                 return response()->json(['success' => false, 'message' => 'Publisher Id or API Token incorrect.', 'data' => $settingData]);
             }
 
-            if (isInstanceOf(GuzzleException::class) && $e->getCode() === 404) {
+            if ($e instanceof GuzzleException && $e->getCode() === 404) {
                 return response()->json(['success' => false, 'message' => 'Publisher does not exist in registry.', 'data' => $settingData]);
             }
 
