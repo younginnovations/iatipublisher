@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\IATI\Models\Audit\Audit;
 use App\IATI\Models\User\User;
 use Exception;
 use Illuminate\Console\Command;
@@ -42,36 +41,23 @@ class Issue1419FillFullnameAndEmailInAuditLog extends Command
             DB::beginTransaction();
 
             $allUserIds = User::all()->pluck('id')->toArray();
-            $allUserIdsUsedInAudit = Audit::all()->pluck('user_id');
-            $allUserIdsUsedInAudit = array_values(array_unique($allUserIdsUsedInAudit->toArray()));
-            $allUserIdsUsedInAudit = array_values(array_filter($allUserIdsUsedInAudit, static function ($value) {
-                return $value !== null;
-            }));
 
-            $fullnameMappedToId = User::whereIn('id', $allUserIdsUsedInAudit)->pluck('full_name', 'id')->toArray();
-            $emailMappedToId = User::whereIn('id', $allUserIdsUsedInAudit)->pluck('email', 'id')->toArray();
+            $this->info('Audit records updated started.');
 
-            $insertValuesMappedToId = [];
+            foreach ($allUserIds as $userId) {
+                if ($userId) {
+                    $user = User::find($userId);
+                    $email = $user->email;
+                    $fullname = $user->full_name;
 
-            $this->info('Required data fetched.');
-
-            foreach ($allUserIdsUsedInAudit as $id) {
-                if ($id && in_array($id, $allUserIds, true)) {
-                    $insertValuesMappedToId[$id] = [
-                        'full_name' => $fullnameMappedToId[$id],
-                        'email' => $emailMappedToId[$id],
-                    ];
+                    DB::statement(
+                        'UPDATE audits SET full_name = ?, email = ? WHERE user_id = ?',
+                        [$fullname, $email, $userId]
+                    );
                 }
             }
 
-            $this->info('Required data parsed.');
-
-            foreach ($insertValuesMappedToId as $userId => $values) {
-                Audit::where('user_id', $userId)->update($values);
-                $this->info("Audit record for user_id: $userId completed.");
-            }
-
-            $this->info('Audit records updated successfully.');
+            $this->info('Audit records updated completed.');
 
             DB::commit();
         } catch (Exception $e) {
