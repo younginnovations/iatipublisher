@@ -240,16 +240,6 @@ class Organization extends Model implements Auditable
     }
 
     /**
-     * Returns the users of the organization including deleted users.
-     *
-     * @return HasMany
-     */
-    public function usersIncludingDeleted(): HasMany
-    {
-        return $this->hasMany(User::class, 'organization_id', 'id')->withTrashed();
-    }
-
-    /**
      * @return HasOne
      */
     public function activityPublished(): HasOne
