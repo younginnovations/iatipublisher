@@ -224,6 +224,7 @@ class RegisterController extends Controller
             'publisher_id'          => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
             'password'              => ['required', 'string', 'min:8', 'max:255', 'confirmed'],
             'password_confirmation' => ['required', 'string', 'min:8', 'max:255'],
+            'default_language'      => ['required', sprintf('in:%s', implode(',', array_keys(getCodeList('Language', 'Activity', false))))],
         ]);
 
         $validator->setCustomMessages([
@@ -252,8 +253,9 @@ class RegisterController extends Controller
             $countries = getCodeList('Country', 'Organization');
             $registration_agencies = getCodeList('OrganizationRegistrationAgency', 'Organization');
             $uncategorizedRegistrationAgencyPrefix = Enums::UNCATEGORIZED_ORGANISATION_AGENCY_PREFIX;
+            $languages = getCodeList('Language', 'Activity');
 
-            return view('web.register', compact('countries', 'registration_agencies', 'uncategorizedRegistrationAgencyPrefix'));
+            return view('web.register', compact('countries', 'registration_agencies', 'uncategorizedRegistrationAgencyPrefix', 'languages'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

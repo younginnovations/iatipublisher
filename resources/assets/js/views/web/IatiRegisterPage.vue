@@ -74,6 +74,9 @@
               </p>
               <div class="ml-8 xl:mr-1">
                 <ul class="list-disc">
+                  {{
+                    iatiError
+                  }}
                   <li v-for="(error, error_key) in iatiError" :key="error_key">
                     <span v-if="typeof error === 'object'">{{ error[0] }}</span>
                     <span v-else>{{ error }}</span>
@@ -305,6 +308,7 @@ export default defineComponent({
       email: '',
       password: '',
       password_confirmation: '',
+      default_language: '',
     });
 
     const iatiError: ObjectType = reactive({});
@@ -330,6 +334,7 @@ export default defineComponent({
       email: '',
       password: '',
       password_confirmation: '',
+      default_language: '',
       step: '1',
     });
 
@@ -587,6 +592,16 @@ export default defineComponent({
               "Select an option:<br>Primary - your organisation is publishing its own or (associated organisations') data <br>Secondary - your organisation is reproducing data on the activities of another organisation",
             type: 'select',
             options: props.types.source,
+            class: 'mb-4 lg:mb-6',
+          },
+          default_language: {
+            label: 'Default language',
+            name: 'default_language',
+            placeholder: 'Select your default language',
+            id: 'default-language',
+            required: true,
+            type: 'select',
+            options: props.types.languages,
             class: 'mb-4 lg:mb-6',
           },
           record_exclusions: {

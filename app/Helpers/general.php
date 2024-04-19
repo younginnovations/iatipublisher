@@ -1081,3 +1081,22 @@ if (!function_exists('getTimestampFromOrganizationXml')) {
         return $organization->updated_at->toIso8601String();
     }
 }
+
+if (!function_exists('addAdditionalLabel')) {
+    /**
+     * @param string $parentElement
+     * @param string $elementName
+     *
+     * @return string
+     */
+    function generateAddAdditionalLabel(string $parentElement, string $elementName): string
+    {
+        $elementName = str_replace('_', '', $elementName);
+
+        if ($parentElement === 'reporting_org' && $elementName === 'narrative') {
+            $elementName = 'name';
+        }
+
+        return "Add additional $elementName";
+    }
+}

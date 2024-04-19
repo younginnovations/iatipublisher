@@ -88,22 +88,43 @@ class UserService
      */
     public function registerExistingUser(array $data): Model
     {
+        $publisherSourceType = Arr::get($data, 'source', 'secondary_source');
+        $secondaryReporterValue = $publisherSourceType === 'secondary_source' ? '1' : '0';
+        $narrativeValue = $publisherSourceType === 'primary_source'
+            ? [['narrative' => $data['publisher_name'], 'language' => $data['default_language']]]
+            : [['narrative' => null, 'language' => null]];
+
         $organization = $this->organizationRepo->createOrganization([
             'publisher_id'        => $data['publisher_id'],
             'publisher_name'      => $data['publisher_name'],
             'country'             => $data['country'] ?? null,
             'registration_agency' => $data['registration_agency'],
             'registration_number' => $data['registration_number'],
-            'registration_type' => 'existing_org',
+            'registration_type'   => 'existing_org',
             'identifier'          => $data['registration_agency'] . '-' . $data['registration_number'],
             'iati_status'         => 'pending',
-            'name'                => [['narrative' => $data['publisher_name'], 'language' => null]],
+            'name'                => [['narrative' => $data['publisher_name'], 'language' => $data['default_language']]],
             'reporting_org'       => [[
                 'ref'                => $data['registration_agency'] . '-' . $data['registration_number'],
                 'type'               => '',
-                'secondary_reporter' => '',
-                'narrative'          => [],
+                'secondary_reporter' => $secondaryReporterValue,
+                'narrative'          => $narrativeValue,
             ]],
+        ]);
+
+        $this->settingRepo->store([
+            'organization_id' => $organization['id'],
+            'publishing_info' => [
+                'publisher_id'           => $data['publisher_id'],
+                'api_token'              => '',
+                'publisher_verification' => false,
+                'token_verification'     => false,
+                'token_status'           => 'Incorrect',
+            ],
+            'default_values' => [
+                'default_currency' => '',
+                'default_language' => $data['default_language'],
+            ],
         ]);
 
         $user = $this->userRepo->store([
@@ -130,32 +151,43 @@ class UserService
      */
     public function registerNewUser(array $data): Model
     {
+        $publisherSourceType = Arr::get($data, 'source', 'secondary_source');
+        $secondaryReporterValue = $publisherSourceType === 'secondary_source' ? '1' : '0';
+        $narrativeValue = $publisherSourceType === 'primary_source'
+            ? [['narrative' => $data['publisher_name'], 'language' => $data['default_language']]]
+            : [['narrative' => null, 'language' => null]];
+
         $organization = $this->organizationRepo->createOrganization([
             'publisher_id'        => $data['publisher_id'],
             'publisher_name'      => $data['publisher_name'],
             'country'             => $data['country'] ?? null,
             'registration_agency' => $data['registration_agency'],
             'registration_number' => $data['registration_number'],
-            'registration_type' => 'new_org',
+            'registration_type'   => 'new_org',
             'publisher_type'      => $data['publisher_type'],
             'identifier'          => $data['registration_agency'] . '-' . $data['registration_number'],
             'iati_status'         => 'pending',
-            'name'                => [['narrative' => $data['publisher_name'], 'language' => null]],
+            'name'                => [['narrative' => $data['publisher_name'], 'language' => $data['default_language']]],
             'reporting_org'       => [[
-                'type' => $data['publisher_type'],
-                'ref' => $data['identifier'],
-                'secondary_reporter' => ($data['source'] === 'secondary_source' ? '1' : '0'),
-                'narrative' => [['narrative' => null, 'language' => null]],
+                'type'               => $data['publisher_type'],
+                'ref'                => $data['identifier'],
+                'secondary_reporter' => $secondaryReporterValue,
+                'narrative'          => $narrativeValue,
             ]],
         ]);
 
         $this->settingRepo->store([
             'organization_id' => $organization['id'],
             'publishing_info' => [
-                'publisher_id' => $data['publisher_id'],
-                'api_token' => $data['token'],
+                'publisher_id'           => $data['publisher_id'],
+                'api_token'              => $data['token'],
                 'publisher_verification' => true,
-                'token_verification' => true,
+                'token_verification'     => true,
+                'token_status'           => 'Pending',
+            ],
+            'default_values' => [
+                'default_currency' => '',
+                'default_language' => $data['default_language'],
             ],
         ]);
 
@@ -181,6 +213,7 @@ class UserService
      * @param bool $exists
      *
      * @return array
+     * @throws GuzzleException
      */
     public function checkPublisher(string $publisher_id, bool $exists = true): array
     {

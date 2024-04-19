@@ -89,7 +89,7 @@
     "sub_elements": {
       "narrative": {
         "name": "narrative",
-        "label": "narrative",
+        "label": "name",
         "type": "textarea",
         "placeholder": "",
         "required": true,

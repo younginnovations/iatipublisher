@@ -276,6 +276,10 @@ export default defineComponent({
       type: [Object],
       required: true,
     },
+    languages: {
+      type: [Object],
+      required: true,
+    },
   },
 
   setup(props) {
@@ -301,6 +305,7 @@ export default defineComponent({
       email: '',
       password: '',
       password_confirmation: '',
+      default_language: '',
     });
 
     const formData: ObjectType = reactive({
@@ -315,6 +320,8 @@ export default defineComponent({
       email: '',
       password: '',
       password_confirmation: '',
+      default_language: '',
+      source: '',
     });
 
     watch(
@@ -486,7 +493,7 @@ export default defineComponent({
             required: true,
             hover_text: '',
             type: 'email',
-            class: 'col-start-1 mb-4 lg:mb-2',
+            class: 'mb-4 lg:mb-2',
           },
           username: {
             label: 'Username',
@@ -499,6 +506,16 @@ export default defineComponent({
             type: 'text',
             class: 'mb-4 lg:mb-2',
             help_text: '',
+          },
+          default_language: {
+            label: 'Default language',
+            name: 'default_language',
+            placeholder: 'Select your default language',
+            id: 'default-language',
+            required: true,
+            type: 'select',
+            options: props.languages,
+            class: 'mb-4 lg:mb-2',
           },
           password: {
             label: 'Password',
@@ -585,6 +602,7 @@ export default defineComponent({
             step.value += 1;
           }
 
+          formData.source = response.data.publisher_source_type;
           isLoaderVisible.value = false;
         })
         .catch(() => {

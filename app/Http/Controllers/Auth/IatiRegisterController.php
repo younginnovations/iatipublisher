@@ -201,6 +201,7 @@ class IatiRegisterController extends Controller
                     'email',
                     'password',
                     'password_confirmation',
+                    'default_language',
                 ]
             );
 
@@ -298,6 +299,7 @@ class IatiRegisterController extends Controller
                 'dataLicense' => getCodeList('DataLicense', 'Activity', false),
                 'source' => getCodeList('Source', 'Activity', false),
                 'uncategorizedRegistrationAgencyPrefix' => Enums::UNCATEGORIZED_ORGANISATION_AGENCY_PREFIX,
+                'languages' => getCodeList('Language', 'Activity'),
             ];
 
             return view('web.iati_register', compact('types'));

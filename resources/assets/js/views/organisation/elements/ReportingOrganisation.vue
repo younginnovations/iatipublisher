@@ -36,7 +36,7 @@
             </td>
           </tr>
           <tr>
-            <td>Narrative</td>
+            <td>Name</td>
             <td>
               <div
                 v-for="(narrative, j) in reporting_org.narrative"

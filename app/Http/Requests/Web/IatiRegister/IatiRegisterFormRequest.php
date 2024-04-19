@@ -53,7 +53,8 @@ class IatiRegisterFormRequest extends FormRequest
                 break;
             case '3':
                 $rules = [
-                    'source'          => ['required', sprintf('in:%s', implode(',', array_keys(getCodeList('Source', 'Activity', false))))],
+                    'source'           => ['required', sprintf('in:%s', implode(',', array_keys(getCodeList('Source', 'Activity', false))))],
+                    'default_language' => ['required', sprintf('in:%s', implode(',', array_keys(getCodeList('Language', 'Activity', false))))],
                 ];
                 break;
             case '4':
