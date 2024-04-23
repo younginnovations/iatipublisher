@@ -7,8 +7,8 @@
       <div class="section__title">
         <h2>Create IATI Publisher Account</h2>
         <p>
-          Register your organisation to start your IATI publishing journey by
-          creating an account in IATI publisher.
+          Start your IATI publishing journey by creating an account in IATI
+          Publisher
         </p>
       </div>
       <div class="section__wrapper flex justify-center">
@@ -50,16 +50,24 @@
             </ul>
           </aside>
           <div class="form__container">
-            <div class="flex items-center space-x-1">
-              <HoverText
-                v-if="registerForm[getCurrentStep()]['hover_text']"
-                :hover-text="registerForm[getCurrentStep()]['hover_text']"
-                :name="registerForm[getCurrentStep()].title"
-                position="right"
-              />
-              <span class="text-xl font-bold text-n-50 sm:text-2xl">{{
-                registerForm[getCurrentStep()].title
-              }}</span>
+            <div class="flex justify-between">
+              <div class="flex items-center space-x-1">
+                <HoverText
+                  v-if="registerForm[getCurrentStep()]['hover_text']"
+                  :hover-text="registerForm[getCurrentStep()]['hover_text']"
+                  :name="registerForm[getCurrentStep()].title"
+                  position="right"
+                />
+                <span class="text-xl font-bold text-n-50 sm:text-2xl">
+                  {{ registerForm[getCurrentStep()].title }}
+                </span>
+              </div>
+              <div class="flex items-center">
+                <small class="label">
+                  <span class="required-icon px-1">*</span>
+                  <span>Mandatory fields</span>
+                </small>
+              </div>
             </div>
             <div
               v-if="!publisherExists"
@@ -388,7 +396,7 @@ export default defineComponent({
         title: 'Publisher Information',
         is_complete: false,
         description:
-          'This information will be used to create a Publisher in IATI Publisher',
+          'This information will be used to register your organisation',
         hover_text:
           'Provide information about your organisation. You will need to provide the same information that you used to create your Publisher Account on the IATI Registry (iatiregistry.org).',
         fields: {
@@ -406,7 +414,7 @@ export default defineComponent({
           publisher_id: {
             label: 'Publisher ID',
             name: 'publisher_id',
-            placeholder: 'Type your organisation ID here',
+            placeholder: 'Type your publisher ID here',
             id: 'publisher-id',
             required: true,
             hover_text:
@@ -450,10 +458,10 @@ export default defineComponent({
               'Add the registration number for your organisation that has been provided by the registration agency named above.',
             type: 'text',
             class: 'mb-4 lg:mb-2',
-            help_text: 'for e.g. 123456',
+            help_text: 'E.g. 123456',
           },
           iati_organizational_identifier: {
-            label: 'IATI Organisational Identifier',
+            label: 'IATI Organisation Identifier',
             name: 'identifier',
             placeholder: '',
             id: 'identifier',
