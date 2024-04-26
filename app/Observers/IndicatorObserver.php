@@ -35,15 +35,15 @@ class IndicatorObserver
      */
     public function created(Indicator $indicator): void
     {
-        $changeUpdatedAt = !$indicator->migrated_from_aidstream;
-
-        $resultObserver = new ResultObserver();
-        $this->setIndicatorDefaultValues($indicator, $changeUpdatedAt);
-        $resultObserver->updateActivityElementStatus($indicator->result, $changeUpdatedAt);
-
-        if ($changeUpdatedAt) {
-            $resultObserver->resetActivityStatus($indicator->result);
-        }
+//        $changeUpdatedAt = !$indicator->migrated_from_aidstream;
+//
+//        $resultObserver = new ResultObserver();
+//        $this->setIndicatorDefaultValues($indicator, $changeUpdatedAt);
+//        $resultObserver->updateActivityElementStatus($indicator->result, $changeUpdatedAt);
+//
+//        if ($changeUpdatedAt) {
+//            $resultObserver->resetActivityStatus($indicator->result);
+//        }
     }
 
     /**

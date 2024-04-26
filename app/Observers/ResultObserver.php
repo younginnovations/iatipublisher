@@ -62,14 +62,14 @@ class ResultObserver
      */
     public function created(Result $result): void
     {
-        $changeUpdatedAt = !$result->migrated_from_aidstream;
-
-        $this->setResultDefaultValues($result, $changeUpdatedAt);
-        $this->updateActivityElementStatus($result, $changeUpdatedAt);
-
-        if ($changeUpdatedAt) {
-            $this->resetActivityStatus($result);
-        }
+//        $changeUpdatedAt = !$result->migrated_from_aidstream;
+//
+//        $this->setResultDefaultValues($result, $changeUpdatedAt);
+//        $this->updateActivityElementStatus($result, $changeUpdatedAt);
+//
+//        if ($changeUpdatedAt) {
+//            $this->resetActivityStatus($result);
+//        }
     }
 
     /**

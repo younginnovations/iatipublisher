@@ -35,16 +35,16 @@ class PeriodObserver
      */
     public function created(Period $period): void
     {
-        $changeUpdatedAt = !$period->migrated_from_aidstream;
-
-        $resultObserver = new ResultObserver();
-
-        $this->setPeriodDefaultValues($period, $changeUpdatedAt);
-        $resultObserver->updateActivityElementStatus($period->indicator->result, $changeUpdatedAt);
-
-        if ($changeUpdatedAt) {
-            $resultObserver->resetActivityStatus($period->indicator->result);
-        }
+//        $changeUpdatedAt = !$period->migrated_from_aidstream;
+//
+//        $resultObserver = new ResultObserver();
+//
+//        $this->setPeriodDefaultValues($period, $changeUpdatedAt);
+//        $resultObserver->updateActivityElementStatus($period->indicator->result, $changeUpdatedAt);
+//
+//        if ($changeUpdatedAt) {
+//            $resultObserver->resetActivityStatus($period->indicator->result);
+//        }
     }
 
     /**
