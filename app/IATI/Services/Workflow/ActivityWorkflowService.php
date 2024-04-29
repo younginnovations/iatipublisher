@@ -180,15 +180,28 @@ class ActivityWorkflowService
      */
     public function publishActivities($activities, $organization, $settings, bool $publishFile = true): void
     {
+        $start = now();
+        logger()->info("Xml generation and append process started at $start");
+
         $this->xmlGeneratorService->generateActivitiesXml(
             $activities,
             $settings,
             $organization
         );
 
+        $end = now();
+        logger()->info("Xml generation and append process ended at $end");
+        logger()->info('Xml generation and append process took ' . $end->diffInMinutes($start) . ' minutes');
+
         $activityPublished = $this->activityPublishedService->getActivityPublished($organization->id);
         $publishingInfo = $settings->publishing_info;
+
+        $publishStart = now();
+        logger()->info("Xml publish process started at $publishStart");
         $this->publisherService->publishFile($publishingInfo, $activityPublished, $organization);
+        $publishEnd = now();
+        logger()->info("Xml publish process ended at $publishEnd");
+        logger()->info('Xml publish process took ' . $publishEnd->diffInMinutes($publishStart) . ' minutes');
 
         foreach ($activities as $activity) {
             $this->activityService->updatePublishedStatus($activity, 'published', true);
@@ -251,6 +264,8 @@ class ActivityWorkflowService
         $organization = $activity->organization;
         $settings = $organization->settings;
 
+        $xmlGenerationStart = now();
+        logger()->info("Xml generation process started for validating activity id: $activity->id at " . $xmlGenerationStart);
         $xmlData = $this->xmlGeneratorService->getActivityXmlData(
             $activity,
             $activity->transactions,
@@ -258,10 +273,25 @@ class ActivityWorkflowService
             $settings,
             $organization
         );
+        $xmlGenerationEnd = now();
+        logger()->info("Xml generation process completed for validating activity id: $activity->id at " . $xmlGenerationEnd);
+        logger()->info('Xml generation process took ' . $xmlGenerationEnd->diffInMinutes($xmlGenerationStart) . ' minutes.');
 
+        $xmlUploadStart = now();
+        logger()->info("Xml upload process started for validating activity id: $activity->id at " . $xmlUploadStart);
         awsUploadFile("xmlValidation/$activity->org_id/activity_$activity->id.xml", $xmlData);
+        $xmlUploadEnd = now();
+        logger()->info("Xml upload process completed for validating activity id: $activity->id at " . $xmlUploadEnd);
+        logger()->info('Xml upload process took ' . $xmlUploadEnd->diffInMinutes($xmlGenerationStart) . ' minutes.');
 
-        return $this->getResponse($xmlData);
+        $xmlValidationStart = now();
+        logger()->info("Xml validation api started for activity id: $activity->id at " . $xmlValidationStart);
+        $response = $this->getResponse($xmlData);
+        $xmlValidationEnd = now();
+        logger()->info("Xml validation api ended for activity id: $activity->id at " . $xmlValidationEnd);
+        logger()->info('Xml validation api took ' . $xmlValidationEnd->diffInMinutes($xmlValidationStart) . ' minutes.');
+
+        return $response;
     }
 
     /**

@@ -294,6 +294,9 @@ class XmlGenerator
         $activityMappedToActivityIdentifier = [];
 
         foreach ($activityData as $activity) {
+            $xmlGenerationStarted = now();
+            logger()->info("Individual Xml generation and upload started for activity: $activity->id at $xmlGenerationStarted");
+
             $publishedActivity = sprintf('%s-%s.xml', $publisherId, $activity->id);
             $activityCompleteXml = $this->getXml($activity, $activity->transactions ?? [], $activity->results ?? [], $settings, $organization, $refreshTimestamp);
             $innerActivityXml = $activityCompleteXml->getElementsByTagName('iati-activity')->item(0);
@@ -305,12 +308,23 @@ class XmlGenerator
             $publishedFiles[] = $publishedActivity;
 
             awsUploadFile(sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $publishedActivity), $activityCompleteXml->saveXML());
+
+            $xmlGenerationCompleted = now();
+            logger()->info("Individual Xml generation and upload completed for activity: $activity->id at $xmlGenerationCompleted");
+            logger()->info('Individual Xml generation and upload process took ' . $xmlGenerationCompleted->diffInMinutes($xmlGenerationStarted) . ' minutes.');
         }
 
         if (count($innerActivityXmlArray)) {
+            $xmlAppendStarted = now();
+            logger()->info("Xml append process started for activity: $activity->id at $xmlAppendStarted");
+
             $filename = sprintf('%s-%s.xml', $publisherId, 'activities');
             $this->savePublishedFiles($filename, $activity->org_id, $publishedFiles);
             $this->appendMultipleInnerActivityXmlToMergedXml($innerActivityXmlArray, $settings, $organization, $activityMappedToActivityIdentifier, $refreshTimestamp);
+
+            $xmlAppendEnded = now();
+            logger()->info("Xml append process ended for activity: $activity->id at $xmlAppendEnded");
+            logger()->info('Xml append process took ' . $xmlAppendEnded->diffInMinutes($xmlAppendStarted) . ' minutes.');
         }
     }
 

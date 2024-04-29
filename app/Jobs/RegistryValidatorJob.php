@@ -76,23 +76,41 @@ class RegistryValidatorJob implements ShouldQueue
      */
     public function handle(ActivityWorkflowService $activityWorkflowService): void
     {
+        $startTime = now();
+        logger()->info("Registry validator job for activity: {$this->activity->id} started at $startTime");
+
         try {
             if (!Cache::get('activity-validation-delete')) {
                 $validationStatusRepository = app()->make(ValidationStatusRepository::class);
                 $validationStatusRepository->storeValidationStatus((int) $this->activity->id, (int) $this->user->id, status: 'processing');
 
                 $response = $activityWorkflowService->validateActivityOnIATIValidator($this->activity);
+
+                $storeStart = now();
+                logger()->info("Store validation process for activity: {$this->activity->id} started at $storeStart");
                 $this->storeValidation($response);
+                $storeEnd = now();
+                logger()->info("Store validation process for activity: {$this->activity->id} ended at $storeEnd");
+                logger()->info("Store validation process for activity {$this->activity->id} took " . $storeEnd->diffInMinutes($storeStart) . ' minutes');
             }
         } catch (BadResponseException $ex) {
             if ($ex->getCode() === 422) {
                 $response = $ex->getResponse()->getBody()->getContents();
+                $storeStart = now();
+                logger()->info("Store validation process for activity with validation errors: {$this->activity->id} started at $storeStart");
                 $this->storeValidation($response);
+                $storeEnd = now();
+                logger()->info("Store validation process for activity with validation errors: {$this->activity->id} ended at $storeEnd");
+                logger()->info("Store validation process for activity with validation errors {$this->activity->id} took " . $storeEnd->diffInMinutes($storeStart) . ' minutes');
             }
         } catch (BindingResolutionException|JsonException $e) {
             logger($e);
             $this->fail();
         }
+
+        $endTime = now();
+        logger()->info("Registry validator job for activity: {$this->activity->id} ended at $endTime");
+        logger()->info("Registry validator job for activity {$this->activity->id} took " . $endTime->diffInMinutes($startTime) . ' minutes');
     }
 
     /**
