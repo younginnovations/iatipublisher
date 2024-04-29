@@ -35,11 +35,12 @@ class DuplicateActivityData extends Command
         try {
             // Duplicating transactions
             DB::beginTransaction();
-            $activity = Activity::where('id', 878)->with(['transactions', 'results.indicators.periods'])->first();
+            $activity = Activity::where('id', 939)->with(['transactions', 'results.indicators.periods'])->first();
 
             for ($i = 1; $i <= 1; $i++) {
                 $this->info('Duplicating activity no ' . $i);
                 $newActivity = $activity->replicate();
+                $newActivity->title = $this->getTitleData($activity->title, $i);
                 $newActivity->iati_identifier = $this->getIatiIdentifier($activity->iati_identifier, $i);
                 $newActivity->push();
 
@@ -64,6 +65,14 @@ class DuplicateActivityData extends Command
         $newIdentifier['iati_identifier_text'] = $this->getIncrementedData($oldIdentifier['iati_identifier_text'], $amount);
 
         return $newIdentifier;
+    }
+
+    public function getTitleData($oldTitle, $amount)
+    {
+        $newTitle = $oldTitle;
+        $newTitle[0]['narrative'] = $this->getIncrementedData($oldTitle[0]['narrative'], $amount);
+
+        return $newTitle;
     }
 
     public function getIncrementedData($data, $amount)
