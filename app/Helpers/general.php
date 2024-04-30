@@ -1100,3 +1100,37 @@ if (!function_exists('addAdditionalLabel')) {
         return "Add additional $elementName";
     }
 }
+
+if (!function_exists('writeLog')) {
+    /**
+     * @param $process
+     * @param  string  $content
+     * @param  string  $type
+     * @param  bool  $newLine
+     *
+     * @return void
+     *
+     * @throws JsonException
+     */
+    function writeLog($process, string $content, string $type = 'info', bool $newLine = false): void
+    {
+        $fileContent = awsGetFile('BulkPublishTesting/bulk-publish-info.json');
+        $data = $fileContent ? json_decode($fileContent, true, 512, JSON_THROW_ON_ERROR) : [];
+
+        if ($type === 'info') {
+            logger()->info($content);
+            $data[$process][] = 'Info: ' . $content;
+        } else {
+            logger()->error($content);
+            $data[$process][] = 'Error: ' . $content;
+        }
+
+        if ($newLine) {
+            $data[$process][] = '';
+        }
+
+        awsUploadFile('BulkPublishTesting/bulk-publish-info.json', json_encode($data, JSON_THROW_ON_ERROR));
+
+//        dispatch(new \App\Jobs\WriteBulkPublishLog($process, $content, $type, $newLine));
+    }
+}

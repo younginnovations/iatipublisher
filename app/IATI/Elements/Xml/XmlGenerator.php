@@ -295,7 +295,7 @@ class XmlGenerator
 
         foreach ($activityData as $activity) {
             $xmlGenerationStarted = now();
-            logger()->info("Individual Xml generation and upload started for activity: $activity->id at $xmlGenerationStarted");
+//            writeLog("publish", "Individual Xml generation and upload started for activity: $activity->id at $xmlGenerationStarted");
 
             $publishedActivity = sprintf('%s-%s.xml', $publisherId, $activity->id);
             $activityCompleteXml = $this->getXml($activity, $activity->transactions ?? [], $activity->results ?? [], $settings, $organization, $refreshTimestamp);
@@ -310,21 +310,21 @@ class XmlGenerator
             awsUploadFile(sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $publishedActivity), $activityCompleteXml->saveXML());
 
             $xmlGenerationCompleted = now();
-            logger()->info("Individual Xml generation and upload completed for activity: $activity->id at $xmlGenerationCompleted");
-            logger()->info('Individual Xml generation and upload process took ' . $xmlGenerationCompleted->diffInMinutes($xmlGenerationStarted) . ' minutes.');
+//            writeLog("publish", "Individual Xml generation and upload completed for activity: $activity->id at $xmlGenerationCompleted");
+            writeLog('publish', 'Individual Xml generation and upload process for activity: ' . $activity->id . ' took ' . $xmlGenerationCompleted->diffInSeconds($xmlGenerationStarted) . ' seconds or ' . $xmlGenerationCompleted->diffInMinutes($xmlGenerationStarted) . ' minutes', 'info', true);
         }
 
         if (count($innerActivityXmlArray)) {
             $xmlAppendStarted = now();
-            logger()->info("Xml append process started for activity: $activity->id at $xmlAppendStarted");
+//            writeLog("publish", "Xml append process started at $xmlAppendStarted");
 
             $filename = sprintf('%s-%s.xml', $publisherId, 'activities');
             $this->savePublishedFiles($filename, $activity->org_id, $publishedFiles);
             $this->appendMultipleInnerActivityXmlToMergedXml($innerActivityXmlArray, $settings, $organization, $activityMappedToActivityIdentifier, $refreshTimestamp);
 
             $xmlAppendEnded = now();
-            logger()->info("Xml append process ended for activity: $activity->id at $xmlAppendEnded");
-            logger()->info('Xml append process took ' . $xmlAppendEnded->diffInMinutes($xmlAppendStarted) . ' minutes.');
+//            writeLog("publish", "Xml append process ended at $xmlAppendEnded");
+            writeLog('publish', 'Xml append process took ' . $xmlAppendEnded->diffInSeconds($xmlAppendStarted) . ' seconds or ' . $xmlAppendEnded->diffInMinutes($xmlAppendStarted) . ' minutes');
         }
     }
 

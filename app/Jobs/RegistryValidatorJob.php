@@ -77,7 +77,7 @@ class RegistryValidatorJob implements ShouldQueue
     public function handle(ActivityWorkflowService $activityWorkflowService): void
     {
         $startTime = now();
-        logger()->info("Registry validator job for activity: {$this->activity->id} started at $startTime");
+        writeLog('validation', "Registry validator job for activity: {$this->activity->id} started at $startTime");
 
         try {
             if (!Cache::get('activity-validation-delete')) {
@@ -87,21 +87,21 @@ class RegistryValidatorJob implements ShouldQueue
                 $response = $activityWorkflowService->validateActivityOnIATIValidator($this->activity);
 
                 $storeStart = now();
-                logger()->info("Store validation process for activity: {$this->activity->id} started at $storeStart");
+//                writeLog("validation", "Store validation process for activity: {$this->activity->id} started at $storeStart");
                 $this->storeValidation($response);
                 $storeEnd = now();
-                logger()->info("Store validation process for activity: {$this->activity->id} ended at $storeEnd");
-                logger()->info("Store validation process for activity {$this->activity->id} took " . $storeEnd->diffInMinutes($storeStart) . ' minutes');
+//                writeLog("validation", "Store validation process for activity: {$this->activity->id} ended at $storeEnd");
+                writeLog('validation', "Store validation process for activity {$this->activity->id} took " . $storeEnd->diffInSeconds($storeStart) . ' seconds or ' . $storeEnd->diffInMinutes($storeStart) . ' minutes.');
             }
         } catch (BadResponseException $ex) {
             if ($ex->getCode() === 422) {
                 $response = $ex->getResponse()->getBody()->getContents();
                 $storeStart = now();
-                logger()->info("Store validation process for activity with validation errors: {$this->activity->id} started at $storeStart");
+//                writeLog("validation", "Store validation process for activity with validation errors: {$this->activity->id} started at $storeStart");
                 $this->storeValidation($response);
                 $storeEnd = now();
-                logger()->info("Store validation process for activity with validation errors: {$this->activity->id} ended at $storeEnd");
-                logger()->info("Store validation process for activity with validation errors {$this->activity->id} took " . $storeEnd->diffInMinutes($storeStart) . ' minutes');
+//                writeLog("validation", "Store validation process for activity with validation errors: {$this->activity->id} ended at $storeEnd");
+                writeLog('validation', "Store validation process for activity with validation errors {$this->activity->id} took " . $storeEnd->diffInSeconds($storeStart) . ' seconds or ' . $storeEnd->diffInMinutes($storeStart) . ' minutes.');
             }
         } catch (BindingResolutionException|JsonException $e) {
             logger($e);
@@ -109,8 +109,8 @@ class RegistryValidatorJob implements ShouldQueue
         }
 
         $endTime = now();
-        logger()->info("Registry validator job for activity: {$this->activity->id} ended at $endTime");
-        logger()->info("Registry validator job for activity {$this->activity->id} took " . $endTime->diffInMinutes($startTime) . ' minutes');
+//        writeLog("validation", "Registry validator job for activity: {$this->activity->id} ended at $endTime");
+        writeLog('validation', "Registry validator job for activity {$this->activity->id} took " . $endTime->diffInSeconds($startTime) . ' seconds or ' . $endTime->diffInMinutes($startTime) . ' minutes.', 'info', true);
     }
 
     /**
