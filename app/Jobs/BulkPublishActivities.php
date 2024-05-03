@@ -92,6 +92,7 @@ class BulkPublishActivities implements ShouldQueue
      */
     public function handle(BulkPublishingStatusService $publishingStatusService, ActivityWorkflowService $activityWorkflowService, ActivityService $activityService): void
     {
+        $this->activities->load(['transactions', 'results.indicators.periods']);
         $startTime = now();
         writeLog('publish', "Bulk publish activities started at $startTime");
 
