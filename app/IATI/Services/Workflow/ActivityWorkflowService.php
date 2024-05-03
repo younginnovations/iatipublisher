@@ -265,7 +265,7 @@ class ActivityWorkflowService
         $settings = $organization->settings;
 
         $xmlGenerationStart = now();
-//        writeLog("validation", "Xml generation process started for validating activity id: $activity->id at " . $xmlGenerationStart);
+        writeLog('validation', "Xml generation process started for validating activity id: $activity->id at " . $xmlGenerationStart);
         $xmlData = $this->xmlGeneratorService->getActivityXmlData(
             $activity,
             $activity->transactions,
@@ -274,23 +274,23 @@ class ActivityWorkflowService
             $organization
         );
         $xmlGenerationEnd = now();
-//        writeLog("validation", "Xml generation process completed for validating activity id: $activity->id at " . $xmlGenerationEnd);
+        writeLog('validation', "Xml generation process completed for validating activity id: $activity->id at " . $xmlGenerationEnd);
         writeLog('validation', 'Xml generation process for activity: ' . $activity->id . ' took ' . $xmlGenerationEnd->diffInSeconds($xmlGenerationStart) . ' seconds or ' . $xmlGenerationEnd->diffInMinutes($xmlGenerationStart) . ' minutes.');
 
         $xmlUploadStart = now();
 //        writeLog("validation", "Xml upload process started for validating activity id: $activity->id at " . $xmlUploadStart);
         awsUploadFile("xmlValidation/$activity->org_id/activity_$activity->id.xml", $xmlData);
         $xmlUploadEnd = now();
-//        writeLog("validation", "Xml upload process completed for validating activity id: $activity->id at " . $xmlUploadEnd);
+        writeLog('validation', "Xml upload process completed for validating activity id: $activity->id at " . $xmlUploadEnd);
         writeLog('validation', 'Xml upload process for activity: ' . $activity->id . ' took ' . $xmlUploadEnd->diffInSeconds($xmlGenerationStart) . ' seconds or ' . $xmlUploadEnd->diffInMinutes($xmlGenerationStart) . ' minutes.');
 
         $xmlValidationStart = now();
 
         try {
-//            writeLog("validation", "Xml validation api started for activity id: $activity->id at " . $xmlValidationStart);
+            writeLog('validation', "Xml validation api started for activity id: $activity->id at " . $xmlValidationStart);
             $response = $this->getResponse($xmlData);
             $xmlValidationEnd = now();
-//            writeLog("validation", "Xml validation api ended for activity id: $activity->id at " . $xmlValidationEnd);
+            writeLog('validation', "Xml validation api ended for activity id: $activity->id at " . $xmlValidationEnd);
             writeLog('validation', 'Xml validation api for activity : ' . $activity->id . ' took ' . $xmlValidationEnd->diffInSeconds($xmlValidationStart) . ' seconds or ' . $xmlValidationEnd->diffInMinutes($xmlValidationStart) . ' minutes.');
         } catch (\Exception $e) {
             $xmlValidationEnd = now();
