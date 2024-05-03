@@ -295,7 +295,7 @@ class XmlGenerator
 
         foreach ($activityData as $activity) {
             $xmlGenerationStarted = now();
-//            writeLog("publish", "Individual Xml generation and upload started for activity: $activity->id at $xmlGenerationStarted");
+            writeLog('publish', "Individual Xml generation and upload started for activity: $activity->id at $xmlGenerationStarted");
 
             $publishedActivity = sprintf('%s-%s.xml', $publisherId, $activity->id);
             $activityCompleteXml = $this->getXml($activity, $activity->transactions ?? [], $activity->results ?? [], $settings, $organization, $refreshTimestamp);
@@ -310,21 +310,21 @@ class XmlGenerator
             awsUploadFile(sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $publishedActivity), $activityCompleteXml->saveXML());
 
             $xmlGenerationCompleted = now();
-//            writeLog("publish", "Individual Xml generation and upload completed for activity: $activity->id at $xmlGenerationCompleted");
+            writeLog('publish', "Individual Xml generation and upload completed for activity: $activity->id at $xmlGenerationCompleted");
             writeLog('publish', 'Individual Xml generation and upload process for activity: ' . $activity->id . ' took ' . $xmlGenerationCompleted->diffInSeconds($xmlGenerationStarted) . ' seconds or ' . $xmlGenerationCompleted->diffInMinutes($xmlGenerationStarted) . ' minutes', 'info', true);
         }
 
         if (count($innerActivityXmlArray)) {
             $xmlAppendStarted = now();
 
-//            writeLog("publish", "Xml append process started at $xmlAppendStarted");
+            writeLog('publish', "Xml append process started at $xmlAppendStarted");
 
             $filename = sprintf('%s-%s.xml', $publisherId, 'activities');
             $this->savePublishedFiles($filename, $activity->org_id, $publishedFiles);
             $this->appendMultipleInnerActivityXmlToMergedXml($innerActivityXmlArray, $settings, $organization, $activityMappedToActivityIdentifier, $refreshTimestamp);
 
             $xmlAppendEnded = now();
-//            writeLog("publish", "Xml append process ended at $xmlAppendEnded");
+            writeLog('publish', "Xml append process ended at $xmlAppendEnded");
             writeLog('publish', 'Xml append process took ' . $xmlAppendEnded->diffInSeconds($xmlAppendStarted) . ' seconds or ' . $xmlAppendEnded->diffInMinutes($xmlAppendStarted) . ' minutes');
         }
     }

@@ -35,9 +35,9 @@ class DuplicateActivityData extends Command
         try {
             // Duplicating transactions
             DB::beginTransaction();
-            $activity = Activity::where('id', 948)->with(['transactions', 'results.indicators.periods'])->first();
+            $activity = Activity::where('id', 953)->with(['transactions', 'results.indicators.periods'])->first();
 
-            for ($i = 1; $i <= 5; $i++) {
+            for ($i = 1; $i <= 1; $i++) {
                 $this->info('Duplicating activity no ' . $i);
                 $newActivity = $activity->replicate();
                 $newActivity->title = $this->getTitleData($activity->title, $i);
@@ -96,14 +96,19 @@ class DuplicateActivityData extends Command
 
     public function duplicateResults($newActivity, $oldResults)
     {
-        foreach ($oldResults as $result) {
-            $this->info('Duplicating result ' . $result->id);
-            $newResult = $result->replicate();
-            $newResult->activity_id = $newActivity->id;
-            $newResult->save();
+        $count = 0;
 
-            $this->duplicateIndicators($newResult, $result->indicators);
-            $this->info('Duplicated result ' . $result->id);
+        foreach ($oldResults as $result) {
+            if ($count <= 5) {
+                $this->info('Duplicating result ' . $result->id);
+                $newResult = $result->replicate();
+                $newResult->activity_id = $newActivity->id;
+                $newResult->save();
+
+                $this->duplicateIndicators($newResult, $result->indicators);
+                $this->info('Duplicated result ' . $result->id);
+                $count++;
+            }
         }
     }
 

@@ -93,7 +93,7 @@ class BulkPublishActivities implements ShouldQueue
     public function handle(BulkPublishingStatusService $publishingStatusService, ActivityWorkflowService $activityWorkflowService, ActivityService $activityService): void
     {
         $startTime = now();
-//        writeLog("publish", "Bulk publish activities started at $startTime");
+        writeLog('publish', "Bulk publish activities started at $startTime");
 
         $counter = 0;
         $this->setServices($publishingStatusService, $activityWorkflowService, $activityService);
@@ -114,8 +114,8 @@ class BulkPublishActivities implements ShouldQueue
         }
 
         $endTime = now();
-//        writeLog("publish", "Bulk publish activities ended at $endTime");
-        writeLog('publish', 'Bulk publish activities took ' . now()->diffInSeconds($startTime) . ' seconds or ' . now()->diffInMinutes($startTime) . ' minutes');
+        writeLog('publish', "Bulk publish activities ended at $endTime");
+        writeLog('publish', 'Bulk publish activities took ' . now()->diffInSeconds($startTime) . ' seconds or ' . $endTime->diffInMinutes($startTime) . ' minutes');
     }
 
     /**
