@@ -310,7 +310,7 @@ class XmlGenerator
             awsUploadFile(sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $publishedActivity), $activityCompleteXml->saveXML());
 
             $xmlGenerationCompleted = now();
-            writeLog('publish', "Individual Xml generation and upload completed for activity: $activity->id at $xmlGenerationCompleted");
+//            writeLog('publish', "Individual Xml generation and upload completed for activity: $activity->id at $xmlGenerationCompleted");
             writeLog('publish', 'Individual Xml generation and upload process for activity: ' . $activity->id . ' took ' . $xmlGenerationCompleted->diffInSeconds($xmlGenerationStarted) . ' seconds or ' . $xmlGenerationCompleted->diffInMinutes($xmlGenerationStarted) . ' minutes', 'info', true);
         }
 
@@ -324,7 +324,7 @@ class XmlGenerator
             $this->appendMultipleInnerActivityXmlToMergedXml($innerActivityXmlArray, $settings, $organization, $activityMappedToActivityIdentifier, $refreshTimestamp);
 
             $xmlAppendEnded = now();
-            writeLog('publish', "Xml append process ended at $xmlAppendEnded");
+//            writeLog('publish', "Xml append process ended at $xmlAppendEnded");
             writeLog('publish', 'Xml append process took ' . $xmlAppendEnded->diffInSeconds($xmlAppendStarted) . ' seconds or ' . $xmlAppendEnded->diffInMinutes($xmlAppendStarted) . ' minutes');
         }
     }

@@ -1112,7 +1112,7 @@ if (!function_exists('writeLog')) {
      *
      * @throws JsonException
      */
-    function writeLog($process, string $content, string $type = 'info', bool $newLine = false): void
+    function writeLog($process, string $content, string $type = 'info', bool $newLine = false, $variableType = null, $time = 0): void
     {
         $fileContent = awsGetFile('BulkPublishTesting/bulk-publish-info.json');
         $data = $fileContent ? json_decode($fileContent, true, 512, JSON_THROW_ON_ERROR) : [];
@@ -1129,8 +1129,12 @@ if (!function_exists('writeLog')) {
             $data[$process][] = '';
         }
 
+        if ($variableType) {
+            $data['total_seconds'][$variableType] = Arr::get($data, "total_seconds.$variableType", 0) + $time;
+        }
+
         awsUploadFile('BulkPublishTesting/bulk-publish-info.json', json_encode($data, JSON_THROW_ON_ERROR));
 
-//        dispatch(new \App\Jobs\WriteBulkPublishLog($process, $content, $type, $newLine));
+//        dispatch(new \App\Jobs\WriteBulkPublishLog($process, $content, $type, $newLine, $variableType, $time));
     }
 }

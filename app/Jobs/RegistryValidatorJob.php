@@ -91,7 +91,7 @@ class RegistryValidatorJob implements ShouldQueue
                 $this->storeValidation($response);
                 $storeEnd = now();
 //                writeLog("validation", "Store validation process for activity: {$this->activity->id} ended at $storeEnd");
-                writeLog('validation', "Store validation process for activity {$this->activity->id} took " . $storeEnd->diffInSeconds($storeStart) . ' seconds or ' . $storeEnd->diffInMinutes($storeStart) . ' minutes.');
+                writeLog('validation', "Store validation process for activity {$this->activity->id} took " . $storeEnd->diffInSeconds($storeStart) . ' seconds or ' . $storeEnd->diffInMinutes($storeStart) . ' minutes.', 'info', false, 'store_validation_process', $storeEnd->diffInSeconds($storeStart));
             }
         } catch (BadResponseException $ex) {
             if ($ex->getCode() === 422) {
@@ -101,7 +101,7 @@ class RegistryValidatorJob implements ShouldQueue
                 $this->storeValidation($response);
                 $storeEnd = now();
 //                writeLog("validation", "Store validation process for activity with validation errors: {$this->activity->id} ended at $storeEnd");
-                writeLog('validation', "Store validation process for activity with validation errors {$this->activity->id} took " . $storeEnd->diffInSeconds($storeStart) . ' seconds or ' . $storeEnd->diffInMinutes($storeStart) . ' minutes.');
+                writeLog('validation', "Store validation process for activity with validation errors {$this->activity->id} took " . $storeEnd->diffInSeconds($storeStart) . ' seconds or ' . $storeEnd->diffInMinutes($storeStart) . ' minutes.', 'info', false, 'store_validation_process', $storeEnd->diffInSeconds($storeStart));
             }
         } catch (BindingResolutionException|JsonException $e) {
             logger($e);
@@ -110,7 +110,7 @@ class RegistryValidatorJob implements ShouldQueue
 
         $endTime = now();
 //        writeLog("validation", "Registry validator job for activity: {$this->activity->id} ended at $endTime");
-        writeLog('validation', "Registry validator job for activity {$this->activity->id} took " . $endTime->diffInSeconds($startTime) . ' seconds or ' . $endTime->diffInMinutes($startTime) . ' minutes.', 'info', true);
+        writeLog('validation', "Registry validator job for activity {$this->activity->id} took " . $endTime->diffInSeconds($startTime) . ' seconds or ' . $endTime->diffInMinutes($startTime) . ' minutes.', 'info', true, 'registry_validator_job', $endTime->diffInSeconds($startTime));
     }
 
     /**

@@ -114,7 +114,7 @@ class BulkPublishActivities implements ShouldQueue
         }
 
         $endTime = now();
-        writeLog('publish', "Bulk publish activities ended at $endTime");
+//        writeLog('publish', "Bulk publish activities ended at $endTime");
         writeLog('publish', 'Bulk publish activities took ' . now()->diffInSeconds($startTime) . ' seconds or ' . $endTime->diffInMinutes($startTime) . ' minutes');
     }
 

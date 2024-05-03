@@ -96,19 +96,19 @@ class DuplicateActivityData extends Command
 
     public function duplicateResults($newActivity, $oldResults)
     {
-        $count = 0;
+//        $count = 0;
 
         foreach ($oldResults as $result) {
-            if ($count <= 5) {
-                $this->info('Duplicating result ' . $result->id);
-                $newResult = $result->replicate();
-                $newResult->activity_id = $newActivity->id;
-                $newResult->save();
+//            if ($count <= 5) {
+            $this->info('Duplicating result ' . $result->id);
+            $newResult = $result->replicate();
+            $newResult->activity_id = $newActivity->id;
+            $newResult->save();
 
-                $this->duplicateIndicators($newResult, $result->indicators);
-                $this->info('Duplicated result ' . $result->id);
-                $count++;
-            }
+            $this->duplicateIndicators($newResult, $result->indicators);
+            $this->info('Duplicated result ' . $result->id);
+//                $count++;
+//            }
         }
     }
 

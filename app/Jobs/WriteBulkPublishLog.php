@@ -20,7 +20,7 @@ class WriteBulkPublishLog implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(public $process, public string $content, public string $type, public bool $newLine)
+    public function __construct(public $process, public string $content, public string $type, public bool $newLine, public $variableType, public $time)
     {
         //
     }
@@ -46,6 +46,10 @@ class WriteBulkPublishLog implements ShouldQueue
 
             if ($this->newLine) {
                 $data[$this->process][] = '';
+            }
+
+            if ($variableType) {
+                $data['total_seconds'][$variableType] = Arr::get($data, "total_seconds.$variableType", 0) + $time;
             }
 
             awsUploadFile('BulkPublishTesting/bulk-publish-info.json', json_encode($data, JSON_THROW_ON_ERROR));

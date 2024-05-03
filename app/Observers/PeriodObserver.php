@@ -57,11 +57,11 @@ class PeriodObserver
      */
     public function updated(Period $period): void
     {
-        $resultObserver = new ResultObserver();
-
-        $this->setPeriodDefaultValues($period);
-        $resultObserver->updateActivityElementStatus($period->indicator->result);
-        $resultObserver->resetActivityStatus($period->indicator->result);
+//        $resultObserver = new ResultObserver();
+//
+//        $this->setPeriodDefaultValues($period);
+//        $resultObserver->updateActivityElementStatus($period->indicator->result);
+//        $resultObserver->resetActivityStatus($period->indicator->result);
     }
 
     /**
@@ -76,11 +76,11 @@ class PeriodObserver
      */
     public function setPeriodDefaultValues($period, bool $changeUpdatedAt = true): void
     {
-        if (!$changeUpdatedAt) {
-            $period->timestamps = false;
-        }
-
-        $period->saveQuietly();
+//        if (!$changeUpdatedAt) {
+//            $period->timestamps = false;
+//        }
+//
+//        $period->saveQuietly();
     }
 
     /**
@@ -93,8 +93,8 @@ class PeriodObserver
      */
     public function deleted(Period $period): void
     {
-        $resultObserver = new ResultObserver();
-        $resultObserver->updateActivityElementStatus($period->indicator->result);
-        $resultObserver->resetActivityStatus($period->indicator->result);
+//        $resultObserver = new ResultObserver();
+//        $resultObserver->updateActivityElementStatus($period->indicator->result);
+//        $resultObserver->resetActivityStatus($period->indicator->result);
     }
 }

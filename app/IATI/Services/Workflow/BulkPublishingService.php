@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Workflow;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ValidationStatusRepository;
 use App\IATI\Repositories\ApiLog\ApiLogRepository;
 use App\IATI\Services\Activity\ActivityService;
@@ -137,14 +138,23 @@ class BulkPublishingService
         $user = Auth::user();
         $activityTitle = [];
 
-        foreach ($activityIds as $activityId) {
-            $activity = $this->activityService->getActivity($activityId);
+        $activities = Activity::whereIn('id', $activityIds)->with(['transactions', 'results.indicators.periods'])->get();
 
+        foreach ($activities as $activity) {
             if ($activity && $activity->status === 'draft') {
                 $activityTitle[] = $activity->default_title_narrative;
                 RegistryValidatorJob::dispatch($activity, $user);
             }
         }
+
+//        foreach ($activityIds as $activityId) {
+//            $activity = $this->activityService->getActivity($activityId);
+//
+//            if ($activity && $activity->status === 'draft') {
+//                $activityTitle[] = $activity->default_title_narrative;
+//                RegistryValidatorJob::dispatch($activity, $user);
+//            }
+//        }
 
         return $activityTitle;
     }
