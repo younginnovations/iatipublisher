@@ -316,6 +316,7 @@ class XmlGenerator
 
         if (count($innerActivityXmlArray)) {
             $xmlAppendStarted = now();
+
 //            writeLog("publish", "Xml append process started at $xmlAppendStarted");
 
             $filename = sprintf('%s-%s.xml', $publisherId, 'activities');
