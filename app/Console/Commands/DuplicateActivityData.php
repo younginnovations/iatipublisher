@@ -33,11 +33,13 @@ class DuplicateActivityData extends Command
     public function handle()
     {
         try {
-            // Duplicating transactions
-            DB::beginTransaction();
-            $activity = Activity::where('id', 953)->with(['transactions', 'results.indicators.periods'])->first();
+            $activity_id = $this->ask('Insert activity id to duplicate');
+            $no_of_iterations = $this->ask('Insert number of iterations');
 
-            for ($i = 1; $i <= 1; $i++) {
+            DB::beginTransaction();
+            $activity = Activity::where('id', $activity_id)->with(['transactions', 'results.indicators.periods'])->first();
+
+            for ($i = 1; $i <= $no_of_iterations; $i++) {
                 $this->info('Duplicating activity no ' . $i);
                 $newActivity = $activity->replicate();
                 $newActivity->title = $this->getTitleData($activity->title, $i);
