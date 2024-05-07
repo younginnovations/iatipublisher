@@ -321,6 +321,7 @@ class XmlGenerator
 
             $filename = sprintf('%s-%s.xml', $publisherId, 'activities');
             $this->savePublishedFiles($filename, $activity->org_id, $publishedFiles);
+            writeLog('publish', 'Saved published files to database.');
             $this->appendMultipleInnerActivityXmlToMergedXml($innerActivityXmlArray, $settings, $organization, $activityMappedToActivityIdentifier, $refreshTimestamp);
 
             $xmlAppendEnded = now();
@@ -757,9 +758,11 @@ class XmlGenerator
     public function appendMultipleInnerActivityXmlToMergedXml(array $innerActivityXmlArray, $settings, $organization, array $activityMappedToActivityIdentifier, bool $refreshTimestamp = true): void
     {
         $mergedXml = $this->getMergedXmlFromS3($settings);
+        writeLog('publish', 'Retrieved merged file.');
 
         foreach ($innerActivityXmlArray as $targetedIatiIdentifier => $innerActivity) {
             $mergedXml = removeSingleActivityXmlFromMergedActivitiesXml($mergedXml, $targetedIatiIdentifier);
+            writeLog('publish', "Removed activity xml from merged file for $targetedIatiIdentifier in innerActivityXmlArray.");
         }
 
         foreach ($activityMappedToActivityIdentifier as $activity) {
@@ -768,24 +771,34 @@ class XmlGenerator
             if (!empty($oldIatiIdentifiers)) {
                 foreach ($oldIatiIdentifiers as $oldTargetIdentifier) {
                     $mergedXml = removeSingleActivityXmlFromMergedActivitiesXml($mergedXml, $oldTargetIdentifier);
+                    writeLog('publish', "Removed activity xml from merged file for $oldTargetIdentifier in activityMappedToActivityIdentifier");
                 }
             }
         }
 
         $mergedXmlAsString = $mergedXml->saveXML();
+        writeLog('publish', 'Created merged xml.');
+
         $mergedXmlAsString = preventMalformedXmlIfNoActivityNode($mergedXmlAsString);
+        writeLog('publish', 'Prevented malformed xml.');
+
         $mergedXmlAsString = removeClosingIatiActivitiesTag($mergedXmlAsString);
+        writeLog('publish', 'Removed closing iati activities tag.');
 
         foreach ($innerActivityXmlArray as $innerActivity) {
             $mergedXmlAsString .= $innerActivity;
         }
 
         $mergedXmlAsString .= '</iati-activities>';
+        writeLog('publish', 'Merged xml as string.');
 
         $mergedXml = new DOMDocument();
+        writeLog('publish', 'Started loading xml.');
         $mergedXml->loadXML($mergedXmlAsString);
+        writeLog('publish', 'Load xml.');
 
         $this->putMergedXmlToS3($mergedXml, $settings, $refreshTimestamp);
+        writeLog('publish', 'Uploaded xml to S3.');
     }
 
     /**

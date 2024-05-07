@@ -172,7 +172,7 @@ return [
             'maxProcesses' => 1,
             'maxTime' => 0,
             'maxJobs' => 0,
-            'memory' => 1024,
+            'memory' => 2048,
             'tries' => 1,
             'timeout' => 60 * 60,
             'nice' => 0,
