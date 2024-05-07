@@ -168,12 +168,25 @@ class BulkPublishActivities implements ShouldQueue
      *
      * @return void
      */
-    public function failed(): void
+    public function failed(\Exception $exception): void
     {
         try {
             app(BulkPublishingStatusRepository::class)->failStuckActivities($this->organizationId);
+
+            $this->writeToAws($exception);
         } catch (\Exception $e) {
             awsUploadFile('error-bulk-publish.log', $e->getMessage());
         }
+    }
+
+    public function writeToAws($exception): void
+    {
+        $fileContent = awsGetFile('BulkPublishTesting/bulk-publish-info.json');
+        $data = $fileContent ? json_decode($fileContent, true, 512, JSON_THROW_ON_ERROR) : [];
+        $data['bulk_publish_fail_error'] = [
+            'message' => $exception->getMessage(),
+            'exception' => $exception,
+        ];
+        awsUploadFile('BulkPublishTesting/bulk-publish-info.json', json_encode($data, JSON_THROW_ON_ERROR));
     }
 }
