@@ -22,15 +22,15 @@ class Budget extends Element
      * @var array
      */
     private array $_csvHeaders
-    = [
-        'budget_type',
-        'budget_status',
-        'budget_period_start',
-        'budget_period_end',
-        'budget_value',
-        'budget_value_date',
-        'budget_currency',
-    ];
+        = [
+            'budget_type',
+            'budget_status',
+            'budget_period_start',
+            'budget_period_end',
+            'budget_value',
+            'budget_value_date',
+            'budget_currency',
+        ];
 
     /**
      * Index under which the data is stored within the object.

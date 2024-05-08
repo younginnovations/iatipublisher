@@ -447,7 +447,7 @@ trait MigrateActivityPublishedTrait
                     'Completed unpublishing segmented files for Aidstream org: ' . $aidstreamOrganizationId . '.'
                 );
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $message = "Error while unpublishing segmented files for Aidstream org: {$aidstreamOrganizationId} with error: {$exception->getMessage()}.";
             $this->setGeneralError($message)->setDetailedError(
                 $message,

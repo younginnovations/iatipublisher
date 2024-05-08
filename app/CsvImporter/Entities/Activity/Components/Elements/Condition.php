@@ -22,11 +22,11 @@ class Condition extends Element
      * @var array
      */
     private array $_csvHeaders
-    = [
-        'conditions_attached',
-        'condition_type',
-        'condition_narrative',
-    ];
+        = [
+            'conditions_attached',
+            'condition_type',
+            'condition_narrative',
+        ];
 
     /**
      * Index under which the data is stored within the object.

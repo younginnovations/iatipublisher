@@ -49,7 +49,7 @@ class ApiLogService
     /**
      * @param array $postData
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function save(array $postData): Model
     {

@@ -251,7 +251,7 @@ if (!function_exists('getEncodingType')) {
             }
 
             return 'UTF-8';
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return 'UTF-8';
         }
     }

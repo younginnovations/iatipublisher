@@ -22,22 +22,22 @@ class PlannedDisbursement extends Element
      * @var array
      */
     private array $_csvHeaders
-    = [
-        'planned_disbursement_type',
-        'planned_disbursement_period_start',
-        'planned_disbursement_period_end',
-        'planned_disbursement_value',
-        'planned_disbursement_value_currency',
-        'planned_disbursement_value_date',
-        'planned_disbursement_provider_org_reference',
-        'planned_disbursement_provider_org_activity_id',
-        'planned_disbursement_provider_org_type',
-        'planned_disbursement_provider_org_narrative',
-        'planned_disbursement_receiver_org_reference',
-        'planned_disbursement_receiver_org_activity_id',
-        'planned_disbursement_receiver_org_type',
-        'planned_disbursement_receiver_org_narrative',
-    ];
+        = [
+            'planned_disbursement_type',
+            'planned_disbursement_period_start',
+            'planned_disbursement_period_end',
+            'planned_disbursement_value',
+            'planned_disbursement_value_currency',
+            'planned_disbursement_value_date',
+            'planned_disbursement_provider_org_reference',
+            'planned_disbursement_provider_org_activity_id',
+            'planned_disbursement_provider_org_type',
+            'planned_disbursement_provider_org_narrative',
+            'planned_disbursement_receiver_org_reference',
+            'planned_disbursement_receiver_org_activity_id',
+            'planned_disbursement_receiver_org_type',
+            'planned_disbursement_receiver_org_narrative',
+        ];
 
     /**
      * Index under which the data is stored within the object.

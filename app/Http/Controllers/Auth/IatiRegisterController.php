@@ -279,7 +279,7 @@ class IatiRegisterController extends Controller
             $this->db->commit();
 
             return ['success' => true, 'user' => $user];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e);
         }
     }
@@ -303,7 +303,7 @@ class IatiRegisterController extends Controller
             ];
 
             return view('web.iati_register', compact('types'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return view('web.welcome');

@@ -39,7 +39,7 @@ class OrganizationRepository extends Repository
      *
      * @param array $data
      *
-     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|mixed
+     * @return Builder|Model|mixed
      */
     public function createOrganization(array $data): mixed
     {

@@ -20,14 +20,14 @@ class ReportingOrgController extends Controller
     /**
      * @var ReportingOrgService
      */
-    protected reportingOrgService $reportingOrgService;
+    protected ReportingOrgService $reportingOrgService;
 
     /**
      * ReportingOrgController Constructor.
      *
-     * @param reportingOrgService    $reportingOrgService
+     * @param ReportingOrgService    $reportingOrgService
      */
-    public function __construct(reportingOrgService $reportingOrgService)
+    public function __construct(ReportingOrgService $reportingOrgService)
     {
         $this->reportingOrgService = $reportingOrgService;
     }

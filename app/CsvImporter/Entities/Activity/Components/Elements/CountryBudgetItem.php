@@ -22,12 +22,12 @@ class CountryBudgetItem extends Element
      * @var array
      */
     private array $_csvHeaders
-    = [
-        'country_budget_item_vocabulary',
-        'budget_item_code',
-        'budget_item_percentage',
-        'budget_item_description',
-    ];
+        = [
+            'country_budget_item_vocabulary',
+            'budget_item_code',
+            'budget_item_percentage',
+            'budget_item_description',
+        ];
 
     /**
      * Index under which the data is stored within the object.
