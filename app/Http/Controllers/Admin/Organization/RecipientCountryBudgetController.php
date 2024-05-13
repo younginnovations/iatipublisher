@@ -24,7 +24,7 @@ class RecipientCountryBudgetController extends Controller
     /**
      * RecipientCountryBudgetController Constructor.
      *
-     * @param recipientCountryBudgetService    $recipientCountryBudgetService
+     * @param RecipientCountryBudgetService    $recipientCountryBudgetService
      */
     public function __construct(RecipientCountryBudgetService $recipientCountryBudgetService)
     {

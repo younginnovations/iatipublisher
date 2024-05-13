@@ -16,7 +16,7 @@ class ActivityIdentifierService
     /**
      * @var ActivityRepository
      */
-    protected activityRepository $activityRepository;
+    protected ActivityRepository $activityRepository;
 
     /**
      * @var BaseFormCreator
@@ -29,7 +29,7 @@ class ActivityIdentifierService
      * @param ActivityRepository $activityRepository
      * @param BaseFormCreator    $baseFormCreator
      */
-    public function __construct(activityRepository $activityRepository, BaseFormCreator $baseFormCreator)
+    public function __construct(ActivityRepository $activityRepository, BaseFormCreator $baseFormCreator)
     {
         $this->activityRepository = $activityRepository;
         $this->baseFormCreator = $baseFormCreator;

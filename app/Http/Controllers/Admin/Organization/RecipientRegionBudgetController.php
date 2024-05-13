@@ -24,7 +24,7 @@ class RecipientRegionBudgetController extends Controller
     /**
      * RecipientRegionBudgetController Constructor.
      *
-     * @param recipientRegionBudgetService    $recipientRegionBudgetService
+     * @param RecipientRegionBudgetService    $recipientRegionBudgetService
      */
     public function __construct(RecipientRegionBudgetService $recipientRegionBudgetService)
     {

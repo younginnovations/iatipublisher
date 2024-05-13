@@ -24,7 +24,7 @@ class ReportingOrgController extends Controller
     /**
      * ReportingOrgController Constructor.
      *
-     * @param reportingOrgService    $reportingOrgService
+     * @param ReportingOrgService    $reportingOrgService
      */
     public function __construct(ReportingOrgService $reportingOrgService)
     {

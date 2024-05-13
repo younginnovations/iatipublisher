@@ -22,13 +22,13 @@ class HumanitarianScope extends Element
      * @var array
      */
     private array $_csvHeaders
-    = [
-        'humanitarian_scope_type',
-        'humanitarian_scope_vocabulary',
-        'humanitarian_scope_vocabulary_uri',
-        'humanitarian_scope_code',
-        'humanitarian_scope_narrative',
-    ];
+        = [
+            'humanitarian_scope_type',
+            'humanitarian_scope_vocabulary',
+            'humanitarian_scope_vocabulary_uri',
+            'humanitarian_scope_code',
+            'humanitarian_scope_narrative',
+        ];
 
     /**
      * Index under which the data is stored within the object.

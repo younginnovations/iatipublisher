@@ -51,8 +51,8 @@ use Illuminate\Support\Facades\Route;
 */
 Route::group(['middleware' => ['can:crud_activity']], static function () {
     Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
-    Route::get('/activities/page/{page?}', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getPaginatedActivities'])->name('activities.paginate');
-    Route::get('/activities/codelists', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getLanguagesOrganization'])->name('activities.codelist');
+    Route::get('/activities/page/{page?}', [ActivityController::class, 'getPaginatedActivities'])->name('activities.paginate');
+    Route::get('/activities/codelists', [ActivityController::class, 'getLanguagesOrganization'])->name('activities.codelist');
     Route::resource('/activity', ActivityController::class)->except('index')->parameters(['activity' => 'id']);
     Route::get('activity/{id}/title', [TitleController::class, 'edit'])->name('activity.title.edit');
     Route::put('activity/{id}/title', [TitleController::class, 'update'])->name('activity.title.update');
@@ -118,7 +118,7 @@ Route::group(['middleware' => ['can:crud_activity']], static function () {
     Route::put('activity/{id}/reporting_org', [ReportingOrgController::class, 'update'])->name('activity.reporting-org.update');
 
     Route::resource('activity.transaction', TransactionController::class)->parameters(['activity' => 'id', 'transaction' => 'transactionId']);
-    Route::get('/activity/{id}/transactions/page/{page?}', [App\Http\Controllers\Admin\Activity\TransactionController::class, 'getPaginatedTransactions'])->name('activity.transactions.paginate');
+    Route::get('/activity/{id}/transactions/page/{page?}', [TransactionController::class, 'getPaginatedTransactions'])->name('activity.transactions.paginate');
 
     // Publish Activity
     Route::post('activity/{id}/publish', [ActivityWorkflowController::class, 'publish'])->name('activity.publish');

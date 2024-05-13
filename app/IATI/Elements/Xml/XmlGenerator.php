@@ -250,7 +250,7 @@ class XmlGenerator
     /**
      * Generates single activity and combines xml file and publishes to IATI.
      */
-    public function generateActivityXml($activity, $transaction, $result, $settings, $organization): ?DomDocument
+    public function generateActivityXml($activity, $transaction, $result, $settings, $organization): ?DOMDocument
     {
         $publishingInfo = $settings->publishing_info;
         $publisherId = Arr::get($publishingInfo, 'publisher_id', 'Not Available');
@@ -413,10 +413,10 @@ class XmlGenerator
      * @param $organization
      * @param bool $refreshTimestamp
      *
-     * @return DomDocument|null
+     * @return DOMDocument|null
      * @throws JsonException
      */
-    public function getXml($activity, $transaction, $result, $settings, $organization, bool $refreshTimestamp = true): ?DomDocument
+    public function getXml($activity, $transaction, $result, $settings, $organization, bool $refreshTimestamp = true): ?DOMDocument
     {
         $defaultValues = $activity->default_field_values;
 

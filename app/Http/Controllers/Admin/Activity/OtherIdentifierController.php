@@ -17,14 +17,14 @@ use Illuminate\Http\RedirectResponse;
 class OtherIdentifierController extends Controller
 {
     /**
-     * @var otherIdentifierService
+     * @var OtherIdentifierService
      */
     protected OtherIdentifierService $otherIdentifierService;
 
     /**
      * OtherIdentifierController Constructor.
      *
-     * @param otherIdentifierService $otherIdentifierService
+     * @param OtherIdentifierService $otherIdentifierService
      */
     public function __construct(OtherIdentifierService $otherIdentifierService)
     {
@@ -36,7 +36,7 @@ class OtherIdentifierController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View|void
      */
     public function edit(int $id): View|RedirectResponse
     {

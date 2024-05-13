@@ -27,7 +27,7 @@ class DashboardController extends Controller
     public DashboardService $dashboardService;
 
     /**
-     * @var CSVGenerator
+     * @var CsvGenerator
      */
     public CsvGenerator $csvGenerator;
 

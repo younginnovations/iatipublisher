@@ -68,7 +68,7 @@ class UserController extends Controller
      * @param DatabaseManager $db
      * @param DashboardService $dashboardService
      */
-    public function __construct(UserService $userService, OrganizationService $organizationService, AuditService $auditService, CSVGenerator $csvGenerator, DatabaseManager $db, DashboardService $dashboardService)
+    public function __construct(UserService $userService, OrganizationService $organizationService, AuditService $auditService, CsvGenerator $csvGenerator, DatabaseManager $db, DashboardService $dashboardService)
     {
         $this->userService = $userService;
         $this->organizationService = $organizationService;

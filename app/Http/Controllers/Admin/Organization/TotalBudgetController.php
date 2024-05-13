@@ -16,12 +16,12 @@ use Illuminate\Support\Facades\Auth;
  */
 class TotalBudgetController extends Controller
 {
-    protected totalBudgetService $totalBudgetService;
+    protected TotalBudgetService $totalBudgetService;
 
     /**
      * TotalBudgetController Constructor.
      *
-     * @param totalBudgetService    $totalBudgetService
+     * @param TotalBudgetService    $totalBudgetService
      */
     public function __construct(TotalBudgetService $totalBudgetService)
     {

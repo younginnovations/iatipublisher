@@ -24,9 +24,9 @@ class DocumentLinkController extends Controller
     /**
      * DocumentLinkController Constructor.
      *
-     * @param documentLinkService    $documentLinkService
+     * @param DocumentLinkService    $documentLinkService
      */
-    public function __construct(documentLinkService $documentLinkService)
+    public function __construct(DocumentLinkService $documentLinkService)
     {
         $this->documentLinkService = $documentLinkService;
     }

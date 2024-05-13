@@ -24,7 +24,7 @@ class RecipientOrgBudgetController extends Controller
     /**
      * RecipientOrgBudgetController Constructor.
      *
-     * @param recipientOrgBudgetService    $recipientOrgBudgetService
+     * @param RecipientOrgBudgetService    $recipientOrgBudgetService
      */
     public function __construct(RecipientOrgBudgetService $recipientOrgBudgetService)
     {
