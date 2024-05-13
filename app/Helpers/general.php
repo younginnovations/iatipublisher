@@ -980,17 +980,13 @@ if (!function_exists('getJsonFromSource')) {
 
         if ($jsonString) {
             return $jsonString;
-        }
-
-        if ($completePath === 'AppData/Data/Organization/OrganizationRegistrationAgency.json') {
+        } else {
             $jsonString = awsGetFile($completePath);
 
-            if ($jsonString) {
-                return $jsonString;
-            }
-        }
+            Cache::set($completePath, $jsonString);
 
-        return file_get_contents(public_path($completePath));
+            return $jsonString;
+        }
     }
 }
 
