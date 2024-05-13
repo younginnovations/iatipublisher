@@ -193,8 +193,8 @@
           class="mt-5 mb-12 flex items-center justify-center gap-4 space-x-3"
         >
           <a
-            href="/files/Manuals/IATI_Publisher-User_Manual_v1.0.pdf"
-            download="User Manual"
+            href="/files/Manuals/IATI_Publisher-Import_manual.pdf"
+            download="Import Manual"
             class="flex items-center space-x-1 text-bluecoral"
           >
             <span class="mx-1.5">Read our import manual</span>
