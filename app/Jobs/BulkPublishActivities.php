@@ -61,6 +61,8 @@ class BulkPublishActivities implements ShouldQueue
      */
     protected ActivityService $activityService;
 
+    public $timeout = 36000;
+
     /**
      * Create a new job instance.
      *
