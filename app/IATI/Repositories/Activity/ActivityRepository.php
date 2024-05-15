@@ -155,7 +155,7 @@ class ActivityRepository extends Repository
      */
     public function getActivitiesHavingIds($activityIds): object
     {
-        return $this->model->whereIn('id', $activityIds)->where('org_id', auth()->user()->organization->id)->where('status', 'draft')->get();
+        return $this->model->whereIn('id', $activityIds)->where('org_id', auth()->user()->organization->id)->where('status', 'draft')->with(['transactions', 'results.indicators.periods'])->get();
     }
 
     /**

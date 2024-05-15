@@ -369,7 +369,7 @@ class ResultService
                     ],
                     'document-link' => $this->buildDocumentLink(Arr::get($result, 'document_link', [])),
                     'reference'     => $this->buildReference(Arr::get($result, 'reference', []), 'vocabulary-uri'),
-                    'indicator'     => $this->buildIndicator($totalResult->indicators()->orderBy('created_at', 'asc')->get()),
+                    'indicator'     => $this->buildIndicator($totalResult->indicators->sortBy('created_at')),
                 ];
             }
         }
@@ -406,7 +406,7 @@ class ResultService
                     'document-link' => $this->buildDocumentLink(Arr::get($indicator, 'document_link', [])),
                     'reference'     => $this->buildReference(Arr::get($indicator, 'reference', []), 'indicator-uri', 'indicator_uri'),
                     'baseline'      => $this->buildBaseline(Arr::get($indicator, 'baseline', []), Arr::get($indicator, 'measure', null)),
-                    'period'        => $this->buildPeriod($totalIndicator->periods()->orderBy('created_at', 'asc')->get(), Arr::get($indicator, 'measure', null)),
+                    'period'        => $this->buildPeriod($totalIndicator->periods->sortBy('created_at'), Arr::get($indicator, 'measure', null)),
                 ];
             }
         }
