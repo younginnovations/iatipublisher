@@ -1,7 +1,7 @@
 <template>
   <div class="adminBar bg-eggshell px-10 py-3">
     <div class="inline-flex text-sm leading-normal">
-      <svg-vue icon="smile" class="mt-1 mr-1 text-base text-spring-50" />
+      <svg-vue icon="smile" class="mr-1 mt-1 text-base text-spring-50" />
       <span class="mr-1">
         Logged in as
         <b class="capitalize"> {{ name }} </b>,

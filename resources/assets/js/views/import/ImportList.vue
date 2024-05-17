@@ -1,5 +1,5 @@
 <template>
-  <div class="listing__page bg-paper px-10 pt-4 pb-[71px]">
+  <div class="listing__page bg-paper px-10 pb-[71px] pt-4">
     <div class="page-title mb-6">
       <div class="pb-4 text-caption-c1 text-n-40">
         <div>

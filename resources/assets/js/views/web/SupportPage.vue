@@ -2,7 +2,7 @@
   <div class="smooth -mb-7 px-5 py-7 sm:px-10 sm:py-14 md:-mb-20">
     <div class="mx-auto max-w-[700px]">
       <section class="rounded bg-white py-4 shadow-textbox sm:py-8">
-        <article class="py-4 px-6 sm:py-6 sm:px-12">
+        <article class="px-6 py-4 sm:px-12 sm:py-6">
           <h3 class="text-2xl font-bold text-bluecoral">Support</h3>
 
           <p class="mt-4 text-base">

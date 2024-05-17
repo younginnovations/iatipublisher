@@ -40,7 +40,7 @@
 
       <span
         id="fixed-date-range"
-        class="w-fit rounded bg-n-10 py-1 px-2 text-center text-xs text-bluecoral hover:cursor-pointer"
+        class="w-fit rounded bg-n-10 px-2 py-1 text-center text-xs text-bluecoral hover:cursor-pointer"
         @click="openCalendar"
         >{{ fixed }}
       </span>
@@ -91,7 +91,7 @@
         </VueDatePicker>
 
         <span
-          class="absolute top-1/2 right-0 -translate-y-1/2 cursor-pointer"
+          class="absolute right-0 top-1/2 -translate-y-1/2 cursor-pointer"
           style="height: fit-content; font-size: 20px; margin-top: 2px"
           @click="openCalendar"
         >

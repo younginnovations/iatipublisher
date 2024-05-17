@@ -62,7 +62,7 @@
         <div class="mb-2 flex justify-between">
           <div class="text-xs font-bold">Error message</div>
           <a
-            class="top-1 right-3 cursor-pointer text-xs font-bold"
+            class="right-3 top-1 cursor-pointer text-xs font-bold"
             @click="downloadError('error', message)"
             >Download error message</a
           >

@@ -76,10 +76,10 @@
             href="https://www.youtube.com/channel/UCAVH1gcgJXElsj8ENC-bDQQ"
             target="_blank"
           >
-            <svg-vue class="mt-1 mr-1 text-4xl" icon="youtube" />
+            <svg-vue class="mr-1 mt-1 text-4xl" icon="youtube" />
           </a>
           <a class="ml-4" href="https://twitter.com/IATI_aid" target="_blank">
-            <svg-vue class="mt-1 mr-1 text-4xl" icon="twitter" />
+            <svg-vue class="mr-1 mt-1 text-4xl" icon="twitter" />
           </a>
         </div>
       </div>

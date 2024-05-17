@@ -1,7 +1,7 @@
 <template>
   <div
     id="right"
-    class="right m-auto flex basis-2/4 items-center rounded-l-lg rounded-r-lg bg-white py-5 px-5 sm:py-10 sm:px-10 md:my-0 md:rounded-l-none lg:px-14 lg:py-28 xl:px-24"
+    class="right m-auto flex basis-2/4 items-center rounded-l-lg rounded-r-lg bg-white px-5 py-5 sm:px-10 sm:py-10 md:my-0 md:rounded-l-none lg:px-14 lg:py-28 xl:px-24"
   >
     <Loader v-if="isLoaderVisible"></Loader>
 
@@ -33,7 +33,7 @@
           </span>
         </div>
       </div>
-      <div class="relative mt-6 mb-4 flex flex-col text-sm text-bluecoral">
+      <div class="relative mb-4 mt-6 flex flex-col text-sm text-bluecoral">
         <label for="username">Email / Username</label>
         <input
           id="username"
@@ -45,7 +45,7 @@
           type="text"
           placeholder="Enter a registered email or username"
         />
-        <svg-vue class="absolute top-12 left-5 text-xl sm:left-6" icon="user" />
+        <svg-vue class="absolute left-5 top-12 text-xl sm:left-6" icon="user" />
         <span
           v-if="errorData.emailOrUsername !== ''"
           class="error text-xs"
@@ -67,7 +67,7 @@
           placeholder="Enter a correct password"
         />
         <svg-vue
-          class="absolute top-12 left-5 text-xl sm:left-6"
+          class="absolute left-5 top-12 text-xl sm:left-6"
           icon="pw-lock"
         />
         <span v-if="errorData.password" class="error" role="alert">{{

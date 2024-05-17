@@ -358,7 +358,7 @@
           </span>
           <div class="open-text h-[38px]">
             <svg-vue
-              class="absolute top-1/2 left-2 w-10 -translate-y-1/2 text-base"
+              class="absolute left-2 top-1/2 w-10 -translate-y-1/2 text-base"
               icon="magnifying-glass"
             />
             <input
@@ -383,7 +383,7 @@
           <span
             v-for="(item, index) in filter.organization"
             :key="index"
-            class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+            class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
           >
             <span class="text-n-40">Org:</span
             ><span
@@ -416,7 +416,7 @@
           <span
             v-for="(item, index) in filter.status"
             :key="index"
-            class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+            class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
           >
             <span class="text-n-40">Status:</span
             ><span>{{ textBubbledata(item, 'status') }}</span>
@@ -436,7 +436,7 @@
           class="inline-flex flex-wrap gap-2"
         >
           <span
-            class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+            class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
           >
             <span class="text-n-40">Date:</span
             ><span>{{
@@ -675,7 +675,7 @@
                       :class="
                         user['status'] ? 'translate-x-0' : 'translate-x-full'
                       "
-                      class="absolute top-1/2 left-[2px] block h-3 w-3 -translate-y-1/2 rounded-full bg-white duration-200"
+                      class="absolute left-[2px] top-1/2 block h-3 w-3 -translate-y-1/2 rounded-full bg-white duration-200"
                     />
                   </span>
                 </p>

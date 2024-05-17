@@ -61,7 +61,7 @@
             >
               <PreviouslyPublished
                 v-if="datum['linked_to_iati'] && datum['status'] === 'draft'"
-                class="absolute top-0 left-0"
+                class="absolute left-0 top-0"
               />
               <div class="ellipsis relative w-full">
                 <a

@@ -8,7 +8,7 @@
     padding: 16px 0px 24px;
 
     &__container {
-      @apply relative rounded-lg bg-white p-7 md:py-14 md:px-20;
+      @apply relative rounded-lg bg-white p-7 md:px-20 md:py-14;
       max-height: 65vh;
 
       @media screen and (max-width: 440px) {

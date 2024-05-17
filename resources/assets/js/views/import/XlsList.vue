@@ -1,5 +1,5 @@
 <template>
-  <div class="py-8 px-10">
+  <div class="px-10 py-8">
     <div class="flex flex-wrap justify-between">
       <h6 class="text-3xl font-bold text-n-50">
         Add/Update All <span class="capitalize">{{ status.template }}</span>

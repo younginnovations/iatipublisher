@@ -85,7 +85,7 @@
             divide its work internally into activities. You could consider one
             activity to be:
           </p>
-          <ul class="mt-4 ml-4 list-disc text-base text-bluecoral">
+          <ul class="ml-4 mt-4 list-disc text-base text-bluecoral">
             <li class="text-base">
               <span class="text-black"
                 >a large programme at country or region level</span
@@ -103,7 +103,7 @@
           <p class="mt-2 text-base">
             You can provide your Activity Data in two ways on IATI Publisher:
           </p>
-          <ul class="mt-4 ml-4 list-disc text-base text-bluecoral">
+          <ul class="ml-4 mt-4 list-disc text-base text-bluecoral">
             <li class="text-base">
               <span class="text-black"
                 >fill out the data fields in the Activity Data form for each

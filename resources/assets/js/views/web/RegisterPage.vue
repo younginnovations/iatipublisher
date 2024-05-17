@@ -241,7 +241,7 @@
               </div>
               <p
                 v-if="checkStep(key)"
-                class="detail mt-2 mb-6 font-normal xl:pr-2"
+                class="detail mb-6 mt-2 font-normal xl:pr-2"
               >
                 {{ form['description'] }}
               </p>
@@ -735,7 +735,7 @@ export default defineComponent({
         @apply leading-9;
       }
 
-      @apply my-7 mx-3 text-center leading-7 sm:leading-10 lg:mb-10 lg:mt-14;
+      @apply mx-3 my-7 text-center leading-7 sm:leading-10 lg:mb-10 lg:mt-14;
 
       p {
         font-weight: normal;

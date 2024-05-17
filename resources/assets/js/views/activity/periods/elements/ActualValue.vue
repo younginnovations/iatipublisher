@@ -1,5 +1,5 @@
 <template>
-  <div class="target mt-6 ml-4">
+  <div class="target ml-4 mt-6">
     <div v-for="(tValue, v) in actualValue" :key="v" class="item">
       <table class="mb-3 w-full">
         <tbody>

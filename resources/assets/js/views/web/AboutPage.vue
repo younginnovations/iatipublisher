@@ -2,7 +2,7 @@
   <div class="smooth -mb-7 px-5 py-7 sm:px-10 sm:py-14 md:-mb-20">
     <div class="mx-auto max-w-[700px]">
       <section class="rounded bg-white py-4 shadow-textbox sm:py-8">
-        <article class="py-4 px-6 sm:py-6 sm:px-12">
+        <article class="px-6 py-4 sm:px-12 sm:py-6">
           <h3 class="my-2 text-2xl font-bold text-bluecoral">
             What is IATI Publisher?
           </h3>
@@ -13,11 +13,11 @@
             and humanitarian data.
           </p>
         </article>
-        <article class="py-4 px-6 sm:py-6 sm:px-12">
+        <article class="px-6 py-4 sm:px-12 sm:py-6">
           <h3 class="my-2 text-2xl font-bold text-bluecoral">
             Use IATI Publisher to:
           </h3>
-          <ul class="mt-4 ml-4 list-disc text-base text-bluecoral">
+          <ul class="ml-4 mt-4 list-disc text-base text-bluecoral">
             <li class="text-base">
               <span class="text-black"
                 >Register your organisation with an IATI Publisher account</span
@@ -74,7 +74,7 @@
             >.
           </p>
         </article>
-        <article class="ounded py-4 px-6 sm:py-6 sm:px-12">
+        <article class="ounded px-6 py-4 sm:px-12 sm:py-6">
           <h3 class="my-2 text-2xl font-bold text-bluecoral">
             Development of IATI Publisher
           </h3>

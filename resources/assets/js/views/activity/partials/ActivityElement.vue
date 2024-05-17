@@ -114,7 +114,7 @@
       </div>
       <div
         v-if="title === 'reporting_org'"
-        class="my-2 flex space-x-2 rounded-lg bg-eggshell py-2 px-4"
+        class="my-2 flex space-x-2 rounded-lg bg-eggshell px-4 py-2"
       >
         <svg-vue
           icon="exclamation-warning"
@@ -129,7 +129,7 @@
       </div>
       <div
         v-if="title === 'transactions' && data.warning_info_text !== ''"
-        class="mb-4 flex items-center rounded-md bg-eggshell pt-2 pr-4 pb-2 pl-4 text-xs"
+        class="mb-4 flex items-center rounded-md bg-eggshell pb-2 pl-4 pr-4 pt-2 text-xs"
       >
         <svg
           class="elements-svg"

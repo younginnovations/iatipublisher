@@ -2,7 +2,7 @@
   <div class="smooth -mb-7 px-5 py-7 sm:px-10 sm:py-14 md:-mb-20">
     <div class="mx-auto max-w-[700px]">
       <section class="rounded bg-white py-4 shadow-textbox sm:py-8">
-        <article class="py-4 px-6 sm:py-6 sm:px-12">
+        <article class="px-6 py-4 sm:px-12 sm:py-6">
           <p class="text-base">
             The IATI Standard is a set of rules and guidance on how to publish
             useful development and humanitarian data. IATI Publisher will take
@@ -12,7 +12,7 @@
             organisations to publish two sets of data:
           </p>
         </article>
-        <article class="py-4 px-6 sm:py-6 sm:px-12">
+        <article class="px-6 py-4 sm:px-12 sm:py-6">
           <h3 class="my-2 text-2xl font-bold text-bluecoral">
             1. Organisation Data
           </h3>
@@ -22,7 +22,7 @@
             your name and the type of organisation you are. You can also provide
             data on:
           </p>
-          <ul class="mt-4 ml-4 list-disc text-base text-bluecoral">
+          <ul class="ml-4 mt-4 list-disc text-base text-bluecoral">
             <li class="text-base">
               <span class="text-black"
                 >Total spending by your organisation over the last year
@@ -59,7 +59,7 @@
             >
           </p>
         </article>
-        <article class="py-4 px-6 sm:py-6 sm:px-12">
+        <article class="px-6 py-4 sm:px-12 sm:py-6">
           <h3 class="my-2 text-2xl font-bold text-bluecoral">
             2. Activity Data
           </h3>
@@ -137,7 +137,7 @@
             >
           </p>
         </article>
-        <article class="py-4 px-6 sm:py-6 sm:px-12">
+        <article class="px-6 py-4 sm:px-12 sm:py-6">
           <h3 class="my-2 text-2xl font-bold text-bluecoral">
             Download PDF of IATI Standard data fields
           </h3>
@@ -167,7 +167,7 @@
             [IATI Activity Standard data PDF]
           </a>
         </article>
-        <article class="py-4 px-6 sm:py-6 sm:px-12">
+        <article class="px-6 py-4 sm:px-12 sm:py-6">
           <h3 class="my-2 text-2xl font-bold text-bluecoral">
             IATI Standard reference
           </h3>

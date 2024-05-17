@@ -37,7 +37,7 @@
   }
 
   th {
-    @apply py-4 px-6 align-top text-xs uppercase leading-normal;
+    @apply px-6 py-4 align-top text-xs uppercase leading-normal;
 
     svg {
       @apply mr-1 text-xl text-n-30;
@@ -52,7 +52,7 @@
   }
 
   td {
-    @apply relative py-4 px-6 align-top text-sm leading-relaxed;
+    @apply relative px-6 py-4 align-top text-sm leading-relaxed;
   }
 
   tr.already-published {
@@ -64,10 +64,10 @@
 
   .has-status {
     td {
-      @apply px-6 pt-11 pb-7;
+      @apply px-6 pb-7 pt-11;
     }
     th {
-      @apply px-6 pt-11 pb-7;
+      @apply px-6 pb-7 pt-11;
     }
   }
 
