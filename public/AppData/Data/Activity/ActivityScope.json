@@ -1,56 +1,64 @@
 {
-  "date-last-modified": "2017-07-03T16:29:56.100684+00:00",
-  "version": "",
-  "name": "ActivityScope",
-  "xml:lang": "en",
-  "ActivityScope": [
-    {
-      "code": "1",
-      "name": "Global",
-      "language": "en",
-      "description": "The activity scope is global"
-    },
-    {
-      "code": "2",
-      "name": "Regional",
-      "language": "en",
-      "description": "The activity scope is a supranational region"
-    },
-    {
-      "code": "3",
-      "name": "Multi-national",
-      "language": "en",
-      "description": "The activity scope covers multiple countries, that don't constitute a region"
-    },
-    {
-      "code": "4",
-      "name": "National",
-      "language": "en",
-      "description": "The activity scope covers one country"
-    },
-    {
-      "code": "5",
-      "name": "Sub-national: Multi-first-level administrative areas",
-      "language": "en",
-      "description": "The activity scope covers more than one first-level subnational administrative areas (e.g. counties, provinces, states)"
-    },
-    {
-      "code": "6",
-      "name": "Sub-national: Single first-level administrative area",
-      "language": "en",
-      "description": "The activity scope covers one first-level subnational administrative area (e.g. country, province, state)"
-    },
-    {
-      "code": "7",
-      "name": "Sub-national: Single second-level administrative area",
-      "language": "en",
-      "description": "The activity scope covers one second-level subnational administrative area (e.g. municipality or district)"
-    },
-    {
-      "code": "8",
-      "name": "Single location",
-      "language": "en",
-      "description": "The activity scope covers one single location (e.g. town, village, farm)"
-    }
-  ]
+    "date-last-modified": "2024-05-21 06:47:18",
+    "version": "",
+    "name": "ActivityScope",
+    "xml:lang": "en",
+    "ActivityScope": [
+        {
+            "code": "1",
+            "name": "Global",
+            "description": "The activity scope is global",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "2",
+            "name": "Regional",
+            "description": "The activity scope is a supranational region",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "3",
+            "name": "Multi-national",
+            "description": "The activity scope covers multiple countries, that don't constitute a region",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "4",
+            "name": "National",
+            "description": "The activity scope covers one country",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "5",
+            "name": "Sub-national: Multi-first-level administrative areas",
+            "description": "The activity scope covers more than one first-level subnational administrative areas (e.g. counties, provinces, states)",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "6",
+            "name": "Sub-national: Single first-level administrative area",
+            "description": "The activity scope covers one first-level subnational administrative area (e.g. country, province, state)",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "7",
+            "name": "Sub-national: Single second-level administrative area",
+            "description": "The activity scope covers one second-level subnational administrative area (e.g. municipality or district)",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "8",
+            "name": "Single location",
+            "description": "The activity scope covers one single location (e.g. town, village, farm)",
+            "status": "active",
+            "language": "en"
+        }
+    ]
 }

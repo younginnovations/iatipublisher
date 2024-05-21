@@ -112,21 +112,12 @@
           />
         </div>
       </div>
-      <div
-        v-if="title === 'reporting_org'"
-        class="my-2 flex space-x-2 rounded-lg bg-eggshell px-4 py-2"
-      >
-        <svg-vue
-          icon="exclamation-warning"
-          class="h-6 -translate-y-1.5"
-        ></svg-vue>
 
-        <!-- eslint-disable vue/no-v-html -->
-        <div
-          class="text-xs font-normal text-n-50"
-          v-html="elements['reporting_org']['helper_text']"
-        ></div>
-      </div>
+      <HelperText
+        v-if="title === 'reporting_org'"
+        :helper-text="elements['reporting_org']['helper_text']"
+      />
+
       <div
         v-if="title === 'transactions' && data.warning_info_text !== ''"
         class="mb-4 flex items-center rounded-md bg-eggshell pb-2 pl-4 pr-4 pt-2 text-xs"
@@ -640,6 +631,7 @@ import Status from 'Components/status/ElementStatus.vue';
 import HoverText from 'Components/HoverText.vue';
 import Modal from 'Components/PopupModal.vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
+import HelperText from 'Components/HelperText.vue';
 
 // toggle state for modal popup
 let [deleteValue, deleteToggle] = useToggle();

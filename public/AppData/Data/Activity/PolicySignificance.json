@@ -1,37 +1,42 @@
 {
-  "date-last-modified": "2017-07-03T16:29:55.576536+00:00",
-  "version": "",
-  "name": "PolicySignificance",
-  "xml:lang": "en",
-  "PolicySignificance": [
-    {
-      "code": "0",
-      "name": "not targeted",
-      "language": "en",
-      "description": "The score \"not targeted\" means that the activity was examined but found not to target the policy objective."
-    },
-    {
-      "code": "1",
-      "name": "significant objective",
-      "language": "en",
-      "description": "Significant (secondary) policy objectives are those which, although important, were not the prime motivation for undertaking the activity."
-    },
-    {
-      "code": "2",
-      "name": "principal objective",
-      "language": "en",
-      "description": "Principal (primary) policy objectives are those which can be identified as being fundamental in the design and impact of the activity and which are an explicit objective of the activity. They may be selected by answering the question \"Would the activity have been undertaken without this objective?\""
-    },
-    {
-      "code": "3",
-      "name": "principal objective AND in support of an action programme",
-      "language": "en",
-      "description": "For desertification-related aid only"
-    },
-    {
-      "code": "4",
-      "name": "Explicit primary objective",
-      "language": "en"
-    }
-  ]
+    "date-last-modified": "2024-05-21 06:47:18",
+    "version": "",
+    "name": "PolicySignificance",
+    "xml:lang": "en",
+    "PolicySignificance": [
+        {
+            "code": "0",
+            "name": "not targeted",
+            "description": "The score \"not targeted\" means that the activity was examined but found not to target the policy objective.",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "1",
+            "name": "significant objective",
+            "description": "Significant (secondary) policy objectives are those which, although important, were not the prime motivation for undertaking the activity.",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "2",
+            "name": "principal objective",
+            "description": "Principal (primary) policy objectives are those which can be identified as being fundamental in the design and impact of the activity and which are an explicit objective of the activity. They may be selected by answering the question \"Would the activity have been undertaken without this objective?\"",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "3",
+            "name": "principal objective AND in support of an action programme",
+            "description": "For desertification-related aid only",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "4",
+            "name": "Explicit primary objective",
+            "status": "active",
+            "language": "en"
+        }
+    ]
 }

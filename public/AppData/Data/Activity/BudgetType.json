@@ -1,20 +1,22 @@
 {
-  "date-last-modified": "2017-07-03T16:29:57.112002+00:00",
-  "version": "",
-  "name": "BudgetType",
-  "xml:lang": "en",
-  "BudgetType": [
-    {
-      "code": "1",
-      "name": "Original",
-      "language": "en",
-      "description": "The original budget allocated to the activity"
-    },
-    {
-      "code": "2",
-      "name": "Revised",
-      "language": "en",
-      "description": "The updated budget for an activity"
-    }
-  ]
+    "date-last-modified": "2024-05-21 06:47:18",
+    "version": "",
+    "name": "BudgetType",
+    "xml:lang": "en",
+    "BudgetType": [
+        {
+            "code": "1",
+            "name": "Original",
+            "description": "The original budget allocated to the activity",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "2",
+            "name": "Revised",
+            "description": "The updated budget for an activity",
+            "status": "active",
+            "language": "en"
+        }
+    ]
 }

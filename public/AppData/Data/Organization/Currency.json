@@ -1,813 +1,1072 @@
 {
-  "date-last-modified": "2017-07-03T16:29:56.967764+00:00",
-  "version": "",
-  "name": "Currency",
-  "xml:lang": "en",
-  "Currency": [
-    {
-      "code": "AED",
-      "name": "UAE Dirham",
-      "language": "en"
-    },
-    {
-      "code": "AFN",
-      "name": "Afghani",
-      "language": "en"
-    },
-    {
-      "code": "ALL",
-      "name": "Lek",
-      "language": "en"
-    },
-    {
-      "code": "AMD",
-      "name": "Armenian Dram",
-      "language": "en"
-    },
-    {
-      "code": "ANG",
-      "name": "Netherlands Antillian Guilder",
-      "language": "en"
-    },
-    {
-      "code": "AOA",
-      "name": "Kwanza",
-      "language": "en"
-    },
-    {
-      "code": "ARS",
-      "name": "Argentine Peso",
-      "language": "en"
-    },
-    {
-      "code": "AUD",
-      "name": "Australian Dollar",
-      "language": "en"
-    },
-    {
-      "code": "AWG",
-      "name": "Aruban Guilder",
-      "language": "en"
-    },
-    {
-      "code": "AZN",
-      "name": "Azerbaijanian Manat",
-      "language": "en"
-    },
-    {
-      "code": "BAM",
-      "name": "Convertible Marks",
-      "language": "en"
-    },
-    {
-      "code": "BBD",
-      "name": "Barbados Dollar",
-      "language": "en"
-    },
-    {
-      "code": "BDT",
-      "name": "Taka",
-      "language": "en"
-    },
-    {
-      "code": "BGN",
-      "name": "Bulgarian Lev",
-      "language": "en"
-    },
-    {
-      "code": "BHD",
-      "name": "Bahraini Dinar",
-      "language": "en"
-    },
-    {
-      "code": "BIF",
-      "name": "Burundi Franc",
-      "language": "en"
-    },
-    {
-      "code": "BMD",
-      "name": "Bermudian Dollar",
-      "language": "en"
-    },
-    {
-      "code": "BND",
-      "name": "Brunei Dollar",
-      "language": "en"
-    },
-    {
-      "code": "BOB",
-      "name": "Boliviano",
-      "language": "en"
-    },
-    {
-      "code": "BOV",
-      "name": "Mvdol",
-      "language": "en"
-    },
-    {
-      "code": "BRL",
-      "name": "Brazilian Real",
-      "language": "en"
-    },
-    {
-      "code": "BSD",
-      "name": "Bahamian Dollar",
-      "language": "en"
-    },
-    {
-      "code": "BTN",
-      "name": "Ngultrum",
-      "language": "en"
-    },
-    {
-      "code": "BWP",
-      "name": "Pula",
-      "language": "en"
-    },
-    {
-      "code": "BZD",
-      "name": "Belize Dollar",
-      "language": "en"
-    },
-    {
-      "code": "CAD",
-      "name": "Canadian Dollar",
-      "language": "en"
-    },
-    {
-      "code": "CDF",
-      "name": "Congolese Franc",
-      "language": "en"
-    },
-    {
-      "code": "CHF",
-      "name": "Swiss Franc",
-      "language": "en"
-    },
-    {
-      "code": "CLF",
-      "name": "Unidades de fomento",
-      "language": "en"
-    },
-    {
-      "code": "CLP",
-      "name": "Chilean Peso",
-      "language": "en"
-    },
-    {
-      "code": "CNY",
-      "name": "Yuan Renminbi",
-      "language": "en"
-    },
-    {
-      "code": "COP",
-      "name": "Colombian Peso",
-      "language": "en"
-    },
-    {
-      "code": "COU",
-      "name": "Unidad de Valor Real",
-      "language": "en"
-    },
-    {
-      "code": "CRC",
-      "name": "Costa Rican Colon",
-      "language": "en"
-    },
-    {
-      "code": "CUC",
-      "name": "Peso Convertible",
-      "language": "en"
-    },
-    {
-      "code": "CUP",
-      "name": "Cuban Peso",
-      "language": "en"
-    },
-    {
-      "code": "CVE",
-      "name": "Cape Verde Escudo",
-      "language": "en"
-    },
-    {
-      "code": "CZK",
-      "name": "Czech Koruna",
-      "language": "en"
-    },
-    {
-      "code": "DJF",
-      "name": "Djibouti Franc",
-      "language": "en"
-    },
-    {
-      "code": "DKK",
-      "name": "Danish Krone",
-      "language": "en"
-    },
-    {
-      "code": "DOP",
-      "name": "Dominican Peso",
-      "language": "en"
-    },
-    {
-      "code": "DZD",
-      "name": "Algerian Dinar",
-      "language": "en"
-    },
-    {
-      "code": "EGP",
-      "name": "Egyptian Pound",
-      "language": "en"
-    },
-    {
-      "code": "ERN",
-      "name": "Nakfa",
-      "language": "en"
-    },
-    {
-      "code": "ETB",
-      "name": "Ethiopian Birr",
-      "language": "en"
-    },
-    {
-      "code": "EUR",
-      "name": "Euro",
-      "language": "en"
-    },
-    {
-      "code": "FJD",
-      "name": "Fiji Dollar",
-      "language": "en"
-    },
-    {
-      "code": "FKP",
-      "name": "Falkland Islands Pound",
-      "language": "en"
-    },
-    {
-      "code": "GBP",
-      "name": "Pound Sterling",
-      "language": "en"
-    },
-    {
-      "code": "GEL",
-      "name": "Lari",
-      "language": "en"
-    },
-    {
-      "code": "GHS",
-      "name": "Cedi",
-      "language": "en"
-    },
-    {
-      "code": "GIP",
-      "name": "Gibraltar Pound",
-      "language": "en"
-    },
-    {
-      "code": "GMD",
-      "name": "Dalasi",
-      "language": "en"
-    },
-    {
-      "code": "GNF",
-      "name": "Guinea Franc",
-      "language": "en"
-    },
-    {
-      "code": "GTQ",
-      "name": "Quetzal",
-      "language": "en"
-    },
-    {
-      "code": "GYD",
-      "name": "Guyana Dollar",
-      "language": "en"
-    },
-    {
-      "code": "HKD",
-      "name": "Hong Kong Dollar",
-      "language": "en"
-    },
-    {
-      "code": "HNL",
-      "name": "Lempira",
-      "language": "en"
-    },
-    {
-      "code": "HRK",
-      "name": "Kuna",
-      "language": "en"
-    },
-    {
-      "code": "HTG",
-      "name": "Gourde",
-      "language": "en"
-    },
-    {
-      "code": "HUF",
-      "name": "Forint",
-      "language": "en"
-    },
-    {
-      "code": "IDR",
-      "name": "Rupiah",
-      "language": "en"
-    },
-    {
-      "code": "ILS",
-      "name": "New Israeli Sheqel",
-      "language": "en"
-    },
-    {
-      "code": "INR",
-      "name": "Indian Rupee",
-      "language": "en"
-    },
-    {
-      "code": "IQD",
-      "name": "Iraqi Dinar",
-      "language": "en"
-    },
-    {
-      "code": "IRR",
-      "name": "Iranian Rial",
-      "language": "en"
-    },
-    {
-      "code": "ISK",
-      "name": "Iceland Krona",
-      "language": "en"
-    },
-    {
-      "code": "JMD",
-      "name": "Jamaican Dollar",
-      "language": "en"
-    },
-    {
-      "code": "JOD",
-      "name": "Jordanian Dinar",
-      "language": "en"
-    },
-    {
-      "code": "JPY",
-      "name": "Yen",
-      "language": "en"
-    },
-    {
-      "code": "KES",
-      "name": "Kenyan Shilling",
-      "language": "en"
-    },
-    {
-      "code": "KGS",
-      "name": "Som",
-      "language": "en"
-    },
-    {
-      "code": "KHR",
-      "name": "Riel",
-      "language": "en"
-    },
-    {
-      "code": "KMF",
-      "name": "Comoro Franc",
-      "language": "en"
-    },
-    {
-      "code": "KPW",
-      "name": "North Korean Won",
-      "language": "en"
-    },
-    {
-      "code": "KRW",
-      "name": "Won",
-      "language": "en"
-    },
-    {
-      "code": "KWD",
-      "name": "Kuwaiti Dinar",
-      "language": "en"
-    },
-    {
-      "code": "KYD",
-      "name": "Cayman Islands Dollar",
-      "language": "en"
-    },
-    {
-      "code": "KZT",
-      "name": "Tenge",
-      "language": "en"
-    },
-    {
-      "code": "LAK",
-      "name": "Kip",
-      "language": "en"
-    },
-    {
-      "code": "LBP",
-      "name": "Lebanese Pound",
-      "language": "en"
-    },
-    {
-      "code": "LKR",
-      "name": "Sri Lanka Rupee",
-      "language": "en"
-    },
-    {
-      "code": "LRD",
-      "name": "Liberian Dollar",
-      "language": "en"
-    },
-    {
-      "code": "LSL",
-      "name": "Loti",
-      "language": "en"
-    },
-    {
-      "code": "LYD",
-      "name": "Libyan Dinar",
-      "language": "en"
-    },
-    {
-      "code": "MAD",
-      "name": "Moroccan Dirham",
-      "language": "en"
-    },
-    {
-      "code": "MDL",
-      "name": "Moldovan Leu",
-      "language": "en"
-    },
-    {
-      "code": "MGA",
-      "name": "Malagasy Ariary",
-      "language": "en"
-    },
-    {
-      "code": "MKD",
-      "name": "Denar",
-      "language": "en"
-    },
-    {
-      "code": "MMK",
-      "name": "Kyat",
-      "language": "en"
-    },
-    {
-      "code": "MNT",
-      "name": "Tugrik",
-      "language": "en"
-    },
-    {
-      "code": "MOP",
-      "name": "Pataca",
-      "language": "en"
-    },
-    {
-      "code": "MUR",
-      "name": "Mauritius Rupee",
-      "language": "en"
-    },
-    {
-      "code": "MVR",
-      "name": "Rufiyaa",
-      "language": "en"
-    },
-    {
-      "code": "MWK",
-      "name": "Malawi Kwacha",
-      "language": "en"
-    },
-    {
-      "code": "MXN",
-      "name": "Mexican Peso",
-      "language": "en"
-    },
-    {
-      "code": "MXV",
-      "name": "Mexican Unidad de Inversion (UDI)",
-      "language": "en"
-    },
-    {
-      "code": "MYR",
-      "name": "Malaysian Ringgit",
-      "language": "en"
-    },
-    {
-      "code": "MZN",
-      "name": "Metical",
-      "language": "en"
-    },
-    {
-      "code": "NAD",
-      "name": "Namibia Dollar",
-      "language": "en"
-    },
-    {
-      "code": "NGN",
-      "name": "Naira",
-      "language": "en"
-    },
-    {
-      "code": "NIO",
-      "name": "Cordoba Oro",
-      "language": "en"
-    },
-    {
-      "code": "NOK",
-      "name": "Norwegian Krone",
-      "language": "en"
-    },
-    {
-      "code": "NPR",
-      "name": "Nepalese Rupee",
-      "language": "en"
-    },
-    {
-      "code": "NZD",
-      "name": "New Zealand Dollar",
-      "language": "en"
-    },
-    {
-      "code": "OMR",
-      "name": "Rial Omani",
-      "language": "en"
-    },
-    {
-      "code": "PAB",
-      "name": "Balboa",
-      "language": "en"
-    },
-    {
-      "code": "PEN",
-      "name": "Nuevo Sol",
-      "language": "en"
-    },
-    {
-      "code": "PGK",
-      "name": "Kina",
-      "language": "en"
-    },
-    {
-      "code": "PHP",
-      "name": "Philippine Peso",
-      "language": "en"
-    },
-    {
-      "code": "PKR",
-      "name": "Pakistan Rupee",
-      "language": "en"
-    },
-    {
-      "code": "PLN",
-      "name": "Zloty",
-      "language": "en"
-    },
-    {
-      "code": "PYG",
-      "name": "Guarani",
-      "language": "en"
-    },
-    {
-      "code": "QAR",
-      "name": "Qatari Rial",
-      "language": "en"
-    },
-    {
-      "code": "RON",
-      "name": "Romanian Leu",
-      "language": "en"
-    },
-    {
-      "code": "RSD",
-      "name": "Serbian Dinar",
-      "language": "en"
-    },
-    {
-      "code": "RUB",
-      "name": "Russian Ruble",
-      "language": "en"
-    },
-    {
-      "code": "RWF",
-      "name": "Rwanda Franc",
-      "language": "en"
-    },
-    {
-      "code": "SAR",
-      "name": "Saudi Riyal",
-      "language": "en"
-    },
-    {
-      "code": "SBD",
-      "name": "Solomon Islands Dollar",
-      "language": "en"
-    },
-    {
-      "code": "SCR",
-      "name": "Seychelles Rupee",
-      "language": "en"
-    },
-    {
-      "code": "SDG",
-      "name": "Sudanese Pound",
-      "language": "en"
-    },
-    {
-      "code": "SEK",
-      "name": "Swedish Krona",
-      "language": "en"
-    },
-    {
-      "code": "SGD",
-      "name": "Singapore Dollar",
-      "language": "en"
-    },
-    {
-      "code": "SHP",
-      "name": "Saint Helena Pound",
-      "language": "en"
-    },
-    {
-      "code": "SLL",
-      "name": "Leone",
-      "language": "en"
-    },
-    {
-      "code": "SOS",
-      "name": "Somali Shilling",
-      "language": "en"
-    },
-    {
-      "code": "SSP",
-      "name": "South Sudanese Pound",
-      "language": "en"
-    },
-    {
-      "code": "SRD",
-      "name": "Surinam Dollar",
-      "language": "en"
-    },
-    {
-      "code": "SVC",
-      "name": "El Salvador Colon",
-      "language": "en"
-    },
-    {
-      "code": "SYP",
-      "name": "Syrian Pound",
-      "language": "en"
-    },
-    {
-      "code": "SZL",
-      "name": "Lilangeni",
-      "language": "en"
-    },
-    {
-      "code": "THB",
-      "name": "Baht",
-      "language": "en"
-    },
-    {
-      "code": "TJS",
-      "name": "Somoni",
-      "language": "en"
-    },
-    {
-      "code": "TMT",
-      "name": "Manat",
-      "language": "en"
-    },
-    {
-      "code": "TND",
-      "name": "Tunisian Dinar",
-      "language": "en"
-    },
-    {
-      "code": "TOP",
-      "name": "Paanga",
-      "language": "en"
-    },
-    {
-      "code": "TRY",
-      "name": "Turkish Lira",
-      "language": "en"
-    },
-    {
-      "code": "TTD",
-      "name": "Trinidad and Tobago Dollar",
-      "language": "en"
-    },
-    {
-      "code": "TWD",
-      "name": "New Taiwan Dollar",
-      "language": "en"
-    },
-    {
-      "code": "TZS",
-      "name": "Tanzanian Shilling",
-      "language": "en"
-    },
-    {
-      "code": "UAH",
-      "name": "Hryvnia",
-      "language": "en"
-    },
-    {
-      "code": "UGX",
-      "name": "Uganda Shilling",
-      "language": "en"
-    },
-    {
-      "code": "USD",
-      "name": "US Dollar",
-      "language": "en"
-    },
-    {
-      "code": "USN",
-      "name": "US Dollar (Next day)",
-      "language": "en"
-    },
-    {
-      "code": "UYI",
-      "name": "Uruguay Peso en Unidades Indexadas",
-      "language": "en"
-    },
-    {
-      "code": "UYU",
-      "name": "Peso Uruguayo",
-      "language": "en"
-    },
-    {
-      "code": "UZS",
-      "name": "Uzbekistan Sum",
-      "language": "en"
-    },
-    {
-      "code": "VND",
-      "name": "Dong",
-      "language": "en"
-    },
-    {
-      "code": "VUV",
-      "name": "Vatu",
-      "language": "en"
-    },
-    {
-      "code": "WST",
-      "name": "Tala",
-      "language": "en"
-    },
-    {
-      "code": "XAF",
-      "name": "CFA Franc BEAC",
-      "language": "en"
-    },
-    {
-      "code": "XBT",
-      "name": "Bitcoin",
-      "language": "en"
-    },
-    {
-      "code": "XCD",
-      "name": "East Caribbean Dollar",
-      "language": "en"
-    },
-    {
-      "code": "XDR",
-      "name": "International Monetary Fund (IMF) Special Drawing Right (SDR)",
-      "language": "en"
-    },
-    {
-      "code": "XOF",
-      "name": "CFA Franc BCEAO",
-      "language": "en"
-    },
-    {
-      "code": "XPF",
-      "name": "CFP Franc",
-      "language": "en"
-    },
-    {
-      "code": "YER",
-      "name": "Yemeni Rial",
-      "language": "en"
-    },
-    {
-      "code": "ZAR",
-      "name": "Rand",
-      "language": "en"
-    },
-    {
-      "code": "ZWL",
-      "name": "Zimbabwe Dollar",
-      "language": "en"
-    },
-    {
-      "code": "VED",
-      "name": "Bolivar Soberano",
-      "language": "en"
-    }
-  ]
+    "date-last-modified": "2024-05-21 06:47:18",
+    "version": "",
+    "name": "Currency",
+    "xml:lang": "en",
+    "Currency": [
+        {
+            "code": "AED",
+            "name": "UAE Dirham",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "AFN",
+            "name": "Afghani",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "ALL",
+            "name": "Lek",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "AMD",
+            "name": "Armenian Dram",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "ANG",
+            "name": "Netherlands Antillian Guilder",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "AOA",
+            "name": "Kwanza",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "ARS",
+            "name": "Argentine Peso",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "AUD",
+            "name": "Australian Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "AWG",
+            "name": "Aruban Guilder",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "AZN",
+            "name": "Azerbaijanian Manat",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "BAM",
+            "name": "Convertible Marks",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "BBD",
+            "name": "Barbados Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "BDT",
+            "name": "Taka",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "BGN",
+            "name": "Bulgarian Lev",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "BHD",
+            "name": "Bahraini Dinar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "BIF",
+            "name": "Burundi Franc",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "BMD",
+            "name": "Bermudian Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "BND",
+            "name": "Brunei Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "BOB",
+            "name": "Boliviano",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "BOV",
+            "name": "Mvdol",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "BRL",
+            "name": "Brazilian Real",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "BSD",
+            "name": "Bahamian Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "BTN",
+            "name": "Ngultrum",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "BWP",
+            "name": "Pula",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "BYR",
+            "name": "Belarussian Ruble",
+            "description": "Withdrawn from ISO Currency codelist. Use code BYN.",
+            "status": "withdrawn",
+            "language": "en"
+        },
+        {
+            "code": "BYN",
+            "name": "Belarussian Ruble",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "BZD",
+            "name": "Belize Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "CAD",
+            "name": "Canadian Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "CDF",
+            "name": "Congolese Franc",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "CHF",
+            "name": "Swiss Franc",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "CLF",
+            "name": "Unidades de fomento",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "CLP",
+            "name": "Chilean Peso",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "CNY",
+            "name": "Yuan Renminbi",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "COP",
+            "name": "Colombian Peso",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "COU",
+            "name": "Unidad de Valor Real",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "CRC",
+            "name": "Costa Rican Colon",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "CUC",
+            "name": "Peso Convertible",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "CUP",
+            "name": "Cuban Peso",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "CVE",
+            "name": "Cape Verde Escudo",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "CZK",
+            "name": "Czech Koruna",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "DJF",
+            "name": "Djibouti Franc",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "DKK",
+            "name": "Danish Krone",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "DOP",
+            "name": "Dominican Peso",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "DZD",
+            "name": "Algerian Dinar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "EEK",
+            "name": "Kroon",
+            "description": "Withdrawn from ISO Currency codelist",
+            "status": "withdrawn",
+            "language": "en"
+        },
+        {
+            "code": "EGP",
+            "name": "Egyptian Pound",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "ERN",
+            "name": "Nakfa",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "ETB",
+            "name": "Ethiopian Birr",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "EUR",
+            "name": "Euro",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "FJD",
+            "name": "Fiji Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "FKP",
+            "name": "Falkland Islands Pound",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "GBP",
+            "name": "Pound Sterling",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "GEL",
+            "name": "Lari",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "GHS",
+            "name": "Cedi",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "GIP",
+            "name": "Gibraltar Pound",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "GMD",
+            "name": "Dalasi",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "GNF",
+            "name": "Guinea Franc",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "GTQ",
+            "name": "Quetzal",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "GYD",
+            "name": "Guyana Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "HKD",
+            "name": "Hong Kong Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "HNL",
+            "name": "Lempira",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "HRK",
+            "name": "Kuna",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "HTG",
+            "name": "Gourde",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "HUF",
+            "name": "Forint",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "IDR",
+            "name": "Rupiah",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "ILS",
+            "name": "New Israeli Sheqel",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "INR",
+            "name": "Indian Rupee",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "IQD",
+            "name": "Iraqi Dinar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "IRR",
+            "name": "Iranian Rial",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "ISK",
+            "name": "Iceland Krona",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "JMD",
+            "name": "Jamaican Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "JOD",
+            "name": "Jordanian Dinar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "JPY",
+            "name": "Yen",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "KES",
+            "name": "Kenyan Shilling",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "KGS",
+            "name": "Som",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "KHR",
+            "name": "Riel",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "KMF",
+            "name": "Comoro Franc",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "KPW",
+            "name": "North Korean Won",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "KRW",
+            "name": "Won",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "KWD",
+            "name": "Kuwaiti Dinar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "KYD",
+            "name": "Cayman Islands Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "KZT",
+            "name": "Tenge",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "LAK",
+            "name": "Kip",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "LBP",
+            "name": "Lebanese Pound",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "LKR",
+            "name": "Sri Lanka Rupee",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "LRD",
+            "name": "Liberian Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "LSL",
+            "name": "Loti",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "LTL",
+            "name": "Lithuanian Litas",
+            "description": "Withdrawn from ISO Currency codelist",
+            "status": "withdrawn",
+            "language": "en"
+        },
+        {
+            "code": "LVL",
+            "name": "Latvian Lats",
+            "description": "Withdrawn from ISO Currency codelist",
+            "status": "withdrawn",
+            "language": "en"
+        },
+        {
+            "code": "LYD",
+            "name": "Libyan Dinar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "MAD",
+            "name": "Moroccan Dirham",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "MDL",
+            "name": "Moldovan Leu",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "MGA",
+            "name": "Malagasy Ariary",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "MKD",
+            "name": "Denar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "MMK",
+            "name": "Kyat",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "MNT",
+            "name": "Tugrik",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "MOP",
+            "name": "Pataca",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "MRO",
+            "name": "Ouguiya",
+            "description": "Withdrawn from ISO Currency codelist. Use code MRU.",
+            "status": "withdrawn",
+            "language": "en"
+        },
+        {
+            "code": "MRU",
+            "name": "Ouguiya",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "MUR",
+            "name": "Mauritius Rupee",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "MVR",
+            "name": "Rufiyaa",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "MWK",
+            "name": "Malawi Kwacha",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "MXN",
+            "name": "Mexican Peso",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "MXV",
+            "name": "Mexican Unidad de Inversion (UDI)",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "MYR",
+            "name": "Malaysian Ringgit",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "MZN",
+            "name": "Metical",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "NAD",
+            "name": "Namibia Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "NGN",
+            "name": "Naira",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "NIO",
+            "name": "Cordoba Oro",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "NOK",
+            "name": "Norwegian Krone",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "NPR",
+            "name": "Nepalese Rupee",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "NZD",
+            "name": "New Zealand Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "OMR",
+            "name": "Rial Omani",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "PAB",
+            "name": "Balboa",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "PEN",
+            "name": "Nuevo Sol",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "PGK",
+            "name": "Kina",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "PHP",
+            "name": "Philippine Peso",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "PKR",
+            "name": "Pakistan Rupee",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "PLN",
+            "name": "Zloty",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "PYG",
+            "name": "Guarani",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "QAR",
+            "name": "Qatari Rial",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "RON",
+            "name": "Romanian Leu",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "RSD",
+            "name": "Serbian Dinar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "RUB",
+            "name": "Russian Ruble",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "RWF",
+            "name": "Rwanda Franc",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "SAR",
+            "name": "Saudi Riyal",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "SBD",
+            "name": "Solomon Islands Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "SCR",
+            "name": "Seychelles Rupee",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "SDG",
+            "name": "Sudanese Pound",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "SEK",
+            "name": "Swedish Krona",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "SGD",
+            "name": "Singapore Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "SHP",
+            "name": "Saint Helena Pound",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "SLE",
+            "name": "Leone",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "SLL",
+            "name": "Leone",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "SOS",
+            "name": "Somali Shilling",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "SSP",
+            "name": "South Sudanese Pound",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "SRD",
+            "name": "Surinam Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "STD",
+            "name": "Dobra",
+            "description": "Withdrawn from ISO Currency codelist. Use code STN.",
+            "status": "withdrawn",
+            "language": "en"
+        },
+        {
+            "code": "STN",
+            "name": "Dobra",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "SVC",
+            "name": "El Salvador Colon",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "SYP",
+            "name": "Syrian Pound",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "SZL",
+            "name": "Lilangeni",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "THB",
+            "name": "Baht",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "TJS",
+            "name": "Somoni",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "TMT",
+            "name": "Manat",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "TND",
+            "name": "Tunisian Dinar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "TOP",
+            "name": "Paanga",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "TRY",
+            "name": "Turkish Lira",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "TTD",
+            "name": "Trinidad and Tobago Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "TWD",
+            "name": "New Taiwan Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "TZS",
+            "name": "Tanzanian Shilling",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "UAH",
+            "name": "Hryvnia",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "UGX",
+            "name": "Uganda Shilling",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "USD",
+            "name": "US Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "USN",
+            "name": "US Dollar (Next day)",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "USS",
+            "name": "US Dollar (Same day)",
+            "description": "Withdrawn from ISO Currency codelist.",
+            "status": "withdrawn",
+            "language": "en"
+        },
+        {
+            "code": "UYI",
+            "name": "Uruguay Peso en Unidades Indexadas",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "UYU",
+            "name": "Peso Uruguayo",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "UZS",
+            "name": "Uzbekistan Sum",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "VED",
+            "name": "Bolivar Soberano",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "VEF",
+            "name": "Bolivar",
+            "status": "withdrawn",
+            "language": "en"
+        },
+        {
+            "code": "VES",
+            "name": "Bolivar Soberano",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "VND",
+            "name": "Dong",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "VUV",
+            "name": "Vatu",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "WST",
+            "name": "Tala",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "XAF",
+            "name": "CFA Franc BEAC",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "XBT",
+            "name": "Bitcoin",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "XCD",
+            "name": "East Caribbean Dollar",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "XDR",
+            "name": "International Monetary Fund (IMF) Special Drawing Right (SDR)",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "XOF",
+            "name": "CFA Franc BCEAO",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "XPF",
+            "name": "CFP Franc",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "YER",
+            "name": "Yemeni Rial",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "ZAR",
+            "name": "Rand",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "ZMK",
+            "name": "Zambian Kwacha",
+            "description": "Withdrawn from ISO Country codelist. Use code ZMW.",
+            "status": "withdrawn",
+            "language": "en"
+        },
+        {
+            "code": "ZMW",
+            "name": "Zambian Kwacha",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "ZWL",
+            "name": "Zimbabwe Dollar",
+            "status": "active",
+            "language": "en"
+        }
+    ]
 }

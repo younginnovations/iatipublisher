@@ -967,8 +967,7 @@ if (!function_exists('getTimestampFromSingleXml')) {
 
 if (!function_exists('getJsonFromSource')) {
     /**
-     * Returns json string from either cache or public except for OrganizationRegistrationAgency.json.
-     * Returns json string for OrganizationRegistrationAgency.json from s3.
+     * Return codelist json.
      *
      * @param string $completePath
      *
@@ -978,15 +977,13 @@ if (!function_exists('getJsonFromSource')) {
     {
         $jsonString = Cache::get($completePath);
 
-        if ($jsonString) {
-            return $jsonString;
-        } else {
+        if (!$jsonString) {
             $jsonString = awsGetFile($completePath);
 
             Cache::set($completePath, $jsonString);
-
-            return $jsonString;
         }
+
+        return $jsonString;
     }
 }
 

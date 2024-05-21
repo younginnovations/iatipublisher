@@ -1,32 +1,36 @@
 {
-  "date-last-modified": "2017-07-03T16:29:56.957236+00:00",
-  "version": "",
-  "name": "GeographicLocationClass",
-  "xml:lang": "en",
-  "GeographicLocationClass": [
-    {
-      "code": "1",
-      "name": "Administrative Region",
-      "language": "en",
-      "description": "The designated geographic location is an administrative region (state, county, province, district, municipality etc.)"
-    },
-    {
-      "code": "2",
-      "name": "Populated Place",
-      "language": "en",
-      "description": "The designated geographic location is a populated place (town, village, farm etc.)"
-    },
-    {
-      "code": "3",
-      "name": "Structure",
-      "language": "en",
-      "description": "The designated geopgraphic location is a structure (such as a school or a clinic)"
-    },
-    {
-      "code": "4",
-      "name": "Other Topographical Feature",
-      "language": "en",
-      "description": "The designated geographic location is a topographical feature, such as a mountain, a river, a forest"
-    }
-  ]
+    "date-last-modified": "2024-05-21 06:47:18",
+    "version": "",
+    "name": "GeographicLocationClass",
+    "xml:lang": "en",
+    "GeographicLocationClass": [
+        {
+            "code": "1",
+            "name": "Administrative Region",
+            "description": "The designated geographic location is an administrative region (state, county, province, district, municipality etc.)",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "2",
+            "name": "Populated Place",
+            "description": "The designated geographic location is a populated place (town, village, farm etc.)",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "3",
+            "name": "Structure",
+            "description": "The designated geopgraphic location is a structure (such as a school or a clinic)",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "4",
+            "name": "Other Topographical Feature",
+            "description": "The designated geographic location is a topographical feature, such as a mountain, a river, a forest",
+            "status": "active",
+            "language": "en"
+        }
+    ]
 }
