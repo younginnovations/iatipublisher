@@ -74,7 +74,16 @@ class TagService
      */
     public function update($id, $activityTag): bool
     {
-        return $this->activityRepository->update($id, ['tag' => $this->sanitizeTagData($activityTag)]);
+        $activityTag = $this->sanitizeTagData($activityTag);
+
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['tag'] = doesTagHaveDeprecatedCode($activityTag);
+
+        return $this->activityRepository->update($id, [
+            'tag'                    => $activityTag,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -85,13 +94,13 @@ class TagService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id, $activityDefaultFieldValues): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('tag');
         $model['tag'] = $this->getTagData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.tag.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

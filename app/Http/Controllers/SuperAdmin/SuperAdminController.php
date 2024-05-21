@@ -46,7 +46,7 @@ class SuperAdminController extends Controller
     public function listOrganizations(): View|Factory|JsonResponse|Application
     {
         try {
-            $country = getCodeList('Country', 'Activity', false);
+            $country = getCodeList('Country', 'Activity', code: false, filterDeprecated: true);
             $setupCompleteness = [
                 'Publishers_with_complete_setup' => 'Publishers with complete setup',
                 'Publishers_settings_not_completed' => 'Publishers setting not completed',
@@ -54,8 +54,8 @@ class SuperAdminController extends Controller
                 'Both_publishing_settings_and_default_values_not_completed' => 'Both publishing settings and default values not completed',
             ];
             $registrationType = Enums::ORGANIZATION_REGISTRATION_METHOD;
-            $publisherType = getCodeList('OrganizationType', 'Organization');
-            $dataLicense = getCodeList('DataLicense', 'Activity', false);
+            $publisherType = getCodeList('OrganizationType', 'Organization', filterDeprecated: true);
+            $dataLicense = getCodeList('DataLicense', 'Activity', code: false, filterDeprecated: true);
             $oldestDates = $this->dashboardService->getOldestDate('publisher');
 
             return view('superadmin.organisationsList', compact('country', 'setupCompleteness', 'registrationType', 'publisherType', 'dataLicense', 'oldestDates'));

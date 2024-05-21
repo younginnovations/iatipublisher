@@ -1,5 +1,5 @@
 {
-    "date-last-modified": "2024-05-21 06:47:18",
+    "date-last-modified": "2024-06-12 03:03:53",
     "version": "",
     "name": "SectorCategory",
     "xml:lang": "en",
@@ -94,7 +94,7 @@
         },
         {
             "code": "230",
-            "name": "ENERGY GENERATION AND SUPPLY",
+            "name": "ENERGY GENERATION AND SUPPLY (deprecated)",
             "description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation.",
             "status": "withdrawn",
             "language": "en"
@@ -263,7 +263,7 @@
         },
         {
             "code": "920",
-            "name": "SUPPORT TO NON- GOVERNMENTAL ORGANISATIONS (NGOs)",
+            "name": "SUPPORT TO NON- GOVERNMENTAL ORGANISATIONS (NGOs) (deprecated)",
             "description": "In the donor country.",
             "status": "withdrawn",
             "language": "en"

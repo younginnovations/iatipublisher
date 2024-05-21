@@ -7,6 +7,7 @@ namespace App\IATI\Services;
 use App\Constants\CoreElements;
 use App\IATI\Services\Activity\RecipientRegionService;
 use App\IATI\Traits\ElementCompleteServiceTrait;
+use App\IATI\Traits\ElementDeprecationService;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 use JsonException;
@@ -17,6 +18,7 @@ use JsonException;
 class ElementCompleteService
 {
     use ElementCompleteServiceTrait;
+    use ElementDeprecationService;
 
     /**
      * Public variable element.
@@ -1078,5 +1080,38 @@ class ElementCompleteService
         }
 
         return ($completed_core_element_count / count($core_elements)) * 100;
+    }
+
+    public function refreshDeprecationStatusMap($activity): void
+    {
+        $skippables = [
+            'id',
+            'org_id',
+            'status',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
+            'upload_medium',
+            'linked_to_iati',
+            'element_status',
+            'default_field_values',
+            'migrated_from_aidstream',
+            'complete_percentage',
+        ];
+        $deprecationMap = [];
+        $attributes = $activity->getAttributes();
+
+        foreach ($attributes as $attribute => $value) {
+            $attributeMethod = dashesToCamelCase('does_' . $attribute . '_have_deprecated_code');
+
+            if (!in_array($attribute, $skippables) && is_callable([$this, $attributeMethod])) {
+                $deprecationMap[$attribute] = call_user_func([$this, $attributeMethod], $activity);
+            }
+        }
+
+        $activity->deprecation_status_map = $deprecationMap;
+        $activity->timestamps = false;
+        $activity->updateQuietly(['touch' => false]);
     }
 }

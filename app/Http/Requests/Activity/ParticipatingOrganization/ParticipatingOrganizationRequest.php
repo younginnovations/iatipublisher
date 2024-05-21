@@ -71,9 +71,15 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
         foreach ($formFields as $participatingOrgIndex => $participatingOrg) {
             $participatingOrgForm = 'participating_org.' . $participatingOrgIndex;
             $identifier = $participatingOrgForm . '.identifier';
-            $rules[sprintf('%s.organization_role', $participatingOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganisationRole', 'Organization', false)));
-            $rules[sprintf('%s.type', $participatingOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
-            $rules[sprintf('%s.crs_channel_code', $participatingOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('CRSChannelCode', 'Activity', false)));
+            $rules[sprintf('%s.organization_role', $participatingOrgForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('OrganisationRole', 'Organization', false)
+            ));
+            $rules[sprintf('%s.type', $participatingOrgForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('OrganizationType', 'Organization', false)
+            ));
+            $rules[sprintf('%s.crs_channel_code', $participatingOrgForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('CRSChannelCode', 'Activity', false)
+            ));
 
             foreach ($this->getErrorsForNarrative($participatingOrg['narrative'], $participatingOrgForm) as $participatingNarrativeIndex => $narrativeRules) {
                 $rules[$participatingNarrativeIndex] = $narrativeRules;

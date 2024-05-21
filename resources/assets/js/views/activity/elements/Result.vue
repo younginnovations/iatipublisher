@@ -45,10 +45,18 @@
           ></HoverText>
         </div>
       </div>
+
+      <HelperText
+        v-if="elementHasDeprecatedCode"
+        helper-text="This element data contains deprecated codelist value."
+      />
+
       <div class="divider mb-4 h-px w-full bg-n-20"></div>
       <div class="results">
         <template v-for="(result, r) in resultData" :key="r">
           <div class="item">
+            <HelperText :helper-text="result['deprecation_status_map']" />
+
             <div class="elements-detail">
               <div>
                 <!-- title -->
@@ -138,24 +146,31 @@
                     v-if="result.indicators.length > 0"
                     class="indicator overflow-hidden rounded-t-lg border border-n-20"
                   >
-                    <div
-                      class="head flex items-center border-b border-n-20 px-6 py-2"
-                    >
-                      <div class="grow text-xs font-bold text-n-50">
-                        Indicator
+                    <div class="items-center border-b border-n-20 px-6 py-2">
+                      <div class="head flex items-center">
+                        <div class="grow text-xs font-bold text-n-50">
+                          Indicator
+                        </div>
+                        <div class="inline-flex shrink-0">
+                          <Btn
+                            text="Add New Indicator"
+                            icon="add"
+                            :link="`/${title}/${result.id}/indicator/create`"
+                            class="mr-2.5"
+                          />
+                          <Btn
+                            text="Show full indicator list"
+                            icon=""
+                            design="bgText"
+                            :link="`/${title}/${result.id}/indicator`"
+                          />
+                        </div>
                       </div>
-                      <div class="inline-flex shrink-0">
-                        <Btn
-                          text="Add New Indicator"
-                          icon="add"
-                          :link="`/${title}/${result.id}/indicator/create`"
-                          class="mr-2.5"
-                        />
-                        <Btn
-                          text="Show full indicator list"
-                          icon=""
-                          design="bgText"
-                          :link="`/${title}/${result.id}/indicator`"
+                      <div class="block">
+                        <HelperText
+                          :helper-text="
+                            onlyDeprecatedStatusMap(result['indicators'])
+                          "
                         />
                       </div>
                     </div>
@@ -339,10 +354,20 @@ import NotYet from 'Components/sections/HaveNotAddedYet.vue';
 // composable
 import getActivityTitle from 'Composable/title';
 import dateFormat from 'Composable/dateFormat';
+import HelperText from 'Components/HelperText.vue';
+import indicator from 'Activity/results/elements/Indicator.vue';
+import { onlyDeprecatedStatusMap } from 'Composable/utils';
 
 export default defineComponent({
   name: 'ActivityResult',
+  methods: { onlyDeprecatedStatusMap },
+  computed: {
+    indicator() {
+      return indicator;
+    },
+  },
   components: {
+    HelperText,
     Btn,
     NotYet,
   },
@@ -376,6 +401,11 @@ export default defineComponent({
     completed: {
       type: Boolean,
       required: true,
+    },
+    elementHasDeprecatedCode: {
+      type: [Boolean],
+      required: false,
+      default: false,
     },
   },
   setup(props) {

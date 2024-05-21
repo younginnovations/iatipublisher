@@ -176,6 +176,7 @@ class ImportXlsService
                 $transactionList[] = [
                     'activity_id' => $activityId,
                     'transaction' => json_encode($transaction),
+                    'deprecation_status_map'=>json_encode(refreshTransactionDeprecationStatusMap($transaction)),
                 ];
             }
 
@@ -203,6 +204,8 @@ class ImportXlsService
 
         foreach ($activities as $value) {
             $activity = unsetErrorFields($contents[$value]);
+            $activity['data'] = unsetDeprecatedFieldValues(Arr::get($activity, 'data', []));
+
             $activityData = Arr::get($activity, 'data', []);
 
             $organizationId = Auth::user()->organization->id;
@@ -212,6 +215,7 @@ class ImportXlsService
                 $oldActivity = $this->activityRepository->find($existingId);
                 $activityData = $this->fillActivityData($activityData);
                 $activityData['upload_medium'] = 'xls';
+                $activityData['deprecation_status_map'] = refreshActivityDeprecationStatusMap($activityData);
 
                 if ($oldActivity['has_ever_been_published']) {
                     $activityData['iati_identifier']['iati_identifier_text'] = $oldActivity['iati_identifier']['iati_identifier_text'];
@@ -337,11 +341,12 @@ class ImportXlsService
             $code = Arr::get($result, 'code', false);
             $activityId = $identifiers[$parentIdentifier];
             $this->storeImportErrors($activityId, $result['errors'], 'result>' . $code);
+            $deprecationStatusMap = refreshResultDeprecationStatusMap($resultData);
 
             if ($existenceId) {
-                $this->resultRepository->update($existenceId, ['result_code' => $code, 'result' => $resultData]);
+                $this->resultRepository->update($existenceId, ['result_code' => $code, 'result' => $resultData, 'deprecation_status_map'=>$deprecationStatusMap]);
             } else {
-                $this->resultRepository->store(['result' => $resultData, 'result_code' => $code, 'activity_id' => $activityId]);
+                $this->resultRepository->store(['result' => $resultData, 'result_code' => $code, 'activity_id' => $activityId, 'deprecation_status_map'=>$deprecationStatusMap]);
             }
         }
 
@@ -373,11 +378,12 @@ class ImportXlsService
             $result = $this->resultRepository->find($resultId);
             $activityId = $result->activity_id;
             $this->storeImportErrors($activityId, $indicator['errors'], "result > $parentIdentifier > indicator > $code");
+            $deprecationStatusMap = refreshIndicatorDeprecationStatusMap($indicatorData);
 
             if ($existenceId) {
-                $this->indicatorRepository->update($existenceId, ['indicator' => $indicatorData]);
+                $this->indicatorRepository->update($existenceId, ['indicator' => $indicatorData, 'deprecation_status_map' => $deprecationStatusMap]);
             } else {
-                $this->indicatorRepository->store(['indicator' => $indicatorData, 'indicator_code' => $code, 'result_id' => $resultId]);
+                $this->indicatorRepository->store(['indicator' => $indicatorData, 'indicator_code' => $code, 'result_id' => $resultId, 'deprecation_status_map' => $deprecationStatusMap]);
             }
         }
     }
@@ -407,11 +413,12 @@ class ImportXlsService
             $indicator = $this->indicatorRepository->find($indicatorId);
             $activityId = $indicator->result->activity_id;
             $this->storeImportErrors($activityId, $period['errors'], "indicator > $parentIdentifier > period > $code}");
+            $deprecationStatusMap = refreshPeriodDeprecationStatusMap($periodData);
 
             if ($existenceId) {
-                $this->periodRepository->update($existenceId, ['period' => $periodData]);
+                $this->periodRepository->update($existenceId, ['period' => $periodData, 'deprecation_status_map'=>$deprecationStatusMap]);
             } else {
-                $this->periodRepository->store(['period' => $periodData, 'period_code' => $code, 'indicator_id' => $identifiers['indicator'][$parentIdentifier]]);
+                $this->periodRepository->store(['period' => $periodData, 'period_code' => $code, 'indicator_id' => $identifiers['indicator'][$parentIdentifier], 'deprecation_status_map'=>$deprecationStatusMap]);
             }
         }
     }

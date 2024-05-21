@@ -138,6 +138,41 @@
             <div v-else class="py-6">No activities found</div>
           </div>
         </div>
+
+        <div
+          v-if="Object.keys(deprecationStatusMap).length > 0"
+          class="non-eligible-activities mb-6 text-sm leading-relaxed"
+        >
+          <div class="title mb-6 flex">
+            <svg-vue
+              icon="exclamation-warning"
+              class="mr-1 mt-0.5 text-lg text-spring-50"
+            />
+            <b>Some elements use deprecated codelist values</b>
+          </div>
+
+          <div class="rounded-lg bg-eggshell px-6">
+            <div class="notCompleted">
+              <div
+                v-for="(act, i) in deprecationStatusMap"
+                :key="i"
+                class="item py-6"
+                :class="{
+                  'border-b border-n-20': i != deprecationStatusMap.length - 1,
+                }"
+              >
+                <a
+                  :href="`${permalink}${act.activity_id}`"
+                  target="_blank"
+                  class=""
+                >
+                  {{ act.title }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="flex justify-end">
           <div class="inline-flex">
             <BtnComponent
@@ -395,6 +430,7 @@ interface actTypeface {
 let coreCompletedActivities: Ref<actTypeface[]> = ref([]),
   coreInCompletedActivities: Ref<actTypeface[]> = ref([]),
   permalink = `/activity/`;
+let deprecationStatusMap = ref();
 
 const verifyCoreElements = () => {
   loader.value = true;
@@ -406,8 +442,13 @@ const verifyCoreElements = () => {
     .then((res) => {
       const response = res.data;
       if (response.success) {
-        coreCompletedActivities.value = response.data.complete;
-        coreInCompletedActivities.value = response.data.incomplete;
+        console.log('vitra');
+        coreCompletedActivities.value =
+          response.data.core_elements_completion.complete;
+        coreInCompletedActivities.value =
+          response.data.core_elements_completion.incomplete;
+        deprecationStatusMap.value = response.data.deprecation_status_map;
+        console.log('deprecationStatusMap', deprecationStatusMap.value);
         bulkPublishStep.value = 2;
       } else {
         loader.value = false;

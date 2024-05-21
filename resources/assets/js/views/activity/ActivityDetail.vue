@@ -107,6 +107,7 @@
                   :status="activityProps.status"
                   :core-completed="coreCompleted"
                   :activity-id="activityProps.id"
+                  :deprecation-status-map="deprecationStatusMap"
                 />
               </div>
             </div>
@@ -326,6 +327,11 @@
                     :has-ever-been-published="
                       publishStatus.has_ever_been_published
                     "
+                    :deprecation-code-usage="
+                      String(name) === 'transactions'
+                        ? onlyDeprecatedStatusMap(element.content)
+                        : deprecationStatusMap[name]
+                    "
                     class="elements-card"
                   />
                 </template>
@@ -399,8 +405,10 @@ import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
 // Vuex Store
 import { detailStore } from 'Store/activities/show';
 import { useStore } from 'Store/activities/index';
+import { onlyDeprecatedStatusMap } from 'Composable/utils';
 
 export default defineComponent({
+  methods: { onlyDeprecatedStatusMap },
   components: {
     HoverText,
     ProgressBar,
@@ -466,6 +474,10 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    deprecationStatusMap: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     interface paType {
@@ -492,6 +504,7 @@ export default defineComponent({
     const { types, coreCompleted } = toRefs(props);
     let removed = sessionStorage.getItem('removed');
 
+    console.log('types', types);
     const store = detailStore();
     const indexStore = useStore();
     const showSidebar = ref(false);
@@ -540,7 +553,7 @@ export default defineComponent({
         if (removed) {
           toastData.type = true;
           toastData.visibility = true;
-          toastData.message = 'Removed succesfully';
+          toastData.message = 'Removed successfully';
           sessionStorage.clear();
         }
       };

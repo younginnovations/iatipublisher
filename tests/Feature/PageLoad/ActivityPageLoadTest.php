@@ -38,6 +38,7 @@ class ActivityPageLoadTest extends TestCase
             'updated_by' => $org->user->id,
         ]);
         $this->actingAs($org->user);
+//        dd(route($route, ['id' => $activity->id, 'transactionId' => $activity->transactions[0]->id]));
         $response = $this->get(route($route, ['id' => $activity->id, 'transactionId' => $activity->transactions[0]->id]));
         $response->assertStatus(200);
     }

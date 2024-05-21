@@ -9,6 +9,7 @@ use App\Http\Requests\Organization\TotalExpenditure\TotalExpenditureRequest;
 use App\IATI\Services\Organization\TotalExpenditureService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -42,7 +43,7 @@ class TotalExpenditureController extends Controller
             $id = Auth::user()->organization_id;
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
             $organization = $this->totalExpenditureService->getOrganizationData($id);
-            $form = $this->totalExpenditureService->formGenerator($id);
+            $form = $this->totalExpenditureService->formGenerator($id, Arr::get($organization->deprecation_status_map, 'total_expenditure`', []));
             $data = ['title'=> $element['total_expenditure']['label'], 'name'=>'total-expenditure'];
 
             return view('admin.organisation.forms.totalExpenditure.totalExpenditure', compact('form', 'organization', 'data'));

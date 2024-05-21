@@ -276,6 +276,9 @@
                       ? 'xl:col-span-1'
                       : ''
                   "
+                  :deprecation-code-usage="
+                    organizationProps['deprecation_status_map'][name.toString()]
+                  "
                 />
               </template>
             </template>
@@ -540,6 +543,7 @@ export default defineComponent({
       toggleSidebar,
       showSidebar,
       istopVisible,
+      organizationProps,
     };
   },
 });

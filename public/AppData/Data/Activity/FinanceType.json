@@ -1,5 +1,5 @@
 {
-    "date-last-modified": "2024-05-21 06:47:18",
+    "date-last-modified": "2024-06-12 03:03:53",
     "version": "",
     "name": "FinanceType",
     "xml:lang": "en",
@@ -26,7 +26,7 @@
         {
             "code": "111",
             "category": "100",
-            "name": "Subsidies to national private investors",
+            "name": "Subsidies to national private investors (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -45,7 +45,7 @@
         {
             "code": "211",
             "category": "100",
-            "name": "Interest subsidy to national private exporters",
+            "name": "Interest subsidy to national private exporters (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -77,31 +77,31 @@
         {
             "code": "410",
             "category": "400",
-            "name": "Aid loan excluding debt reorganisation",
+            "name": "Aid loan excluding debt reorganisation (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "411",
             "category": "400",
-            "name": "Investment-related loan to developing countries",
+            "name": "Investment-related loan to developing countries (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "412",
             "category": "400",
-            "name": "Loan in a joint venture with the recipient",
+            "name": "Loan in a joint venture with the recipient (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "413",
             "category": "400",
-            "name": "Loan to national private investor",
+            "name": "Loan to national private investor (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "414",
             "category": "400",
-            "name": "Loan to national private exporter",
+            "name": "Loan to national private exporter (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -162,19 +162,19 @@
         {
             "code": "451",
             "category": "450",
-            "name": "Non-banks guaranteed export credits",
+            "name": "Non-banks guaranteed export credits (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "452",
             "category": "400",
-            "name": "Non-banks non-guaranteed portions of guaranteed export credits",
+            "name": "Non-banks non-guaranteed portions of guaranteed export credits (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "453",
             "category": "400",
-            "name": "Bank export credits",
+            "name": "Bank export credits (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -187,13 +187,13 @@
         {
             "code": "511",
             "category": "500",
-            "name": "Acquisition of equity not part of joint venture in developing countries",
+            "name": "Acquisition of equity not part of joint venture in developing countries (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "512",
             "category": "500",
-            "name": "Other acquisition of equity",
+            "name": "Other acquisition of equity (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -375,55 +375,55 @@
         {
             "code": "710",
             "category": "700",
-            "name": "Foreign direct investment, new capital outflow (includes reinvested earnings if separate identification not available)",
+            "name": "Foreign direct investment, new capital outflow (includes reinvested earnings if separate identification not available) (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "711",
             "category": "700",
-            "name": "Other foreign direct investment, including reinvested earnings",
+            "name": "Other foreign direct investment, including reinvested earnings (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "712",
             "category": "700",
-            "name": "Foreign direct investment, reinvested earnings",
+            "name": "Foreign direct investment, reinvested earnings (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "810",
             "category": "800",
-            "name": "Bank bonds",
+            "name": "Bank bonds (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "811",
             "category": "800",
-            "name": "Non-bank bonds",
+            "name": "Non-bank bonds (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "910",
             "category": "900",
-            "name": "Other bank securities/claims",
+            "name": "Other bank securities/claims (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "911",
             "category": "900",
-            "name": "Other non-bank securities/claims",
+            "name": "Other non-bank securities/claims (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "912",
             "category": "900",
-            "name": "Purchase of securities from issuing agencies",
+            "name": "Purchase of securities from issuing agencies (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "913",
             "category": "900",
-            "name": "Securities and other instruments originally issued by multilateral agencies",
+            "name": "Securities and other instruments originally issued by multilateral agencies (deprecated)",
             "status": "withdrawn"
         }
     ]

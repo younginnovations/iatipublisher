@@ -1,5 +1,5 @@
 {
-    "date-last-modified": "2024-05-21 06:47:18",
+    "date-last-modified": "2024-06-12 03:03:53",
     "version": "",
     "name": "Region",
     "xml:lang": "en",
@@ -36,7 +36,7 @@
         },
         {
             "code": "380",
-            "name": "West Indies, regional",
+            "name": "West Indies, regional (deprecated)",
             "status": "withdrawn",
             "language": "en"
         },

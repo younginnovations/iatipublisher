@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\CollaborationTypeService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class CollaborationTypeController.
@@ -43,7 +44,8 @@ class CollaborationTypeController extends Controller
         try {
             $element = getElementSchema('collaboration_type');
             $activity = $this->collaborationTypeService->getActivityData($id);
-            $form = $this->collaborationTypeService->formGenerator($id, $activity->default_field_values ?? []);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'collaboration_type', []);
+            $form = $this->collaborationTypeService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
             $data = [
                 'title' => $element['label'],
                 'name' => 'collaboration_type',

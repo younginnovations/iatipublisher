@@ -91,7 +91,9 @@ class ResultRequest extends ActivityBaseRequest
     public function getErrorsForResult(array $formFields, bool $fileUpload = false, array $indicators = []): array
     {
         $rules = [];
-        $rules['type'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ResultType', 'Activity', false))));
+        $rules['type'] = sprintf('nullable|in:%s', implode(',', array_keys(
+            $this->getCodeListForRequestFiles('ResultType', 'Activity', false)
+        )));
         $rules['aggregation_status'] = sprintf('nullable|in:0,1');
 
         $tempRules = [
@@ -230,7 +232,9 @@ class ResultRequest extends ActivityBaseRequest
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
             $rules[sprintf('%s.vocabulary_uri', $referenceForm)] = 'nullable|url';
-            $rules[sprintf('%s.vocabulary', $referenceForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ResultVocabulary', 'Activity'))));
+            $rules[sprintf('%s.vocabulary', $referenceForm)] = sprintf('nullable|in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('ResultVocabulary', 'Activity')
+            )));
         }
 
         return $rules;

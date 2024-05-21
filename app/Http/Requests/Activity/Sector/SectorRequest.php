@@ -81,11 +81,21 @@ class SectorRequest extends ActivityBaseRequest
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
-            $rules[sprintf('%s.sector_vocabulary', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorVocabulary', 'Activity', false)));
-            $rules[sprintf('%s.code', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorCode', 'Activity', false)));
-            $rules[sprintf('%s.category_code', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorCategory', 'Activity', false)));
-            $rules[sprintf('%s.sdg_goal', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Goals', 'Activity', false)));
-            $rules[sprintf('%s.sdg_target', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Targets', 'Activity', false)));
+            $rules[sprintf('%s.sector_vocabulary', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('SectorVocabulary', 'Activity', false)
+            ));
+            $rules[sprintf('%s.code', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('SectorCode', 'Activity', false)
+            ));
+            $rules[sprintf('%s.category_code', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('SectorCategory', 'Activity', false)
+            ));
+            $rules[sprintf('%s.sdg_goal', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('UNSDG-Goals', 'Activity', false)
+            ));
+            $rules[sprintf('%s.sdg_target', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('UNSDG-Targets', 'Activity', false)
+            ));
             $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|numeric';
 
             if (isset($sector['sector_vocabulary']) && ($sector['sector_vocabulary'] === '99' || $sector['sector_vocabulary'] === '98')) {

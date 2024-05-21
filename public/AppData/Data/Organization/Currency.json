@@ -1,5 +1,5 @@
 {
-    "date-last-modified": "2024-05-21 06:47:18",
+    "date-last-modified": "2024-06-12 03:03:53",
     "version": "",
     "name": "Currency",
     "xml:lang": "en",
@@ -150,7 +150,7 @@
         },
         {
             "code": "BYR",
-            "name": "Belarussian Ruble",
+            "name": "Belarussian Ruble (deprecated)",
             "description": "Withdrawn from ISO Currency codelist. Use code BYN.",
             "status": "withdrawn",
             "language": "en"
@@ -271,7 +271,7 @@
         },
         {
             "code": "EEK",
-            "name": "Kroon",
+            "name": "Kroon (deprecated)",
             "description": "Withdrawn from ISO Currency codelist",
             "status": "withdrawn",
             "language": "en"
@@ -530,14 +530,14 @@
         },
         {
             "code": "LTL",
-            "name": "Lithuanian Litas",
+            "name": "Lithuanian Litas (deprecated)",
             "description": "Withdrawn from ISO Currency codelist",
             "status": "withdrawn",
             "language": "en"
         },
         {
             "code": "LVL",
-            "name": "Latvian Lats",
+            "name": "Latvian Lats (deprecated)",
             "description": "Withdrawn from ISO Currency codelist",
             "status": "withdrawn",
             "language": "en"
@@ -592,7 +592,7 @@
         },
         {
             "code": "MRO",
-            "name": "Ouguiya",
+            "name": "Ouguiya (deprecated)",
             "description": "Withdrawn from ISO Currency codelist. Use code MRU.",
             "status": "withdrawn",
             "language": "en"
@@ -833,7 +833,7 @@
         },
         {
             "code": "STD",
-            "name": "Dobra",
+            "name": "Dobra (deprecated)",
             "description": "Withdrawn from ISO Currency codelist. Use code STN.",
             "status": "withdrawn",
             "language": "en"
@@ -942,7 +942,7 @@
         },
         {
             "code": "USS",
-            "name": "US Dollar (Same day)",
+            "name": "US Dollar (Same day) (deprecated)",
             "description": "Withdrawn from ISO Currency codelist.",
             "status": "withdrawn",
             "language": "en"
@@ -973,7 +973,7 @@
         },
         {
             "code": "VEF",
-            "name": "Bolivar",
+            "name": "Bolivar (deprecated)",
             "status": "withdrawn",
             "language": "en"
         },
@@ -1051,7 +1051,7 @@
         },
         {
             "code": "ZMK",
-            "name": "Zambian Kwacha",
+            "name": "Zambian Kwacha (deprecated)",
             "description": "Withdrawn from ISO Country codelist. Use code ZMW.",
             "status": "withdrawn",
             "language": "en"

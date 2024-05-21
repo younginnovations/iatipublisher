@@ -104,6 +104,7 @@ class TransactionService
     public function create(array $transactionData): Model
     {
         $transactionData['transaction'] = $this->sanitizeData($transactionData['transaction']);
+        $transactionData['deprecation_status_map'] = refreshTransactionDeprecationStatusMap($transactionData['transaction']);
 
         return $this->transactionRepository->store($transactionData);
     }
@@ -118,7 +119,10 @@ class TransactionService
      */
     public function update($id, $transactionData): bool
     {
-        return $this->transactionRepository->update($id, ['transaction'=>$this->sanitizeData($transactionData)]);
+        $transactionData['transaction'] = $this->sanitizeData($transactionData);
+        $transactionData['deprecation_status_map'] = refreshTransactionDeprecationStatusMap($transactionData);
+
+        return $this->transactionRepository->update($id, $transactionData);
     }
 
     /**
@@ -174,6 +178,8 @@ class TransactionService
     public function editFormGenerator($transactionId, $activityId, $element): Form
     {
         $activityTransaction = $this->getTransaction($transactionId);
+        $deprecationStatusMap = Arr::get($activityTransaction->toArray(), 'deprecation_status_map', []);
+
         $this->transactionElementFormCreator->url = route(
             'admin.activity.transaction.update',
             [$activityId, $transactionId]
@@ -182,8 +188,9 @@ class TransactionService
         return $this->transactionElementFormCreator->editForm(
             $activityTransaction->transaction,
             $element,
-            'PUT',
-            '/activity/' . $activityId
+            method:'PUT',
+            parent_url: '/activity/' . $activityId,
+            deprecationStatusMap: $deprecationStatusMap
         );
     }
 
@@ -635,5 +642,21 @@ class TransactionService
             }
             $element['sub_elements']['sector']['warning_info_text'] = $message;
         }
+    }
+
+    public function getDeprecationStatusMap($id = '', $key = '')
+    {
+        if ($id) {
+            $transaction = $this->transactionRepository->find($id);
+
+            if ($key === '') {
+                return $transaction->deprecation_status_map;
+            }
+            dd($id, $key);
+
+            return Arr::get($transaction->deprecation_status_map, $key, []);
+        }
+
+        return [];
     }
 }

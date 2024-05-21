@@ -143,6 +143,7 @@
                 type="outline"
                 :activity-id="datum['id']"
                 :publish="false"
+                :deprecation-status-map="datum['deprecation_status_map']"
               />
             </div>
           </td>

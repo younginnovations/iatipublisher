@@ -201,6 +201,8 @@ class ImportCsvService
 
         foreach ($activities as $value) {
             $activity = unsetErrorFields($contents[$value]);
+            $activity['data'] = unsetDeprecatedFieldValues(Arr::get($activity, 'data', []));
+
             $iati_identifier_text = $organizationIdentifier . '-' . Arr::get($activity, 'data.identifier.activity_identifier');
             $activity['data']['organization_id'] = $organizationId;
             $activity['data']['identifier']['iati_identifier_text'] = $iati_identifier_text;
@@ -256,6 +258,7 @@ class ImportCsvService
                 'transaction' => $transaction,
                 'activity_id' => $activityId,
                 'default_field_values'=>$defaultValues,
+                'deprecation_status_map'=>refreshTransactionDeprecationStatusMap($transaction),
             ]);
         }
     }

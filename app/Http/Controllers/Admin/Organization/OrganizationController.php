@@ -243,7 +243,7 @@ class OrganizationController extends Controller
      */
     public function getRegistrationAgency(bool|string $country_code = false): array
     {
-        $registration_agency = getCodeList('OrganizationRegistrationAgency', 'Organization');
+        $registration_agency = getCodeList('OrganizationRegistrationAgency', 'Organization', filterDeprecated: true);
         $filtered_agency = [];
 
         if (!$country_code) {

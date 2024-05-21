@@ -1,5 +1,5 @@
 {
-    "date-last-modified": "2024-05-21 06:47:18",
+    "date-last-modified": "2024-06-12 03:03:53",
     "version": "",
     "name": "DocumentCategory",
     "xml:lang": "en",
@@ -11,7 +11,6 @@
             "description": null,
             "status": "active",
             "category-name": "Activity Level",
-            "category-description": "The document is relevant to a specific activity",
             "language": "en"
         },
         {
@@ -21,7 +20,6 @@
             "description": null,
             "status": "active",
             "category-name": "Activity Level",
-            "category-description": "The document is relevant to a specific activity",
             "language": "en"
         },
         {
@@ -31,7 +29,6 @@
             "description": null,
             "status": "active",
             "category-name": "Activity Level",
-            "category-description": "The document is relevant to a specific activity",
             "language": "en"
         },
         {
@@ -41,7 +38,6 @@
             "description": null,
             "status": "active",
             "category-name": "Activity Level",
-            "category-description": "The document is relevant to a specific activity",
             "language": "en"
         },
         {
@@ -51,7 +47,6 @@
             "description": null,
             "status": "active",
             "category-name": "Activity Level",
-            "category-description": "The document is relevant to a specific activity",
             "language": "en"
         },
         {
@@ -61,7 +56,6 @@
             "description": null,
             "status": "active",
             "category-name": "Activity Level",
-            "category-description": "The document is relevant to a specific activity",
             "language": "en"
         },
         {
@@ -71,7 +65,6 @@
             "description": null,
             "status": "active",
             "category-name": "Activity Level",
-            "category-description": "The document is relevant to a specific activity",
             "language": "en"
         },
         {
@@ -81,7 +74,6 @@
             "description": null,
             "status": "active",
             "category-name": "Activity Level",
-            "category-description": "The document is relevant to a specific activity",
             "language": "en"
         },
         {
@@ -91,7 +83,6 @@
             "description": null,
             "status": "active",
             "category-name": "Activity Level",
-            "category-description": "The document is relevant to a specific activity",
             "language": "en"
         },
         {
@@ -101,7 +92,6 @@
             "description": null,
             "status": "active",
             "category-name": "Activity Level",
-            "category-description": "The document is relevant to a specific activity",
             "language": "en"
         },
         {
@@ -111,7 +101,6 @@
             "description": null,
             "status": "active",
             "category-name": "Activity Level",
-            "category-description": "The document is relevant to a specific activity",
             "language": "en"
         },
         {
@@ -121,187 +110,6 @@
             "description": null,
             "status": "active",
             "category-name": "Activity Level",
-            "category-description": "The document is relevant to a specific activity",
-            "language": "en"
-        },
-        {
-            "code": "B01",
-            "category": "B",
-            "name": "Annual report",
-            "description": null,
-            "status": "active",
-            "category-name": "Organisation Level",
-            "category-description": "The document is relevant to the organisation as a whole",
-            "language": "en"
-        },
-        {
-            "code": "B02",
-            "category": "B",
-            "name": "Institutional Strategy paper",
-            "description": null,
-            "status": "active",
-            "category-name": "Organisation Level",
-            "category-description": "The document is relevant to the organisation as a whole",
-            "language": "en"
-        },
-        {
-            "code": "B03",
-            "category": "B",
-            "name": "Country strategy paper",
-            "description": null,
-            "status": "active",
-            "category-name": "Organisation Level",
-            "category-description": "The document is relevant to the organisation as a whole",
-            "language": "en"
-        },
-        {
-            "code": "B04",
-            "category": "B",
-            "name": "Aid Allocation Policy",
-            "description": null,
-            "status": "active",
-            "category-name": "Organisation Level",
-            "category-description": "The document is relevant to the organisation as a whole",
-            "language": "en"
-        },
-        {
-            "code": "B05",
-            "category": "B",
-            "name": "Procurement Policy and Procedure",
-            "description": null,
-            "status": "active",
-            "category-name": "Organisation Level",
-            "category-description": "The document is relevant to the organisation as a whole",
-            "language": "en"
-        },
-        {
-            "code": "B06",
-            "category": "B",
-            "name": "Institutional Audit Report",
-            "description": null,
-            "status": "active",
-            "category-name": "Organisation Level",
-            "category-description": "The document is relevant to the organisation as a whole",
-            "language": "en"
-        },
-        {
-            "code": "B07",
-            "category": "B",
-            "name": "Country Audit Report",
-            "description": null,
-            "status": "active",
-            "category-name": "Organisation Level",
-            "category-description": "The document is relevant to the organisation as a whole",
-            "language": "en"
-        },
-        {
-            "code": "B08",
-            "category": "B",
-            "name": "Exclusions Policy",
-            "description": null,
-            "status": "active",
-            "category-name": "Organisation Level",
-            "category-description": "The document is relevant to the organisation as a whole",
-            "language": "en"
-        },
-        {
-            "code": "B09",
-            "category": "B",
-            "name": "Institutional Evaluation Report",
-            "description": null,
-            "status": "active",
-            "category-name": "Organisation Level",
-            "category-description": "The document is relevant to the organisation as a whole",
-            "language": "en"
-        },
-        {
-            "code": "B10",
-            "category": "B",
-            "name": "Country Evaluation Report",
-            "description": null,
-            "status": "active",
-            "category-name": "Organisation Level",
-            "category-description": "The document is relevant to the organisation as a whole",
-            "language": "en"
-        },
-        {
-            "code": "B11",
-            "category": "B",
-            "name": "Sector strategy",
-            "description": null,
-            "status": "active",
-            "category-name": "Organisation Level",
-            "category-description": "The document is relevant to the organisation as a whole",
-            "language": "en"
-        },
-        {
-            "code": "B12",
-            "category": "B",
-            "name": "Thematic strategy",
-            "description": null,
-            "status": "active",
-            "category-name": "Organisation Level",
-            "category-description": "The document is relevant to the organisation as a whole",
-            "language": "en"
-        },
-        {
-            "code": "B13",
-            "category": "B",
-            "name": "Country-level Memorandum of Understanding",
-            "description": null,
-            "status": "active",
-            "category-name": "Organisation Level",
-            "category-description": "The document is relevant to the organisation as a whole",
-            "language": "en"
-        },
-        {
-            "code": "B14",
-            "category": "B",
-            "name": "Evaluations policy",
-            "description": null,
-            "status": "active",
-            "category-name": "Organisation Level",
-            "category-description": "The document is relevant to the organisation as a whole",
-            "language": "en"
-        },
-        {
-            "code": "B15",
-            "category": "B",
-            "name": "General Terms and Conditions",
-            "description": null,
-            "status": "active",
-            "category-name": "Organisation Level",
-            "category-description": "The document is relevant to the organisation as a whole",
-            "language": "en"
-        },
-        {
-            "code": "B16",
-            "category": "B",
-            "name": "Organisation web page",
-            "description": null,
-            "status": "active",
-            "category-name": "Organisation Level",
-            "category-description": "The document is relevant to the organisation as a whole",
-            "language": "en"
-        },
-        {
-            "code": "B17",
-            "category": "B",
-            "name": "Country/Region web page",
-            "description": null,
-            "status": "active",
-            "category-name": "Organisation Level",
-            "category-description": "The document is relevant to the organisation as a whole",
-            "language": "en"
-        },
-        {
-            "code": "B18",
-            "category": "B",
-            "name": "Sector web page",
-            "description": null,
-            "status": "active",
-            "category-name": "Organisation Level",
-            "category-description": "The document is relevant to the organisation as a whole",
             "language": "en"
         }
     ]

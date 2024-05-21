@@ -70,7 +70,14 @@ class StatusService
      */
     public function update($id, $activityStatus): bool
     {
-        return $this->activityRepository->update($id, ['activity_status' => $activityStatus]);
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['activity_status'] = doesActivityStatusHaveDeprecatedCode(['code'=>$activityStatus]);
+
+        return $this->activityRepository->update($activity->id, [
+            'activity_status'        => $activityStatus,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -81,13 +88,13 @@ class StatusService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('activity_status');
         $model['activity_status'] = $this->getStatusData($id);
         $this->baseFormCreator->url = route('admin.activity.status.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

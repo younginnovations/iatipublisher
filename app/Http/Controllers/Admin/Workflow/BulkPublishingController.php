@@ -81,6 +81,7 @@ class BulkPublishingController extends Controller
     public function checkCoreElementsCompleted(Request $request): JsonResponse
     {
         try {
+            DB::beginTransaction();
             $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization);
 
             if (!empty($message)) {
@@ -103,11 +104,24 @@ class BulkPublishingController extends Controller
             $activityIds = json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR);
 
             if (!empty($activityIds)) {
-                return response()->json(['success' => true, 'message' => 'Retrieved data successfully.', 'data' => $this->bulkPublishingService->getCoreElementsCompletedArray($activityIds)]);
+                $coreElementsCompletion = $this->bulkPublishingService->getCoreElementsCompletedArray($activityIds);
+                $deprecationStatusMap = $this->bulkPublishingService->refreshDeprecation_status($activityIds);
+
+                DB::commit();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Retrieved data successfully.',
+                    'data' => [
+                        'core_elements_completion'=> $coreElementsCompletion,
+                        'deprecation_status_map'  => $deprecationStatusMap,
+                    ],
+                ]);
             }
 
             return response()->json(['success' => false, 'message' => 'No activities selected.']);
         } catch (\Exception $e) {
+            DB::rollBack();
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while checking core elements completed.']);

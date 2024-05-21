@@ -47,12 +47,14 @@ class ParentCollectionFormCreator
      * @param       $method
      * @param string $parent_url
      * @param array $overRideDefaultFieldValue
-     *
+     * @param array $deprecationStatusMap
      * @return Form
      */
-    public function editForm(array $model, $formData, $method, string $parent_url, array $overRideDefaultFieldValue = []): Form
+    public function editForm(array $model, $formData, $method, string $parent_url, array $overRideDefaultFieldValue = [], array $deprecationStatusMap = []): Form
     {
         $formData['overRideDefaultFieldValue'] = $overRideDefaultFieldValue;
+        $formData['deprecationStatusMap'] = $deprecationStatusMap;
+
         $settingsDefaultValue = ($this->settingService->getSetting()->default_values ?? []) + ($this->settingService->getSetting()->activity_default_values ?? []);
 
         if (!empty($overRideDefaultFieldValue) && count($overRideDefaultFieldValue)) {

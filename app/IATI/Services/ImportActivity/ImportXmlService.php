@@ -184,6 +184,8 @@ class ImportXmlService
 
         foreach ($activities as $value) {
             $activity = unsetErrorFields($contents[$value]);
+            $activity['data'] = unsetDeprecatedFieldValues(Arr::get($activity, 'data', []));
+
             $activityData = Arr::get($activity, 'data', []);
 
             $organizationId = Auth::user()->organization->id;
@@ -247,6 +249,7 @@ class ImportXmlService
                 $transactionList[] = [
                     'activity_id' => $activityId,
                     'transaction' => json_encode($transaction),
+                    'deprecation_status_map' => json_encode(refreshTransactionDeprecationStatusMap($transaction)),
                 ];
             }
 
@@ -280,6 +283,7 @@ class ImportXmlService
                         'activity_id' => $activityId,
                         'result' => $result,
                         'default_field_values' => $defaultValues,
+                        'deprecation_status_map'=>refreshResultDeprecationStatusMap($result),
                     ]);
 
                     foreach ($indicators as $indicator) {
@@ -292,12 +296,14 @@ class ImportXmlService
                             'result_id' => $savedResult['id'],
                             'indicator' => $indicator,
                             'default_field_values' => $defaultValues,
+                            'deprecation_status_map'=>refreshIndicatorDeprecationStatusMap($indicator),
                         ]);
 
                         if (!empty($periods)) {
                             foreach ($periods as $period) {
                                 $tempPeriod[] = [
                                     'period' => $period,
+                                    'deprecation_status_map'=>refreshPeriodDeprecationStatusMap($period),
                                 ];
                             }
 
@@ -308,6 +314,7 @@ class ImportXmlService
                     $resultWithoutIndicator[] = [
                         'activity_id' => $activityId,
                         'result' => json_encode($result),
+                        'deprecation_status_map'=>json_encode(refreshResultDeprecationStatusMap($result)),
                     ];
                 }
             }

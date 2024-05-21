@@ -91,7 +91,13 @@ class ReportingOrgService
         $reportingOrg = array_values($reportingOrg['reporting_org']);
         $hasChanged = $this->checkForChange($organization, $reportingOrg);
 
-        return $organization->update(['reporting_org'=>$reportingOrg]) && (!$hasChanged || $this->syncReportingOrg($id));
+        $deprecationStatusMap = $organization->deprecation_status_map;
+        $deprecationStatusMap['reporting_org'] = doesOrganisationReportingOrgHaveDeprecatedCode($reportingOrg);
+
+        return $organization->update([
+                'reporting_org'          => $reportingOrg,
+                'deprecation_status_map' => $deprecationStatusMap,
+            ]) && (!$hasChanged || $this->syncReportingOrg($id));
     }
 
     /**
@@ -101,13 +107,13 @@ class ReportingOrgService
      *
      * @return Form
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $deprecationStatusMap = []): Form
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
         $model['reporting_org'] = $this->getReportingOrgData($id) ?? [];
         $this->parentCollectionFormCreator->url = route('admin.organisation.reporting-org.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['reporting_org'], 'PUT', '/organisation');
+        return $this->parentCollectionFormCreator->editForm($model, $element['reporting_org'], 'PUT', '/organisation', deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

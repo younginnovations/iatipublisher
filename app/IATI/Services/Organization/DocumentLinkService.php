@@ -84,7 +84,16 @@ class DocumentLinkService
             }
         }
 
-        return $this->organizationRepository->update($id, ['document_link' => $this->sanitizeData($documentLink['document_link'])]);
+        $sanitizedDocumentLink = $this->sanitizeData($documentLink['document_link']);
+
+        $organisation = $this->organizationRepository->find($id);
+        $deprecationStatusMap = $organisation->deprecation_status_map;
+        $deprecationStatusMap['document_link'] = doesOrganisationDocumentLinkHaveDeprecatedCode($sanitizedDocumentLink);
+
+        return $this->organizationRepository->update($id, [
+            'document_link'          => $sanitizedDocumentLink,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -94,7 +103,7 @@ class DocumentLinkService
      *
      * @return Form
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $deprecationStatusMap = []): Form
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
         $model['document_link'] = $this->getDocumentLinkData($id) ?? [];

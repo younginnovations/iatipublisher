@@ -41,7 +41,9 @@ class DefaultFinanceTypeRequest extends ActivityBaseRequest
         }
 
         return [
-            'default_finance_type' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('FinanceType', 'Activity', false)))),
+            'default_finance_type' => sprintf('nullable|in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('FinanceType', 'Activity', false)
+            ))),
         ];
     }
 
@@ -63,8 +65,8 @@ class DefaultFinanceTypeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => 'The default finance type does not exist.',
-            'size'      => 'The default finance type cannot have more than one value.',
+            'in'   => 'The default finance type does not exist.',
+            'size' => 'The default finance type cannot have more than one value.',
         ];
     }
 }

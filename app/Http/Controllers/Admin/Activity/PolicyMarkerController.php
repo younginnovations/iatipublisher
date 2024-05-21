@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\PolicyMarkerService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class PolicyMarkerController.
@@ -43,7 +44,8 @@ class PolicyMarkerController extends Controller
         try {
             $element = getElementSchema('policy_marker');
             $activity = $this->policyMarkerService->getActivityData($id);
-            $form = $this->policyMarkerService->formGenerator($id, $activity->default_field_values ?? []);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'policy_marker', []);
+            $form = $this->policyMarkerService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'policy_marker'];
 
             return view('admin.activity.policyMarker.edit', compact('form', 'activity', 'data'));

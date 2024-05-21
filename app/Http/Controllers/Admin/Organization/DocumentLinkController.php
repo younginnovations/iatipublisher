@@ -9,6 +9,7 @@ use App\Http\Requests\Organization\DocumentLink\DocumentLinkRequest;
 use App\IATI\Services\Organization\DocumentLinkService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -42,7 +43,7 @@ class DocumentLinkController extends Controller
             $id = Auth::user()->organization_id;
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
             $organization = $this->documentLinkService->getOrganizationData($id);
-            $form = $this->documentLinkService->formGenerator($id);
+            $form = $this->documentLinkService->formGenerator($id, deprecationStatusMap: Arr::get($organization->deprecation_status_map, 'document_link', []));
             $status = $organization->document_link_element_completed ?? false;
             $data = ['status'=> $organization->document_link_element_completed ?? false, 'title'=> $element['document_link']['label'], 'name'=>'document-link'];
 

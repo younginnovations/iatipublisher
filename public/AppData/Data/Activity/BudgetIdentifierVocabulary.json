@@ -1,12 +1,12 @@
 {
-    "date-last-modified": "2024-05-21 06:47:18",
+    "date-last-modified": "2024-06-12 03:03:53",
     "version": "",
     "name": "BudgetIdentifierVocabulary",
     "xml:lang": "en",
     "BudgetIdentifierVocabulary": [
         {
             "code": "1",
-            "name": "IATI",
+            "name": "IATI (deprecated)",
             "description": "The budget identifier reported uses IATI budget identifier categories",
             "status": "withdrawn",
             "language": "en"

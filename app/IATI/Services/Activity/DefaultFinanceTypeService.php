@@ -70,7 +70,14 @@ class DefaultFinanceTypeService
      */
     public function update($id, $activityDefaultFinanceType): bool
     {
-        return $this->activityRepository->update($id, ['default_finance_type' => $activityDefaultFinanceType]);
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['default_finance_type'] = doesDefaultFinanceTypeHaveDeprecatedCode($activityDefaultFinanceType);
+
+        return $this->activityRepository->update($id, [
+            'default_finance_type'   => $activityDefaultFinanceType['code'],
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -81,13 +88,13 @@ class DefaultFinanceTypeService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id, $activityDefaultFieldValues): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('default_finance_type');
         $model['default_finance_type'] = $this->getDefaultFinanceTypeData($id);
         $this->baseFormCreator->url = route('admin.activity.default-finance-type.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, overRideDefaultFieldValue: $activityDefaultFieldValues);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, overRideDefaultFieldValue: $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

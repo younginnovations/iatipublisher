@@ -12,6 +12,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class TitleController.
@@ -45,7 +46,8 @@ class TitleController extends Controller
         try {
             $element = getElementSchema('title');
             $activity = $this->titleService->getActivityData($id);
-            $form = $this->titleService->formGenerator($id, $activity->default_field_values ?? []);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'title', []);
+            $form = $this->titleService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'title'];
 
             return view('admin.activity.title.edit', compact('form', 'activity', 'data'));

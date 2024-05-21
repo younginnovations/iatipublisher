@@ -9,6 +9,7 @@ use App\Http\Requests\Organization\Name\NameRequest;
 use App\IATI\Services\Organization\NameService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -42,7 +43,7 @@ class NameController extends Controller
             $id = Auth::user()->organization_id;
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
             $organization = $this->nameService->getOrganizationData($id);
-            $form = $this->nameService->formGenerator($id);
+            $form = $this->nameService->formGenerator($id, deprecationStatusMap: Arr::get($organization->deprecation_status_map, 'name', []));
             $data = ['title'=> $element['name']['label'], 'name'=>'name'];
 
             return view('admin.organisation.forms.name.name', compact('form', 'organization', 'data'));

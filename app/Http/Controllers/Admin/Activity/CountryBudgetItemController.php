@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\CountryBudgetItemService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class CountryBudgetItemController.
@@ -43,7 +44,8 @@ class CountryBudgetItemController extends Controller
         try {
             $element = getElementSchema('country_budget_items');
             $activity = $this->countryBudgetItemService->getActivityData($id);
-            $form = $this->countryBudgetItemService->formGenerator($id, $activity->default_field_values ?? []);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'country_budget_items', []);
+            $form = $this->countryBudgetItemService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
             $data = [
                 'title'  => $element['label'],
                 'name'   => 'country_budget_items',

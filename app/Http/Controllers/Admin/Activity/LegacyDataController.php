@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\LegacyDataService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class LegacyDataController.
@@ -43,7 +44,8 @@ class LegacyDataController extends Controller
         try {
             $element = getElementSchema('legacy_data');
             $activity = $this->activityLegacyDataService->getActivityData($id);
-            $form = $this->activityLegacyDataService->formGenerator($id);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'legacy', []);
+            $form = $this->activityLegacyDataService->formGenerator($id, deprecationStatusMap: $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'legacy_data'];
 
             return view('admin.activity.legacyData.edit', compact('form', 'activity', 'data'));

@@ -89,3 +89,18 @@ export function generateUsername(fullname: string) {
 
   return '';
 }
+
+export function onlyDeprecatedStatusMap(elements) {
+  const deprecatedStatus = [];
+
+  console.log('elements', elements);
+  for (let i = 0; i < Object.keys(elements).length; i++) {
+    if (i in elements && 'deprecation_status_map' in elements[i]) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      deprecatedStatus.push(elements[i]['deprecation_status_map']);
+    }
+  }
+
+  return deprecatedStatus;
+}

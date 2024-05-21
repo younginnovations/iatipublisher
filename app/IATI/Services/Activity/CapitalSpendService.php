@@ -70,7 +70,14 @@ class CapitalSpendService
      */
     public function update($id, $activityCapitalSpend): bool
     {
-        return $this->activityRepository->update($id, ['capital_spend' => $activityCapitalSpend]);
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['capital_spend'] = doesCapitalSpendHaveDeprecatedCode($activityCapitalSpend);
+
+        return $this->activityRepository->update($id, [
+            'capital_spend'          => $activityCapitalSpend,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -81,13 +88,13 @@ class CapitalSpendService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('capital_spend');
         $model['capital_spend'] = $this->getCapitalSpendData($id);
         $this->baseFormCreator->url = route('admin.activity.capital-spend.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

@@ -1,5 +1,5 @@
 {
-    "date-last-modified": "2024-05-21 06:47:18",
+    "date-last-modified": "2024-06-12 03:03:53",
     "version": "",
     "name": "CRSChannelCode",
     "xml:lang": "en",
@@ -777,7 +777,7 @@
         {
             "code": "41109",
             "category": "41000",
-            "name": "International Research and Training Institute for the Advancement of Women",
+            "name": "International Research and Training Institute for the Advancement of Women (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -843,7 +843,7 @@
         {
             "code": "41124",
             "category": "41000",
-            "name": "United Nations Development Fund for Women",
+            "name": "United Nations Development Fund for Women (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -1005,7 +1005,7 @@
         {
             "code": "41200",
             "category": "41000",
-            "name": "UN entities (core contributions reportable in TOSSD only)",
+            "name": "UN entities (core contributions reportable in TOSSD only) (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -1077,7 +1077,7 @@
         {
             "code": "41311",
             "category": "41000",
-            "name": "United Nations Peacebuilding Fund (Window One: Flexible Contributions Only)",
+            "name": "United Nations Peacebuilding Fund (Window One: Flexible Contributions Only) (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -1198,7 +1198,7 @@
         {
             "code": "41700",
             "category": "41000",
-            "name": "UN entities, non-core contributions",
+            "name": "UN entities, non-core contributions (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -1240,7 +1240,7 @@
         {
             "code": "42005",
             "category": "42000",
-            "name": "Facility for Euro-Mediterranean Investment and Partnership Trust Fund",
+            "name": "Facility for Euro-Mediterranean Investment and Partnership Trust Fund (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -1540,7 +1540,7 @@
         {
             "code": "47004",
             "category": "47000",
-            "name": "ASEAN Cultural Fund",
+            "name": "ASEAN Cultural Fund (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -1588,7 +1588,7 @@
         {
             "code": "47014",
             "category": "47000",
-            "name": "Commonwealth Fund for Technical Co-operation",
+            "name": "Commonwealth Fund for Technical Co-operation (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -1600,7 +1600,7 @@
         {
             "code": "47016",
             "category": "47000",
-            "name": "Commonwealth Institute",
+            "name": "Commonwealth Institute (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -1642,13 +1642,13 @@
         {
             "code": "47023",
             "category": "47000",
-            "name": "Commonwealth Legal Advisory Service",
+            "name": "Commonwealth Legal Advisory Service (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "47024",
             "category": "47000",
-            "name": "Commonwealth Media Development Fund",
+            "name": "Commonwealth Media Development Fund (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -1684,25 +1684,25 @@
         {
             "code": "47030",
             "category": "47000",
-            "name": "Commonwealth Scientific Council",
+            "name": "Commonwealth Scientific Council (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "47031",
             "category": "47000",
-            "name": "Commonwealth Small States Office",
+            "name": "Commonwealth Small States Office (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "47032",
             "category": "47000",
-            "name": "Commonwealth Trade and Investment Access Facility",
+            "name": "Commonwealth Trade and Investment Access Facility (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "47033",
             "category": "47000",
-            "name": "Commonwealth Youth Programme",
+            "name": "Commonwealth Youth Programme (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -1732,7 +1732,7 @@
         {
             "code": "47038",
             "category": "47000",
-            "name": "INTERPOL Fund for Aid and Technical Assistance to Developing Countries",
+            "name": "INTERPOL Fund for Aid and Technical Assistance to Developing Countries (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -1786,13 +1786,13 @@
         {
             "code": "47048",
             "category": "47000",
-            "name": "Inter-American Indian Institute",
+            "name": "Inter-American Indian Institute (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "47049",
             "category": "47000",
-            "name": "International Bureau of Education - International Educational Reporting System (IERS)",
+            "name": "International Bureau of Education - International Educational Reporting System (IERS) (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -1852,7 +1852,7 @@
         {
             "code": "47060",
             "category": "47000",
-            "name": "International Institute for Cotton",
+            "name": "International Institute for Cotton (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -1996,7 +1996,7 @@
         {
             "code": "47085",
             "category": "47000",
-            "name": "Pan-American Railway Congress Association",
+            "name": "Pan-American Railway Congress Association (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -2014,7 +2014,7 @@
         {
             "code": "47088",
             "category": "47000",
-            "name": "Relief Net",
+            "name": "Relief Net (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -2026,13 +2026,13 @@
         {
             "code": "47090",
             "category": "47000",
-            "name": "Southern African Transport and Communications Commission",
+            "name": "Southern African Transport and Communications Commission (deprecated)",
             "status": "withdrawn"
         },
         {
             "code": "47091",
             "category": "47000",
-            "name": "(Colombo Plan) Special Commonwealth African Assistance Programme",
+            "name": "(Colombo Plan) Special Commonwealth African Assistance Programme (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -2050,7 +2050,7 @@
         {
             "code": "47094",
             "category": "47000",
-            "name": "South Pacific Applied Geoscience Commission",
+            "name": "South Pacific Applied Geoscience Commission (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -2098,7 +2098,7 @@
         {
             "code": "47102",
             "category": "47000",
-            "name": "World Customs Organisation Fellowship Programme",
+            "name": "World Customs Organisation Fellowship Programme (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -2134,7 +2134,7 @@
         {
             "code": "47108",
             "category": "47000",
-            "name": "Multi-Country Demobilisation and Reintegration Program",
+            "name": "Multi-Country Demobilisation and Reintegration Program (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -2397,7 +2397,7 @@
         },
         {
             "code": "50000",
-            "name": "Others",
+            "name": "Others (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -2415,7 +2415,7 @@
         {
             "code": "52000",
             "category": "50000",
-            "name": "Other",
+            "name": "Other (deprecated)",
             "status": "withdrawn"
         },
         {
@@ -2438,7 +2438,7 @@
         {
             "code": "61002",
             "category": "61000",
-            "name": "Private exporter in provider country",
+            "name": "Private exporter in provider country (deprecated)",
             "status": "withdrawn"
         },
         {

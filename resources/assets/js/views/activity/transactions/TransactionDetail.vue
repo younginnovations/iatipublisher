@@ -106,11 +106,13 @@
 
       <div class="activities__content">
         <div></div>
+
         <div
           class="activities__content--elements -mx-3 -mt-3 flex-wrap xl:flex"
         >
           <template v-for="(post, key) in transactionData" :key="key">
             <TransactionElement
+              v-if="key.toString() !== 'deprecation_status_map'"
               :data="post"
               :element-name="key.toString()"
               :edit-url="`/activity/${transaction.activity_id}/transaction/${transaction.id}`"
@@ -130,6 +132,9 @@
                   : element['sub_elements'][key]['hover_text'] ?? ''
               "
               :types="types"
+              :deprecation-status-map="
+                transaction['deprecation_status_map'][key.toString()]
+              "
             />
           </template>
         </div>

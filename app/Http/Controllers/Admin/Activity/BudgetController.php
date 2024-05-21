@@ -11,6 +11,7 @@ use App\IATI\Services\Activity\BudgetService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class BudgetController.
@@ -52,7 +53,8 @@ class BudgetController extends Controller
             $element = getElementSchema('budget');
             $activity = $this->activityService->getActivity($id);
 
-            $form = $this->budgetService->formGenerator($id, $activity->default_field_values ?? []);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'budget', []);
+            $form = $this->budgetService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
             $data = [
                 'title'  => $element['label'],
                 'name'   => 'budget',

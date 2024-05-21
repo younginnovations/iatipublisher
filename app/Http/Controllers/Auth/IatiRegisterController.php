@@ -293,13 +293,13 @@ class IatiRegisterController extends Controller
     {
         try {
             $types = [
-                'country' => getCodeList('Country', 'Organization'),
-                'registrationAgency' => getCodeList('OrganizationRegistrationAgency', 'Organization'),
-                'publisherType' => getCodeList('OrganizationType', 'Organization'),
-                'dataLicense' => getCodeList('DataLicense', 'Activity', false),
-                'source' => getCodeList('Source', 'Activity', false),
+                'country'                               => getCodeList('Country', 'Organization', filterDeprecated: true),
+                'registrationAgency'                    => getCodeList('OrganizationRegistrationAgency', 'Organization', filterDeprecated: true),
+                'publisherType'                         => getCodeList('OrganizationType', 'Organization', filterDeprecated: true),
+                'dataLicense'                           => getCodeList('DataLicense', 'Activity', false, filterDeprecated: true),
+                'source'                                => getCodeList('Source', 'Activity', false, filterDeprecated: true),
                 'uncategorizedRegistrationAgencyPrefix' => Enums::UNCATEGORIZED_ORGANISATION_AGENCY_PREFIX,
-                'languages' => getCodeList('Language', 'Activity'),
+                'languages'                             => getCodeList('Language', 'Activity', filterDeprecated: true),
             ];
 
             return view('web.iati_register', compact('types'));

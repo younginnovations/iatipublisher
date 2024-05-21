@@ -10,6 +10,7 @@ use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -114,6 +115,7 @@ class PeriodService
     public function create(array $periodData): Model
     {
         $periodData['period'] = $this->sanitizeData($periodData['period']);
+        $periodData['deprecation_status_map'] = refreshPeriodDeprecationStatusMap($periodData['period']);
 
         return $this->periodRepository->store($periodData);
     }
@@ -129,6 +131,7 @@ class PeriodService
     public function update(int $id, $periodData): bool
     {
         $periodData['period'] = $this->sanitizeData($periodData['period']);
+        $periodData['deprecation_status_map'] = refreshPeriodDeprecationStatusMap($periodData['period']);
 
         return $this->periodRepository->update($id, $periodData);
     }
@@ -162,9 +165,17 @@ class PeriodService
     {
         $element = getElementSchema('period');
         $indicatorPeriod = $this->getPeriod($periodId);
+        $deprecationStatusMap = Arr::get($indicatorPeriod->toArray(), 'deprecation_status_map', []);
+
         $this->resultElementFormCreator->url = route('admin.indicator.period.update', [$indicatorId, $periodId]);
 
-        return $this->resultElementFormCreator->editForm($indicatorPeriod->period, $element, 'PUT', route('admin.indicator.period.index', $indicatorId));
+        return $this->resultElementFormCreator->editForm(
+            $indicatorPeriod->period,
+            $element,
+            method: 'PUT',
+            parent_url: route('admin.indicator.period.index', $indicatorId),
+            deprecationStatusMap: $deprecationStatusMap
+        );
     }
 
     /**
@@ -225,5 +236,20 @@ class PeriodService
     public function deletePeriod($id): bool
     {
         return $this->periodRepository->delete($id);
+    }
+
+    public function getDeprecationStatusMap($id = '', $key = '')
+    {
+        if ($id) {
+            $period = $this->periodRepository->find($id);
+
+            if (!$key) {
+                return $period->deprecation_status_map;
+            }
+
+            return Arr::get($period->deprecation_status_map, $key, []);
+        }
+
+        return [];
     }
 }

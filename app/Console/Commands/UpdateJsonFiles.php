@@ -25,6 +25,84 @@ class UpdateJsonFiles extends Command
      */
     protected $description = 'This command will update code list json files.';
 
+    /**
+     * @var array|string[]
+     */
+    protected array $ignoreables
+        = [
+            'AdditionalExtension.json',
+            'DataLicense.json',
+            'EarmarkingModality.json',
+            'Element.json',
+            'ElementGroup.json',
+            'Extension.json',
+            'Source.json',
+            'OrganisationElements.json',
+            'OrganisationElementsGroup.json',
+            'OrganizationRegistrationAgency.json',
+        ];
+
+    /**
+     * @var array|string[]
+     */
+    protected array $codelistWithLanguageProperty
+        = [
+            'ActivityDateType.json',
+            'ActivityScope.json',
+            'ActivityStatus.json',
+            'BudgetIdentifier.json',
+            'BudgetIdentifierVocabulary.json',
+            'BudgetStatus.json',
+            'BudgetType.json',
+            'CollaborationType.json',
+            'ConditionType.json',
+            'ContactType.json',
+            'Country.json',
+            'Currency.json',
+            'DescriptionType.json',
+            'DisbursementChannel.json',
+            'DocumentCategory.json',
+            'FileFormat.json',
+            'FlowType.json',
+            'GeographicExactness.json',
+            'GeographicLocationClass.json',
+            'GeographicLocationReach.json',
+            'GeographicVocabulary.json',
+            'HumanitarianScopeType.json',
+            'HumanitarianScopeVocabulary.json',
+            'IndicatorMeasure.json',
+            'IndicatorVocabulary.json',
+            'Language.json',
+            'LocationType.json',
+            'OtherIdentifierType.json',
+            'PolicyMarker.json',
+            'PolicyMarkerVocabulary.json',
+            'PolicySignificance.json',
+            'Region.json',
+            'RegionVocabulary.json',
+            'RelatedActivityType.json',
+            'ResultType.json',
+            'SectorCategory.json',
+            'SectorCode.json',
+            'SectorVocabulary.json',
+            'TagVocabulary.json',
+            'TiedStatus.json',
+            'UNSDG-Goals.json',
+            'UNSDG-Targets.json',
+            'OrganisationRole.json',
+        ];
+
+    /**
+     * @var array|array[]
+     */
+    protected array $codeListWithAdditionalProperties
+        = [
+            'FileFormat.json' => ['category-name', 'name'],
+        ];
+
+    /**
+     * @var array|array[]
+     */
     private array $allFiles
         = [
             'Activity'     => [
@@ -100,21 +178,9 @@ class UpdateJsonFiles extends Command
             ],
         ];
 
-    protected array $ignoreables
-        = [
-            'AdditionalExtension.json',
-            'DataLicense.json',
-            'EarmarkingModality.json',
-            'Element.json',
-            'ElementGroup.json',
-            'Extension.json',
-            'Source.json',
-            'OrganisationElements.json',
-            'OrganisationElementsGroup.json',
-            'OrganizationRegistrationAgency.json',
-            'OrganizationType.json',
-        ];
-
+    /**
+     * @var array|array[]
+     */
     private array $urlSuffixMap
         = [
             'Activity'     => [
@@ -186,70 +252,35 @@ class UpdateJsonFiles extends Command
                 'OrganisationElementsGroup.json'      => null,
                 'OrganisationRole.json'               => 'OrganisationRole.json',
                 'OrganizationRegistrationAgency.json' => null,
-                'OrganizationType.json'               => null,
+                'OrganizationType.json'               => 'OrganisationType.json',
             ],
         ];
 
+    /**
+     * @var array|string[]
+     */
     private array $specialCases
         = [
+            'SectorCode.json',
             'BudgetIdentifier.json',
             'DocumentCategory.json',
             'LocationType.json',
         ];
-    private array $combinationMap
+
+    /**
+     * @var array|array[]
+     */
+    private array  $combinationMap
         = [
+            'SectorCode.json'       => ['Sector.json', 'SectorCategory.json'],
             'BudgetIdentifier.json' => ['BudgetIdentifierSector.json', 'BudgetIdentifier.json'],
             'DocumentCategory.json' => ['DocumentCategory.json', 'DocumentCategory-category.json'],
             'LocationType.json'     => ['LocationType.json', 'LocationType-category.json'],
         ];
 
-    protected array $codelistWithLanguageProperty
-        = [
-            'ActivityDateType.json',
-            'ActivityScope.json',
-            'ActivityStatus.json',
-            'BudgetIdentifier.json',
-            'BudgetIdentifierVocabulary.json',
-            'BudgetStatus.json',
-            'BudgetType.json',
-            'CollaborationType.json',
-            'ConditionType.json',
-            'ContactType.json',
-            'Country.json',
-            'Currency.json',
-            'DescriptionType.json',
-            'DisbursementChannel.json',
-            'DocumentCategory.json',
-            'FileFormat.json',
-            'FlowType.json',
-            'GeographicExactness.json',
-            'GeographicLocationClass.json',
-            'GeographicLocationReach.json',
-            'GeographicVocabulary.json',
-            'HumanitarianScopeType.json',
-            'HumanitarianScopeVocabulary.json',
-            'IndicatorMeasure.json',
-            'IndicatorVocabulary.json',
-            'Language.json',
-            'LocationType.json',
-            'OtherIdentifierType.json',
-            'PolicyMarker.json',
-            'PolicyMarkerVocabulary.json',
-            'PolicySignificance.json',
-            'Region.json',
-            'RegionVocabulary.json',
-            'RelatedActivityType.json',
-            'ResultType.json',
-            'SectorCategory.json',
-            'SectorCode.json',
-            'SectorVocabulary.json',
-            'TagVocabulary.json',
-            'TiedStatus.json',
-            'UNSDG-Goals.json',
-            'UNSDG-Targets.json',
-            'OrganisationRole.json',
-        ];
-
+    /**
+     * @var string
+     */
     private string $modifiedDate;
 
     /**
@@ -257,7 +288,7 @@ class UpdateJsonFiles extends Command
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $this->modifiedDate = now()->format('Y-m-d H:i:s');
 
@@ -268,50 +299,146 @@ class UpdateJsonFiles extends Command
                 }
 
                 if (in_array($fileName, $this->specialCases)) {
-                    $this->proceedForCombinedCodelist($folderName, $fileName, Arr::get($this->combinationMap, $fileName));
+                    switch ($fileName) {
+                        case 'SectorCode.json':
+                            $this->combineAndProceedForSector($folderName, $fileName, Arr::get($this->combinationMap, $fileName));
+                            break;
+                        case 'BudgetIdentifier.json':
+                            $this->combineAndProceedForBudgetIdentifier($folderName, $fileName, Arr::get($this->combinationMap, $fileName));
+                            break;
+                        case 'DocumentCategory.json':
+                            $this->combineAndProceedForDocumentCategory($folderName, $fileName, Arr::get($this->combinationMap, $fileName));
+                            break;
+                        case 'LocationType.json':
+                            $this->combineAndProceedForLocationType($folderName, $fileName, Arr::get($this->combinationMap, $fileName));
+                            break;
+                    }
                 } else {
                     $this->proceedNormally($folderName, $fileName, $this->urlSuffixMap[$folderName][$fileName]);
                 }
+
+                $this->info("Done for $fileName");
             }
         }
     }
 
-    public function getCurlResult($url, $filename)
+    /**
+     * Proceed for BudgetIdentifier.json.
+     *
+     * @param string $folderName
+     * @param string $filename
+     * @param array $mapCombination
+     *
+     * @return void
+     */
+    public function combineAndProceedForBudgetIdentifier(string $folderName, string $filename, array $mapCombination): void
     {
-        $response = Http::get($url);
+        $temp = ['baseData' => '', 'categoryData' => ''];
 
-        return $response->json();
+        foreach ($mapCombination as $key => $urlSuffix) {
+            $type = $key === 0 ? 'baseData' : 'categoryData';
+            $url = $this->getUrl($urlSuffix);
+            $temp[$type] = $this->getCurlResult($url, $urlSuffix);
+        }
+
+        $combinedData = $this->combineBudgetIdentifier($temp['baseData']['data'], $temp['categoryData']['data']);
+        $contentForFile = $this->parseToPublisherJson($combinedData, $filename);
+
+        $filePath = "AppData/Data/$folderName/$filename";
+
+        awsUploadFile($filePath, $contentForFile);
+        Cache::set($filePath, $contentForFile);
+        file_put_contents(public_path($filePath), $contentForFile);
     }
 
-    public function combineData($baseData, $categoryData): array
+    /**
+     * Proceed for DocumentCategory.json.
+     *
+     * @param string $folderName
+     * @param string $filename
+     * @param array $mapCombination
+     *
+     * @return void
+     */
+    public function combineAndProceedForDocumentCategory(string $folderName, string $filename, array $mapCombination): void
     {
+        $temp = ['baseData' => '', 'categoryData' => ''];
+
+        foreach ($mapCombination as $key => $urlSuffix) {
+            $type = $key === 0 ? 'baseData' : 'categoryData';
+            $url = $this->getUrl($urlSuffix);
+            $temp[$type] = $this->getCurlResult($url, $urlSuffix);
+        }
+
+        $filteredDocumentCategoryItems = array_filter($temp['baseData']['data'], function ($baseData) use ($folderName) {
+            if ($folderName === 'Activity') {
+                return $baseData['category'] === 'A';
+            } else {
+                return $baseData['category'] === 'B';
+            }
+        });
+
+        $category = $folderName === 'Activity' ? 'Activity Level' : 'Organisation Level';
+
+        foreach ($filteredDocumentCategoryItems as &$documentCategoryItem) {
+            $documentCategoryItem['category-name'] = $category;
+        }
+
+        $contentForFile = $this->parseToPublisherJson($filteredDocumentCategoryItems, $filename);
+        $filePath = "AppData/Data/$folderName/$filename";
+
+        file_put_contents(public_path($filePath), $contentForFile);
+        awsUploadFile($filePath, $contentForFile);
+        Cache::set($filePath, $contentForFile);
+    }
+
+    /**
+     * Proceed for LocationType.json.
+     *
+     * @param string $folderName
+     * @param string $fileName
+     * @param array $mapCombination
+     *
+     * @return void
+     */
+    private function combineAndProceedForLocationType(string $folderName, string $fileName, array $mapCombination): void
+    {
+        $temp = ['baseData' => '', 'categoryData' => ''];
+
+        foreach ($mapCombination as $key => $urlSuffix) {
+            $type = $key === 0 ? 'baseData' : 'categoryData';
+            $url = $this->getUrl($urlSuffix);
+            $temp[$type] = $this->getCurlResult($url, $urlSuffix);
+        }
+
+        $baseData = $temp['baseData']['data'];
+        $categoryData = $temp['categoryData']['data'];
+
         foreach ($baseData as $key => $data) {
             $categoryCode = $data['category'];
-            $categoryName = $this->pluckFromCategoryData($categoryData, $categoryCode, 'name');
-            $categoryDescription = $this->pluckFromCategoryData($categoryData, $categoryCode, 'description');
+            $categoryName = $this->pluckFromLocationCategory($categoryData, $categoryCode, 'name');
 
             $baseData[$key]['category-name'] = $categoryName;
-            $baseData[$key]['category-description'] = $categoryDescription;
         }
 
-        return $baseData;
+        $contentForFile = $this->parseToPublisherJson($baseData, $fileName);
+
+        $filePath = "AppData/Data/$folderName/$fileName";
+
+        file_put_contents(public_path($filePath), $contentForFile);
+        awsUploadFile($filePath, $contentForFile);
+        Cache::set($filePath, $contentForFile);
     }
 
-    public function pluckFromCategoryData($categoryData, $code, $neededKey)
-    {
-        foreach ($categoryData as $key => $data) {
-            if ($data['code'] === $code) {
-                if (empty($data[$neededKey])) {
-                    return '';
-                } else {
-                    return $data[$neededKey];
-                }
-            }
-        }
-
-        return '';
-    }
-
+    /**
+     * Proceed for all json.
+     *
+     * @param $folderName
+     * @param $filename
+     * @param $urlSuffix
+     *
+     * @return void
+     */
     private function proceedNormally($folderName, $filename, $urlSuffix): void
     {
         $url = $this->getUrl($urlSuffix);
@@ -325,7 +452,50 @@ class UpdateJsonFiles extends Command
         Cache::set($filePath, $contentForFile);
     }
 
-    private function parseToPublisherJson($data, $filename): bool|string
+    /**
+     * @param string $urlSuffix
+     *
+     * @return string
+     */
+    private function getUrl(string $urlSuffix): string
+    {
+        return "https://cdn.iatistandard.org/prod-iati-website/reference_downloads/203/codelists/downloads/clv3/json/en/{$urlSuffix}";
+    }
+
+    public function getCurlResult($url, $filename)
+    {
+        $response = Http::timeout(30)->get($url); // increase timeout for this
+
+        return $response->json();
+    }
+
+    /**
+     * @param $baseData
+     * @param $categoryData
+     *
+     * @return array
+     */
+    private function combineBudgetIdentifier($baseData, $categoryData): array
+    {
+        foreach ($baseData as $datum) {
+            $baseData[$datum['code']] = $datum;
+        }
+
+        foreach ($categoryData as &$data) {
+            $data['category-name'] = $baseData[$data['category']]['name'];
+        }
+
+        return $categoryData;
+    }
+
+    /**
+     * Parse json to IATI-Publisher codelist json.
+     *
+     * @param $data
+     * @param string $filename
+     * @return bool|string
+     */
+    private function parseToPublisherJson($data, string $filename): bool|string
     {
         $fileDetails = explode('.', $filename);
         $fileNameNoExt = $fileDetails[0];
@@ -342,35 +512,51 @@ class UpdateJsonFiles extends Command
             $dataToWriteInFile[$fileNameNoExt] = $this->addLanguageProperty($dataToWriteInFile[$fileNameNoExt]);
         }
 
+        foreach ($dataToWriteInFile[$fileNameNoExt] as &$item) {
+            if (Arr::get($item, 'status', 'active') === 'withdrawn' && Arr::get($item, 'name', false)) {
+                $item['name'] = $item['name'] . ' (deprecated)';
+            }
+        }
+
+        if ($filename === 'FileFormat.json') {
+            foreach ($dataToWriteInFile[$fileNameNoExt] as &$datum) {
+                foreach ($this->codeListWithAdditionalProperties[$filename] as $property) {
+                    $datum[$property] = '';
+                }
+            }
+        }
+
         return json_encode($dataToWriteInFile, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 
-    public function proceedForCombinedCodelist(string $folderName, string $filename, array $mapCombination): void
+    /**
+     * @param $categoryData
+     * @param $code
+     * @param $neededKey
+     *
+     * @return string
+     */
+    public function pluckFromLocationCategory($categoryData, $code, $neededKey)
     {
-        $temp = ['baseData' => '', 'categoryData' => ''];
-
-        foreach ($mapCombination as $key => $urlSuffix) {
-            $type = $key === 0 ? 'baseData' : 'categoryData';
-            $url = $this->getUrl($urlSuffix);
-            $temp[$type] = $this->getCurlResult($url, $urlSuffix);
+        foreach ($categoryData as $key => $data) {
+            if ($data['code'] === $code) {
+                if (empty($data[$neededKey])) {
+                    return '';
+                } else {
+                    return $data[$neededKey];
+                }
+            }
         }
 
-        $combinedData = $this->combineData($temp['baseData']['data'], $temp['categoryData']['data']);
-        $contentForFile = $this->parseToPublisherJson($combinedData, $filename);
-
-        $filePath = "AppData/Data/$folderName/$filename";
-
-        file_put_contents(public_path($filePath), $contentForFile);
-        awsUploadFile($filePath, $contentForFile);
-        Cache::set($filePath, $contentForFile);
+        return '';
     }
 
-    private function getUrl($urlSuffix): string
-    {
-        return "https://cdn.iatistandard.org/prod-iati-website/reference_downloads/203/codelists/downloads/clv3/json/en/{$urlSuffix}";
-    }
-
-    private function hasLanguageProperty($filename): bool
+    /**
+     * @param string $filename
+     *
+     * @return bool
+     */
+    private function hasLanguageProperty(string $filename): bool
     {
         return in_array($filename, $this->codelistWithLanguageProperty);
     }
@@ -382,5 +568,80 @@ class UpdateJsonFiles extends Command
         }
 
         return $data;
+    }
+
+    private function pluckFromCategoryData($categoryData, $code, $neededKey)
+    {
+        foreach ($categoryData as $key => $data) {
+            if ($data['code'] === $code) {
+                if (empty($data[$neededKey])) {
+                    return '';
+                } else {
+                    return $data[$neededKey];
+                }
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * Proceed for Sector.json.
+     *
+     * @param string $folderName
+     * @param mixed $fileName
+     * @param array $mapCombination
+     *
+     * @return void
+     */
+    private function combineAndProceedForSector(string $folderName, mixed $fileName, array $mapCombination): void
+    {
+        $temp = ['baseData' => '', 'categoryData' => ''];
+
+        foreach ($mapCombination as $key => $urlSuffix) {
+            $type = $key === 0 ? 'baseData' : 'categoryData';
+            $url = $this->getUrl($urlSuffix);
+            $temp[$type] = $this->getCurlResult($url, $urlSuffix);
+        }
+
+        $baseData = $temp['baseData']['data'];
+        $categoryData = $temp['categoryData']['data'];
+
+        foreach ($baseData as $key => $data) {
+            $categoryCode = $data['category'];
+            $categoryName = $this->pluckFromSectorCategory($categoryData, $categoryCode, 'name');
+
+            $baseData[$key]['category-name'] = $categoryName;
+        }
+
+        $contentForFile = $this->parseToPublisherJson($baseData, $fileName);
+
+        $filePath = "AppData/Data/$folderName/$fileName";
+
+        file_put_contents(public_path($filePath), $contentForFile);
+        awsUploadFile($filePath, $contentForFile);
+        Cache::set($filePath, $contentForFile);
+    }
+
+    /**
+     * @param $categoryData
+     * @param $code
+     * @param $neededKey
+     *
+     * @return string
+     */
+    public function pluckFromSectorCategory($categoryData, $code, $neededKey)
+    {
+        foreach ($categoryData as $key => $data) {
+            if ($data['code'] === $code) {
+                if (empty($data[$neededKey])) {
+                    return '';
+                } else {
+                    return $data[$neededKey];
+                }
+            }
+        }
+
+        return '';
     }
 }

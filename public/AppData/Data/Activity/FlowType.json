@@ -1,5 +1,5 @@
 {
-    "date-last-modified": "2024-05-21 06:47:18",
+    "date-last-modified": "2024-06-12 03:03:53",
     "version": "",
     "name": "FlowType",
     "xml:lang": "en",
@@ -13,7 +13,7 @@
         },
         {
             "code": "20",
-            "name": "OOF",
+            "name": "OOF (deprecated)",
             "description": "Other Official Flows",
             "status": "withdrawn",
             "language": "en"
@@ -41,7 +41,7 @@
         },
         {
             "code": "35",
-            "name": "Private Market",
+            "name": "Private Market (deprecated)",
             "description": "Private long-term (i.e. over one-year maturity) capital transactions made by residents of DAC countries",
             "status": "withdrawn",
             "language": "en"

@@ -74,7 +74,16 @@ class HumanitarianScopeService
      */
     public function update($id, $activityHumanitarianScope): bool
     {
-        return $this->activityRepository->update($id, ['humanitarian_scope' => $this->sanitizeHumanitarianScopeData($activityHumanitarianScope)]);
+        $activityHumanitarianScope = $this->sanitizeHumanitarianScopeData($activityHumanitarianScope);
+
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['humanitarian_scope'] = doesHumanitarianScopeHaveDeprecatedCode($activityHumanitarianScope);
+
+        return $this->activityRepository->update($activity->id, [
+            'humanitarian_scope'     => $activityHumanitarianScope,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -85,13 +94,13 @@ class HumanitarianScopeService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id, $activityDefaultFieldValues): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('humanitarian_scope');
         $model['humanitarian_scope'] = $this->getHumanitarianScopeData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.humanitarian-scope.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

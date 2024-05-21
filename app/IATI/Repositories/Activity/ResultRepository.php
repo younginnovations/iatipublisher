@@ -153,4 +153,11 @@ class ResultRepository extends Repository
     {
         return $this->model->has('indicators')->with('indicators')->whereIn('id', $resultIds);
     }
+
+    public function getActivityByResultId($resultId)
+    {
+        $result = $this->model->where('id', $resultId)->first();
+
+        return $result->activity;
+    }
 }

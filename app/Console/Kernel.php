@@ -17,7 +17,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('command:FetchOrganisationRegistrationAgency')->dailyAt('00:00');
+        $schedule->command('command:UpdateJsonFiles')->dailyAt('00:00');
+        $schedule->command('command:FetchOrganisationRegistrationAgency')->dailyAt('00:05');
+        $schedule->command('command:SetAppDataJsonCache')->dailyAt('00:10');
     }
 
     /**

@@ -246,6 +246,11 @@ export default defineComponent({
     let { result, activity } = toRefs(props);
     const hasIndicators = result.value.indicators.length > 0 ? true : false;
     const resultsData = result.value.result;
+    console.log('resultData', resultsData);
+    const deprecationStatusMap = resultsData.deprecation_status_map;
+    console.log('deprecationStatusMap', deprecationStatusMap);
+    delete resultsData.deprecation_status_map;
+    console.log(deprecationStatusMap);
 
     const activityId = activity.value.id,
       activityTitle = activity.value.title,

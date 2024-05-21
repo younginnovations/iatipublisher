@@ -55,7 +55,9 @@ class ReportingOrgRequest extends OrganizationBaseRequest
             ];
             $rules[$reportingOrganizationForm . '.type'] = [
                 'nullable',
-                sprintf('in:%s', implode(',', array_keys(getCodeList('OrganizationType', 'Organization')))),
+                sprintf('in:%s', implode(',', array_keys(
+                    $this->getCodeListForRequestFiles('OrganizationType', 'Organization')
+                ))),
             ];
             $rules[$reportingOrganizationForm . '.secondary_reporter'] = [
                 'nullable',

@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\StatusService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class StatusController.
@@ -43,7 +44,8 @@ class StatusController extends Controller
         try {
             $element = getElementSchema('activity_status');
             $activity = $this->statusService->getActivityData($id);
-            $form = $this->statusService->formGenerator($id);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'activity_status', []);
+            $form = $this->statusService->formGenerator($id, deprecationStatusMap: $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'activity_status'];
 
             return view('admin.activity.status.edit', compact('form', 'activity', 'data'));

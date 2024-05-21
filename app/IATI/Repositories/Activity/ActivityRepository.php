@@ -236,6 +236,7 @@ class ActivityRepository extends Repository
             'reporting_org' => $this->getActivityElement($mappedActivity, 'reporting_org'),
             'upload_medium' => Enums::UPLOAD_TYPE['xml'],
         ];
+        $data['deprecated_status_map'] = refreshActivityDeprecationStatusMap($data);
 
         if ($activity_id) {
             return $this->update($activity_id, $data, true);
@@ -304,43 +305,44 @@ class ActivityRepository extends Repository
         $defaultTiedStatus = $this->autoFillSettingsValue($this->getSingleValuedActivityElement($activityData, 'default_tied_status'), 'default_tied_status');
         $defaultAidType = $this->autoFillDefaultAidTypeSettingValue($this->getActivityElement($activityData, 'default_aid_type'));
 
-        return $this->store(
-            [
-                'iati_identifier' => $activityData['identifier'],
-                'title' => $this->getActivityElement($activityData, 'title'),
-                'description' => $this->getActivityElement($activityData, 'description'),
-                'activity_status' => $this->getSingleValuedActivityElement($activityData, 'activity_status'),
-                'activity_date' => $this->getActivityElement($activityData, 'activity_date'),
-                'participating_org' => $this->getActivityElement($activityData, 'participating_organization'),
-                'recipient_country' => $this->getActivityElement($activityData, 'recipient_country'),
-                'recipient_region' => $this->getActivityElement($activityData, 'recipient_region'),
-                'sector' => $this->getActivityElement($activityData, 'sector'),
-                'org_id' => $activityData['organization_id'],
-                'policy_marker' => $this->getActivityElement($activityData, 'policy_marker'),
-                'budget' => $this->getActivityElement($activityData, 'budget'),
-                'activity_scope' => $this->getSingleValuedActivityElement($activityData, 'activity_scope'),
-                'default_field_values' => $activityData['default_field_values'] ?? [],
-                'contact_info' => $this->getActivityElement($activityData, 'contact_info'),
-                'related_activity' => $this->getActivityElement($activityData, 'related_activity'),
-                'other_identifier' => $this->getActivityElement($activityData, 'other_identifier'),
-                'tag' => $this->getActivityElement($activityData, 'tag'),
-                'collaboration_type' => !empty($collaborationType) ? (int) $collaborationType : null,
-                'default_flow_type' => !empty($defaultFlowType) ? (int) $defaultFlowType : null,
-                'default_finance_type' => !empty($defaultFinanceType) ? (int) $defaultFinanceType : null,
-                'default_tied_status' => !empty($defaultTiedStatus) ? (int) $defaultTiedStatus : null,
-                'default_aid_type' => $defaultAidType,
-                'country_budget_items' => Arr::get($activityData, 'country_budget_item', null),
-                'humanitarian_scope' => $this->getActivityElement($activityData, 'humanitarian_scope'),
-                'capital_spend' => $this->getSingleValuedActivityElement($activityData, 'capital_spend'),
-                'conditions' => Arr::get($activityData, 'condition', null),
-                'legacy_data' => $this->getActivityElement($activityData, 'legacy_data'),
-                'document_link' => $this->getActivityElement($activityData, 'document_link'),
-                'location' => $this->getActivityElement($activityData, 'location'),
-                'planned_disbursement' => $this->getActivityElement($activityData, 'planned_disbursement'),
-                'reporting_org' => $this->getActivityElement($activityData, 'reporting_organization'),
-                'upload_medium' => Enums::UPLOAD_TYPE['csv'],
-            ]
-        );
+        $activity = [
+            'iati_identifier' => $activityData['identifier'],
+            'title' => $this->getActivityElement($activityData, 'title'),
+            'description' => $this->getActivityElement($activityData, 'description'),
+            'activity_status' => $this->getSingleValuedActivityElement($activityData, 'activity_status'),
+            'activity_date' => $this->getActivityElement($activityData, 'activity_date'),
+            'participating_org' => $this->getActivityElement($activityData, 'participating_organization'),
+            'recipient_country' => $this->getActivityElement($activityData, 'recipient_country'),
+            'recipient_region' => $this->getActivityElement($activityData, 'recipient_region'),
+            'sector' => $this->getActivityElement($activityData, 'sector'),
+            'org_id' => $activityData['organization_id'],
+            'policy_marker' => $this->getActivityElement($activityData, 'policy_marker'),
+            'budget' => $this->getActivityElement($activityData, 'budget'),
+            'activity_scope' => $this->getSingleValuedActivityElement($activityData, 'activity_scope'),
+            'default_field_values' => $activityData['default_field_values'] ?? [],
+            'contact_info' => $this->getActivityElement($activityData, 'contact_info'),
+            'related_activity' => $this->getActivityElement($activityData, 'related_activity'),
+            'other_identifier' => $this->getActivityElement($activityData, 'other_identifier'),
+            'tag' => $this->getActivityElement($activityData, 'tag'),
+            'collaboration_type' => !empty($collaborationType) ? (int) $collaborationType : null,
+            'default_flow_type' => !empty($defaultFlowType) ? (int) $defaultFlowType : null,
+            'default_finance_type' => !empty($defaultFinanceType) ? (int) $defaultFinanceType : null,
+            'default_tied_status' => !empty($defaultTiedStatus) ? (int) $defaultTiedStatus : null,
+            'default_aid_type' => $defaultAidType,
+            'country_budget_items' => Arr::get($activityData, 'country_budget_item', null),
+            'humanitarian_scope' => $this->getActivityElement($activityData, 'humanitarian_scope'),
+            'capital_spend' => $this->getSingleValuedActivityElement($activityData, 'capital_spend'),
+            'conditions' => Arr::get($activityData, 'condition', null),
+            'legacy_data' => $this->getActivityElement($activityData, 'legacy_data'),
+            'document_link' => $this->getActivityElement($activityData, 'document_link'),
+            'location' => $this->getActivityElement($activityData, 'location'),
+            'planned_disbursement' => $this->getActivityElement($activityData, 'planned_disbursement'),
+            'reporting_org' => $this->getActivityElement($activityData, 'reporting_organization'),
+            'upload_medium' => Enums::UPLOAD_TYPE['csv'],
+        ];
+        $activity['deprecation_status_map'] = refreshActivityDeprecationStatusMap($activity) ?? [];
+
+        return $this->store($activity);
     }
 
     /**
@@ -449,6 +451,7 @@ class ActivityRepository extends Repository
             'planned_disbursement' => $this->getActivityElement($activityData, 'planned_disbursement'),
             'reporting_org' => $this->getActivityElement($activityData, 'reporting_organization'),
         ];
+        $activity['deprecation_status_map'] = refreshActivityDeprecationStatusMap($activity) ?? [];
 
         return $this->update($id, $activity, true);
     }

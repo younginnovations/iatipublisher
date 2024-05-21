@@ -98,7 +98,7 @@ class DownloadActivityController extends Controller
             }
 
             $csvData = $this->downloadActivityService->getCsvData($activities);
-            $humanitarianScopeVocabularyArray = getCodeList('HumanitarianScopeVocabulary', 'Activity');
+            $humanitarianScopeVocabularyArray = getCodeList('HumanitarianScopeVocabulary', 'Activity', filterDeprecated: true);
 
             foreach ($csvData as $index => $data) {
                 $csvData[$index]['Humanitarian Scope Vocabulary'] = Arr::get($humanitarianScopeVocabularyArray, $csvData[$index]['Humanitarian Scope Vocabulary']);

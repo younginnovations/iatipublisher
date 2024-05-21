@@ -70,7 +70,14 @@ class DefaultTiedStatusService
      */
     public function update($id, $activityDefaultTiedStatus): bool
     {
-        return $this->activityRepository->update($id, ['default_tied_status' => $activityDefaultTiedStatus]);
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['default_tied_status'] = doesDefaultTiedStatusHaveDeprecatedCode(['code'=>$activityDefaultTiedStatus]);
+
+        return $this->activityRepository->update($activity->id, [
+            'default_tied_status'    => $activityDefaultTiedStatus,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -81,13 +88,13 @@ class DefaultTiedStatusService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id, $activityDefaultFieldValues): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('default_tied_status');
         $model['default_tied_status'] = $this->getDefaultTiedStatusData($id);
         $this->baseFormCreator->url = route('admin.activity.default-tied-status.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, overRideDefaultFieldValue: $activityDefaultFieldValues);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, overRideDefaultFieldValue: $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

@@ -113,10 +113,23 @@
         </div>
       </div>
 
-      <HelperText
+      <div
         v-if="title === 'reporting_org'"
-        :helper-text="elements['reporting_org']['helper_text']"
-      />
+        class="my-2 flex space-x-2 rounded-lg bg-eggshell px-4 py-2"
+      >
+        <svg-vue
+          icon="exclamation-warning"
+          class="h-6 -translate-y-1.5"
+        ></svg-vue>
+
+        <!-- eslint-disable vue/no-v-html -->
+        <div
+          class="text-xs font-normal text-n-50"
+          v-html="elements['reporting_org']['helper_text']"
+        ></div>
+      </div>
+
+      <HelperText :helper-text="deprecationCodeUsage" />
 
       <div
         v-if="title === 'transactions' && data.warning_info_text !== ''"
@@ -674,6 +687,11 @@ const props = defineProps({
   },
   hasEverBeenPublished: {
     type: Boolean,
+    required: false,
+    default: false,
+  },
+  deprecationCodeUsage: {
+    type: [Boolean, Boolean],
     required: false,
     default: false,
   },

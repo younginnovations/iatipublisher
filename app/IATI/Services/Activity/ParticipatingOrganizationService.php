@@ -74,7 +74,17 @@ class ParticipatingOrganizationService
      */
     public function update($id, $participatingOrganization): bool
     {
-        return $this->activityRepository->update($id, ['participating_org' => $this->sanitizeParticipatingOrgData($participatingOrganization)]);
+        $participatingOrganization = $this->sanitizeParticipatingOrgData($participatingOrganization);
+
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+
+        $deprecationStatusMap['participating_org'] = doesParticipatingOrgHaveDeprecatedCode($participatingOrganization);
+
+        return $this->activityRepository->update($id, [
+            'participating_org'      => $participatingOrganization,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -85,13 +95,13 @@ class ParticipatingOrganizationService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id, $activityDefaultFieldValues): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('participating_org');
         $model['participating_org'] = $this->getParticipatingOrganizationData($id) ?: [];
         $this->parentCollectionFormCreator->url = route('admin.activity.participating-org.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**
