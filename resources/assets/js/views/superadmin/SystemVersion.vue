@@ -1,5 +1,5 @@
 <template>
-  <div class="page-height bg-paper px-5 pt-4 pb-[71px] xl:px-10">
+  <div class="page-height bg-paper px-5 pb-[71px] pt-4 xl:px-10">
     <div class="title shrink-0 grow-0">
       <div class="mb-2 text-caption-c1 text-n-40 xl:mb-4">
         <nav aria-label="breadcrumbs" class="breadcrumb">

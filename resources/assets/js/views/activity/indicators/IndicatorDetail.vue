@@ -1,8 +1,8 @@
 <template>
-  <div class="bg-paper px-5 pt-4 pb-[71px] xl:px-10">
+  <div class="bg-paper px-5 pb-[71px] pt-4 xl:px-10">
     <div
       v-if="showSidebar"
-      class="fixed top-0 left-0 z-[50] h-screen w-screen bg-black/10 lg:hidden"
+      class="fixed left-0 top-0 z-[50] h-screen w-screen bg-black/10 lg:hidden"
       @click="
         () => {
           showSidebar = !showSidebar;

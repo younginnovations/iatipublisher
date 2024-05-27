@@ -13,7 +13,7 @@
       :show="!show"
       :class="
         show
-          ? 'border-l-2 border-l-salmon-50 pl-4 pt-4 pr-6 pb-2.5 text-sm leading-relaxed text-n-50 duration-300 ease-out'
+          ? 'border-l-2 border-l-salmon-50 pb-2.5 pl-4 pr-6 pt-4 text-sm leading-relaxed text-n-50 duration-300 ease-out'
           : 'alert relative border-l-2 border-l-salmon-50 duration-300 ease-out'
       "
     >

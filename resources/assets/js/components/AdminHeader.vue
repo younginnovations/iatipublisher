@@ -270,7 +270,7 @@
                 >
               </li>
               <li class="dropdown__list flex" @click="logout">
-                <svg-vue class="mr-3 ml-1" icon="logout"></svg-vue>
+                <svg-vue class="ml-1 mr-3" icon="logout"></svg-vue>
                 <button class="text-sm">Logout</button>
               </li>
             </ul>
@@ -308,7 +308,7 @@
                 >
               </li>
               <li class="dropdown__list flex" @click="logout">
-                <svg-vue class="mr-3 ml-1" icon="logout"></svg-vue>
+                <svg-vue class="ml-1 mr-3" icon="logout"></svg-vue>
                 <button class="text-sm">Logout</button>
               </li>
             </ul>
@@ -689,7 +689,7 @@ provide('defaultLanguage', props.defaultLanguage);
 }
 
 .spinner {
-  @apply absolute top-3 right-7 inline-block animate-spin rounded-full border-2 border-n-10 border-opacity-5;
+  @apply absolute right-7 top-3 inline-block animate-spin rounded-full border-2 border-n-10 border-opacity-5;
   width: 15px;
   height: 15px;
   border-top-color: white;

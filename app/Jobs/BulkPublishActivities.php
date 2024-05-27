@@ -62,6 +62,11 @@ class BulkPublishActivities implements ShouldQueue
     protected ActivityService $activityService;
 
     /**
+     * @var int
+     */
+    public $timeout = 3600;
+
+    /**
      * Create a new job instance.
      *
      * @param $activities
@@ -92,6 +97,7 @@ class BulkPublishActivities implements ShouldQueue
      */
     public function handle(BulkPublishingStatusService $publishingStatusService, ActivityWorkflowService $activityWorkflowService, ActivityService $activityService): void
     {
+        $this->activities->load(['transactions', 'results.indicators.periods']);
         $counter = 0;
         $this->setServices($publishingStatusService, $activityWorkflowService, $activityService);
 

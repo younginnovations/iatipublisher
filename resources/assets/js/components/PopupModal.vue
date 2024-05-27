@@ -4,7 +4,7 @@
       <div
         v-if="modalActive"
         :class="{ '!p-0': noPadding }"
-        class="modal fixed top-0 left-0 z-[999998] flex h-screen w-screen items-center justify-center p-4 sm:p-8"
+        class="modal fixed left-0 top-0 z-[999998] flex h-screen w-screen items-center justify-center p-4 sm:p-8"
       >
         <Transition name="modal-animation-inner">
           <div
@@ -12,7 +12,7 @@
             class="flex h-full w-full items-center justify-center"
           >
             <div
-              class="modal-backdrop absolute top-0 left-0 h-full w-full bg-n-50 opacity-50"
+              class="modal-backdrop absolute left-0 top-0 h-full w-full bg-n-50 opacity-50"
               @click="close"
             />
             <div

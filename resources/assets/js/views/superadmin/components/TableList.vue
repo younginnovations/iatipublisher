@@ -171,7 +171,7 @@
       <span
         v-for="(item, index) in filter.country"
         :key="index"
-        class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+        class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
       >
         <span class="text-n-40">Country:</span>
         <span
@@ -188,7 +188,7 @@
 
     <span v-show="filter.completeness" class="inline-flex flex-wrap gap-2">
       <span
-        class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+        class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
       >
         <span class="text-n-40">Setup Completeness:</span>
         <span
@@ -205,7 +205,7 @@
 
     <span v-show="filter.registration_type" class="inline-flex flex-wrap gap-2">
       <span
-        class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+        class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
       >
         <span class="text-n-40">Registration Type:</span>
         <span
@@ -227,7 +227,7 @@
       <span
         v-for="(item, index) in filter.publisher_type"
         :key="index"
-        class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+        class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
       >
         <span class="text-n-40">Organisation Type:</span>
         <span
@@ -249,7 +249,7 @@
       <span
         v-for="(item, index) in filter.data_license"
         :key="index"
-        class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+        class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
       >
         <span class="text-n-40">Data License:</span>
         <span
@@ -268,7 +268,7 @@
       class="inline-flex flex-wrap gap-2"
     >
       <span
-        class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+        class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
       >
         <span>
           <span class="text-n-40"> Date range: </span>
@@ -484,7 +484,7 @@
                     {{ data?.user?.email }}
                   </div>
                   <div
-                    class="absolute top-full left-0 hidden rounded bg-eggshell p-2 shadow-sm group-hover:block"
+                    class="absolute left-0 top-full hidden rounded bg-eggshell p-2 shadow-sm group-hover:block"
                   >
                     {{ data?.user?.email }}
                   </div>

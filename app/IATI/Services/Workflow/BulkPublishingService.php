@@ -136,10 +136,9 @@ class BulkPublishingService
     {
         $user = Auth::user();
         $activityTitle = [];
+        $activities = $this->activityService->getActivitiesHavingIds($activityIds);
 
-        foreach ($activityIds as $activityId) {
-            $activity = $this->activityService->getActivity($activityId);
-
+        foreach ($activities as $activity) {
             if ($activity && $activity->status === 'draft') {
                 $activityTitle[] = $activity->default_title_narrative;
                 RegistryValidatorJob::dispatch($activity, $user);

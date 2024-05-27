@@ -3,7 +3,7 @@
     <div class="dropdown__content z-50">
       <div class="flex flex-col">
         <strong class="text-sm font-bold text-n-50">{{ props.name }}</strong>
-        <p class="mt-2 mb-4 text-sm text-n-50">
+        <p class="mb-4 mt-2 text-sm text-n-50">
           {{ props.text }}
         </p>
         <a class="read__more" :href="`${props.btnLink}`">

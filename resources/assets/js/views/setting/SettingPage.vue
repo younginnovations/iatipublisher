@@ -4,7 +4,7 @@
     <div class="setting input__field">
       <span class="text-xs font-bold text-n-40">Settings</span>
       <div class="flex items-center justify-between">
-        <div class="my-2 flex items-center sm:mt-4 sm:mb-6">
+        <div class="my-2 flex items-center sm:mb-6 sm:mt-4">
           <a href="/activities"><svg-vue icon="left-arrow" /></a>
           <h2 class="ml-3 text-heading-5 font-bold text-n-50 sm:text-heading-4">
             Settings
@@ -66,7 +66,7 @@
       </div>
     </div>
     <div
-      class="fixed bottom-0 left-0 w-full bg-eggshell py-5 px-6 shadow-dropdown sm:pr-40"
+      class="fixed bottom-0 left-0 w-full bg-eggshell px-6 py-5 shadow-dropdown sm:pr-40"
     >
       <div class="flex items-center justify-end">
         <a

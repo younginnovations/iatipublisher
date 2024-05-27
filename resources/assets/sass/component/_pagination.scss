@@ -7,7 +7,7 @@
 
   a,
   .pagination-dots {
-    @apply flex border-y border-l border-n-20 py-1.5 px-3;
+    @apply flex border-y border-l border-n-20 px-3 py-1.5;
 
     &:not(.prev-btn) {
       @apply border-l border-n-20;
@@ -22,7 +22,7 @@
       }
     }
     &.prev-btn {
-      @apply rounded-tl rounded-bl;
+      @apply rounded-bl rounded-tl;
     }
 
     &.next-btn {

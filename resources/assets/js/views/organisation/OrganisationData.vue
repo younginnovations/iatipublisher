@@ -16,7 +16,7 @@
     >
       <svg-vue icon="chevron" class="rotate-180 pb-2 text-3xl text-white" />
     </div>
-    <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
+    <div class="relative bg-paper px-5 pb-[71px] pt-4 xl:px-10">
       <!-- title section -->
       <div class="page-title mb-4 xl:mb-6">
         <div class="flex items-end gap-4">
@@ -550,7 +550,7 @@ export default defineComponent({
   content: '';
   width: 0.5px;
   height: 140px;
-  @apply absolute top-1 -right-6 bg-n-20;
+  @apply absolute -right-6 top-1 bg-n-20;
 }
 
 .element {
@@ -566,7 +566,7 @@ export default defineComponent({
 }
 
 .element__search {
-  @apply my-4 h-10 w-full rounded border border-n-30 bg-white py-3 pr-3 pl-10 text-n-40 outline-none duration-300;
+  @apply my-4 h-10 w-full rounded border border-n-30 bg-white py-3 pl-10 pr-3 text-n-40 outline-none duration-300;
 
   &::placeholder {
     @apply text-sm text-n-30 duration-300;

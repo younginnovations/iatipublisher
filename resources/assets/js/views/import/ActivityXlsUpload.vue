@@ -1,5 +1,5 @@
 <template>
-  <div class="listing__page bg-paper pt-4 pb-[71px]">
+  <div class="listing__page bg-paper pb-[71px] pt-4">
     <div class="page-title mb-4 w-screen px-10">
       <div class="flex items-end gap-4">
         <div class="title">
@@ -142,7 +142,7 @@
             </label>
           </div>
         </div>
-        <div class="mx-auto mb-4 max-w-[565px] rounded bg-eggshell py-3 px-6">
+        <div class="mx-auto mb-4 max-w-[565px] rounded bg-eggshell px-6 py-3">
           <div class="flex">
             <div class="w-[30px]">
               <svg-vue class="mr-2.5 text-[20px]" icon="alert-outline" />
@@ -190,7 +190,7 @@
           process.
         </p>
         <div
-          class="mt-5 mb-12 flex items-center justify-center gap-4 space-x-3"
+          class="mb-12 mt-5 flex items-center justify-center gap-4 space-x-3"
         >
           <a
             href="/files/Manuals/IATI_Publisher-Import_manual.pdf"
@@ -222,7 +222,7 @@
                 'visible translate-y-2 opacity-100': showDownloadDropdown,
                 'invisible -translate-y-2 opacity-0': !showDownloadDropdown,
               }"
-              class="absolute top-full -left-2.5 z-0 w-[110%] rounded bg-n-0 p-2 uppercase text-n-40 shadow-lg duration-75"
+              class="absolute -left-2.5 top-full z-0 w-[110%] rounded bg-n-0 p-2 uppercase text-n-40 shadow-lg duration-75"
             >
               <li
                 class="group cursor-pointer rounded-sm text-[10px] font-bold text-n-40 hover:bg-teal-10"
@@ -288,7 +288,7 @@
     :class="{ 'animate-loader': loader }"
   />
   <Modal :no-padding="true" :modal-active="showDownloadCode" width="1220">
-    <div class="border-b border-n-20 py-5 px-6">
+    <div class="border-b border-n-20 px-6 py-5">
       <div class="flex justify-between">
         <div>
           <div class="flex items-center space-x-2">
@@ -308,7 +308,7 @@
         </button>
       </div>
     </div>
-    <div class="flex justify-between border-b border-n-20 py-5 px-6">
+    <div class="flex justify-between border-b border-n-20 px-6 py-5">
       <div class="relative">
         <svg-vue
           class="absolute left-3 top-1/2 h-[16px] -translate-y-1/2 text-base text-n-30"
@@ -338,8 +338,8 @@
       <table class="w-full text-xs text-n-40">
         <thead>
           <tr class="border-b border-n-20 text-left">
-            <th class="w-[600px] py-4 px-6">Activity Title</th>
-            <th class="py-4 px-6">
+            <th class="w-[600px] px-6 py-4">Activity Title</th>
+            <th class="px-6 py-4">
               <div
                 class="flex cursor-pointer text-n-50 transition duration-500 hover:text-spring-50"
                 @click="sortingDirection"
@@ -356,8 +356,8 @@
                 <span>Updated On</span>
               </div>
             </th>
-            <th class="py-4 px-6">Status</th>
-            <th class="py-4 px-6 text-left">
+            <th class="px-6 py-4">Status</th>
+            <th class="px-6 py-4 text-left">
               <button class="cursor-pointer" @click="selectAll">
                 <svg-vue class="text-base" icon="checkbox" />
               </button>
@@ -373,7 +373,7 @@
             :key="activity['id']"
             class="w-full border-b border-n-20"
           >
-            <td class="py-4 px-6 text-sm text-n-50">
+            <td class="px-6 py-4 text-sm text-n-50">
               <div class="ellipsis relative w-full">
                 <div
                   class="w-[500px] !max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-n-50"
@@ -387,7 +387,7 @@
                 </div>
               </div>
             </td>
-            <td class="py-4 px-6 text-xs text-n-40">
+            <td class="px-6 py-4 text-xs text-n-40">
               {{ dateFormat(activity['updated_at'], 'fromNow') }}
             </td>
             <td>

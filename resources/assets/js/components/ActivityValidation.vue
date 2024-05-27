@@ -7,7 +7,7 @@
           (localStoragePercent ? +localStoragePercent : percentageWidth) ===
             100 || hasError
         "
-        class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-[1px]"
+        class="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 rounded-full bg-white p-[1px]"
         @click="stopValidating"
       >
         <svg-vue class="text-sm" icon="cross-icon" />
@@ -19,7 +19,7 @@
             class="relative mx-2 h-5 w-5 rounded-full bg-spring-10 text-xs font-medium text-spring-50"
           >
             <div
-              class="absolute top-1/2 left-1/2 !-translate-y-[40%] -translate-x-[65%]"
+              class="absolute left-1/2 top-1/2 !-translate-y-[40%] -translate-x-[65%]"
             >
               {{ validationNames.length }}
             </div>

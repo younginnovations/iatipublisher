@@ -12,7 +12,7 @@
       </div>
     </div>
     <span class="text-sm font-bold text-n-50">Default for all data</span>
-    <div class="register mt-4 mb-4">
+    <div class="register mb-4 mt-4">
       <div class="register__container mb-0">
         <div>
           <div class="flex justify-between">
@@ -84,7 +84,7 @@
     <span class="text-sm font-bold text-n-50"
       >Recommended defaults for activity data</span
     >
-    <div class="register mt-4 mb-4">
+    <div class="register mb-4 mt-4">
       <div class="register__container">
         <!-- Default Hierarchy -->
         <div>
@@ -308,7 +308,7 @@
     <span class="text-sm font-bold text-n-50"
       >Optional defaults for activity data</span
     >
-    <div class="register mt-4 mb-4">
+    <div class="register mb-4 mt-4">
       <div class="register__container">
         <!-- Budget Not Provided -->
         <div>

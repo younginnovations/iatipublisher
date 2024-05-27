@@ -249,7 +249,7 @@
               </div>
               <p
                 v-if="checkStep(key)"
-                class="detail mt-2 mb-6 font-normal xl:pr-2"
+                class="detail mb-6 mt-2 font-normal xl:pr-2"
               >
                 {{ form['description'] }}
               </p>
@@ -417,7 +417,7 @@ export default defineComponent({
         title: 'Publisher Information',
         is_complete: false,
         description:
-          'This information will be used to register your organisation',
+          'This information will be used to register your organisation as an IATI publisher',
         hover_text:
           "We refer to organisations who publish IATI data as 'Publishers'. Before publishing data, all organisations need their own 'Publisher Account' on the IATI Registry (iatiregistry.org). Enter your organisation's data here and we'll create your organisation's Publisher Account for you. These details will also be saved here in IATI Publisher. ",
         fields: {
@@ -548,8 +548,7 @@ export default defineComponent({
       2: {
         title: 'Contact Information',
         is_complete: false,
-        description:
-          'This information will be used to register your organisation',
+        description: "This is your organisation's contact information",
         fields: {
           contact_email: {
             label: 'Contact Email',
@@ -585,10 +584,9 @@ export default defineComponent({
         },
       },
       3: {
-        title: 'Publishing Aditional Information',
+        title: 'Publishing Additional Information',
         is_complete: false,
-        description:
-          'This information will be used to create an admin account in IATI Publisher',
+        description: 'This is about how your organisation will publish data',
         fields: {
           source: {
             label: 'Source',
@@ -629,7 +627,7 @@ export default defineComponent({
         title: 'Administrator Information',
         is_complete: false,
         description:
-          'Provide your information to create an admin account here on IATI Publisher and IATI Registry at once.',
+          'This will create an admin account for you as an individual',
         fields: {
           full_name: {
             label: 'Full Name',
@@ -1028,7 +1026,7 @@ export default defineComponent({
         @apply leading-9;
       }
 
-      @apply my-7 mx-3 text-center leading-7 sm:leading-10 lg:mb-10 lg:mt-14;
+      @apply mx-3 my-7 text-center leading-7 sm:leading-10 lg:mb-10 lg:mt-14;
 
       p {
         font-weight: normal;

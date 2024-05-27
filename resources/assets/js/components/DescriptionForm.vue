@@ -7,7 +7,7 @@
   >
     <div class="subelement rounded-tl-lg border-l border-spring-50 pb-11">
       <label
-        class="control-label flex rounded-tl-lg rounded-tr-lg border-t border-r border-spring-50 py-4 px-6 text-sm font-bold leading-relaxed"
+        class="control-label flex rounded-tl-lg rounded-tr-lg border-r border-t border-spring-50 px-6 py-4 text-sm font-bold leading-relaxed"
         >Description</label
       >
       <div class="multi-form relative">
@@ -39,7 +39,7 @@
         </div>
         <div class="subelement rounded-tl-lg border-l border-spring-50 pb-11">
           <label
-            class="control-label flex rounded-tl-lg rounded-tr-lg border-t border-r border-spring-50 py-4 px-6 text-sm font-bold leading-relaxed"
+            class="control-label flex rounded-tl-lg rounded-tr-lg border-r border-t border-spring-50 px-6 py-4 text-sm font-bold leading-relaxed"
             >Narrative</label
           >
           <div class="form-child-body relative">

@@ -37,7 +37,7 @@ class RegistryValidatorJob implements ShouldQueue
      *
      * @var int
      */
-    public int $timeout = 900;
+    public $timeout = 3600;
 
     /**
      * Activity Instance for validation.
