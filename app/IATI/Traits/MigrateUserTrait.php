@@ -69,16 +69,14 @@ trait MigrateUserTrait
      */
     public function migrateUsersIfNeeded($iatiOrganization, $aidstreamUsers, $aidStreamOrganization): void
     {
-        $iatiNonDeletedUsers = $iatiOrganization->users;
+        $iatiAllUsers = $iatiOrganization->users;
 
-        $iatiEmails = [];
-        $iatiNonDeletedEmails = ($iatiNonDeletedUsers && count($iatiNonDeletedUsers)) ? $iatiNonDeletedUsers->pluck('email')->toArray() : [];
-        $iatiUsernames = [];
-        $iatiNonDeletedUsernames = ($iatiNonDeletedUsers && count($iatiNonDeletedUsers)) ? $iatiNonDeletedUsers->pluck('username')->toArray() : [];
+        $iatiUserEmails = ($iatiAllUsers && count($iatiAllUsers)) ? $iatiAllUsers->pluck('email')->toArray() : [];
+        $iatiUserUsernames = ($iatiAllUsers && count($iatiAllUsers)) ? $iatiAllUsers->pluck('username')->toArray() : [];
 
         if (count($aidstreamUsers)) {
             foreach ($aidstreamUsers as $aidstreamUser) {
-                if (!in_array($aidstreamUser->email, $iatiEmails, true) && !in_array($aidstreamUser->username, $iatiUsernames, true)) {
+                if (!in_array($aidstreamUser->email, $iatiUserEmails, true) && !in_array($aidstreamUser->username, $iatiUserUsernames, true)) {
                     $this->logInfo(
                         'Started user migration for user id: ' . $aidstreamUser->id . ' of organization: ' . $aidStreamOrganization->name
                     );
@@ -89,19 +87,8 @@ trait MigrateUserTrait
                     $this->logInfo(
                         'Completed user migration for user id: ' . $aidstreamUser->id . ' of organization: ' . $aidStreamOrganization->name
                     );
-                } elseif (in_array($aidstreamUser->email, $iatiEmails, true) && in_array($aidstreamUser->username, $iatiUsernames, true)) {
-                    if (in_array($aidstreamUser->email, $iatiNonDeletedEmails, true)) {
-                        if (in_array($aidstreamUser->username, $iatiNonDeletedUsernames, true)) {
-                            $message = "User with email {$aidstreamUser->email} and username {$aidstreamUser->username} already exists in IATI Publisher so not migrated.";
-                        } else {
-                            $message = "User with email {$aidstreamUser->email} and username {$aidstreamUser->username} (with soft deleted username) already exists in IATI Publisher so not migrated.";
-                        }
-                    } elseif (in_array($aidstreamUser->username, $iatiNonDeletedUsernames, true)) {
-                        $message = "User with email {$aidstreamUser->email} (with soft deleted email) and username {$aidstreamUser->username} already exists in IATI Publisher so not migrated.";
-                    } else {
-                        $message = "User with email {$aidstreamUser->email} (with soft deleted email) and username {$aidstreamUser->username} (with soft deleted username) already exists in IATI Publisher so not migrated.";
-                    }
-
+                } elseif (in_array($aidstreamUser->email, $iatiUserEmails, true) && in_array($aidstreamUser->username, $iatiUserUsernames, true)) {
+                    $message = "User with email {$aidstreamUser->email} and username {$aidstreamUser->username} already exists in IATI Publisher so not migrated.";
                     $this->setGeneralError($message)->setDetailedError(
                         $message,
                         $aidStreamOrganization->id,
@@ -109,13 +96,8 @@ trait MigrateUserTrait
                         $aidstreamUser->id,
                         $iatiOrganization->id
                     );
-                } elseif (in_array($aidstreamUser->email, $iatiEmails, true)) {
-                    if (in_array($aidstreamUser->email, $iatiNonDeletedEmails, true)) {
-                        $message = "User with email {$aidstreamUser->email} (with soft deleted email) already exists in IATI Publisher so not migrated.";
-                    } else {
-                        $message = "User with email {$aidstreamUser->email} already exists in IATI Publisher so not migrated.";
-                    }
-
+                } elseif (in_array($aidstreamUser->email, $iatiUserEmails, true)) {
+                    $message = "User with email {$aidstreamUser->email} already exists in IATI Publisher so not migrated.";
                     $this->setGeneralError($message)->setDetailedError(
                         $message,
                         $aidStreamOrganization->id,
@@ -123,13 +105,8 @@ trait MigrateUserTrait
                         $aidstreamUser->id,
                         $iatiOrganization->id
                     );
-                } elseif (in_array($aidstreamUser->username, $iatiUsernames, true)) {
-                    if (in_array($aidstreamUser->email, $iatiNonDeletedEmails, true)) {
-                        $message = "User with username {$aidstreamUser->username} already exists in IATI Publisher so not migrated.";
-                    } else {
-                        $message = "User with username {$aidstreamUser->username} (with soft deleted username) already exists in IATI Publisher so not migrated.";
-                    }
-
+                } elseif (in_array($aidstreamUser->username, $iatiUserUsernames, true)) {
+                    $message = "User with username {$aidstreamUser->username} already exists in IATI Publisher so not migrated.";
                     $this->setGeneralError($message)->setDetailedError(
                         $message,
                         $aidStreamOrganization->id,

@@ -261,8 +261,8 @@ class AuditService
         $row['created_at'] = now();
         $row['updated_at'] = now();
         $row['new_values'] = $this->encryptAuditableItemIfUserOrOrganization($element->toArray(), $row['auditable_type']);
-        $row['full_name'] = auth()->user()->full_name;
-        $row['email'] = auth()->user()->email;
+        $row['full_name'] = auth()->user() ? auth()->user()->full_name : null;
+        $row['email'] = auth()->user() ? auth()->user()->email : null;
 
         $this->auditRepository->insertRows($row);
 
