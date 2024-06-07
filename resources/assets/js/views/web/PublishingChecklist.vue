@@ -21,10 +21,7 @@
             create one for you (so you don’t have to visit IATI Registry to do
             this).
           </p>
-          <a
-            target="_blank"
-            href="https://www.iatiregistry.org/register_publisher/"
-          >
+          <a target="_blank" href="/iati/register">
             Create your IATI Registry Publisher Account
           </a>
           <p class="my-2 text-base">
