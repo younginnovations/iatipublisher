@@ -38,6 +38,13 @@
               <li><a href="/iati-standard">IATI Standard</a></li>
               <li><a href="/publishing-checklist">Publishing Checklist</a></li>
               <li><a href="/support">Support</a></li>
+              <li>
+                <a
+                  href="https://iatistandard.org/en/privacy-policy/"
+                  target="_blank"
+                  >Privacy Policy</a
+                >
+              </li>
             </ul>
           </div>
           <div class="footer__links lg:justify-self-end">
