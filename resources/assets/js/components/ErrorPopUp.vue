@@ -2,7 +2,7 @@
   <div>
     <div class="fixed inset-0 z-40 bg-black/20"></div>
     <div
-      class="fixed left-1/2 top-[50vh] z-50 w-[500px] max-w-[90%] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-6"
+      class="fixed left-1/2 top-[50vh] z-50 w-[550px] max-w-[90%] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-6"
     >
       <h3 class="mb-4 text-lg font-medium">
         <svg-vue icon="alert" class="mr-2 inline text-crimson-40"></svg-vue
@@ -20,7 +20,14 @@
           :key="index"
           class="my-3 ml-6"
         >
-          {{ item }}
+          <span>
+            {{ item }}
+          </span>
+          <template v-if="item === 'Your Organisation data is not published.'">
+            <a class="text-base font-semibold" href="/organisation">
+              Go to Organisation
+            </a>
+          </template>
         </li>
       </ul>
       <div class="mt-4 flex flex-row-reverse">
