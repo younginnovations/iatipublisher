@@ -221,7 +221,7 @@ const props = defineProps({
   },
   deprecationCodeUsage: {
     type: Object,
-    required: false,
+    required: true,
   },
 });
 

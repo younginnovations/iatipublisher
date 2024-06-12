@@ -40,7 +40,6 @@
 import { defineComponent, inject } from 'vue';
 import dateFormat from 'Composable/dateFormat';
 import Btn from 'Components/buttons/Link.vue';
-import HelperText from 'Components/HelperText.vue';
 
 export default defineComponent({
   name: 'ActivityTransactions',

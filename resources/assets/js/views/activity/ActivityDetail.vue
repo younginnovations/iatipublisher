@@ -408,7 +408,6 @@ import { useStore } from 'Store/activities/index';
 import { onlyDeprecatedStatusMap } from 'Composable/utils';
 
 export default defineComponent({
-  methods: { onlyDeprecatedStatusMap },
   components: {
     HoverText,
     ProgressBar,
@@ -827,5 +826,6 @@ export default defineComponent({
       width,
     };
   },
+  methods: { onlyDeprecatedStatusMap },
 });
 </script>

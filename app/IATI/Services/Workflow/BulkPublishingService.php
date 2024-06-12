@@ -456,7 +456,7 @@ class BulkPublishingService
         return $this->validationStatusRepository->deleteValidationResponses();
     }
 
-    public function refreshDeprecation_status(mixed $activityIds): array
+    public function refreshDeprecationStatus(mixed $activityIds): array
     {
         $activities = $this->activityService->getActivitiesHavingIds($activityIds);
         $arr = [];

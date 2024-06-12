@@ -629,7 +629,6 @@ import HelperText from 'Components/HelperText.vue';
 
 export default defineComponent({
   name: 'ResultIndicator',
-  methods: { onlyDeprecatedStatusMap },
   components: {
     HelperText,
     NotYet,
@@ -657,5 +656,6 @@ export default defineComponent({
 
     return { indicatorData, dateFormat, getActivityTitle, countDocumentLink };
   },
+  methods: { onlyDeprecatedStatusMap },
 });
 </script>
