@@ -1,133 +1,164 @@
 {
-  "name": "Region",
-  "date-last-modified": "2020-09-01T13:10:43.821650+00:00",
-  "version": "",
-  "xml:lang": "en",
-  "Region": [
-    {
-      "code": "88",
-      "name": "States Ex-Yugoslavia unspecified",
-      "language": "en"
-    },
-    {
-      "code": "89",
-      "name": "Europe, regional",
-      "language": "en"
-    },
-    {
-      "code": "189",
-      "name": "North of Sahara, regional",
-      "language": "en"
-    },
-    {
-      "code": "289",
-      "name": "South of Sahara, regional",
-      "language": "en"
-    },
-    {
-      "code": "298",
-      "name": "Africa, regional",
-      "language": "en"
-    },
-    {
-      "code": "389",
-      "name": "North & Central America, regional",
-      "language": "en"
-    },
-    {
-      "code": "489",
-      "name": "South America, regional",
-      "language": "en"
-    },
-    {
-      "code": "498",
-      "name": "America, regional",
-      "language": "en"
-    },
-    {
-      "code": "589",
-      "name": "Middle East, regional",
-      "language": "en"
-    },
-    {
-      "code": "619",
-      "name": "Central Asia, regional",
-      "language": "en"
-    },
-    {
-      "code": "679",
-      "name": "South Asia, regional",
-      "language": "en"
-    },
-    {
-      "code": "689",
-      "name": "South & Central Asia, regional",
-      "language": "en"
-    },
-    {
-      "code": "789",
-      "name": "Far East Asia, regional",
-      "language": "en"
-    },
-    {
-      "code": "798",
-      "name": "Asia, regional",
-      "language": "en"
-    },
-    {
-      "code": "889",
-      "name": "Oceania, regional",
-      "language": "en"
-    },
-    {
-      "code": "998",
-      "name": "Developing countries, unspecified",
-      "language": "en"
-    },
-    {
-      "code": "1027",
-      "name": "Eastern Africa, regional",
-      "language": "en"
-    },
-    {
-      "code": "1028",
-      "name": "Middle Africa, regional",
-      "language": "en"
-    },
-    {
-      "code": "1029",
-      "name": "Southern Africa, regional",
-      "language": "en"
-    },
-    {
-      "code": "1030",
-      "name": "Western Africa, regional",
-      "language": "en"
-    },
-    {
-      "code": "1031",
-      "name": "Caribbean, regional",
-      "language": "en"
-    },
-    {
-      "code": "1032",
-      "name": "Central America, regional",
-      "language": "en"
-    },
-    {
-      "code": "1033",
-      "name": "Melanesia, regional",
-      "language": "en"
-    },
-    {
-      "code": "1034",
-      "name": "Micronesia, regional",
-      "language": "en"
-    },
-    {
-      "code": "1035",
-      "name": "Polynesia, regional",
-      "language": "en"
-    }
-  ]
+    "date-last-modified": "2024-06-12 04:09:26",
+    "version": "",
+    "name": "Region",
+    "xml:lang": "en",
+    "Region": [
+        {
+            "code": "88",
+            "name": "States Ex-Yugoslavia unspecified",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "89",
+            "name": "Europe, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "189",
+            "name": "North of Sahara, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "289",
+            "name": "South of Sahara, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "298",
+            "name": "Africa, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "380",
+            "name": "West Indies, regional (deprecated)",
+            "status": "withdrawn",
+            "language": "en"
+        },
+        {
+            "code": "389",
+            "name": "Caribbean & Central America, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "489",
+            "name": "South America, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "498",
+            "name": "America, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "589",
+            "name": "Middle East, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "619",
+            "name": "Central Asia, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "679",
+            "name": "South Asia, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "689",
+            "name": "South & Central Asia, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "789",
+            "name": "Far East Asia, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "798",
+            "name": "Asia, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "889",
+            "name": "Oceania, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "998",
+            "name": "Developing countries, unspecified",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "1027",
+            "name": "Eastern Africa, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "1028",
+            "name": "Middle Africa, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "1029",
+            "name": "Southern Africa, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "1030",
+            "name": "Western Africa, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "1031",
+            "name": "Caribbean, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "1032",
+            "name": "Central America, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "1033",
+            "name": "Melanesia, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "1034",
+            "name": "Micronesia, regional",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "1035",
+            "name": "Polynesia, regional",
+            "status": "active",
+            "language": "en"
+        }
+    ]
 }

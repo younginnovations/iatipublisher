@@ -47,29 +47,48 @@
     @reset="resetPublishStep"
   >
     <div class="popup mb-4">
-      <div class="title mb-6 flex items-center text-sm">
-        <svg-vue
-          class="mr-1 text-lg"
-          :class="{
-            'text-spring-50': publishStateChange.alertState,
-            'text-crimson-40': !publishStateChange.alertState,
-          }"
-          :icon="publishStateChange.icon"
-        />
-        <b>{{ publishStateChange.title }} </b>
-      </div>
-      <div
-        class="rounded-lg bg-mint p-4"
-        :class="{
-          'bg-mint': publishStateChange.alertState,
-          'bg-[#FFF1F0]': !publishStateChange.alertState && publishStep !== 1,
-          '!bg-eggshell': !publishStateChange.alertState && publishStep === 1,
-        }"
-      >
+      <div class="">
+        <div class="title mb-6 flex items-center text-sm">
+          <svg-vue
+            class="mr-1 text-lg"
+            :class="{
+              'text-spring-50': publishStateChange.alertState,
+              'text-crimson-40': !publishStateChange.alertState,
+            }"
+            :icon="publishStateChange.icon"
+          />
+          <b>{{ publishStateChange.title }} </b>
+        </div>
         <div
-          class="text-sm leading-normal"
-          v-html="publishStateChange.description"
-        ></div>
+          class="rounded-lg bg-mint p-4"
+          :class="{
+            'bg-mint': publishStateChange.alertState,
+            'bg-[#FFF1F0]': !publishStateChange.alertState && publishStep !== 1,
+            '!bg-eggshell': !publishStateChange.alertState && publishStep === 1,
+          }"
+        >
+          <div
+            class="text-sm leading-normal"
+            v-html="publishStateChange.description"
+          ></div>
+        </div>
+      </div>
+
+      <div v-if="hasDeprecatedValueInUse && publishStep === 0" class="my-6">
+        <div class="title mb-4 flex h-5 items-center text-sm">
+          <svg-vue
+            icon="exclamation-warning"
+            class="mr-1 h-full text-lg text-spring-50"
+          />
+          <b class="h-full">Some elements use deprecated codelist values</b>
+        </div>
+        <div class="rounded-lg bg-eggshell p-4">
+          <div class="text-sm leading-normal">
+            Certain elements in this activity use deprecated code list values,
+            which we do not recommend. Using these outdated values can undermine
+            data quality.
+          </div>
+        </div>
       </div>
     </div>
     <div class="flex justify-end">
@@ -191,6 +210,7 @@ const props = defineProps({
   coreCompleted: { type: Boolean, required: true },
   activityId: { type: Number, required: true },
   publish: { type: Boolean, required: false, default: true },
+  deprecationStatusMap: { type: Object, required: true },
 });
 const showExistingProcessModal = ref(false);
 const showModalButtonLoader = ref(false);
@@ -248,7 +268,34 @@ const loader = ref(false);
 // true for completed and false for not completed
 
 const coreElementStatus = coreCompleted.value;
+const hasDeprecatedValueInUse = checkIfHasDeprecatedValueInUse();
+console.log(
+  'hasDeprecatedValueInUse',
+  hasDeprecatedValueInUse,
+  props.deprecationStatusMap
+);
+function checkIfHasDeprecatedValueInUse(): boolean {
+  function recursiveCheck(item): boolean {
+    if (Array.isArray(item)) {
+      for (const element of item) {
+        if (recursiveCheck(element)) {
+          return true;
+        }
+      }
+    } else if (typeof item === 'object' && item !== null) {
+      for (const key in item) {
+        if (recursiveCheck(item[key])) {
+          return true;
+        }
+      }
+    } else if (item !== false) {
+      return true;
+    }
+    return false;
+  }
 
+  return recursiveCheck(props.deprecationStatusMap);
+}
 // Dynamic text for loader
 const loaderText = ref('Please Wait');
 

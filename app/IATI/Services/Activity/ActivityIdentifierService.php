@@ -6,6 +6,7 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Repositories\Activity\ActivityRepository;
+use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -71,12 +72,19 @@ class ActivityIdentifierService
      */
     public function update($id, $activityIdentifier): bool
     {
-        $hasEverBeenPublished = $this->activityRepository->find($id, ['has_ever_been_published'])['has_ever_been_published'];
+        $activity = $this->activityRepository->find($id, ['has_ever_been_published', 'deprecation_status_map']);
+
+        $hasEverBeenPublished = Arr::get($activity, 'has_ever_been_published');
+        $deprecationStatusMap = Arr::get($activity, 'deprecation_status_map');
 
         if (!$hasEverBeenPublished) {
             $activityIdentifier['present_organization_identifier'] = auth()->user()->organization->identifier;
+            $deprecationStatusMap['iati_identifier'] = doesIatiIdentifierHaveDeprecatedCode($activityIdentifier);
 
-            return $this->activityRepository->update($id, ['iati_identifier' => $activityIdentifier]);
+            return $this->activityRepository->update($id, [
+                'iati_identifier'        => $activityIdentifier,
+                'deprecation_status_map' => $deprecationStatusMap,
+            ]);
         }
 
         return false;
@@ -90,7 +98,7 @@ class ActivityIdentifierService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('iati_identifier');
         $model['activity_identifier'] = $this->getActivityIdentifierData($id);
@@ -103,6 +111,6 @@ class ActivityIdentifierService
             $showCancelOrSaveButton = false;
         }
 
-        return $this->baseFormCreator->editForm($model['activity_identifier'], $element, 'PUT', '/activity/' . $id, $showCancelOrSaveButton);
+        return $this->baseFormCreator->editForm($model['activity_identifier'], $element, 'PUT', '/activity/' . $id, $showCancelOrSaveButton, deprecationStatusMap: $deprecationStatusMap);
     }
 }

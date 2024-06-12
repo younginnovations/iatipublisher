@@ -80,9 +80,15 @@ class PolicyMarkerRequest extends ActivityBaseRequest
 
         foreach ($formFields as $policyMarkerIndex => $policyMarker) {
             $policyMarkerForm = sprintf('policy_marker.%s', $policyMarkerIndex);
-            $rules[sprintf('%s.policy_marker_vocabulary', $policyMarkerForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('PolicyMarkerVocabulary', 'Activity', false)));
-            $rules[sprintf('%s.significance', $policyMarkerForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('PolicySignificance', 'Activity', false)));
-            $rules[sprintf('%s.policy_marker', $policyMarkerForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('PolicyMarker', 'Activity', false)));
+            $rules[sprintf('%s.policy_marker_vocabulary', $policyMarkerForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('PolicyMarkerVocabulary', 'Activity', false)
+            ));
+            $rules[sprintf('%s.significance', $policyMarkerForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('PolicySignificance', 'Activity', false)
+            ));
+            $rules[sprintf('%s.policy_marker', $policyMarkerForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('PolicyMarker', 'Activity', false)
+            ));
             $rules[sprintf('%s.vocabulary_uri', $policyMarkerForm)] = 'nullable|url';
 
             foreach ($this->getErrorsForNarrative($policyMarker['narrative'], $policyMarkerForm) as $policyMarkerNarrativeIndex => $narrativeRules) {
@@ -110,7 +116,7 @@ class PolicyMarkerRequest extends ActivityBaseRequest
             $messages[sprintf('%s.significance.in', $policyMarkerForm)] = 'The policy marker significance is invalid.';
             $messages[sprintf('%s.policy_marker.in', $policyMarkerForm)] = 'The policy marker code is invalid.';
             $messages[sprintf('%s.vocabulary_uri.url', $policyMarkerForm)]
-                = 'The @vocabulary-uri field must be a valid url.';
+                                                                                    = 'The @vocabulary-uri field must be a valid url.';
 
             foreach ($this->getMessagesForNarrative($policyMarker['narrative'], $policyMarkerForm) as $policyMarkerNarrativeIndex => $narrativeMessages) {
                 $messages[$policyMarkerNarrativeIndex] = $narrativeMessages;

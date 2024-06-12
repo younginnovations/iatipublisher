@@ -4,7 +4,6 @@
          bootstrap="vendor/autoload.php"
          colors="true"
          backupStaticAttributes="false"
-         processIsolation="true"
 >
     <testsuites>
         <testsuite name="Unit">
@@ -22,9 +21,9 @@
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
-        <env name="CACHE_DRIVER" value="file"/>
-         <env name="DB_CONNECTION" value="pgsql"/>
-         <env name="DB_DATABASE" value="iati_db_test"/>
+        <env name="CACHE_DRIVER" value="redis"/>
+        <env name="DB_CONNECTION" value="pgsql"/>
+        <env name="DB_DATABASE" value="iati_db_test"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>

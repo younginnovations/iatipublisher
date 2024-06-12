@@ -86,6 +86,7 @@ class OrganizationIdentifierService
     public function update($id, $organizationIdentifiers): bool
     {
         $organization = $this->organizationRepository->find($id);
+        $deprecationStatusMap = $organization->deprecation_status_map;
         $olderOrgInfo = clone $organization;
         $reportingOrg = $organization->reporting_org;
         $reportingOrg[0]['ref'] = $organizationIdentifiers['organization_registration_agency'] . '-' . $organizationIdentifiers['registration_number'];
@@ -126,6 +127,9 @@ class OrganizationIdentifierService
             $organization->old_identifiers = $allOldIdentifiers;
         }
 
+        $deprecationStatusMap['organization_identifier'] = doesOrganisationIdentifierHaveDeprecatedCode($organizationIdentifiers);
+        $organization->deprecation_status_map = $deprecationStatusMap;
+
         $organization->save();
 
         if ($hasChanged) {
@@ -147,7 +151,7 @@ class OrganizationIdentifierService
      * @return Form
      * @throws JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $deprecationStatusMap = []): Form
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
         $organization = $this->getOrganizationData($id);
@@ -166,7 +170,8 @@ class OrganizationIdentifierService
             additonalInfo: [
                 'formId'   => 'save-and-exit-organization-identifier-form',
                 'submitId' => 'save-and-exit-button',
-            ]
+            ],
+            deprecationStatusMap: $deprecationStatusMap
         );
     }
 

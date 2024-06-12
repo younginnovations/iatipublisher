@@ -53,7 +53,9 @@ class StatusRequest extends ActivityBaseRequest
         }
 
         return [
-            'activity_status' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ActivityStatus', 'Activity', false)))),
+            'activity_status' => sprintf('nullable|in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('ActivityStatus', 'Activity', false)
+            ))),
         ];
     }
 
@@ -65,7 +67,7 @@ class StatusRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in' => 'The activity status does not exist.',
+            'in'   => 'The activity status does not exist.',
             'size' => 'The activity status cannot have more than one value.',
         ];
     }

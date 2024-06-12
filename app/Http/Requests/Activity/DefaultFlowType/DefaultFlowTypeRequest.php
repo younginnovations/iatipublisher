@@ -41,7 +41,9 @@ class DefaultFlowTypeRequest extends ActivityBaseRequest
         }
 
         return [
-            'default_flow_type' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('FlowType', 'Activity', false)))),
+            'default_flow_type' => sprintf('nullable|in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('FlowType', 'Activity', false)
+            ))),
         ];
     }
 
@@ -65,8 +67,8 @@ class DefaultFlowTypeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => 'The default flow type does not exist.',
-            'size'      => 'The default flow type cannot have more than one value.',
+            'in'   => 'The default flow type does not exist.',
+            'size' => 'The default flow type cannot have more than one value.',
         ];
     }
 }

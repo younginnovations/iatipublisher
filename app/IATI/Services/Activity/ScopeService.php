@@ -70,7 +70,14 @@ class ScopeService
      */
     public function update($id, $activityScope): bool
     {
-        return $this->activityRepository->update($id, ['activity_scope' => $activityScope]);
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['activity_scope'] = doesActivityScopeHaveDeprecatedCode(['code'=>$activityScope]);
+
+        return $this->activityRepository->update($id, [
+            'activity_scope'         => $activityScope,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -81,13 +88,13 @@ class ScopeService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('activity_scope');
         $model['activity_scope'] = $this->getScopeData($id);
         $this->baseFormCreator->url = route('admin.activity.scope.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\ParticipatingOrganizationService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class ParticipatingOrganizationController
@@ -44,7 +45,8 @@ class ParticipatingOrganizationController extends Controller
         try {
             $element = getElementSchema('participating_org');
             $activity = $this->participatingOrganizationService->getActivityData($id);
-            $form = $this->participatingOrganizationService->formGenerator($id, $activity->default_field_values ?? []);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'participating_org', []);
+            $form = $this->participatingOrganizationService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'participating_org'];
 
             return view('admin.activity.participatingOrganization.edit', compact('form', 'activity', 'data'));
@@ -72,7 +74,7 @@ class ParticipatingOrganizationController extends Controller
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Participating-organization updated successfully.');
         } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating participating-organization.');
         }

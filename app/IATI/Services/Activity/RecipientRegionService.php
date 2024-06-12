@@ -92,11 +92,17 @@ class RecipientRegionService
      */
     public function update($id, $activityRecipientRegion): bool
     {
+        $recipientRegionData = $this->sanitizeRecipientRegionData($activityRecipientRegion);
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['recipient_region'] = doesRecipientRegionHaveDeprecatedCode($recipientRegionData);
+
         $data = [
-            'recipient_region' => $this->sanitizeRecipientRegionData($activityRecipientRegion),
+            'recipient_region'       => $recipientRegionData,
+            'deprecation_status_map' => $deprecationStatusMap,
         ];
         $totalRecipientRegionPercentage = $activityRecipientRegion['total_region_percentage'] ?? 0;
-        $data = $this->setRecipientCountryStatus((int) $id, $data, $totalRecipientRegionPercentage);
+        $data = $this->setRecipientCountryStatus((int) $id, $data, $totalRecipientRegionPercentage, $activity);
 
         return $this->activityRepository->update($id, $data);
     }
@@ -109,12 +115,12 @@ class RecipientRegionService
      *
      * @return Form
      */
-    public function formGenerator($id, $element, $activityDefaultFieldValues): Form
+    public function formGenerator($id, $element, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $model['recipient_region'] = $this->getRecipientRegionData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.recipient-region.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**
@@ -184,15 +190,12 @@ class RecipientRegionService
      * @param int $id
      * @param array $data
      * @param $totalRecipientRegionPercentage
+     * @param $activity
      *
      * @return array
-     *
-     * @throws BindingResolutionException
-     * @throws JsonException
      */
-    public function setRecipientCountryStatus(int $id, array &$data, $totalRecipientRegionPercentage): array
+    public function setRecipientCountryStatus(int $id, array &$data, $totalRecipientRegionPercentage, $activity): array
     {
-        $activity = $this->activityRepository->find($id);
         $currentRecipientCountryPercentage = getAllocatedPercentageOfRecipientCountry($activity);
         $totalPercentage = $totalRecipientRegionPercentage + $currentRecipientCountryPercentage;
         $elementStatus['element_status'] = $activity->element_status;

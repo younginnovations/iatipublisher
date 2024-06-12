@@ -19,6 +19,11 @@
           <HoverText :hover-text="hoverText" class="text-n-40"></HoverText>
         </div>
       </div>
+
+      <div>
+        <HelperText :helper-text="deprecationStatusMap" />
+      </div>
+
       <div class="divider mb-4 h-px w-full bg-n-20"></div>
       <div>
         <template v-if="elementName === 'description'">
@@ -110,10 +115,12 @@ import {
   FinanceType,
   TiedStatus,
 } from './elements/Index';
+import HelperText from 'Components/HelperText.vue';
 
 export default defineComponent({
   name: 'ActivityElement',
   components: {
+    HelperText,
     HoverText,
     Description,
     AidType,
@@ -156,6 +163,10 @@ export default defineComponent({
       type: String,
       required: false,
       default: '',
+    },
+    deprecationStatusMap: {
+      type: Object,
+      required: true,
     },
   },
   setup(props) {

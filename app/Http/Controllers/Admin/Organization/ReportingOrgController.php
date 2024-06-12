@@ -9,6 +9,7 @@ use App\Http\Requests\Organization\ReportingOrg\ReportingOrgRequest;
 use App\IATI\Services\Organization\ReportingOrgService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -43,7 +44,7 @@ class ReportingOrgController extends Controller
             $id = Auth::user()->organization_id;
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
             $organization = $this->reportingOrgService->getOrganizationData($id);
-            $form = $this->reportingOrgService->formGenerator($id);
+            $form = $this->reportingOrgService->formGenerator($id, Arr::get($organization->deprecation_status_map, 'reporting_org', []));
             $data = ['title'=> $element['reporting_org']['label'], 'name'=>'reporting-org'];
 
             return view('admin.organisation.forms.reportingOrg.reportingOrg', compact('form', 'organization', 'data'));

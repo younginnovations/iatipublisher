@@ -455,4 +455,82 @@ class BulkPublishingService
     {
         return $this->validationStatusRepository->deleteValidationResponses();
     }
+
+    public function refreshDeprecationStatus(mixed $activityIds): array
+    {
+        $activities = $this->activityService->getActivitiesHavingIds($activityIds);
+        $arr = [];
+
+        foreach ($activities as $id => $activity) {
+            $all = [
+                'iati_identifier'      => doesIatiIdentifierHaveDeprecatedCode($activity->iati_identifier ?? []),
+                'other_identifier'     => doesOtherIdentifierHaveDeprecatedCode($activity->other_identifier ?? []),
+                'title'                => doesTitleHaveDeprecatedCode($activity->title ?? []),
+                'description'          => doesDescriptionHaveDeprecatedCode($activity->description ?? []),
+                'activity_status'      => doesActivityStatusHaveDeprecatedCode(['code' => $activity->activity_status ?? []]),
+                'activity_date'        => doesActivityDateHaveDeprecatedCode($activity->activity_date ?? []),
+                'contact_info'         => doesContactInfoHaveDeprecatedCode($activity->contact_info ?? []),
+                'activity_scope'       => doesActivityScopeHaveDeprecatedCode(['code' => $activity->activity_scope ?? []]),
+                'participating_org'    => doesParticipatingOrgHaveDeprecatedCode($activity->participating_org ?? []),
+                'recipient_country'    => doesRecipientCountryHaveDeprecatedCode($activity->recipient_country ?? []),
+                'recipient_region'     => doesRecipientRegionHaveDeprecatedCode($activity->recipient_region ?? []),
+                'location'             => doesLocationHaveDeprecatedCode($activity->location ?? []),
+                'sector'               => doesSectorHaveDeprecatedCode($activity->sector ?? []),
+                'country_budget_items' => doesCountryBudgetItemsHaveDeprecatedCode($activity->country_budget_items ?? []),
+                'humanitarian_scope'   => doesHumanitarianScopeHaveDeprecatedCode($activity->humanitarian_scope ?? []),
+                'policy_marker'        => doesPolicyMarkerHaveDeprecatedCode($activity->policy_marker ?? []),
+                'collaboration_type'   => doesCollaborationTypeHaveDeprecatedCode($activity->collaboration_type ?? []),
+                'default_flow_type'    => doesDefaultFlowTypeHaveDeprecatedCode(['code' => $activity->default_flow_type ?? []]),
+                'default_finance_type' => doesDefaultFinanceTypeHaveDeprecatedCode(['code' => $activity->default_finance_type ?? []]),
+                'default_aid_type'     => doesDefaultAidTypeHaveDeprecatedCode($activity->default_aid_type ?? []),
+                'default_tied_status'  => doesDefaultTiedStatusHaveDeprecatedCode(['code' => $activity->default_tied_status ?? []]),
+                'budget'               => doesBudgetHaveDeprecatedCode($activity->budget ?? []),
+                'planned_disbursement' => doesPlannedDisbursementHaveDeprecatedCode($activity->planned_disbursement ?? []),
+                'capital_spend'        => doesCapitalSpendHaveDeprecatedCode($activity->capital_spend ?? []),
+                'document_link'        => doesDocumentLinkHaveDeprecatedCode($activity->document_link ?? []),
+                'related_activity'     => doesRelatedActivityHaveDeprecatedCode($activity->related_activity ?? []),
+                'legacy_data'          => doesLegacyDataHaveDeprecatedCode($activity->legacy_data ?? []),
+                'conditions'           => doesConditionsHaveDeprecatedCode($activity->conditions ?? []),
+                'tag'                  => doesTagHaveDeprecatedCode($activity->tag ?? []),
+                'results'              => array_map('refreshResultDeprecationStatusMap', $activity->results->toArray()),
+                'transactions'         => array_map('refreshTransactionDeprecationStatusMap', $activity->results->toArray()),
+            ];
+
+            $this->activityService->updateActivity($activity->id, ['deprecation_status_map'=>Arr::except($all, ['results', 'transactions'])]);
+
+            $flat = $this->flattenArrayWithKeys($all);
+
+            if ($this->arrayOr($flat)) {
+                $arr[$id] = ['activity_id'=> $activity->id, 'title'=>$activity->title[0]['narrative'] ?? 'No title'];
+            }
+        }
+
+        return $arr;
+    }
+
+    private function flattenArrayWithKeys($array, $prefix = ''): array
+    {
+        $result = [];
+
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $result = array_merge($result, $this->flattenArrayWithKeys($value, $prefix . $key . '.'));
+            } else {
+                $result[$prefix . $key] = $value;
+            }
+        }
+
+        return $result;
+    }
+
+    private function arrayOr(array $array)
+    {
+        foreach ($array as $item) {
+            if ($item) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

@@ -55,12 +55,14 @@ class ReportingOrgRequest extends ActivityBaseRequest
      * @return array
      * @throws \JsonException
      */
-    public function getCriticalErrorsForReportingOrganization(array $formFields):array
+    public function getCriticalErrorsForReportingOrganization(array $formFields): array
     {
         $rules = [];
         $rules['reporting_org'] = 'size:1';
 
-        $reportingOrganizationTypes = implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
+        $reportingOrganizationTypes = implode(',', array_keys(
+            $this->getCodeListForRequestFiles('OrganizationType', 'Organization', false)
+        ));
         $organizationReportingOrg = $this->reportingOrganisationInOrganisation ?: auth()->user()->organization->reporting_org;
         $reportingOrganization = $formFields[0];
         $reportingOrganizationIndex = 0;
@@ -170,7 +172,7 @@ class ReportingOrgRequest extends ActivityBaseRequest
      *
      * @return $this
      */
-    public function reportingOrganisationInOrganisation($reportingOrganisationInOrganisation):static
+    public function reportingOrganisationInOrganisation($reportingOrganisationInOrganisation): static
     {
         $this->reportingOrganisationInOrganisation = $reportingOrganisationInOrganisation;
 
@@ -192,7 +194,7 @@ class ReportingOrgRequest extends ActivityBaseRequest
             $narratives = [];
             $languages = [];
 
-            foreach ($narrativeFields as $index=>$item) {
+            foreach ($narrativeFields as $index => $item) {
                 $narratives[] = Arr::get($item, 'narrative', null);
                 $languages[] = Arr::get($item, 'language', null);
             }
@@ -212,7 +214,7 @@ class ReportingOrgRequest extends ActivityBaseRequest
      *
      * @return bool
      */
-    public function reportingOrgKeyExistsAndDoesntMatch(string $key, mixed $reportingOrganization, array $organizationReportingOrg) :bool
+    public function reportingOrgKeyExistsAndDoesntMatch(string $key, mixed $reportingOrganization, array $organizationReportingOrg): bool
     {
         return !compareStringIgnoringWhitespace(
             (string) Arr::get($reportingOrganization, $key, ''),

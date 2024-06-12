@@ -90,7 +90,9 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
         foreach ($formFields as $plannedDisbursementIndex => $plannedDisbursement) {
             $plannedDisbursementForm = sprintf('planned_disbursement.%s', $plannedDisbursementIndex);
-            $rules[sprintf('%s.planned_disbursement_type', $plannedDisbursementForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('BudgetType', 'Activity', false)));
+            $rules[sprintf('%s.planned_disbursement_type', $plannedDisbursementForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('BudgetType', 'Activity', false)
+            ));
 
             $tempRules = [
                 $this->getCriticalPlannedDisbursementRulesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementForm),
@@ -197,7 +199,9 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
         foreach ($formFields as $providerOrgIndex => $providerOrg) {
             $providerOrgForm = sprintf('%s.provider_org.%s', $formBase, $providerOrgIndex);
-            $rules[sprintf('%s.type', $providerOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
+            $rules[sprintf('%s.type', $providerOrgForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('OrganizationType', 'Organization', false)
+            ));
 
             foreach ($this->getErrorsForNarrative($providerOrg['narrative'], $providerOrgForm) as $providerOrgNarrativeIndex => $providerOrgNarrativeRules) {
                 $rules[$providerOrgNarrativeIndex] = $providerOrgNarrativeRules;
@@ -270,7 +274,9 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
         foreach ($formFields as $receiverOrgIndex => $receiverOrg) {
             $receiverOrgForm = sprintf('%s.receiver_org.%s', $formBase, $receiverOrgIndex);
-            $rules[sprintf('%s.type', $receiverOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
+            $rules[sprintf('%s.type', $receiverOrgForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('OrganizationType', 'Organization', false)
+            ));
 
             foreach ($this->getErrorsForNarrative($receiverOrg['narrative'], $receiverOrgForm) as $receiverOrgNarrativeIndex => $receiverOrgNarrativeRules) {
                 $rules[$receiverOrgNarrativeIndex] = $receiverOrgNarrativeRules;

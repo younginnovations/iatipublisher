@@ -109,9 +109,9 @@ class RegisterController extends Controller
                 'publisher_id'        => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
                 'publisher_name'      => ['required', 'string', 'max:255', 'unique:organizations,publisher_name'],
                 'identifier'          => ['required', 'string', 'max:255', 'unique:organizations,identifier'],
-                'registration_agency' => ['required', sprintf('in:%s', implode(',', array_keys(getCodeList('OrganizationRegistrationAgency', 'Organization'))))],
+                'registration_agency' => ['required', sprintf('in:%s', implode(',', array_keys(getCodeList('OrganizationRegistrationAgency', 'Organization', filterDeprecated: true))))],
                 'registration_number' => ['required'],
-                'country'             => ['nullable', sprintf('in:%s', implode(',', array_keys(getCodeList('Country', 'Activity'))))],
+                'country'             => ['nullable', sprintf('in:%s', implode(',', array_keys(getCodeList('Country', 'Activity', filterDeprecated: true))))],
             ]);
 
             if ($validator->fails()) {
@@ -224,7 +224,7 @@ class RegisterController extends Controller
             'publisher_id'          => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
             'password'              => ['required', 'string', 'min:8', 'max:255', 'confirmed'],
             'password_confirmation' => ['required', 'string', 'min:8', 'max:255'],
-            'default_language'      => ['required', sprintf('in:%s', implode(',', array_keys(getCodeList('Language', 'Activity', false))))],
+            'default_language'      => ['required', sprintf('in:%s', implode(',', array_keys(getCodeList('Language', 'Activity', false, filterDeprecated: true))))],
         ]);
 
         $validator->setCustomMessages([
@@ -250,10 +250,10 @@ class RegisterController extends Controller
     public function showRegistrationForm(): \Illuminate\View\View|RedirectResponse
     {
         try {
-            $countries = getCodeList('Country', 'Organization');
-            $registration_agencies = getCodeList('OrganizationRegistrationAgency', 'Organization');
+            $countries = getCodeList('Country', 'Organization', filterDeprecated: true);
+            $registration_agencies = getCodeList('OrganizationRegistrationAgency', 'Organization', filterDeprecated: true);
             $uncategorizedRegistrationAgencyPrefix = Enums::UNCATEGORIZED_ORGANISATION_AGENCY_PREFIX;
-            $languages = getCodeList('Language', 'Activity');
+            $languages = getCodeList('Language', 'Activity', filterDeprecated: true);
 
             return view('web.register', compact('countries', 'registration_agencies', 'uncategorizedRegistrationAgencyPrefix', 'languages'));
         } catch (\Exception $e) {

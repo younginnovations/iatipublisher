@@ -55,15 +55,15 @@ class SettingController extends Controller
     public function index(): Factory|View|Application|RedirectResponse
     {
         try {
-            $currencies = getCodeList('Currency', 'Organization');
-            $languages = getCodeList('Language', 'Organization');
+            $currencies = getCodeList('Currency', 'Organization', filterDeprecated: true);
+            $languages = getCodeList('Language', 'Organization', filterDeprecated: true);
             $humanitarian = trans('setting.humanitarian_types');
-            $budgetNotProvided = getCodeList('BudgetNotProvided', 'Activity');
-            $defaultCollaborationType = getCodeList('CollaborationType', 'Activity');
-            $defaultFlowType = getCodeList('FlowType', 'Activity');
-            $defaultFinanceType = getCodeList('FinanceType', 'Activity');
-            $defaultAidType = getCodeList('AidType', 'Activity');
-            $defaultTiedStatus = getCodeList('TiedStatus', 'Activity');
+            $budgetNotProvided = getCodeList('BudgetNotProvided', 'Activity', filterDeprecated: true);
+            $defaultCollaborationType = getCodeList('CollaborationType', 'Activity', filterDeprecated: true);
+            $defaultFlowType = getCodeList('FlowType', 'Activity', filterDeprecated: true);
+            $defaultFinanceType = getCodeList('FinanceType', 'Activity', filterDeprecated: true);
+            $defaultAidType = getCodeList('AidType', 'Activity', filterDeprecated: true);
+            $defaultTiedStatus = getCodeList('TiedStatus', 'Activity', filterDeprecated: true);
             $userRole = Auth::user()->role->role;
 
             return view('admin.settings.index', compact('currencies', 'languages', 'humanitarian', 'budgetNotProvided', 'userRole', 'defaultCollaborationType', 'defaultFlowType', 'defaultFinanceType', 'defaultAidType', 'defaultTiedStatus'));

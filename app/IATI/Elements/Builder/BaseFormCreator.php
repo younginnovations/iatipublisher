@@ -53,9 +53,11 @@ class BaseFormCreator
      *
      * @return Form
      */
-    public function editForm(array $model, $formData, $method, string $parent_url, bool $showCancelOrSaveButton = true, array $additonalInfo = [], $overRideDefaultFieldValue = []): Form
+    public function editForm(array $model, $formData, $method, string $parent_url, bool $showCancelOrSaveButton = true, array $additonalInfo = [], $overRideDefaultFieldValue = [], $deprecationStatusMap = []): Form
     {
         $formData['overRideDefaultFieldValue'] = $overRideDefaultFieldValue;
+        $formData['deprecationStatusMap'] = $deprecationStatusMap;
+
         $settingsDefaultValue = ($this->settingService->getSetting()->default_values ?? []) + ($this->settingService->getSetting()->activity_default_values ?? []);
 
         if (!empty($overRideDefaultFieldValue) && count($overRideDefaultFieldValue)) {

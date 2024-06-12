@@ -75,6 +75,7 @@ class Activity extends Model implements Auditable
         'created_at',
         'updated_at',
         'has_ever_been_published',
+        'deprecation_status_map',
     ];
 
     /**
@@ -114,6 +115,7 @@ class Activity extends Model implements Auditable
         'element_status'       => 'json',
         'linked_to_iati'       => 'boolean',
         'complete_percentage'  => 'float',
+        'deprecation_status_map'=>'json',
     ];
 
     /**

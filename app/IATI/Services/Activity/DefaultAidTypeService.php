@@ -71,7 +71,15 @@ class DefaultAidTypeService
      */
     public function update($id, $activityDefaultAidType): bool
     {
-        return $this->activityRepository->update($id, ['default_aid_type' => array_values($activityDefaultAidType['default_aid_type'])]);
+        $activityDefaultAidType = array_values($activityDefaultAidType['default_aid_type']);
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['default_aid_type'] = doesDefaultAidTypeHaveDeprecatedCode($activityDefaultAidType);
+
+        return $this->activityRepository->update($id, [
+            'default_aid_type'   => $activityDefaultAidType,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -82,13 +90,13 @@ class DefaultAidTypeService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id, $activityDefaultFieldValues): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('default_aid_type');
         $model['default_aid_type'] = $this->getDefaultAidTypeData($id);
         $this->baseFormCreator->url = route('admin.activity.default-aid-type.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, overRideDefaultFieldValue: $activityDefaultFieldValues);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, overRideDefaultFieldValue: $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

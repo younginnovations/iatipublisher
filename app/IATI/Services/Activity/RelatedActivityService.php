@@ -71,7 +71,15 @@ class RelatedActivityService
      */
     public function update($id, $activityRelatedActivity): bool
     {
-        return $this->activityRepository->update($id, ['related_activity' => array_values($activityRelatedActivity['related_activity'])]);
+        $activityRelatedActivity = array_values($activityRelatedActivity['related_activity']);
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['related_activity'] = doesRelatedActivityHaveDeprecatedCode($activityRelatedActivity);
+
+        return $this->activityRepository->update($id, [
+            'related_activity'       => $activityRelatedActivity,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -82,13 +90,13 @@ class RelatedActivityService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('related_activity');
         $model['related_activity'] = $this->getRelatedActivityData($id);
         $this->baseFormCreator->url = route('admin.activity.related-activity.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

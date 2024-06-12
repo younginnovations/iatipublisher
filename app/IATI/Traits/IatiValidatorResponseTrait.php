@@ -104,7 +104,6 @@ trait IatiValidatorResponseTrait
         } elseif (isset($details['caseContext']['paths']) && !empty($details['caseContext']['paths'])) {
             foreach ($error['details']['caseContext']['paths'] as $caseContext => $detailedErrors) {
                 if (isset($detailedErrors['lineNumber'])) {
-                    logger()->info('case context path');
                     $caseContextErrorResponse = $this->getCaseContextErrorResponse($detailedErrors, $activity, $errorMessage, $xml, $xmlString);
                     $error['response'][$caseContext]['iati_path'] = $caseContextErrorResponse['iati_path'];
                     $error['response'][$caseContext]['message'] = $caseContextErrorResponse['message'];

@@ -71,7 +71,14 @@ class LegacyDataService
      */
     public function update($id, $activityLegacy): bool
     {
-        return $this->activityRepository->update($id, ['legacy_data' => array_values($activityLegacy['legacy_data'])]);
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['legacy_data'] = doesLegacyDataHaveDeprecatedCode($activityLegacy);
+
+        return $this->activityRepository->update($activity->id, [
+            'legacy_data'            => array_values($activityLegacy['legacy_data']),
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -82,13 +89,13 @@ class LegacyDataService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('legacy_data');
         $model['legacy_data'] = $this->getActivityLegacyData($id);
         $this->baseFormCreator->url = route('admin.activity.legacy-data.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

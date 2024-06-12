@@ -73,7 +73,14 @@ class TitleService
      */
     public function update($id, $activityTitle): bool
     {
-        return $this->activityRepository->update($id, ['title'=>$activityTitle['narrative']]);
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['title'] = doesTitleHaveDeprecatedCode($activityTitle);
+
+        return $this->activityRepository->update($id, [
+            'title'                  => $activityTitle['narrative'],
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -84,13 +91,13 @@ class TitleService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id, $activityDefaultFieldValues): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('title');
         $model['narrative'] = $this->getTitleData($id);
         $this->baseFormCreator->url = route('admin.activity.title.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, overRideDefaultFieldValue: $activityDefaultFieldValues);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, overRideDefaultFieldValue: $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

@@ -18,9 +18,8 @@ class PeriodRequest extends ActivityBaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @throws BindingResolutionException
-     *
      * @return array
+     * @throws BindingResolutionException
      */
     public function rules(): array
     {
@@ -33,9 +32,8 @@ class PeriodRequest extends ActivityBaseRequest
     /**
      * Get the error message as required.
      *
-     * @throws BindingResolutionException
-     *
      * @return array
+     * @throws BindingResolutionException
      */
     public function messages(): array
     {
@@ -51,9 +49,8 @@ class PeriodRequest extends ActivityBaseRequest
      * @param array $periodBase
      * @param $indicatorId
      *
-     * @throws BindingResolutionException
-     *
      * @return array
+     * @throws BindingResolutionException
      */
     public function getWarningForPeriod(array $formFields, bool $fileUpload = false, array $indicator = [], $periodBase = [], $indicatorId = null): array
     {
@@ -83,9 +80,8 @@ class PeriodRequest extends ActivityBaseRequest
      * @param array $indicator
      * @param array $periodBase
      *
-     * @throws BindingResolutionException
-     *
      * @return array
+     * @throws BindingResolutionException
      */
     public function getErrorsForPeriod(array $formFields, bool $fileUpload = false, array $indicator = [], $periodBase = []): array
     {
@@ -114,9 +110,8 @@ class PeriodRequest extends ActivityBaseRequest
      * @param array $indicator
      * @param $indicatorId
      *
-     * @throws BindingResolutionException
-     *
      * @return array
+     * @throws BindingResolutionException
      */
     public function getMessagesForPeriod(array $formFields, bool $fileUpload = false, array $indicator = [], $indicatorId = null): array
     {
@@ -276,9 +271,8 @@ class PeriodRequest extends ActivityBaseRequest
      * @param $indicator
      * @param $indicatorId
      *
-     * @throws BindingResolutionException
-     *
      * @return array
+     * @throws BindingResolutionException
      */
     protected function getWarningForTarget($formFields, $valueType, $fileUpload, $indicator, $indicatorId): array
     {
@@ -288,7 +282,7 @@ class PeriodRequest extends ActivityBaseRequest
         if ($fileUpload) {
             $measure = $indicatorId ? $indicatorService->getIndicatorMeasureType($indicatorId) : Arr::get($indicator, 'measure');
             $indicatorMeasureType = is_array($measure) ? $measure : [
-                'qualitative' => $measure === '5',
+                'qualitative'     => $measure === '5',
                 'non_qualitative' => in_array($measure, ['1', '2', '3', '4']),
             ];
         } else {
@@ -331,9 +325,8 @@ class PeriodRequest extends ActivityBaseRequest
      * @param $fileUpload
      * @param $indicator
      *
-     * @throws BindingResolutionException
-     *
      * @return array
+     * @throws BindingResolutionException
      */
     protected function getErrorsForTarget($formFields, $valueType, $fileUpload, $indicator): array
     {
@@ -365,9 +358,8 @@ class PeriodRequest extends ActivityBaseRequest
      * @param $indicator
      * @param $indicatorId
      *
-     * @throws BindingResolutionException
-     *
      * @return array
+     * @throws BindingResolutionException
      */
     protected function getMessagesForTarget($formFields, $valueType, $fileUpload, $indicator, $indicatorId): array
     {
@@ -377,7 +369,7 @@ class PeriodRequest extends ActivityBaseRequest
         if ($fileUpload) {
             $measure = $indicatorId ? $indicatorService->getIndicatorMeasureType($indicatorId) : Arr::get($indicator, 'measure');
             $indicatorMeasureType = is_array($measure) ? $measure : [
-                'qualitative' => $measure === '5',
+                'qualitative'     => $measure === '5',
                 'non_qualitative' => in_array($measure, ['1', '2', '3', '4']),
             ];
         } else {

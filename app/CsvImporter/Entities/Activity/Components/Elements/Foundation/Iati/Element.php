@@ -154,7 +154,7 @@ abstract class Element
      */
     protected function loadCodeList($codeList, string $directory = 'Activity'): array
     {
-        return getCodeList($codeList, $directory, false);
+        return getCodeList($codeList, $directory, false, filterDeprecated: true);
     }
 
     /**

@@ -169,13 +169,13 @@ class OrganizationService
     public function getOrganizationTypes(): array
     {
         return [
-            'budgetType' => getCodeList('BudgetStatus', 'Activity', false),
-            'languages' => getCodeList('Language', 'Organization', false),
-            'documentCategory' => getCodeList('DocumentCategory', 'Organization', false),
-            'organizationType' => getCodeList('OrganizationType', 'Organization', false),
-            'country' => getCodeList('Country', 'Organization', false),
-            'regionVocabulary' => getCodeList('RegionVocabulary', 'Activity', false),
-            'region' => getCodeList('Region', 'Activity', false),
+            'budgetType' => getCodeList('BudgetStatus', 'Activity', false, filterDeprecated: true),
+            'languages' => getCodeList('Language', 'Organization', false, filterDeprecated: true),
+            'documentCategory' => getCodeList('DocumentCategory', 'Organization', false, filterDeprecated: true),
+            'organizationType' => getCodeList('OrganizationType', 'Organization', false, filterDeprecated: true),
+            'country' => getCodeList('Country', 'Organization', false, filterDeprecated: true),
+            'regionVocabulary' => getCodeList('RegionVocabulary', 'Activity', false, filterDeprecated: true),
+            'region' => getCodeList('Region', 'Activity', false, filterDeprecated: true),
         ];
     }
 
@@ -496,9 +496,9 @@ class OrganizationService
      */
     private function resolvePaginatedOrganizationData(?LengthAwarePaginator $rawPaginatedData): ?LengthAwarePaginator
     {
-        $publisherTypeList = getCodeList('OrganizationType', 'Organization');
-        $dataLicenseList = getCodeList('DataLicense', 'Activity', false);
-        $countryList = getCodeList('Country', 'Activity', false);
+        $publisherTypeList = getCodeList('OrganizationType', 'Organization', filterDeprecated: true);
+        $dataLicenseList = getCodeList('DataLicense', 'Activity', false, filterDeprecated: true);
+        $countryList = getCodeList('Country', 'Activity', false, filterDeprecated: true);
 
         foreach ($rawPaginatedData as $organization) {
             $organization->publisher_type = $organization->publisher_type ? Arr::get($publisherTypeList, $organization->publisher_type, 'Not available') : 'Not available';

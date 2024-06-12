@@ -74,24 +74,33 @@ class OtherIdentifierService
      */
     public function update($id, $activityIdentifier): bool
     {
-        return $this->activityRepository->update($id, ['other_identifier' => $this->sanitizeOtherIdentifierData($activityIdentifier)]);
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+
+        $deprecationStatusMap['other_identifier'] = doesOtherIdentifierHaveDeprecatedCode($activityIdentifier);
+
+        return $this->activityRepository->update($id, [
+            'other_identifier' => $this->sanitizeOtherIdentifierData($activityIdentifier),
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
      * Generates other identifier form.
      *
      * @param $id
-     *
+     * @param $activityDefaultFieldValues
+     * @param $deprecationStatusMap
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id, $activityDefaultFieldValues): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap): Form
     {
         $element = getElementSchema('other_identifier');
         $model['other_identifier'] = $this->getOtherIdentifierData($id) ?: [];
         $this->parentCollectionFormCreator->url = route('admin.activity.other-identifier.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

@@ -4,7 +4,7 @@ namespace Tests\Unit\ImportXls;
 
 use App\XlsImporter\Foundation\Mapper\Activity;
 use App\XlsImporter\Foundation\XlsProcessor\XlsToArray;
-use Arr;
+use Illuminate\Support\Arr;
 use Maatwebsite\Excel\Facades\Excel;
 use Tests\TestCase;
 

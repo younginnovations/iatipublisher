@@ -50,7 +50,9 @@ class OtherIdentifierRequest extends ActivityBaseRequest
 
         foreach ($formFields as $otherIdentifierIndex => $otherIdentifier) {
             $otherIdentifierForm = sprintf('other_identifier.%s', $otherIdentifierIndex);
-            $rules[sprintf('%s.reference_type', $otherIdentifierForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OtherIdentifierType', 'Activity', false)));
+            $rules[sprintf('%s.reference_type', $otherIdentifierForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('OtherIdentifierType', 'Activity', false)
+            ));
 
             foreach ($this->getErrorsForOwnerOrg($otherIdentifier['owner_org'], $otherIdentifierForm) as $ownerOrgIndex => $ownerOrgRules) {
                 $rules[$ownerOrgIndex] = $ownerOrgRules;
@@ -131,7 +133,7 @@ class OtherIdentifierRequest extends ActivityBaseRequest
         return $rules;
     }
 
-    public function getErrorsForOwnerOrg($formFields, $formBase) : array
+    public function getErrorsForOwnerOrg($formFields, $formBase): array
     {
         $rules = [];
 

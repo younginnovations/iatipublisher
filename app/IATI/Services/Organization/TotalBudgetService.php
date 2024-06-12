@@ -85,7 +85,14 @@ class TotalBudgetService
 
         $totalBudget = array_values($totalBudget['total_budget']);
 
-        return $this->organizationRepository->update($id, ['total_budget' => $totalBudget]);
+        $organization = $this->organizationRepository->find($id);
+        $deprecationStatusMap = $organization->deprecation_status_map;
+        $deprecationStatusMap['total_budget'] = doesOrganisationTotalBudgetHaveDeprecatedCode($totalBudget);
+
+        return $this->organizationRepository->update($id, [
+            'total_budget'           => $totalBudget,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**

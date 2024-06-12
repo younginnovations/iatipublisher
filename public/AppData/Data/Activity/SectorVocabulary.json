@@ -1,92 +1,117 @@
 {
-  "date-last-modified": "2017-07-03T16:35:13.050941+00:00",
-  "version": "",
-  "name": "SectorVocabulary",
-  "xml:lang": "en",
-  "SectorVocabulary": [
-    {
-      "code": "1",
-      "name": "OECD DAC CRS Purpose Codes (5 digit)",
-      "language": "en",
-      "description": "The sector reported corresponds to an OECD DAC CRS 5-digit purpose code"
-    },
-    {
-      "code": "2",
-      "name": "OECD DAC CRS Purpose Codes (3 digit)",
-      "language": "en",
-      "description": "The sector reported corresponds to an OECD DAC CRS 3-digit purpose code"
-    },
-    {
-      "code": "3",
-      "name": "Classification of the Functions of Government (UN)",
-      "language": "en",
-      "description": "The sector reported corresponds to the UN Classification of the Functions of Government (CoFoG)"
-    },
-    {
-      "code": "4",
-      "name": "Statistical classification of economic activities in the European Community",
-      "language": "en",
-      "description": "The sector reported corresponds to the statistical classifications of economic activities in the European Community"
-    },
-    {
-      "code": "5",
-      "name": "National Taxonomy for Exempt Entities (USA)",
-      "language": "en",
-      "description": "The sector reported corresponds to the National Taxonomy for Exempt Entities (NTEE) - USA"
-    },
-    {
-      "code": "6",
-      "name": "AidData",
-      "language": "en",
-      "description": "The sector reported corresponds to AidData classifications"
-    },
-    {
-      "code": "7",
-      "name": "SDG Goal",
-      "language": "en",
-      "description": "A value from the top-level list of UN sustainable development goals (SDGs) (e.g. \u20181\u2019)"
-    },
-    {
-      "code": "8",
-      "name": "SDG Target",
-      "language": "en",
-      "description": "A value from the second-level list of UN sustainable development goals (SDGs) (e.g. \u20181.1\u2019)"
-    },
-    {
-      "code": "9",
-      "name": "SDG Indicator",
-      "language": "en",
-      "description": "A value from the second-level list of UN sustainable development (SDG) indicators"
-    },
-    {
-      "code": "10",
-      "name": "Humanitarian Global Clusters (Inter-Agency Standing Committee)",
-      "language": "en",
-      "description": "The sector reported corresponds to an Inter-Agency Standard Committee Humanitarian Global Cluster code"
-    },
-    {
-      "code": "11",
-      "name": "North American Industry Classification System (NAICS)",
-      "language": "en",
-      "description": "The sector reported corresponds to the NAICS codelist"
-    },
-    {
-      "code": "12",
-      "name": "UN System Function",
-      "language": "en",
-      "description": "The sector reported corresponds to the UN System Function codelist"
-    },
-    {
-      "code": "99",
-      "name": "Reporting Organisation",
-      "language": "en",
-      "description": "The sector reported corresponds to a sector vocabulary maintained by the reporting organisation for this activity"
-    },
-    {
-      "code": "98",
-      "name": "Reporting Organisation 2",
-      "language": "en",
-      "description": "The sector reported corresponds to a sector vocabulary maintained by the reporting organisation for this activity (if they are referencing more than one)"
-    }
-  ]
+    "date-last-modified": "2024-06-12 04:09:26",
+    "version": "",
+    "name": "SectorVocabulary",
+    "xml:lang": "en",
+    "SectorVocabulary": [
+        {
+            "code": "1",
+            "url": "http://reference.iatistandard.org/codelists/Sector/",
+            "name": "OECD DAC CRS Purpose Codes (5 digit)",
+            "description": "The sector reported corresponds to an OECD DAC CRS 5-digit purpose code",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "2",
+            "url": "http://reference.iatistandard.org/codelists/SectorCategory/",
+            "name": "OECD DAC CRS Purpose Codes (3 digit)",
+            "description": "The sector reported corresponds to an OECD DAC CRS 3-digit purpose code",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "3",
+            "url": "http://unstats.un.org/unsd/cr/registry/regcst.asp?Cl=4",
+            "name": "Classification of the Functions of Government (UN)",
+            "description": "The sector reported corresponds to the UN Classification of the Functions of Government (CoFoG)",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "4",
+            "url": "http://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=LST_NOM_DTL&StrNom=NACE_REV2&StrLanguageCode=EN",
+            "name": "Statistical classification of economic activities in the European Community",
+            "description": "The sector reported corresponds to the statistical classifications of economic activities in the European Community",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "5",
+            "url": "https://nccs.urban.org/publication/irs-activity-codes",
+            "name": "National Taxonomy for Exempt Entities (USA)",
+            "description": "The sector reported corresponds to the National Taxonomy for Exempt Entities (NTEE) - USA",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "6",
+            "name": "AidData",
+            "description": "The sector reported corresponds to AidData classifications",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "7",
+            "url": "http://reference.iatistandard.org/codelists/unsdg-goals",
+            "name": "SDG Goal",
+            "description": "A value from the top-level list of UN sustainable development goals (SDGs) (e.g. ‘1’)",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "8",
+            "url": "http://reference.iatistandard.org/codelists/unsdg-targets",
+            "name": "SDG Target",
+            "description": "A value from the second-level list of UN sustainable development goals (SDGs) (e.g. ‘1.1’)",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "9",
+            "url": "http://unstats.un.org/sdgs/indicators/indicators-list/",
+            "name": "SDG Indicator",
+            "description": "A value from the second-level list of UN sustainable development (SDG) indicators",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "10",
+            "url": "https://data.humdata.org/dataset/global-coordination-groups-beta",
+            "name": "Humanitarian Global Clusters (Inter-Agency Standing Committee)",
+            "description": "The sector reported corresponds to an Inter-Agency Standard Committee Humanitarian Global Cluster code",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "11",
+            "url": "https://www.census.gov/cgi-bin/sssd/naics/naicsrch?chart=2017",
+            "name": "North American Industry Classification System (NAICS)",
+            "description": "The sector reported corresponds to the NAICS codelist",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "12",
+            "url": "https://unsceb.org/sites/default/files/2021-04/UN_DataStandards_Digital_20210420.pdf",
+            "name": "UN System Function",
+            "description": "The sector reported corresponds to the UN System Function codelist",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "99",
+            "name": "Reporting Organisation",
+            "description": "The sector reported corresponds to a sector vocabulary maintained by the reporting organisation for this activity",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "98",
+            "name": "Reporting Organisation 2",
+            "description": "The sector reported corresponds to a sector vocabulary maintained by the reporting organisation for this activity (if they are referencing more than one)",
+            "status": "active",
+            "language": "en"
+        }
+    ]
 }

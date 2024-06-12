@@ -49,7 +49,7 @@ class Processor
         $str = mb_convert_encoding(file_get_contents($file->getPathName()), 'UTF-8');
         file_put_contents($file->getPathName(), $str);
         $csv = Excel::toCollection(new CsvToArrayWithHeaders, $file)->first()->toArray();
-        $humanitarianScopeVocabularyArray = getCodeList('HumanitarianScopeVocabulary', 'Activity');
+        $humanitarianScopeVocabularyArray = getCodeList('HumanitarianScopeVocabulary', 'Activity', filterDeprecated: true);
         $humanitarianScopeVocabularyArray = array_flip($humanitarianScopeVocabularyArray);
 
         foreach ($csv as $index => $csvDatum) {

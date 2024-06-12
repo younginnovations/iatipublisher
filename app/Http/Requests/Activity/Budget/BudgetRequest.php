@@ -64,9 +64,13 @@ class BudgetRequest extends ActivityBaseRequest
 
         foreach ($formFields as $budgetIndex => $budget) {
             $budgetForm = sprintf('budget.%s', $budgetIndex);
-            $rules[sprintf('%s.budget_type', $budgetForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('BudgetType', 'Activity', false))));
+            $rules[sprintf('%s.budget_type', $budgetForm)] = sprintf('nullable|in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('BudgetType', 'Activity', false)
+            )));
             $rules[sprintf('%s.budget_status', $budgetForm)][] = 'nullable';
-            $rules[sprintf('%s.budget_status', $budgetForm)][] = sprintf('in:%s', implode(',', array_keys(getCodeList('BudgetStatus', 'Activity', false))));
+            $rules[sprintf('%s.budget_status', $budgetForm)][] = sprintf('in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('BudgetStatus', 'Activity', false)
+            )));
 
             $periodStartRules = $this->getCriticalBudgetWarningForPeriodStart($budget['period_start'], $budgetForm);
 
@@ -184,7 +188,9 @@ class BudgetRequest extends ActivityBaseRequest
             $valueForm = sprintf('%s.budget_value.%s', $formBase, $valueIndex);
             $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric|min:0';
             $rules[sprintf('%s.value_date', $valueForm)] = 'nullable|date';
-            $rules[sprintf('%s.currency', $valueForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Currency', 'Activity', false)));
+            $rules[sprintf('%s.currency', $valueForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('Currency', 'Activity', false)
+            ));
         }
 
         return $rules;
@@ -395,6 +401,7 @@ class BudgetRequest extends ActivityBaseRequest
             $messages[sprintf('%s.amount.numeric', $valueForm)] = 'The amount field must be a number.';
             $messages[sprintf('%s.amount.min', $valueForm)] = 'The amount field must not be in negative.';
             $messages[sprintf('%s.value_date.date', $valueForm)] = 'The value-date field must be a valid date.';
+            $messages[sprintf('%s.currency.in', $valueForm)] = 'The value currency is invalid.';
         }
 
         return $messages;

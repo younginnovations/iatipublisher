@@ -12,6 +12,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -52,7 +53,7 @@ class OrganizationIdentifierController extends Controller
             $id = Auth::user()->organization_id;
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
             $organization = $this->organizationIdentifierService->getOrganizationData($id);
-            $form = $this->organizationIdentifierService->formGenerator($id);
+            $form = $this->organizationIdentifierService->formGenerator($id, deprecationStatusMap: Arr::get($organization->deprecation_status_map, 'organization_identifier', []));
             $data = ['title' => $element['organisation_identifier']['label'], 'name' => 'organisation-identifier'];
 
             return view('admin.organisation.forms.organisationIdentifier.edit', compact('form', 'organization', 'data'));
@@ -77,9 +78,9 @@ class OrganizationIdentifierController extends Controller
             $id = Auth::user()->organization_id;
             $organizationIdentifier = $request->all();
 
-            if (!$this->verifyPublisher($organizationIdentifier)) {
-                return redirect()->route('admin.organisation.identifier.edit')->with('error', 'Please enter the correct identifier to match your IATI Registry account.')->withInput();
-            }
+//            if (!$this->verifyPublisher($organizationIdentifier)) {
+//                return redirect()->route('admin.organisation.identifier.edit')->with('error', 'Please enter the correct identifier to match your IATI Registry account.')->withInput();
+//            }
 
             DB::beginTransaction();
 

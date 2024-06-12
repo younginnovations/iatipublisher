@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\DescriptionService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class DescriptionController.
@@ -43,7 +44,8 @@ class DescriptionController extends Controller
         try {
             $element = getElementSchema('description');
             $activity = $this->descriptionService->getActivityData($id);
-            $form = $this->descriptionService->formGenerator($id, $activity->default_field_values ?? []);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'description', []);
+            $form = $this->descriptionService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'description'];
 
             return view('admin.activity.description.edit', compact('form', 'activity', 'data'));

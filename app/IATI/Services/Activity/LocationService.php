@@ -76,7 +76,16 @@ class LocationService
      */
     public function update($id, $location): bool
     {
-        return $this->activityRepository->update($id, ['location' => $this->sanitizeLocationData($location)]);
+        $location = $this->sanitizeLocationData($location);
+
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['location'] = doesLocationHaveDeprecatedCode($location);
+
+        return $this->activityRepository->update($activity->id, [
+            'location'               => $location,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -87,13 +96,13 @@ class LocationService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id, $activityDefaultFieldValues): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('location');
         $model['location'] = $this->getLocationData($id) ?: [];
         $this->parentCollectionFormCreator->url = route('admin.activity.location.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

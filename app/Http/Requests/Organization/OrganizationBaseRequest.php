@@ -202,7 +202,9 @@ class OrganizationBaseRequest extends FormRequest
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
 
-        $validLanguages = implode(',', array_keys(getCodeList('Language', 'Activity', false)));
+        $validLanguages = implode(',', array_keys(
+            $this->getCodeListForRequestFiles('Language', 'Activity', false, false)
+        ));
 
         foreach ($formFields as $narrativeIndex => $narrative) {
             $rules[sprintf('%s.narrative.%s.language', $formBase, $narrativeIndex)][] = 'nullable';
@@ -233,7 +235,8 @@ class OrganizationBaseRequest extends FormRequest
                 '%s.narrative.%s.narrative.required_with_language',
                 $formBase,
                 $narrativeIndex
-            )] = 'The language field is required when narrative field is present.';
+            )]
+                                                                                                 = 'The language field is required when narrative field is present.';
         }
 
         return $messages;
@@ -255,7 +258,9 @@ class OrganizationBaseRequest extends FormRequest
         foreach ($formFields as $valueKey => $valueVal) {
             $valueForm = $formBase . '.value.' . $valueKey;
             $rules[$valueForm . '.amount'] = 'nullable|numeric|min:0';
-            $rules[$valueForm . '.currency'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Currency', 'Activity'))));
+            $rules[$valueForm . '.currency'] = sprintf('nullable|in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('Currency', 'Activity')
+            )));
             $rules[$valueForm . '.value_date'] = $valueDateRule;
         }
 
@@ -281,6 +286,7 @@ class OrganizationBaseRequest extends FormRequest
             $messages[$valueForm . '.amount.min'] = 'The amount must not be in negative.';
             $messages[$valueForm . '.value_date.required'] = 'The @value-date field is required.';
             $messages[$valueForm . '.value_date.date'] = 'The @value-date must be date.';
+            $messages[$valueForm . '.currency.in'] = 'The value currency is invalid.';
         }
 
         return $messages;
@@ -446,7 +452,9 @@ class OrganizationBaseRequest extends FormRequest
 
         foreach ($formField as $budgetLineIndex => $budgetLine) {
             $rules[$formBase . '.value.' . $budgetLineIndex . '.amount'] = 'nullable|numeric|min:0';
-            $rules[$formBase . '.value.' . $budgetLineIndex . '.currency'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Currency', 'Activity'))));
+            $rules[$formBase . '.value.' . $budgetLineIndex . '.currency'] = sprintf('nullable|in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('Currency', 'Activity')
+            )));
             $rules[$formBase . '.value.' . $budgetLineIndex . '.value_date'] = $valueDateRule;
         }
 
@@ -489,7 +497,9 @@ class OrganizationBaseRequest extends FormRequest
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)] = 'unique_lang';
         $rules[sprintf('%s.narrative', $formBase)] = 'unique_default_lang';
-        $validLanguages = implode(',', array_keys(getCodeList('Language', 'Activity', false)));
+        $validLanguages = implode(',', array_keys(
+            $this->getCodeListForRequestFiles('Language', 'Activity', false, false)
+        ));
 
         foreach ($formFields as $narrativeIndex => $narrative) {
             $rules[sprintf('%s.narrative.%s.language', $formBase, $narrativeIndex)][] = 'nullable';
@@ -519,5 +529,32 @@ class OrganizationBaseRequest extends FormRequest
         }
 
         return $messages;
+    }
+
+    protected function getDeprecatedStatusMap()
+    {
+        if (is_null($this->route())) {
+            /* Some tests do not make actual request, so route is null */
+            return [];
+        }
+
+        if (\auth()->check()) {
+            $user = \auth()->user();
+            $organisation = $user->organization;
+
+            if ($organisation) {
+                return $organisation->deprecation_status_map;
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * @throws \JsonException
+     */
+    protected function getCodeListForRequestFiles($listName, $listType, bool $code = true): array
+    {
+        return getCodeList($listName, $listType, $code, filterDeprecated: true, deprecationStatusMap: $this->getDeprecatedStatusMap());
     }
 }

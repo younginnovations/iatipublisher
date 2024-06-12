@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\OtherIdentifierService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class OtherIdentifierController.
@@ -43,7 +44,13 @@ class OtherIdentifierController extends Controller
         try {
             $element = getElementSchema('other_identifier');
             $activity = $this->otherIdentifierService->getActivityData($id);
-            $form = $this->otherIdentifierService->formGenerator($id, $activity->default_field_values ?? []);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'other_identifier', []);
+
+            $form = $this->otherIdentifierService->formGenerator(
+                id:$id,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap: $deprecationStatusMap
+            );
             $data = ['title' => $element['label'], 'name' => 'other_identifier'];
 
             return view('admin.activity.otherIdentifier.edit', compact('form', 'activity', 'data'));

@@ -86,13 +86,13 @@ class ReportingOrgService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id, $activityDefaultFieldValues): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/elementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
         $model['reporting_org'] = $this->getReportingOrgData($id) ?? [];
         $this->parentCollectionFormCreator->url = route('admin.activity.reporting-org.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['reporting_org'], 'PUT', '/activity/' . $id, $activityDefaultFieldValues);
+        return $this->parentCollectionFormCreator->editForm($model, $element['reporting_org'], 'PUT', '/activity/' . $id, $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

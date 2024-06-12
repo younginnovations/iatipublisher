@@ -30,7 +30,7 @@ class SubElementForm extends Form
         if (isset($data['attributes'])) {
             $attributes = $data['attributes'];
 
-            foreach ($attributes as $attribute) {
+            foreach ($attributes as $i=>$attribute) {
                 if (is_array($attribute)) {
                     $attribute['overRideDefaultFieldValue'] = $data['overRideDefaultFieldValue'] ?? [];
 
@@ -85,12 +85,20 @@ class SubElementForm extends Form
         ];
 
         if (array_key_exists('type', $field) && $field['type'] == 'select') {
+            $deprecationStatusMap = $this->getData()['deprecationStatusMap'];
             $defaultValue = getDefaultValue($field['overRideDefaultFieldValue'], $field['name'], $field['choices'] ?? []);
             $options['attr']['class'] = 'select2';
             $options['attr']['class'] .= !empty($defaultValue) ? ' default-value-indicator' : '';
             $options['attr']['data-placeholder'] = $defaultValue ?? Arr::get($field, 'placeholder', '');
             $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
-            $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
+            $options['choices'] = $field['choices']
+                ? (is_string($field['choices'])
+                    ? ($this->getCodeList(
+                        $field['choices'],
+                        deprecationStatusMap: flattenArrayWithKeys($deprecationStatusMap)
+                    ))
+                    : $field['choices'])
+                : false;
             $options['default_value'] = $field['default'] ?? '';
 
             $options['attr']['disabled'] = (array_key_exists(
@@ -130,12 +138,25 @@ class SubElementForm extends Form
      * @param bool $code
      * @return array
      */
-    public function getCodeList(string $filePath, bool $code = true): array
+    public function getCodeList(string $filePath, bool $code = true, $deprecationStatusMap = []): array
     {
         $completePath = "AppData/Data/$filePath";
         $codeListFromFile = getJsonFromSource($completePath);
         $codeLists = json_decode($codeListFromFile, true);
         $codeList = last($codeLists);
+        $possibleSuffixes = getKeysThatUseThisCodeList($completePath);
+        $deprecatedCodesInUse = filterArrayByKeyEndsWithPossibleSuffixes($deprecationStatusMap, $possibleSuffixes);
+
+        $codeList = array_filter($codeList, function ($item) use ($deprecatedCodesInUse) {
+            return filterDeprecated($item, $deprecatedCodesInUse);
+        });
+
+        foreach ($codeList as &$item) {
+            if (Arr::get($item, 'status', false) !== 'active' && in_array(Arr::get($item, 'code', ''), $deprecatedCodesInUse)) {
+                $item['name'] = $item['name'] . ' (used)';
+            }
+        }
+
         $data = [];
 
         foreach ($codeList as $list) {

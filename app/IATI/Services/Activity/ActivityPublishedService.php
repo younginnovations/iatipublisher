@@ -69,6 +69,7 @@ class ActivityPublishedService
      * Updates activity published data.
      *
      * @param $publishedFile
+     * @param $publishedFile
      * @param $newPublishedFiles
      *
      * @return bool

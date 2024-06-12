@@ -115,16 +115,36 @@ class TransactionRequest extends ActivityBaseRequest
     {
         $rules = [];
 
-        $rules['transaction_type.0.transaction_type_code'] = 'nullable|in:' . implode(',', array_keys(getCodeList('TransactionType', 'Activity', false)));
-        $rules['flow_type.0.flow_type'] = 'nullable|in:' . implode(',', array_keys(getCodeList('FlowType', 'Activity', false)));
-        $rules['finance_type.0.finance_type'] = 'nullable|in:' . implode(',', array_keys(getCodeList('FinanceType', 'Activity', false)));
-        $rules['aid_type.0.aid_type_vocabulary'] = 'nullable|in:' . implode(',', array_keys(getCodeList('AidTypeVocabulary', 'Activity', false)));
-        $rules['aid_type.0.aid_type_code'] = 'nullable|in:' . implode(',', array_keys(getCodeList('AidType', 'Activity', false)));
-        $rules['aid_type.0.earmarking_category'] = 'nullable|in:' . implode(',', array_keys(getCodeList('EarmarkingCategory', 'Activity', false)));
-        $rules['aid_type.0.earmarking_modality'] = 'nullable|in:' . implode(',', array_keys(getCodeList('EarmarkingModality', 'Activity', false)));
-        $rules['aid_type.0.cash_and_voucher_modalities'] = 'nullable|in:' . implode(',', array_keys(getCodeList('CashandVoucherModalities', 'Activity', false)));
-        $rules['tied_status.0.tied_status_code'] = 'nullable|in:' . implode(',', array_keys(getCodeList('TiedStatus', 'Activity', false)));
-        $rules['disbursement_channel.0.disbursement_channel_code'] = 'nullable|in:' . implode(',', array_keys(getCodeList('DisbursementChannel', 'Activity', false)));
+        $rules['transaction_type.0.transaction_type_code'] = 'nullable|in:' . implode(',', array_keys(
+            $this->getCodeListForRequestFiles('TransactionType', 'Activity', false)
+        ));
+        $rules['flow_type.0.flow_type'] = 'nullable|in:' . implode(',', array_keys(
+            $this->getCodeListForRequestFiles('FlowType', 'Activity', false)
+        ));
+        $rules['finance_type.0.finance_type'] = 'nullable|in:' . implode(',', array_keys(
+            $this->getCodeListForRequestFiles('FinanceType', 'Activity', false)
+        ));
+        $rules['aid_type.0.aid_type_vocabulary'] = 'nullable|in:' . implode(',', array_keys(
+            $this->getCodeListForRequestFiles('AidTypeVocabulary', 'Activity', false)
+        ));
+        $rules['aid_type.0.aid_type_code'] = 'nullable|in:' . implode(',', array_keys(
+            $this->getCodeListForRequestFiles('AidType', 'Activity', false)
+        ));
+        $rules['aid_type.0.earmarking_category'] = 'nullable|in:' . implode(',', array_keys(
+            $this->getCodeListForRequestFiles('EarmarkingCategory', 'Activity', false)
+        ));
+        $rules['aid_type.0.earmarking_modality'] = 'nullable|in:' . implode(',', array_keys(
+            $this->getCodeListForRequestFiles('EarmarkingModality', 'Activity', false)
+        ));
+        $rules['aid_type.0.cash_and_voucher_modalities'] = 'nullable|in:' . implode(',', array_keys(
+            $this->getCodeListForRequestFiles('CashandVoucherModalities', 'Activity', false)
+        ));
+        $rules['tied_status.0.tied_status_code'] = 'nullable|in:' . implode(',', array_keys(
+            $this->getCodeListForRequestFiles('TiedStatus', 'Activity', false)
+        ));
+        $rules['disbursement_channel.0.disbursement_channel_code'] = 'nullable|in:' . implode(',', array_keys(
+            $this->getCodeListForRequestFiles('DisbursementChannel', 'Activity', false)
+        ));
 
         $tempRules = [
             $this->getCriticalTransactionDateRules($formFields['transaction_date']),
@@ -278,7 +298,9 @@ class TransactionRequest extends ActivityBaseRequest
             $valueForm = sprintf('value.%s', $valueIndex);
             $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric';
             $rules[sprintf('%s.date', $valueForm)] = 'nullable|date';
-            $rules[sprintf('%s.currency', $valueForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Currency', 'Activity'))));
+            $rules[sprintf('%s.currency', $valueForm)] = sprintf('nullable|in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('Currency', 'Activity')
+            )));
         }
 
         return $rules;
@@ -300,6 +322,7 @@ class TransactionRequest extends ActivityBaseRequest
             $messages[sprintf('%s.amount.numeric', $valueForm)] = 'The @amount field must be a number.';
             $messages[sprintf('%s.date.before', $valueForm)] = 'The @value-date must not be in future.';
             $messages[sprintf('%s.date.date', $valueForm)] = 'The @value-date field must be a valid date.';
+            $messages[sprintf('%s.currency.in', $valueForm)] = 'The value currency is invalid.';
         }
 
         return $messages;
@@ -475,11 +498,21 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
-            $rules[sprintf('%s.sector_vocabulary', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorVocabulary', 'Activity', false)));
-            $rules[sprintf('%s.code', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorCode', 'Activity', false)));
-            $rules[sprintf('%s.category_code', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorCategory', 'Activity', false)));
-            $rules[sprintf('%s.sdg_goal', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Goals', 'Activity', false)));
-            $rules[sprintf('%s.sdg_target', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Targets', 'Activity', false)));
+            $rules[sprintf('%s.sector_vocabulary', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('SectorVocabulary', 'Activity', false)
+            ));
+            $rules[sprintf('%s.code', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('SectorCode', 'Activity', false)
+            ));
+            $rules[sprintf('%s.category_code', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('SectorCategory', 'Activity', false)
+            ));
+            $rules[sprintf('%s.sdg_goal', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('UNSDG-Goals', 'Activity', false)
+            ));
+            $rules[sprintf('%s.sdg_target', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('UNSDG-Targets', 'Activity', false)
+            ));
 
             if (isset($sector['sector_vocabulary']) && $sector['sector_vocabulary'] === '99') {
                 $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
@@ -506,7 +539,7 @@ class TransactionRequest extends ActivityBaseRequest
     {
         $messages = [
             'sector.already_in_activity' => 'Sector has already been declared at activity level. You can’t declare a sector at the transaction level. To declare at transaction level, you need to remove sector at activity level.',
-            'sector.sector_required' => 'You have declared sector at transaction level so you must declare sector for all the transactions.',
+            'sector.sector_required'     => 'You have declared sector at transaction level so you must declare sector for all the transactions.',
         ];
 
         if (empty($formFields)) {
@@ -573,7 +606,9 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $providerOrgIndex => $providerOrg) {
             $providerOrgForm = sprintf('provider_organization.%s', $providerOrgIndex);
-            $rules[sprintf('%s.%s', $providerOrgForm, 'type')] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
+            $rules[sprintf('%s.%s', $providerOrgForm, 'type')] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('OrganizationType', 'Organization', false)
+            ));
             $narrativeRules = $this->getErrorsForNarrative($providerOrg['narrative'], $providerOrgForm);
 
             foreach ($narrativeRules as $key => $item) {
@@ -646,7 +681,9 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $receiverOrgIndex => $receiverOrg) {
             $receiverOrgForm = sprintf('receiver_organization.%s', $receiverOrgIndex);
-            $rules[sprintf('%s.%s', $receiverOrgForm, 'type')] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
+            $rules[sprintf('%s.%s', $receiverOrgForm, 'type')] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('OrganizationType', 'Organization', false)
+            ));
             $narrativeRules = $this->getErrorsForNarrative($receiverOrg['narrative'], $receiverOrgForm);
 
             foreach ($narrativeRules as $key => $item) {
@@ -760,8 +797,12 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = sprintf('recipient_region.%s', $recipientRegionIndex);
-            $rules[sprintf('%s.region_vocabulary', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('RegionVocabulary', 'Activity', false)));
-            $rules[sprintf('%s.region_code', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Region', 'Activity', false)));
+            $rules[sprintf('%s.region_vocabulary', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('RegionVocabulary', 'Activity', false)
+            ));
+            $rules[sprintf('%s.region_code', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('Region', 'Activity', false)
+            ));
             $rules[sprintf('%s.vocabulary_uri', $recipientRegionForm)] = 'nullable|url';
 
             if (Arr::get($recipientRegion, 'region_vocabulary', 1) === '99') {
@@ -788,7 +829,7 @@ class TransactionRequest extends ActivityBaseRequest
     {
         $messages = [
             'recipient_region.already_in_activity' => 'Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.',
-            'recipient_region.country_or_region' => 'You must add either recipient country or recipient region.',
+            'recipient_region.country_or_region'   => 'You must add either recipient country or recipient region.',
         ];
 
         if (!$formFields) {
@@ -890,7 +931,9 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('recipient_country.%s', $recipientCountryIndex);
-            $rules[sprintf('%s.country_code', $recipientCountryForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Country', 'Activity', false)));
+            $rules[sprintf('%s.country_code', $recipientCountryForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('Country', 'Activity', false)
+            ));
             $narrativeRules = $this->getErrorsForNarrative(Arr::get($recipientCountry, 'narrative', []), $recipientCountryForm);
 
             foreach ($narrativeRules as $key => $item) {
@@ -912,7 +955,7 @@ class TransactionRequest extends ActivityBaseRequest
     {
         $messages = [
             'recipient_country.already_in_activity' => 'Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.',
-            'recipient_country.country_or_region' => 'You must add either recipient country or recipient region.',
+            'recipient_country.country_or_region'   => 'You must add either recipient country or recipient region.',
         ];
 
         if (!$formFields) {

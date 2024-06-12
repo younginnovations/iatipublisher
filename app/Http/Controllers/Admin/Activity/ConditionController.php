@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\ConditionService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class ConditionController.
@@ -43,7 +44,8 @@ class ConditionController extends Controller
         try {
             $element = getElementSchema('conditions');
             $activity = $this->conditionService->getActivityData($id);
-            $form = $this->conditionService->formGenerator($id, $activity->default_field_values ?? []);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'condition', []);
+            $form = $this->conditionService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
             $data = [
                 'title' => $element['label'],
                 'name' => 'conditions',

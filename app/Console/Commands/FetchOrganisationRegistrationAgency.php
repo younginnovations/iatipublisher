@@ -56,7 +56,6 @@ class FetchOrganisationRegistrationAgency extends Command
             if ($response->successful()) {
                 $jsonValue = $response->json()['lists'];
                 $iatiJsonValues = collect($jsonValue)
-                    ->filter(fn ($rawJson) => !isset($rawJson['deprecated']) || !$rawJson['deprecated'])
                     ->map(fn ($rawJson) => $this->parseToIatiOrganisationRegistrationAgencyJson($rawJson))
                     ->all();
 
@@ -96,7 +95,7 @@ class FetchOrganisationRegistrationAgency extends Command
     public function parseToIatiOrganisationRegistrationAgencyJson($data): array
     {
         $category = $data['coverage'][0] ?? '';
-        $status = isset($data['deprecated']) && $data['deprecated'] === false ? 'active' : null;
+        $status = isset($data['deprecated']) && $data['deprecated'] === true ? 'withdrawn' : 'active';
 
         return [
             'code'            => data_get($data, 'code', ''),

@@ -45,10 +45,18 @@
           ></HoverText>
         </div>
       </div>
+
+      <HelperText
+        v-if="elementHasDeprecatedCode"
+        helper-text="This element data contains deprecated codelist value."
+      />
+
       <div class="divider mb-4 h-px w-full bg-n-20"></div>
       <div class="results">
         <template v-for="(result, r) in resultData" :key="r">
           <div class="item">
+            <HelperText :helper-text="result['deprecation_status_map']" />
+
             <div class="elements-detail">
               <div>
                 <!-- title -->
@@ -138,30 +146,37 @@
                     v-if="result.indicators.length > 0"
                     class="indicator overflow-hidden rounded-t-lg border border-n-20"
                   >
-                    <div
-                      class="head flex items-center border-b border-n-20 px-6 py-2"
-                    >
-                      <div class="grow text-xs font-bold text-n-50">
-                        Indicator
+                    <div class="items-center border-b border-n-20 px-6 py-2">
+                      <div class="head flex items-center">
+                        <div class="grow text-xs font-bold text-n-50">
+                          Indicator
+                        </div>
+                        <div class="inline-flex shrink-0">
+                          <Btn
+                            text="Add New Indicator"
+                            icon="add"
+                            :link="`/${title}/${result.id}/indicator/create`"
+                            class="mr-2.5"
+                          />
+                          <Btn
+                            text="Show full indicator list"
+                            icon=""
+                            design="bgText"
+                            :link="`/${title}/${result.id}/indicator`"
+                          />
+                        </div>
                       </div>
-                      <div class="inline-flex shrink-0">
-                        <Btn
-                          text="Add New Indicator"
-                          icon="add"
-                          :link="`/${title}/${result.id}/indicator/create`"
-                          class="mr-2.5"
-                        />
-                        <Btn
-                          text="Show full indicator list"
-                          icon=""
-                          design="bgText"
-                          :link="`/${title}/${result.id}/indicator`"
+                      <div class="block">
+                        <HelperText
+                          :helper-text="
+                            onlyDeprecatedStatusMap(result['indicators'])
+                          "
                         />
                       </div>
                     </div>
                     <div>
                       <template
-                        v-for="(indicator, i) in result.indicators"
+                        v-for="(indic, i) in result.indicators"
                         :key="i"
                       >
                         <div
@@ -175,7 +190,7 @@
                             <div class="category flex">
                               <div class="mr-4">
                                 {{
-                                  indicator.indicator.title[0].narrative[0]
+                                  indic.indicator.title[0].narrative[0]
                                     .narrative ?? 'untitled'
                                 }}
                               </div>
@@ -184,19 +199,19 @@
                                   <Btn
                                     text="View Indicator"
                                     icon="eye"
-                                    :link="`/${title}/${result.id}/indicator/${indicator.id}`"
+                                    :link="`/${title}/${result.id}/indicator/${indic.id}`"
                                     class="mr-2.5"
                                   />
                                   <Btn
                                     text="Edit Indicator"
-                                    :link="`/${title}/${result.id}/indicator/${indicator.id}/edit`"
+                                    :link="`/${title}/${result.id}/indicator/${indic.id}/edit`"
                                     class="mr-2.5"
                                   />
                                 </span>
                                 <Btn
                                   text="Add Period"
                                   icon="add"
-                                  :link="`/indicator/${indicator.id}/period/create`"
+                                  :link="`/indicator/${indic.id}/period/create`"
                                 />
                               </div>
                             </div>
@@ -206,15 +221,14 @@
                                   <td>Baseline:</td>
                                   <td>
                                     <div
-                                      v-for="(baseline, b) in indicator
-                                        .indicator.baseline"
+                                      v-for="(baseline, b) in indic.indicator
+                                        .baseline"
                                       :key="b"
                                       class=""
                                       :class="{
                                         'mb-1':
                                           b !==
-                                          indicator.indicator.baseline.length -
-                                            1,
+                                          indic.indicator.baseline.length - 1,
                                       }"
                                     >
                                       <div class="description text-xs">
@@ -236,27 +250,24 @@
                                     </div>
                                   </td>
                                 </tr>
-                                <tr v-if="indicator.periods.length > 0">
+                                <tr v-if="indic.periods.length > 0">
                                   <td>Period:</td>
                                   <td>
                                     <div class="inline-flex gap-4">
                                       <div>
                                         <div
-                                          v-for="(
-                                            period, p
-                                          ) in indicator.periods"
+                                          v-for="(period, p) in indic.periods"
                                           :key="p"
                                           class="flex"
                                           :class="{
                                             'mb-1':
-                                              p !==
-                                              indicator.periods.length - 1,
+                                              p !== indic.periods.length - 1,
                                           }"
                                         >
                                           <div class="text-xs">
                                             <a
                                               class="text-xs text-n-50"
-                                              :href="`/indicator/${indicator.id}/period/${period.id}`"
+                                              :href="`/indicator/${indic.id}/period/${period.id}`"
                                             >
                                               {{
                                                 dateFormat(
@@ -279,7 +290,7 @@
                                             <Btn
                                               text="Edit"
                                               icon="edit"
-                                              :link="`/indicator/${indicator.id}/period/${period.id}/edit`"
+                                              :link="`/indicator/${indic.id}/period/${period.id}/edit`"
                                             />
                                           </div>
                                         </div>
@@ -290,7 +301,7 @@
                                           text="Show full period list"
                                           icon=""
                                           design="bgText"
-                                          :link="`/indicator/${indicator.id}/period`"
+                                          :link="`/indicator/${indic.id}/period`"
                                         />
                                       </div>
                                     </div>
@@ -301,7 +312,7 @@
                                   <td>
                                     <div>
                                       <NotYet
-                                        :link="`/indicator/${indicator.id}/period/create`"
+                                        :link="`/indicator/${indic.id}/period/create`"
                                         description="You haven't added any period yet."
                                       />
                                     </div>
@@ -339,10 +350,14 @@ import NotYet from 'Components/sections/HaveNotAddedYet.vue';
 // composable
 import getActivityTitle from 'Composable/title';
 import dateFormat from 'Composable/dateFormat';
+import HelperText from 'Components/HelperText.vue';
+import indicator from 'Activity/results/elements/Indicator.vue';
+import { onlyDeprecatedStatusMap } from 'Composable/utils';
 
 export default defineComponent({
   name: 'ActivityResult',
   components: {
+    HelperText,
     Btn,
     NotYet,
   },
@@ -377,6 +392,11 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
+    elementHasDeprecatedCode: {
+      type: [Boolean],
+      required: false,
+      default: false,
+    },
   },
   setup(props) {
     const format = 'MMMM DD, YYYY';
@@ -396,5 +416,11 @@ export default defineComponent({
       dateFormat,
     };
   },
+  computed: {
+    indicator() {
+      return indicator;
+    },
+  },
+  methods: { onlyDeprecatedStatusMap },
 });
 </script>

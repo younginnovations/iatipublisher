@@ -11,6 +11,7 @@ use App\IATI\Services\Activity\RecipientCountryService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 use JsonException;
 
 /**
@@ -54,7 +55,8 @@ class RecipientCountryController extends Controller
         try {
             $activity = $this->recipientCountryService->getActivityData($id);
             $element = $this->activityService->getRecipientRegionOrCountryManipulatedElementSchema($activity, 'recipient_country');
-            $form = $this->recipientCountryService->formGenerator($id, $element, $activity->default_field_values ?? []);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'recipient_country', []);
+            $form = $this->recipientCountryService->formGenerator($id, $element, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'recipient_country'];
 
             return view('admin.activity.recipientCountry.edit', compact('form', 'activity', 'data'));

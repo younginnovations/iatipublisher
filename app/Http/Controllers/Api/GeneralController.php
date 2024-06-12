@@ -42,7 +42,7 @@ class GeneralController extends Controller
                 ]);
             }
 
-            $fileFormat = getCodeList('FileFormat', 'Activity');
+            $fileFormat = getCodeList('FileFormat', 'Activity', filterDeprecated: true);
             $completePath = 'AppData/Data/Activity/Extension.json';
             $jsonContent = getJsonFromSource($completePath);
             $extensions = array_flip(json_decode($jsonContent, true, 512, JSON_THROW_ON_ERROR));

@@ -193,7 +193,7 @@ class ActivityService
      */
     public function deleteElement($id, $element): bool
     {
-        return $this->activityRepository->update($id, [$element => null]);
+        return $this->activityRepository->update($id, [$element => null], isDeleteOperation: true, deleteElement: $element);
     }
 
     /**
@@ -803,5 +803,20 @@ class ActivityService
     public function updateActivity($activityId, $data): bool
     {
         return $this->activityRepository->update($activityId, $data);
+    }
+
+    public function getDeprecationStatusMap($id = '', $key = '')
+    {
+        if ($id) {
+            $activity = $this->activityRepository->find($id);
+
+            if (!$key) {
+                return $activity->deprecation_status_map;
+            }
+
+            return Arr::get($activity->deprecation_status_map, $key, []);
+        }
+
+        return [];
     }
 }

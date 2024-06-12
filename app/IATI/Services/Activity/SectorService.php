@@ -85,12 +85,12 @@ class SectorService
      *
      * @return Form
      */
-    public function formGenerator($id, $element, $activityDefaultFieldValues): Form
+    public function formGenerator($id, $element, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $model['sector'] = $this->getSectorData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.sector.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

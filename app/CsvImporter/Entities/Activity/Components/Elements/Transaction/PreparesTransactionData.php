@@ -555,7 +555,7 @@ trait PreparesTransactionData
      */
     protected function loadCodeList($codeList, $directory = 'Activity'): array
     {
-        return getCodeList($codeList, $directory, false);
+        return getCodeList($codeList, $directory, false, filterDeprecated: true);
     }
 
     /**

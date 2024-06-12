@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\ActivityIdentifierService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -44,7 +45,8 @@ class IdentifierController extends Controller
         try {
             $element = getElementSchema('iati_identifier');
             $activity = $this->identifierService->getActivityData($id);
-            $form = $this->identifierService->formGenerator($id);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'iati_identifier', []);
+            $form = $this->identifierService->formGenerator($id, deprecationStatusMap: $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'iati_identifier'];
 
             return view('admin.activity.identifier.edit', compact('form', 'activity', 'data'));

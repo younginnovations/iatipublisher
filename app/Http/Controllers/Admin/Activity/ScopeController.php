@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\ScopeService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class ScopeController.
@@ -43,7 +44,8 @@ class ScopeController extends Controller
         try {
             $element = getElementSchema('activity_scope');
             $activity = $this->scopeService->getActivityData($id);
-            $form = $this->scopeService->formGenerator($id);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'activity_scope', []);
+            $form = $this->scopeService->formGenerator($id, deprecationStatusMap: $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'activity_scope'];
 
             return view('admin.activity.scope.edit', compact('form', 'activity', 'data'));

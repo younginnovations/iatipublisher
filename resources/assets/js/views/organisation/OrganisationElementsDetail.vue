@@ -103,6 +103,9 @@
           </a>
         </div>
       </div>
+
+      <HelperText :helper-text="deprecationCodeUsage" />
+
       <div class="divider mb-4 h-px w-full bg-n-20"></div>
       <div class="text-sm text-n-50">
         <!-- iati_organizational_identifier -->
@@ -179,6 +182,7 @@ import BtnComponent from 'Components/ButtonComponent.vue';
 import Modal from 'Components/PopupModal.vue';
 import { useToggle } from '@vueuse/core';
 import axios from 'axios';
+import HelperText from 'Components/HelperText.vue';
 
 const props = defineProps({
   data: {
@@ -213,6 +217,10 @@ const props = defineProps({
   },
   status: {
     type: Boolean,
+    required: true,
+  },
+  deprecationCodeUsage: {
+    type: Object,
     required: true,
   },
 });

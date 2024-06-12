@@ -254,7 +254,7 @@ class DashboardController extends Controller
             $params = $this->dashboardService->resolveStartDateAndEndDate($request, $params, 'organizations');
 
             $paginatedData = $this->dashboardService->getPublisherBy($params, 'country');
-            $codeList = getCodeList('Country', 'Activity');
+            $codeList = getCodeList('Country', 'Activity', filterDeprecated: true);
 
             return response()->json([
                 'success' => true,
@@ -282,7 +282,7 @@ class DashboardController extends Controller
             $params = $this->dashboardService->resolveStartDateAndEndDate($request, $params, 'organizations');
 
             $paginatedData = $this->dashboardService->getPublisherBy($params, 'publisher_type');
-            $codeList = getCodeList('OrganizationType', 'Organization');
+            $codeList = getCodeList('OrganizationType', 'Organization', filterDeprecated: true);
 
             return response()->json([
                 'success' => true,
@@ -310,7 +310,7 @@ class DashboardController extends Controller
             $params = $this->dashboardService->resolveStartDateAndEndDate($request, $params, 'organizations');
 
             $paginatedData = $this->dashboardService->getPublisherBy($params, 'data_license');
-            $codeList = getCodeList('DataLicense', 'Activity');
+            $codeList = getCodeList('DataLicense', 'Activity', filterDeprecated: true);
 
             return response()->json([
                 'success' => true,

@@ -20,10 +20,10 @@ class IndicatorRequest extends ActivityBaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @throws ContainerExceptionInterface
+     * @return array
      * @throws NotFoundExceptionInterface
      *
-     * @return array
+     * @throws ContainerExceptionInterface
      */
     public function rules(): array
     {
@@ -54,10 +54,10 @@ class IndicatorRequest extends ActivityBaseRequest
      * @param array $result
      * @param $resultId
      *
-     * @throws ContainerExceptionInterface
+     * @return array
      * @throws NotFoundExceptionInterface
      *
-     * @return array
+     * @throws ContainerExceptionInterface
      */
     public function getWarningForIndicator(array $formFields, bool $fileUpload = false, array $result = [], $resultId = null): array
     {
@@ -91,15 +91,17 @@ class IndicatorRequest extends ActivityBaseRequest
      * @param bool $fileUpload
      * @param array $result
      *
-     * @throws ContainerExceptionInterface
+     * @return array
      * @throws NotFoundExceptionInterface
      *
-     * @return array
+     * @throws ContainerExceptionInterface
      */
     public function getErrorsForIndicator(array $formFields, bool $fileUpload = false, array $result = []): array
     {
         $rules = [];
-        $rules['measure'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('IndicatorMeasure', 'Activity', false))));
+        $rules['measure'] = sprintf('nullable|in:%s', implode(',', array_keys(
+            $this->getCodeListForRequestFiles('IndicatorMeasure', 'Activity', false)
+        )));
         $rules['ascending'] = sprintf('nullable|in:0,1');
         $rules['aggregation_status'] = sprintf('nullable|in:0,1');
 
@@ -234,7 +236,9 @@ class IndicatorRequest extends ActivityBaseRequest
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
             $rules[sprintf('%s.indicator_uri', $referenceForm)] = 'nullable|url';
-            $rules[sprintf('%s.vocabulary', $referenceForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('IndicatorVocabulary', 'Activity', false))));
+            $rules[sprintf('%s.vocabulary', $referenceForm)] = sprintf('nullable|in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('IndicatorVocabulary', 'Activity', false)
+            )));
         }
 
         return $rules;
@@ -272,10 +276,10 @@ class IndicatorRequest extends ActivityBaseRequest
      *
      * @param $formFields
      *
-     * @throws ContainerExceptionInterface
+     * @return array
      * @throws NotFoundExceptionInterface
      *
-     * @return array
+     * @throws ContainerExceptionInterface
      */
     protected function getWarningForBaseline($formFields): array
     {
@@ -312,10 +316,10 @@ class IndicatorRequest extends ActivityBaseRequest
      *
      * @param $formFields
      *
-     * @throws ContainerExceptionInterface
+     * @return array
      * @throws NotFoundExceptionInterface
      *
-     * @return array
+     * @throws ContainerExceptionInterface
      */
     protected function getErrorsForBaseline($formFields): array
     {

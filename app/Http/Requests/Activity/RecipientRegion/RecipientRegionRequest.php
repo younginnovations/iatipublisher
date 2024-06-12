@@ -94,8 +94,12 @@ class RecipientRegionRequest extends ActivityBaseRequest
         $activityService = app()->make(ActivityService::class);
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
-            $rules[sprintf('%s.region_vocabulary', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('RegionVocabulary', 'Activity', false)));
-            $rules[sprintf('%s.region_code', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Region', 'Activity', false)));
+            $rules[sprintf('%s.region_vocabulary', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('RegionVocabulary', 'Activity', false)
+            ));
+            $rules[sprintf('%s.region_code', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('Region', 'Activity', false)
+            ));
             $rules[$recipientRegionForm . '.vocabulary_uri'] = 'nullable|url';
             $rules[$recipientRegionForm . '.percentage'] = 'nullable|numeric|min:0';
 

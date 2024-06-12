@@ -63,6 +63,7 @@ class Organization extends Model implements Auditable
         'created_at',
         'updated_at',
         'old_identifiers',
+        'deprecation_status_map',
     ];
 
     /**
@@ -81,6 +82,7 @@ class Organization extends Model implements Auditable
         'element_status' => 'json',
         'is_published' => 'boolean',
         'old_identifiers' => 'json',
+        'deprecation_status_map'=>'json',
     ];
 
     /**

@@ -1,6 +1,9 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+php artisan optimize:clear && \
+php artisan command:UpdateJsonFiles && \
+php artisan command:FetchOrganisationRegistrationAgency && \
 php artisan command:SetAppDataJsonCache && \
 php artisan test && \
 npx stylelint "resources/**/*.scss" --fix && \

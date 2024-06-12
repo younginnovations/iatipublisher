@@ -72,8 +72,12 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
 
         foreach ($formFields as $humanitarianScopeIndex => $humanitarianScope) {
             $humanitarianScopeForm = 'humanitarian_scope.' . $humanitarianScopeIndex;
-            $rules[sprintf('%s.type', $humanitarianScopeForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('HumanitarianScopeType', 'Activity', false)));
-            $rules[sprintf('%s.vocabulary', $humanitarianScopeForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('HumanitarianScopeVocabulary', 'Activity', false)));
+            $rules[sprintf('%s.type', $humanitarianScopeForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('HumanitarianScopeType', 'Activity', false)
+            ));
+            $rules[sprintf('%s.vocabulary', $humanitarianScopeForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('HumanitarianScopeVocabulary', 'Activity', false)
+            ));
             $rules[sprintf('%s.vocabulary_uri', $humanitarianScopeForm)] = 'nullable|url';
             $rules[sprintf('%s.code', $humanitarianScopeForm)] = 'nullable|string';
 
