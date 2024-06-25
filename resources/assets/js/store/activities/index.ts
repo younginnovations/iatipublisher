@@ -31,12 +31,32 @@ const state = {
   validatingActivitiesNames: [],
   bulkpublishActivities: {
     publishingActivities: {
-      activities: { activity_id: 0, activity_title: '', status: '' },
+      activities: {
+        activity_id: 0,
+        activity_title: '',
+        status: '',
+      },
       organization_id: 0,
       job_batch_uuid: '',
       status: '',
       message: '',
     },
+  },
+  bulkActivityPublishStatus: {
+    iatiValidatorLoader: false,
+    validationNames: [] as string[],
+    validationStats: {
+      complete: 0,
+      total: 0,
+      failed: 0,
+    },
+    importedActivitiesList: [] as {
+      id: string;
+      activityName: any;
+      status: any;
+    }[],
+    showValidationError: false,
+    completedSteps: [] as number[],
   },
 };
 

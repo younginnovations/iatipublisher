@@ -193,7 +193,6 @@ app.component('AuditListing', AuditListing);
 app.use(SvgVue);
 
 app.use(VueSmoothScroll);
-
 // detect scroll up or down
 let lastScrollTop = 0,
   affixType = 'sticky-none';

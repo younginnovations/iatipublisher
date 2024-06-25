@@ -38,24 +38,31 @@
       </button>
     </div>
     <div class="max-h-[600px] space-y-6 overflow-y-scroll p-6">
-      <ActivityValidation
-        v-if="showValidationPopup"
-        :validation-stats="validationStats"
-        :validation-names="validationNames"
-        :error-tab="showValidationError"
-        @stop-validation="cancelValidationPolling"
-        @proceed="proceedValidation"
-      />
-      <BulkpublishWithXls
-        v-if="
-          showBulkpublish && activities && Object.keys(activities).length > 0
-        "
-        key="bulkpublish"
-        @close="closeBulkpublish"
-        @activity-published-data="handleActivityPublishedData"
-        @hide-loader="hideBulkpublishLoader"
-      />
-      <BulkpublishLoaderCard v-if="showBulkpublishLoader" />
+      {{ store.state.bulkActivityPublishStatus.validationStats }}
+      <div>
+        <ActivityValidation
+          v-if="showValidationPopup"
+          :validation-stats="
+            store.state.bulkActivityPublishStatus.validationStats
+          "
+          :validation-names="
+            store.state.bulkActivityPublishStatus.validationNames
+          "
+          :error-tab="store.state.bulkActivityPublishStatus.showValidationError"
+          @stop-validation="cancelValidationPolling"
+          @proceed="proceedValidation"
+        />
+        <BulkpublishWithXls
+          v-if="
+            showBulkpublish && activities && Object.keys(activities).length > 0
+          "
+          key="bulkpublish"
+          @close="closeBulkpublish"
+          @activity-published-data="handleActivityPublishedData"
+          @hide-loader="hideBulkpublishLoader"
+        />
+        <BulkpublishLoaderCard v-if="showBulkpublishLoader" />
+      </div>
 
       <ActivityDownload
         v-if="downloading && !downloadCompleted && !cancelDownload"
@@ -100,14 +107,11 @@ import { useStore } from 'Store/activities/index';
 
 const store = useStore();
 const showXlsStatus = ref(true);
-const validationStats = ref({ complete: 0, total: 0, failed: 0 });
-const validationNames = ref<string[]>([]);
 
 import { useStorage, useElementSize } from '@vueuse/core';
 import ShimmerLoading from './ShimmerLoading.vue';
 
 const downloadCompleted = ref(false);
-const showValidationError = ref(false);
 const validationRunning = ref(false);
 
 const cancelDownload = ref(false);
@@ -121,9 +125,12 @@ const publishingActivities = ref<string[]>([]);
 const bulkPublishLength = ref(0);
 const activityPublishedData = ref() as Ref<activityPublished>;
 const downloadStatus = inject('xlsDownloadStatus') as Ref;
+const validatedActivitiesList = ref({});
+
 const pa = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
 });
+
 let pollingForValidation;
 
 const props = defineProps({
@@ -155,7 +162,7 @@ const props = defineProps({
 });
 
 onMounted(async () => {
-  validationNames.value = (
+  store.state.bulkActivityPublishStatus.validationNames = (
     store.state.validatingActivitiesNames.length
       ? store.state.validatingActivitiesNames
       : localStorage.getItem('validatingActivitiesNames')?.split('|')
@@ -195,26 +202,31 @@ const proceedValidation = () => {
 };
 
 const checkValidation = async () => {
-  await axios
-    .get(`/activities/checks-for-activity-bulk-validation`)
-    .then((res) => {
-      const response = res.data;
-      validationRunning.value = !response.success;
+  try {
+    const response = await axios.get(
+      `/activities/checks-for-activity-bulk-validation`
+    );
+    if (response.data) {
+      const activities = response.data.activities;
+      validationRunning.value = !response.data.success;
 
-      localStorage.setItem(
-        'validatingActivitiesNames',
-        response.activities &&
-          Object.values(JSON.parse(response.activities)).join('|')
-      );
-      const activityId =
-        response.activities &&
-        Object.keys(JSON.parse(response.activities)).join(',');
-      store.dispatch('updateValidatingActivities', activityId);
+      if (activities) {
+        localStorage.setItem(
+          'validatingActivitiesNames',
+          Object.values(JSON.parse(activities)).join('|')
+        );
 
-      if (!response.success) {
+        const activityId = Object.keys(JSON.parse(activities)).join(',');
+        store.dispatch('updateValidatingActivities', activityId);
+      }
+
+      if (!response.data.success) {
         checkValidationStatus();
       }
-    });
+    }
+  } catch (error) {
+    console.error('Error checking validation:', error);
+  }
 };
 
 const cancelValidationPolling = () => {
@@ -261,36 +273,42 @@ const checkValidationStatus = () => {
         `/activities/get-validation-status?activities=[${store.state.validatingActivities}]`
       )
       .then((res) => {
-        validationStats.value.complete = 0;
-        validationStats.value.total = 0;
-        validationStats.value.failed = 0;
+        store.state.bulkActivityPublishStatus.validationStats.complete = 0;
+        store.state.bulkActivityPublishStatus.validationStats.total = 0;
+        store.state.bulkActivityPublishStatus.validationStats.failed = 0;
         const response = res.data;
         if (response.data && typeof response.data === 'object') {
-          validationNames.value = (
+          validatedActivitiesList.value = response.data;
+          store.state.bulkActivityPublishStatus.validationNames = (
             store.state.validatingActivitiesNames?.length
               ? store.state.validatingActivitiesNames
               : localStorage.getItem('validatingActivitiesNames')?.split('|')
           ) as string[];
 
-          validationStats.value.total = localStorage
-            .getItem('validatingActivitiesNames')
-            ?.split('|')?.length as number;
-          validationStats.value.complete = Object.values(response.data).filter(
-            (value) => value === 'completed'
-          ).length;
-          validationStats.value.failed = Object.values(response.data).filter(
-            (value) => value === 'failed'
-          ).length;
+          store.state.bulkActivityPublishStatus.validationStats.total =
+            localStorage.getItem('validatingActivitiesNames')?.split('|')
+              ?.length as number;
+          store.state.bulkActivityPublishStatus.validationStats.complete =
+            Object.values(response.data).filter(
+              (value) => value === 'completed'
+            ).length;
+          store.state.bulkActivityPublishStatus.validationStats.failed =
+            Object.values(response.data).filter(
+              (value) => value === 'failed'
+            ).length;
         }
 
         if (
-          validationStats.value.total ===
-            validationStats?.value.complete + validationStats?.value.failed &&
-          validationStats?.value.total !== 0
+          store.state.bulkActivityPublishStatus.validationStats.total ===
+            store.state.bulkActivityPublishStatus.validationStats?.complete +
+              store.state?.bulkActivityPublishStatus?.validationStats.failed &&
+          store.state.bulkActivityPublishStatus.validationStats.total !== 0
         ) {
           clearInterval(pollingForValidation);
+          store.state.bulkActivityPublishStatus.iatiValidatorLoader;
         }
-        showValidationError.value = !res.data.success;
+        store.state.bulkActivityPublishStatus.showValidationError =
+          !res.data.success;
       });
   }, 2500);
 };
@@ -305,6 +323,7 @@ watch(
   },
   { deep: true }
 );
+
 watch(
   () => showValidationPopup,
   (value) => {
@@ -325,15 +344,6 @@ watch(
 const showValidationPopup = computed(() => {
   return store.state.startValidation || validationRunning.value;
 });
-
-watch(
-  () => showValidationPopup.value,
-  (value) => {
-    if (!value) {
-      localStorage.removeItem('validationPercent');
-    }
-  }
-);
 
 onUnmounted(() => {
   const supportButton: HTMLElement = document.querySelector(
@@ -360,6 +370,7 @@ const closeXls = () => {
     setTimeout(() => store.dispatch('updateCloseXlsModel', false), 2000);
   });
 };
+
 watch(
   () => store.state.completeXlsDownload,
   (value) => {
@@ -483,9 +494,9 @@ const completeActivityCount = computed(() => {
   }
   if (
     showValidationPopup?.value &&
-    (validationStats?.value.complete ===
+    (store.state.bulkActivityPublishStatus.validationStats.complete ===
       store.state.validatingActivitiesNames.length ||
-      validationStats?.value.complete ===
+      store.state.bulkActivityPublishStatus.validationStats.complete ===
         localStorage.getItem('validatingActivitiesNames')?.split('|').length)
   ) {
     count++;
@@ -499,5 +510,36 @@ const hideBulkpublishLoader = () => {
 
 const handleActivityPublishedData = (data) => {
   activityPublishedData.value = data;
+};
+
+watch(
+  () => store.state.bulkActivityPublishStatus.validationStats,
+  () => {
+    if (
+      store.state.bulkActivityPublishStatus.validationStats.complete ===
+      store.state.bulkActivityPublishStatus.validationStats.total
+    ) {
+      getActivityList();
+    }
+  },
+  { deep: true }
+);
+
+const getActivityList = async () => {
+  const response = await axios.get(
+    `/activities/checks-for-activity-bulk-validation`
+  );
+  const activities = response.data.activities;
+  store.state.bulkActivityPublishStatus.importedActivitiesList = Object.keys(
+    JSON.parse(activities)
+  ).map((key) => {
+    const activityName = JSON.parse(activities)[key];
+    const status = validatedActivitiesList.value[activityName];
+    return {
+      id: key,
+      activityName: activityName,
+      status: status,
+    };
+  });
 };
 </script>

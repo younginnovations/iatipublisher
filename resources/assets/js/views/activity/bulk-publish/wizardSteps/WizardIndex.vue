@@ -1,0 +1,91 @@
+<template>
+  <div class="wizard flex items-end pb-4">
+    <div class="h-1.5 flex-1 rounded-3xl bg-turquoise" />
+    <div v-for="step in steps" :key="step.id" class="wizard-step flex-1">
+      <div class="wizard-step__header">
+        <div
+          class="wizard-step__header__title pb-3 text-xs font-bold leading-[22px] tracking-normal text-n-50"
+        >
+          <span class="inline-block -translate-x-1/2">
+            {{
+              step.name == 'Checking'
+                ? completedSteps.includes(step.id)
+                  ? 'Checked'
+                  : 'Checking'
+                : completedSteps.includes(step.id)
+                ? 'Published'
+                : completedSteps.length == 0
+                ? 'Publish'
+                : 'Publishing'
+            }}
+          </span>
+        </div>
+        <div
+          class="wizard-step__progress relative flex items-center"
+          :class="completedSteps.includes(step.id) ? 'active' : ''"
+        >
+          <div
+            class="w-full rounded-3xl"
+            :class="[
+              completedSteps.includes(step.id)
+                ? 'h-1.5 bg-turquoise'
+                : 'h-1 bg-[#CDF8FA]',
+            ]"
+          ></div>
+          <span
+            class="absolute -left-1 z-[1] flex h-4 w-4 items-center justify-center rounded-full text-xs font-bold"
+            :class="[
+              completedSteps.includes(step.id)
+                ? 'bg-turquoise'
+                : 'bg-[#CDF8FA]',
+              step.id == 3 ? 'hidden' : '',
+            ]"
+          >
+            <template v-if="completedSteps.includes(step.id)">
+              <svg
+                width="11"
+                height="8"
+                viewBox="0 0 11 8"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M10.5 1.27749L4.32875 8L0.5 4.92893L1.70773 3.4531L4.12809 5.39449L9.08023 0L10.5 1.27749Z"
+                  fill="#155366"
+                />
+              </svg>
+            </template>
+            <template v-else>
+              {{ step.id }}
+            </template>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { defineProps } from 'vue';
+const steps = [
+  {
+    name: 'Checking',
+    id: 1,
+  },
+  {
+    name: 'Publish',
+    id: 2,
+  },
+];
+
+defineProps({
+  completedSteps: {
+    type: Array,
+    default: () => [],
+  },
+});
+</script>
+
+<style lang="scss" scoped></style>
