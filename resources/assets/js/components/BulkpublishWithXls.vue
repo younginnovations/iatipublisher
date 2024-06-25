@@ -16,8 +16,9 @@
       <div class="rounded-lg border border-n-20 bg-white p-4">
         <div class="flex items-center justify-between pb-4">
           <h3 class="flex items-center space-x-2 text-sm text-n-50">
-            <span>Multiple Activities </span
-            ><span
+            <span>Multiple Activities </span>
+            {{ activities }}
+            <span
               class="flex h-6 w-6 items-center justify-center rounded-full bg-lagoon-10 text-lagoon-50"
               >{{
                 bulkPublishLength > 0

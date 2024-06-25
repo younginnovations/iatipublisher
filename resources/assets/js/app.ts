@@ -6,6 +6,7 @@
 import { createApp } from 'vue';
 import VueSmoothScroll from 'vue3-smooth-scroll';
 import SvgVue from 'svg-vue3';
+import { VueQueryPlugin } from '@tanstack/vue-query';
 import WebHeader from './views/web/partials/WebHeader.vue';
 import WebFooter from './views/web/partials/WebFooter.vue';
 import AdminFooter from './views/web/partials/AdminFooter.vue';
@@ -193,7 +194,7 @@ app.component('AuditListing', AuditListing);
 app.use(SvgVue);
 
 app.use(VueSmoothScroll);
-
+app.use(VueQueryPlugin);
 // detect scroll up or down
 let lastScrollTop = 0,
   affixType = 'sticky-none';

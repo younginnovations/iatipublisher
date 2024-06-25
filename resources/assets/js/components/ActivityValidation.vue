@@ -3,10 +3,7 @@
     <h6 class="mb-2 font-bold">Validating</h6>
     <div class="relative rounded-lg border border-n-20 bg-white p-4">
       <button
-        v-if="
-          (localStoragePercent ? +localStoragePercent : percentageWidth) ===
-            100 || hasError
-        "
+        v-if="percentageWidth === 100 || hasError"
         class="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 rounded-full bg-white p-[1px]"
         @click="stopValidating"
       >
@@ -26,10 +23,7 @@
           </div>
         </div>
         <button
-          v-if="
-            (localStoragePercent ? +localStoragePercent : percentageWidth) ==
-            100
-          "
+          v-if="percentageWidth == 100"
           class="text-xs font-bold uppercase text-spring-50"
           @click="startBulkPublish"
         >
@@ -51,23 +45,16 @@
           <div
             v-if="!hasError"
             :style="{
-              width:
-                ((localStoragePercent
-                  ? +localStoragePercent
-                  : percentageWidth) ?? 0) + '%',
+              width: (percentageWidth ?? 0) + '%',
             }"
             class="h-full rounded-full bg-spring-50"
           ></div>
         </div>
         <span v-if="!hasError" class="text-sm text-[#344054]"
           >{{
-            isNaN(localStoragePercent ? +localStoragePercent : percentageWidth)
+            isNaN(percentageWidth)
               ? 0
-              : Math.round(
-                  (localStoragePercent
-                    ? +localStoragePercent
-                    : percentageWidth) * 100
-                ) / 100
+              : Math.round(percentageWidth * 100) / 100
           }}%</span
         >
         <span v-else>
@@ -135,7 +122,6 @@ const props = defineProps({
 const emit = defineEmits(['stopValidation', 'proceed']);
 
 //setting percentage of validation progressbar , to maintain consistency when page is reloaded or navigated
-const localStoragePercent = ref(localStorage.getItem('validationPercent'));
 const showValidatingList = ref(false);
 const hasError = ref(false);
 
@@ -185,10 +171,4 @@ const percentageWidth = computed(() => {
       : 0) * 100
   );
 });
-watch(
-  () => percentageWidth?.value,
-  (value) => {
-    localStorage.setItem('validationPercent', (value ?? 0).toString());
-  }
-);
 </script>
