@@ -1111,196 +1111,242 @@ if (!function_exists('addAdditionalLabel')) {
     }
 }
 
-function arrayToLowercase(array $array)
-{
-    $lowercaseArray = [];
+if (!function_exists('arrayToLowercase')) {
+    function arrayToLowercase(array $array)
+    {
+        $lowercaseArray = [];
 
-    foreach ($array as $key => $value) {
-        $lowercaseKey = is_string($key) ? strtolower($key) : $key;
+        foreach ($array as $key => $value) {
+            $lowercaseKey = is_string($key) ? strtolower($key) : $key;
 
-        if (is_array($value)) {
-            $lowercaseValue = arrayToLowercase($value);
-        } elseif (is_string($value)) {
-            $lowercaseValue = strtolower($value);
-        } else {
-            $lowercaseValue = $value;
-        }
-
-        $lowercaseArray[$lowercaseKey] = $lowercaseValue;
-    }
-
-    return $lowercaseArray;
-}
-
-function flattenArrayWithKeys($array, $prefix = ''): array
-{
-    $result = [];
-
-    foreach ($array as $key => $value) {
-        if (is_array($value)) {
-            $result = array_merge($result, flattenArrayWithKeys($value, $prefix . $key . '.'));
-        } else {
-            $result[$prefix . $key] = $value;
-        }
-    }
-
-    return $result;
-}
-
-function refreshActivityDeprecationStatusMap(array $activity): array
-{
-    $deprecationMap = [];
-
-    foreach ($activity as $attribute => $value) {
-        $callable = match ($attribute) {
-            'iati_identifier' => 'doesIdentifierHaveDeprecatedCode',
-            'title' => 'doesTitleHaveDeprecatedCode',
-            'default_field_values' => 'doesDefaultFieldValuesHaveDeprecatedCode',
-            'description' => 'doesDescriptionHaveDeprecatedCode',
-            'activity_date' => 'doesActivityDateHaveDeprecatedCode',
-            'participating_org',
-            'participating_organization' => 'doesParticipatingOrgHaveDeprecatedCode',
-            'recipient_country' => 'doesRecipientCountryHaveDeprecatedCode',
-            'recipient_region' => 'doesRecipientRegionHaveDeprecatedCode',
-            'sector' => 'doesSectorHaveDeprecatedCode',
-            'activity_scope' => 'doesActivityScopeHaveDeprecatedCode',
-            'activity_status' => 'doesActivityStatusHaveDeprecatedCode',
-            'budget' => 'doesBudgetHaveDeprecatedCode',
-            'policy_marker' => 'doesPolicyMarkerHaveDeprecatedCode',
-            'related_activity' => 'doesRelatedActivityHaveDeprecatedCode',
-            'contact_info' => 'doesContactInfoHaveDeprecatedCode',
-            'other_identifier' => 'doesOtherIdentifierHaveDeprecatedCode',
-            'tag' => 'doesTagHaveDeprecatedCode',
-            'collaboration_type' => 'doesCollaborationTypeHaveDeprecatedCode',
-            'default_flow_type' => 'doesDefaultFlowTypeHaveDeprecatedCode',
-            'default_finance_type' => 'doesDefaultFinanceTypeHaveDeprecatedCode',
-            'default_tied_status' => 'doesDefaultTiedStatusHaveDeprecatedCode',
-            'default_aid_type' => 'doesDefaultAidTypeHaveDeprecatedCode',
-            'country_budget_item' => 'doesCountryBudgetItemHaveDeprecatedCode',
-            'humanitarian_scope' => 'doesHumanitarianScopeHaveDeprecatedCode',
-            'capital_spend' => 'doesCapitalSpendHaveDeprecatedCode',
-            'condition' => 'doesConditionHaveDeprecatedCode',
-            'legacy_data' => 'doesLegacyDataHaveDeprecatedCode',
-            'document_link' => 'doesDocumentLinkHaveDeprecatedCode',
-            'location' => 'doesLocationHaveDeprecatedCode',
-            'planned_disbursement' => 'doesPlannedDisbursementHaveDeprecatedCode',
-            default => 'default'
-        };
-
-        if (is_callable($callable)) {
-            if (in_array($attribute, ['activity_scope', 'activity_status', 'default_flow_type', 'default_finance_type', 'default_tied_status'])) {
-                $element = ['code'=>$value];
+            if (is_array($value)) {
+                $lowercaseValue = arrayToLowercase($value);
+            } elseif (is_string($value)) {
+                $lowercaseValue = strtolower($value);
             } else {
-                $element = $value;
+                $lowercaseValue = $value;
             }
 
-            $deprecationMap[$attribute] = call_user_func($callable, $element);
+            $lowercaseArray[$lowercaseKey] = $lowercaseValue;
         }
-    }
 
-    return $deprecationMap;
+        return $lowercaseArray;
+    }
 }
 
-function refreshTransactionDeprecationStatusMap(array $transaction): array
-{
-    return [
-        'humanitarian'          => doesHumanitarianHaveDeprecatedCode($transaction['humanitarian'] ?? []),
-        'transaction_type'      => doesTransactionTypeHaveDeprecatedCode($transaction['transaction_type'] ?? []),
-        'description'           => doesDescriptionHaveDeprecatedCode($transaction['description'] ?? []),
-        'provider_organization' => doesProviderOrganizationHaveDeprecatedCode($transaction['provider_organization'] ?? []),
-        'receiver_organization' => doesReceiverOrganizationHaveDeprecatedCode($transaction['receiver_organization'] ?? []),
-        'disbursement_channel'  => doesDisbursementChannelHaveDeprecatedCode($transaction['disbursement_channel'] ?? []),
-        'sector'                => doesRecipientRegionHaveDeprecatedCode($transaction['sector'] ?? []),
-        'recipient_country'     => doesRecipientCountryHaveDeprecatedCode($transaction['recipient_country'] ?? []),
-        'recipient_region'      => doesRecipientRegionHaveDeprecatedCode($transaction['recipient_region'] ?? []),
-        'flow_type'             => doesFlowTypeHaveDeprecatedCode($transaction['flow_type'] ?? []),
-        'finance_type'          => doesFinanceTypeHaveDeprecatedCode($transaction['finance_type'] ?? []),
-        'aid_type'              => doesAidTypeHaveDeprecatedCode($transaction['aid_type'] ?? []),
-        'tied_status'           => doesTiedStatusHaveDeprecatedCode($transaction['tied_status'] ?? []),
-        'value'                 => doesValueHaveDeprecatedCode($transaction['value'] ?? []),
-    ];
-}
+if (!function_exists('flattenArrayWithKeys')) {
+    function flattenArrayWithKeys($array, $prefix = ''): array
+    {
+        $result = [];
 
-function refreshResultDeprecationStatusMap(array $results): array
-{
-    $compareMap = [
-        'type'       => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/TagVocabulary.json'),
-        'format'     => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/TagVocabulary.json'),
-        'code'       => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/DocumentCategory.json'),
-        'language'   => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/Language.json'),
-        'vocabulary' => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/ResultVocabulary.json'),
-    ];
-
-    return generateDeprecationMap($results, $compareMap);
-}
-
-function refreshIndicatorDeprecationStatusMap(array $indicators): array
-{
-    return [
-        'measure'       => doesMeasureHaveDeprecatedCode(['code' => Arr::get($indicators, 'measure', [])]),
-        'title'         => doesTitleHaveDeprecatedCode(Arr::get($indicators, 'title', [])),
-        'description'   => doesDescriptionHaveDeprecatedCode(Arr::get($indicators, 'description', [])),
-        'document_link' => doesDocumentLinkHaveDeprecatedCode(Arr::get($indicators, 'document_link', [])),
-        'reference'     => doesReferenceHaveDeprecatedCode(Arr::get($indicators, 'reference', [])),
-        'baseline'      => doesBaselineHaveDeprecatedCode(Arr::get($indicators, 'baseline', []))];
-}
-
-function refreshPeriodDeprecationStatusMap(array $periods): array
-{
-    $compareMap = [
-        'format'     => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/TagVocabulary.json'),
-        'code'       => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/DocumentCategory.json'),
-        'language'   => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/Language.json'),
-    ];
-
-    return generateDeprecationMap($periods, $compareMap);
-}
-
-/**
- * @param $activity
- *
- * @return array
- */
-function unsetDeprecatedFieldValues($activity): array
-{
-    if (isset($activity['transaction'])) {
-        $flattenedTransaction = flattenArrayWithKeys(
-            ['transaction'=>refreshTransactionDeprecationStatusMap(Arr::only($activity, 'transaction', []))]
-        );
-    }
-
-    if (isset($activity['transactions'])) {
-        $flattenedTransactions = flattenArrayWithKeys(
-            ['transactions'=>refreshTransactionDeprecationStatusMap(Arr::only($activity, 'transactions', []))]
-        );
-    }
-
-    if (isset($activity['results'])) {
-        $flattenResult = flattenArrayWithKeys(
-            ['results'=>refreshResultDeprecationStatusMap(Arr::only($activity, 'results', []))]
-        );
-    }
-
-    if (isset($activity['results'])) {
-        $flattenResult = flattenArrayWithKeys(
-            ['results'=>refreshResultDeprecationStatusMap(Arr::only($activity, 'results', []))]
-        );
-    }
-
-    if (isset($activity['results'])) {
-        $flattenResult = flattenArrayWithKeys(
-            ['results'=>refreshResultDeprecationStatusMap(Arr::only($activity, 'results', []))]
-        );
-    }
-
-    $flattenActivity = flattenArrayWithKeys(refreshActivityDeprecationStatusMap(Arr::except($activity, ['transaction', 'transactions', 'results'])));
-    $flattened = array_merge($flattenActivity, $flattenedTransaction ?? [], $flattenedTransactions ?? [], $flattenResult ?? []);
-
-    foreach ($flattened as $key => $value) {
-        if ($value) {
-            Arr::set($activity, $key, null);
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $result = array_merge($result, flattenArrayWithKeys($value, $prefix . $key . '.'));
+            } else {
+                $result[$prefix . $key] = $value;
+            }
         }
-    }
 
-    return $activity;
+        return $result;
+    }
+}
+
+if (!function_exists('refreshActivityDeprecationStatusMap')) {
+    function refreshActivityDeprecationStatusMap(array $activity): array
+    {
+        $deprecationMap = [];
+
+        foreach ($activity as $attribute => $value) {
+            $callable = match ($attribute) {
+                'iati_identifier' => 'doesIdentifierHaveDeprecatedCode',
+                'title' => 'doesTitleHaveDeprecatedCode',
+                'default_field_values' => 'doesDefaultFieldValuesHaveDeprecatedCode',
+                'description' => 'doesDescriptionHaveDeprecatedCode',
+                'activity_date' => 'doesActivityDateHaveDeprecatedCode',
+                'participating_org',
+                'participating_organization' => 'doesParticipatingOrgHaveDeprecatedCode',
+                'recipient_country' => 'doesRecipientCountryHaveDeprecatedCode',
+                'recipient_region' => 'doesRecipientRegionHaveDeprecatedCode',
+                'sector' => 'doesSectorHaveDeprecatedCode',
+                'activity_scope' => 'doesActivityScopeHaveDeprecatedCode',
+                'activity_status' => 'doesActivityStatusHaveDeprecatedCode',
+                'budget' => 'doesBudgetHaveDeprecatedCode',
+                'policy_marker' => 'doesPolicyMarkerHaveDeprecatedCode',
+                'related_activity' => 'doesRelatedActivityHaveDeprecatedCode',
+                'contact_info' => 'doesContactInfoHaveDeprecatedCode',
+                'other_identifier' => 'doesOtherIdentifierHaveDeprecatedCode',
+                'tag' => 'doesTagHaveDeprecatedCode',
+                'collaboration_type' => 'doesCollaborationTypeHaveDeprecatedCode',
+                'default_flow_type' => 'doesDefaultFlowTypeHaveDeprecatedCode',
+                'default_finance_type' => 'doesDefaultFinanceTypeHaveDeprecatedCode',
+                'default_tied_status' => 'doesDefaultTiedStatusHaveDeprecatedCode',
+                'default_aid_type' => 'doesDefaultAidTypeHaveDeprecatedCode',
+                'country_budget_item' => 'doesCountryBudgetItemHaveDeprecatedCode',
+                'humanitarian_scope' => 'doesHumanitarianScopeHaveDeprecatedCode',
+                'capital_spend' => 'doesCapitalSpendHaveDeprecatedCode',
+                'condition' => 'doesConditionHaveDeprecatedCode',
+                'legacy_data' => 'doesLegacyDataHaveDeprecatedCode',
+                'document_link' => 'doesDocumentLinkHaveDeprecatedCode',
+                'location' => 'doesLocationHaveDeprecatedCode',
+                'planned_disbursement' => 'doesPlannedDisbursementHaveDeprecatedCode',
+                default => 'default'
+            };
+
+            if (is_callable($callable)) {
+                if (in_array($attribute, ['activity_scope', 'activity_status', 'default_flow_type', 'default_finance_type', 'default_tied_status'])) {
+                    $element = ['code'=>$value];
+                } else {
+                    $element = $value;
+                }
+
+                $deprecationMap[$attribute] = call_user_func($callable, $element);
+            }
+        }
+
+        return $deprecationMap;
+    }
+}
+
+if (!function_exists('refreshTransactionDeprecationStatusMap')) {
+    function refreshTransactionDeprecationStatusMap(array $transaction): array
+    {
+        return [
+            'humanitarian'          => doesHumanitarianHaveDeprecatedCode($transaction['humanitarian'] ?? []),
+            'transaction_type'      => doesTransactionTypeHaveDeprecatedCode($transaction['transaction_type'] ?? []),
+            'description'           => doesDescriptionHaveDeprecatedCode($transaction['description'] ?? []),
+            'provider_organization' => doesProviderOrganizationHaveDeprecatedCode($transaction['provider_organization'] ?? []),
+            'receiver_organization' => doesReceiverOrganizationHaveDeprecatedCode($transaction['receiver_organization'] ?? []),
+            'disbursement_channel'  => doesDisbursementChannelHaveDeprecatedCode($transaction['disbursement_channel'] ?? []),
+            'sector'                => doesRecipientRegionHaveDeprecatedCode($transaction['sector'] ?? []),
+            'recipient_country'     => doesRecipientCountryHaveDeprecatedCode($transaction['recipient_country'] ?? []),
+            'recipient_region'      => doesRecipientRegionHaveDeprecatedCode($transaction['recipient_region'] ?? []),
+            'flow_type'             => doesFlowTypeHaveDeprecatedCode($transaction['flow_type'] ?? []),
+            'finance_type'          => doesFinanceTypeHaveDeprecatedCode($transaction['finance_type'] ?? []),
+            'aid_type'              => doesAidTypeHaveDeprecatedCode($transaction['aid_type'] ?? []),
+            'tied_status'           => doesTiedStatusHaveDeprecatedCode($transaction['tied_status'] ?? []),
+            'value'                 => doesValueHaveDeprecatedCode($transaction['value'] ?? []),
+        ];
+    }
+}
+
+if (!function_exists('refreshResultDeprecationStatusMap')) {
+    function refreshResultDeprecationStatusMap(array $results): array
+    {
+        $compareMap = [
+            'type'       => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/TagVocabulary.json'),
+            'format'     => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/TagVocabulary.json'),
+            'code'       => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/DocumentCategory.json'),
+            'language'   => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/Language.json'),
+            'vocabulary' => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/ResultVocabulary.json'),
+        ];
+
+        return generateDeprecationMap($results, $compareMap);
+    }
+}
+
+if (!function_exists('refreshIndicatorDeprecationStatusMap')) {
+    function refreshIndicatorDeprecationStatusMap(array $indicators): array
+    {
+        return [
+            'measure'       => doesMeasureHaveDeprecatedCode(['code' => Arr::get($indicators, 'measure', [])]),
+            'title'         => doesTitleHaveDeprecatedCode(Arr::get($indicators, 'title', [])),
+            'description'   => doesDescriptionHaveDeprecatedCode(Arr::get($indicators, 'description', [])),
+            'document_link' => doesDocumentLinkHaveDeprecatedCode(Arr::get($indicators, 'document_link', [])),
+            'reference'     => doesReferenceHaveDeprecatedCode(Arr::get($indicators, 'reference', [])),
+            'baseline'      => doesBaselineHaveDeprecatedCode(Arr::get($indicators, 'baseline', []))];
+    }
+}
+
+if (!function_exists('refreshPeriodDeprecationStatusMap')) {
+    function refreshPeriodDeprecationStatusMap(array $periods): array
+    {
+        $compareMap = [
+            'format'     => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/TagVocabulary.json'),
+            'code'       => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/DocumentCategory.json'),
+            'language'   => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/Language.json'),
+        ];
+
+        return generateDeprecationMap($periods, $compareMap);
+    }
+}
+
+if (!function_exists('unsetDeprecatedFieldValues')) {
+    /**
+     * @param $activity
+     *
+     * @return array
+     */
+    function unsetDeprecatedFieldValues($activity): array
+    {
+        if (isset($activity['transaction'])) {
+            $flattenedTransaction = flattenArrayWithKeys(
+                ['transaction'=>refreshTransactionDeprecationStatusMap(Arr::only($activity, 'transaction', []))]
+            );
+        }
+
+        if (isset($activity['transactions'])) {
+            $flattenedTransactions = flattenArrayWithKeys(
+                ['transactions'=>refreshTransactionDeprecationStatusMap(Arr::only($activity, 'transactions', []))]
+            );
+        }
+
+        if (isset($activity['results'])) {
+            $flattenResult = flattenArrayWithKeys(
+                ['results'=>refreshResultDeprecationStatusMap(Arr::only($activity, 'results', []))]
+            );
+        }
+
+        if (isset($activity['results'])) {
+            $flattenResult = flattenArrayWithKeys(
+                ['results'=>refreshResultDeprecationStatusMap(Arr::only($activity, 'results', []))]
+            );
+        }
+
+        if (isset($activity['results'])) {
+            $flattenResult = flattenArrayWithKeys(
+                ['results'=>refreshResultDeprecationStatusMap(Arr::only($activity, 'results', []))]
+            );
+        }
+
+        $flattenActivity = flattenArrayWithKeys(refreshActivityDeprecationStatusMap(Arr::except($activity, ['transaction', 'transactions', 'results'])));
+        $flattened = array_merge($flattenActivity, $flattenedTransaction ?? [], $flattenedTransactions ?? [], $flattenResult ?? []);
+
+        foreach ($flattened as $key => $value) {
+            if ($value) {
+                Arr::set($activity, $key, null);
+            }
+        }
+
+        return $activity;
+    }
+}
+
+if (!function_exists('changeEmptySpaceValueToNullValue')) {
+    function changeEmptySpaceValueToNullValue(array $arr): array
+    {
+        foreach ($arr as &$value) {
+            if (is_string($value)) {
+                $value = trim($value);
+            }
+
+            if ($value === '') {
+                $value = null;
+            }
+        }
+
+        return $arr;
+    }
+}
+
+if (!function_exists('convertDotKeysToNestedArray')) {
+    function convertDotKeysToNestedArray(array $array): array
+    {
+        $result = [];
+
+        foreach ($array as $key => $value) {
+            Arr::set($result, $key, $value);
+        }
+
+        return $result;
+    }
 }

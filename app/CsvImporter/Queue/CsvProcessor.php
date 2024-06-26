@@ -77,6 +77,10 @@ class CsvProcessor
      */
     protected function initActivity(array $options = []): void
     {
+        $tempFlattened = flattenArrayWithKeys($this->data);
+        $tempFlattened = changeEmptySpaceValueToNullValue($tempFlattened);
+        $this->data = convertDotKeysToNestedArray($tempFlattened);
+
         $this->activity = new Activity($this->data, Arr::get($options, 'organization_id'), Arr::get($options, 'user_id'), Arr::get($options, 'activity_identifiers'), Arr::get($options, 'reporting_org'));
     }
 

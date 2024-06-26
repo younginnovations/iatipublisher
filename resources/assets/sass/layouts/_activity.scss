@@ -203,6 +203,13 @@
   pointer-events: none !important;
 }
 
+.freeze .text-danger-error,
+.freeze .text-danger-error * {
+  color: #d1001e !important;
+  border-color: inherit !important;
+  pointer-events: auto !important;
+}
+
 .freeze + .add_to_parent {
   color: #a6b5ba !important;
   pointer-events: none !important;
