@@ -43,7 +43,7 @@ class AlreadyInActivity implements Rule
      */
     public function message(): string
     {
-        if (in_array($this->attribute, ['recipient_region', 'recipient_country'])) {
+        if (str_contains($this->attribute, 'recipient_region') || str_contains($this->attribute, 'recipient_country')) {
             return 'Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.';
         }
 
