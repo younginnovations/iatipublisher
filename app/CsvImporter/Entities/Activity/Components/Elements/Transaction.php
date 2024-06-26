@@ -12,6 +12,7 @@ use App\Http\Requests\Activity\Transaction\TransactionRequest;
 use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
+use JsonException;
 
 /**
  * Class Transaction.
@@ -115,7 +116,7 @@ class Transaction extends Element
      * @param            $activityRow
      * @param Validation $factory
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function __construct($transactionRow, $activityRow, Validation $factory)
     {
@@ -132,7 +133,7 @@ class Transaction extends Element
      * @param $fields
      *
      * @return void
-     * @throws \JsonException
+     * @throws JsonException
      */
     protected function prepare($fields): void
     {
@@ -162,9 +163,13 @@ class Transaction extends Element
 
     /**
      * Validate data for IATI Element.
+     *
      * @param array $multipleTransaction
+     *
      * @return $this
-     * @throw \JsonException
+     *
+     * @throws BindingResolutionException
+     * @throws JsonException
      */
     public function validate(array $multipleTransaction = []): static
     {
@@ -176,7 +181,9 @@ class Transaction extends Element
         $this->errorValidator = $this->factory->sign($this->data())
             ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
-
+        $this->criticalValidator = $this->factory->sign($this->data())
+            ->with($this->criticalErrors(), $this->messages())
+            ->getValidatorInstance();
         $this->setValidity();
 
         return $this;
@@ -187,7 +194,7 @@ class Transaction extends Element
      *
      * @return array
      * @throws BindingResolutionException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function rules(): array
     {
@@ -199,10 +206,22 @@ class Transaction extends Element
      *
      * @return array
      * @throw \JsonException
+     * @throws BindingResolutionException
      */
     public function errorRules(): array
     {
         return $this->getBaseRules($this->request->getErrorsForTransaction(Arr::get($this->data, 'transaction', []), true, $this->getActivityData()), false);
+    }
+
+    /**
+     * Critical error rules for reporting org.
+     *
+     * @return array
+     * @throws BindingResolutionException
+     */
+    public function criticalErrors(): array
+    {
+        return $this->getBaseRules($this->request->getCriticalErrorsForTransaction(Arr::get($this->data, 'transaction', []), true, $this->getActivityData()), false);
     }
 
     /**

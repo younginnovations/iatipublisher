@@ -47,6 +47,7 @@ class TransactionRequest extends ActivityBaseRequest
         $totalRules = [
             $this->getWarningForTransaction($data),
             $this->getErrorsForTransaction($data),
+            $this->getCriticalErrorsForTransaction($data),
         ];
 
         return mergeRules($totalRules);
@@ -62,6 +63,9 @@ class TransactionRequest extends ActivityBaseRequest
         return $this->getMessagesForTransaction(request()->except('_token'));
     }
 
+    /**
+     * @throws BindingResolutionException
+     */
     public function getCriticalErrorsForTransaction(array $formFields, bool $fileUpload = false, array $activityData = [], array $multipleTransactions = []): array
     {
         $rules = [];
@@ -545,7 +549,6 @@ class TransactionRequest extends ActivityBaseRequest
     public function getSectorsMessages(array $formFields): array
     {
         $messages = [
-            'sector.already_in_activity' => 'Sector has already been declared at activity level. You can’t declare a sector at the transaction level. To declare at transaction level, you need to remove sector at activity level.',
             'sector.sector_required'     => 'You have declared sector at transaction level so you must declare sector for all the transactions.',
         ];
 
@@ -932,7 +935,6 @@ class TransactionRequest extends ActivityBaseRequest
     public function getMessagesForRecipientCountry(array $formFields): array
     {
         $messages = [
-            'recipient_country.already_in_activity' => 'Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.',
             'recipient_country.country_or_region'   => 'You must add either recipient country or recipient region.',
         ];
 
@@ -1003,7 +1005,14 @@ class TransactionRequest extends ActivityBaseRequest
         return $rules;
     }
 
-    public function getCriticalErrorForRecipientRegion(array $formFields, bool $fileUpload, array $activityRecipientRegions)
+    /**
+     * @param array $formFields
+     * @param bool $fileUpload
+     * @param array $activityRecipientRegions
+     * @return array|array[]
+     * @throws BindingResolutionException
+     */
+    public function getCriticalErrorForRecipientRegion(array $formFields, bool $fileUpload, array $activityRecipientRegions): array
     {
         if (empty($formFields)) {
             return [];
@@ -1036,7 +1045,14 @@ class TransactionRequest extends ActivityBaseRequest
         return $rules;
     }
 
-    public function getCriticalErrorForRecipientCountry(array $formFields, bool $fileUpload, array $activityRecipientCountries)
+    /**
+     * @param array $formFields
+     * @param bool $fileUpload
+     * @param array $activityRecipientCountries
+     * @return array|array[]
+     * @throws BindingResolutionException
+     */
+    public function getCriticalErrorForRecipientCountry(array $formFields, bool $fileUpload, array $activityRecipientCountries): array
     {
         if (empty($formFields)) {
             return [];
@@ -1065,7 +1081,15 @@ class TransactionRequest extends ActivityBaseRequest
         return $rules;
     }
 
-    public function getCriticalErrorForSector(array $formFields, bool $fileUpload, array $activitySectors, array $transactions = [])
+    /**
+     * @param array $formFields
+     * @param bool $fileUpload
+     * @param array $activitySectors
+     * @param array $transactions
+     * @return array|array[]
+     * @throws BindingResolutionException
+     */
+    public function getCriticalErrorForSector(array $formFields, bool $fileUpload, array $activitySectors, array $transactions = []): array
     {
         if (empty($formFields)) {
             return [];

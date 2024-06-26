@@ -1151,52 +1151,52 @@ function refreshActivityDeprecationStatusMap(array $activity): array
 {
     $deprecationMap = [];
 
-    foreach ($activity as $attribute => $value) {
-        $callable = match ($attribute) {
-            'iati_identifier' => 'doesIdentifierHaveDeprecatedCode',
-            'title' => 'doesTitleHaveDeprecatedCode',
-            'default_field_values' => 'doesDefaultFieldValuesHaveDeprecatedCode',
-            'description' => 'doesDescriptionHaveDeprecatedCode',
-            'activity_date' => 'doesActivityDateHaveDeprecatedCode',
-            'participating_org',
-            'participating_organization' => 'doesParticipatingOrgHaveDeprecatedCode',
-            'recipient_country' => 'doesRecipientCountryHaveDeprecatedCode',
-            'recipient_region' => 'doesRecipientRegionHaveDeprecatedCode',
-            'sector' => 'doesSectorHaveDeprecatedCode',
-            'activity_scope' => 'doesActivityScopeHaveDeprecatedCode',
-            'activity_status' => 'doesActivityStatusHaveDeprecatedCode',
-            'budget' => 'doesBudgetHaveDeprecatedCode',
-            'policy_marker' => 'doesPolicyMarkerHaveDeprecatedCode',
-            'related_activity' => 'doesRelatedActivityHaveDeprecatedCode',
-            'contact_info' => 'doesContactInfoHaveDeprecatedCode',
-            'other_identifier' => 'doesOtherIdentifierHaveDeprecatedCode',
-            'tag' => 'doesTagHaveDeprecatedCode',
-            'collaboration_type' => 'doesCollaborationTypeHaveDeprecatedCode',
-            'default_flow_type' => 'doesDefaultFlowTypeHaveDeprecatedCode',
-            'default_finance_type' => 'doesDefaultFinanceTypeHaveDeprecatedCode',
-            'default_tied_status' => 'doesDefaultTiedStatusHaveDeprecatedCode',
-            'default_aid_type' => 'doesDefaultAidTypeHaveDeprecatedCode',
-            'country_budget_item' => 'doesCountryBudgetItemHaveDeprecatedCode',
-            'humanitarian_scope' => 'doesHumanitarianScopeHaveDeprecatedCode',
-            'capital_spend' => 'doesCapitalSpendHaveDeprecatedCode',
-            'condition' => 'doesConditionHaveDeprecatedCode',
-            'legacy_data' => 'doesLegacyDataHaveDeprecatedCode',
-            'document_link' => 'doesDocumentLinkHaveDeprecatedCode',
-            'location' => 'doesLocationHaveDeprecatedCode',
-            'planned_disbursement' => 'doesPlannedDisbursementHaveDeprecatedCode',
-            default => 'default'
-        };
-
-        if (is_callable($callable)) {
-            if (in_array($attribute, ['activity_scope', 'activity_status', 'default_flow_type', 'default_finance_type', 'default_tied_status'])) {
-                $element = ['code'=>$value];
-            } else {
-                $element = $value;
-            }
-
-            $deprecationMap[$attribute] = call_user_func($callable, $element);
-        }
-    }
+//    foreach ($activity as $attribute => $value) {
+//        $callable = match ($attribute) {
+//            'iati_identifier' => 'doesIdentifierHaveDeprecatedCode',
+//            'title' => 'doesTitleHaveDeprecatedCode',
+//            'default_field_values' => 'doesDefaultFieldValuesHaveDeprecatedCode',
+//            'description' => 'doesDescriptionHaveDeprecatedCode',
+//            'activity_date' => 'doesActivityDateHaveDeprecatedCode',
+//            'participating_org',
+//            'participating_organization' => 'doesParticipatingOrgHaveDeprecatedCode',
+//            'recipient_country' => 'doesRecipientCountryHaveDeprecatedCode',
+//            'recipient_region' => 'doesRecipientRegionHaveDeprecatedCode',
+//            'sector' => 'doesSectorHaveDeprecatedCode',
+//            'activity_scope' => 'doesActivityScopeHaveDeprecatedCode',
+//            'activity_status' => 'doesActivityStatusHaveDeprecatedCode',
+//            'budget' => 'doesBudgetHaveDeprecatedCode',
+//            'policy_marker' => 'doesPolicyMarkerHaveDeprecatedCode',
+//            'related_activity' => 'doesRelatedActivityHaveDeprecatedCode',
+//            'contact_info' => 'doesContactInfoHaveDeprecatedCode',
+//            'other_identifier' => 'doesOtherIdentifierHaveDeprecatedCode',
+//            'tag' => 'doesTagHaveDeprecatedCode',
+//            'collaboration_type' => 'doesCollaborationTypeHaveDeprecatedCode',
+//            'default_flow_type' => 'doesDefaultFlowTypeHaveDeprecatedCode',
+//            'default_finance_type' => 'doesDefaultFinanceTypeHaveDeprecatedCode',
+//            'default_tied_status' => 'doesDefaultTiedStatusHaveDeprecatedCode',
+//            'default_aid_type' => 'doesDefaultAidTypeHaveDeprecatedCode',
+//            'country_budget_item' => 'doesCountryBudgetItemHaveDeprecatedCode',
+//            'humanitarian_scope' => 'doesHumanitarianScopeHaveDeprecatedCode',
+//            'capital_spend' => 'doesCapitalSpendHaveDeprecatedCode',
+//            'condition' => 'doesConditionHaveDeprecatedCode',
+//            'legacy_data' => 'doesLegacyDataHaveDeprecatedCode',
+//            'document_link' => 'doesDocumentLinkHaveDeprecatedCode',
+//            'location' => 'doesLocationHaveDeprecatedCode',
+//            'planned_disbursement' => 'doesPlannedDisbursementHaveDeprecatedCode',
+//            default => 'default'
+//        };
+//
+//        if (is_callable($callable)) {
+//            if (in_array($attribute, ['activity_scope', 'activity_status', 'default_flow_type', 'default_finance_type', 'default_tied_status'])) {
+//                $element = ['code'=>$value];
+//            } else {
+//                $element = $value;
+//            }
+//
+//            $deprecationMap[$attribute] = call_user_func($callable, $element);
+//        }
+//    }
 
     return $deprecationMap;
 }

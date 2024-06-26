@@ -11,6 +11,7 @@ use App\XlsImporter\Foundation\XlsValidator\Traits\ErrorValidationRules;
 use App\XlsImporter\Foundation\XlsValidator\Traits\ValidationMessages;
 use App\XlsImporter\Foundation\XlsValidator\Traits\WarningValidationRules;
 use App\XlsImporter\Foundation\XlsValidator\ValidatorInterface;
+use App\XmlImporter\Foundation\Support\Factory\Traits\CriticalErrorValidationRules;
 use Arr;
 
 /**
@@ -18,6 +19,7 @@ use Arr;
  */
 class ActivityValidator implements ValidatorInterface
 {
+    use CriticalErrorValidationRules;
     use ErrorValidationRules;
     use WarningValidationRules;
     use ValidationMessages;
@@ -159,6 +161,7 @@ class ActivityValidator implements ValidatorInterface
         $tempRules = [
             (new TitleRequest())->getCriticalErrorsForTitle('title', Arr::get($activity, 'title', [])),
             (new IdentifierRequest())->getErrorsForIdentifier(true, 'iati_identifier'),
+            $this->getCriticalErrorsForTransactions($activity),
         ];
 
         foreach ($tempRules as $index => $tempRule) {
