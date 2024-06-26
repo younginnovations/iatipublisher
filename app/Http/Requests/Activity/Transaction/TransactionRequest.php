@@ -7,6 +7,7 @@ namespace App\Http\Requests\Activity\Transaction;
 use App\Http\Requests\Activity\ActivityBaseRequest;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\TransactionService;
+use App\Rules\AlreadyInActivity;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
@@ -59,6 +60,25 @@ class TransactionRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return $this->getMessagesForTransaction(request()->except('_token'));
+    }
+
+    public function getCriticalErrorsForTransaction(array $formFields, bool $fileUpload = false, array $activityData = [], array $multipleTransactions = []): array
+    {
+        $rules = [];
+
+        $tempRules = [
+            $this->getCriticalErrorForSector($formFields['sector'], $fileUpload, Arr::get($activityData, 'sector', []), $multipleTransactions),
+            $this->getCriticalErrorForRecipientRegion($formFields['recipient_region'], $fileUpload, Arr::get($activityData, 'recipient_region', [])),
+            $this->getCriticalErrorForRecipientCountry($formFields['recipient_country'], $fileUpload, Arr::get($activityData, 'recipient_country', [])),
+        ];
+
+        foreach ($tempRules as $tempRule) {
+            foreach ($tempRule as $idx => $rule) {
+                $rules[$idx] = $rule;
+            }
+        }
+
+        return $rules;
     }
 
     /**
@@ -415,12 +435,7 @@ class TransactionRequest extends ActivityBaseRequest
         }
 
         $rules = [];
-        $activityService = app()->make(ActivityService::class);
         $transactionService = app()->make(TransactionService::class);
-
-        Validator::extend('already_in_activity', function () {
-            return false;
-        });
 
         Validator::extend('sector_required', function () {
             return false;
@@ -429,20 +444,12 @@ class TransactionRequest extends ActivityBaseRequest
         if (!$fileUpload) {
             $params = $this->route()->parameters();
 
-            if (!$activityService->isElementEmpty($formFields, 'sectorFields') && $activityService->hasSectorDefinedInActivity($params['id'])) {
-                return ['sector' => 'already_in_activity'];
-            }
-
             $transactionId = isset($params['transactionId']) ? (int) $params['transactionId'] : null;
 
             if (is_variable_null($formFields) && $transactionService->hasSectorDefinedInTransaction($params['id'], $transactionId)) {
                 $rules['sector'] = 'sector_required';
             }
         } else {
-            if (!empty($activitySectors) && !$activityService->isElementEmpty($formFields, 'sectorFields')) {
-                return ['sector' => 'already_in_activity'];
-            }
-
             $hasSector = false;
 
             if (!empty($transactions) && count($transactions) > 1) {
@@ -739,24 +746,8 @@ class TransactionRequest extends ActivityBaseRequest
         $activityService = app()->make(ActivityService::class);
 
         if (!$fileUpload) {
-            $params = $this->route()->parameters();
-
-            if ($activityService->hasRecipientRegionDefinedInActivity($params['id']) || $activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
-                $this->hasCountryOrRegionDefinedInActivity = true;
-            }
-
-            if (!$activityService->isElementEmpty($formFields, 'recipientRegionFields')
-                && ($activityService->hasRecipientRegionDefinedInActivity($params['id']) || $activityService->hasRecipientCountryDefinedInActivity($params['id']))) {
-                Validator::extend('already_in_activity', function () {
-                    return false;
-                });
-
-                return ['recipient_region' => 'already_in_activity'];
-            }
         } else {
-            if (!$activityService->isElementEmpty($formFields, 'recipientRegionFields') && !$activityService->isElementEmpty($activityRecipientRegions, 'recipientRegionFields')) {
-                return ['recipient_region' => 'already_in_activity'];
-            } elseif ($activityService->isElementEmpty($activityRecipientRegions, 'recipientRegionFields')) {
+            if ($activityService->isElementEmpty($activityRecipientRegions, 'recipientRegionFields')) {
                 $this->getRecipientRegionOrCountryRuleFromFileUpload($rules, 'recipient_country');
             }
         }
@@ -828,7 +819,6 @@ class TransactionRequest extends ActivityBaseRequest
     public function getMessagesForRecipientRegion(array $formFields): array
     {
         $messages = [
-            'recipient_region.already_in_activity' => 'Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.',
             'recipient_region.country_or_region'   => 'You must add either recipient country or recipient region.',
         ];
 
@@ -877,20 +867,8 @@ class TransactionRequest extends ActivityBaseRequest
         $activityService = app()->make(ActivityService::class);
 
         if (!$fileUpload) {
-            $params = $this->route()->parameters();
-
-            if (!$activityService->isElementEmpty($formFields, 'recipientCountryFields')
-                && ($activityService->hasRecipientCountryDefinedInActivity($params['id']) || $activityService->hasRecipientRegionDefinedInActivity($params['id']))) {
-                Validator::extend('already_in_activity', function () {
-                    return false;
-                });
-
-                return ['recipient_country' => 'already_in_activity'];
-            }
         } else {
-            if (!$activityService->isElementEmpty($formFields, 'recipientCountryFields') && !$activityService->isElementEmpty($activityRecipientCountries, 'recipientCountryFields')) {
-                return ['recipient_country' => 'already_in_activity'];
-            } elseif ($activityService->isElementEmpty($activityRecipientCountries, 'recipientCountryFields')) {
+            if ($activityService->isElementEmpty($activityRecipientCountries, 'recipientCountryFields')) {
                 $this->getRecipientRegionOrCountryRuleFromFileUpload($rules, 'recipient_country');
             }
         }
@@ -1020,6 +998,96 @@ class TransactionRequest extends ActivityBaseRequest
             Session::put('has_region_or_country_defined_in_transaction', true);
         } elseif ($hasRegionOrCountryDefinedInTransaction && (is_array_value_empty($recipientRegion) && is_array_value_empty($recipientCountry))) {
             $rules[$attribute] = 'country_or_region';
+        }
+
+        return $rules;
+    }
+
+    public function getCriticalErrorForRecipientRegion(array $formFields, bool $fileUpload, array $activityRecipientRegions)
+    {
+        if (empty($formFields)) {
+            return [];
+        }
+
+        $rules = [];
+        $activityService = app()->make(ActivityService::class);
+
+        if (!$fileUpload) {
+            $params = $this->route()->parameters();
+
+            if ($activityService->hasRecipientRegionDefinedInActivity($params['id']) || $activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
+                $this->hasCountryOrRegionDefinedInActivity = true;
+            }
+
+            if (!$activityService->isElementEmpty($formFields, 'recipientRegionFields')
+                && ($activityService->hasRecipientRegionDefinedInActivity($params['id']) || $activityService->hasRecipientCountryDefinedInActivity($params['id']))) {
+                Validator::extend('already_in_activity', function () {
+                    return false;
+                });
+
+                return ['recipient_region' => [new AlreadyInActivity()]];
+            }
+        } else {
+            if (!$activityService->isElementEmpty($formFields, 'recipientRegionFields') && !$activityService->isElementEmpty($activityRecipientRegions, 'recipientRegionFields')) {
+                return ['recipient_region' => [new AlreadyInActivity()]];
+            }
+        }
+
+        return $rules;
+    }
+
+    public function getCriticalErrorForRecipientCountry(array $formFields, bool $fileUpload, array $activityRecipientCountries)
+    {
+        if (empty($formFields)) {
+            return [];
+        }
+
+        $rules = [];
+        $activityService = app()->make(ActivityService::class);
+
+        if (!$fileUpload) {
+            $params = $this->route()->parameters();
+
+            if (!$activityService->isElementEmpty($formFields, 'recipientCountryFields')
+                && ($activityService->hasRecipientCountryDefinedInActivity($params['id']) || $activityService->hasRecipientRegionDefinedInActivity($params['id']))) {
+                Validator::extend('already_in_activity', function () {
+                    return false;
+                });
+
+                return ['recipient_country' => [new AlreadyInActivity()]];
+            }
+        } else {
+            if (!$activityService->isElementEmpty($formFields, 'recipientCountryFields') && !$activityService->isElementEmpty($activityRecipientCountries, 'recipientCountryFields')) {
+                return ['recipient_country' => [new AlreadyInActivity()]];
+            }
+        }
+
+        return $rules;
+    }
+
+    public function getCriticalErrorForSector(array $formFields, bool $fileUpload, array $activitySectors, array $transactions = [])
+    {
+        if (empty($formFields)) {
+            return [];
+        }
+
+        $rules = [];
+        $activityService = app()->make(ActivityService::class);
+
+        Validator::extend('already_in_activity', function () {
+            return false;
+        });
+
+        if (!$fileUpload) {
+            $params = $this->route()->parameters();
+
+            if (!$activityService->isElementEmpty($formFields, 'sectorFields') && $activityService->hasSectorDefinedInActivity($params['id'])) {
+                return ['sector' => [new AlreadyInActivity()]];
+            }
+        } else {
+            if (!empty($activitySectors) && !$activityService->isElementEmpty($formFields, 'sectorFields')) {
+                return ['sector' => [new AlreadyInActivity()]];
+            }
         }
 
         return $rules;

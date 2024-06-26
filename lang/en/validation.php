@@ -229,6 +229,7 @@ return [
         ],
     ],
     'not_in_spam_emails' => 'This email has been flagged as spam and cannot be used.',
+    'already_in_activity' => ':attribute is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.',// can i write logic here to check if attribute is something or something and return message accordingly
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes
