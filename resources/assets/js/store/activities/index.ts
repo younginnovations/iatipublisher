@@ -57,6 +57,10 @@ const state = {
     }[],
     showValidationError: false,
     completedSteps: [] as number[],
+    publishing: {
+      response: null as any,
+      activities: null as any,
+    },
   },
 };
 

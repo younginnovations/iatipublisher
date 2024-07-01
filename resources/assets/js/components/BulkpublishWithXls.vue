@@ -17,13 +17,17 @@
         <div class="flex items-center justify-between pb-4">
           <h3 class="flex items-center space-x-2 text-sm text-n-50">
             <span>Multiple Activities </span>
-            {{ activities }}
             <span
               class="flex h-6 w-6 items-center justify-center rounded-full bg-lagoon-10 text-lagoon-50"
               >{{
                 bulkPublishLength > 0
                   ? bulkPublishLength
-                  : activities && Object.keys(activities).length
+                  : store.state.bulkActivityPublishStatus.publishing
+                      .activities &&
+                    Object.keys(
+                      store.state.bulkActivityPublishStatus.publishing
+                        .activities
+                    ).length
               }}
             </span>
           </h3>
@@ -92,7 +96,8 @@
           >
             <ul class="space-y-3">
               <li
-                v-for="(value, name, index) in activities"
+                v-for="(value, name, index) in store.state
+                  .bulkActivityPublishStatus.publishing.activities"
                 :key="index"
                 class="item flex"
               >
@@ -177,7 +182,6 @@ const emit = defineEmits([
 ]);
 
 let refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
-let activities = ref();
 
 let hasFailedActivities = reactive({
   data: {} as actElements,
@@ -198,6 +202,7 @@ onMounted(() => {
 });
 
 const pollingForBulkpublishData = () => {
+  console.log('pollingForBulkpublishData');
   bulkPublishLength.value = store.state.bulkPublishLength;
   const intervalID = setInterval(() => {
     axios.get(`/activities/bulk-publish-status`).then((res) => {
@@ -207,7 +212,8 @@ const pollingForBulkpublishData = () => {
         clearInterval(intervalID);
       }
       if ('data' in response) {
-        activities.value = response.data.activities;
+        store.state.bulkActivityPublishStatus.publishing.activities =
+          response.data.activities;
         completed.value = response.data.status;
         emit('activityPublishedData', response.data);
         // saving in local storage
@@ -246,11 +252,15 @@ const pollingForBulkpublishData = () => {
 
 const bulkPublishStatus = async () => {
   let count = 0;
+  console.log('bulkPublishStatus');
   const checkStatus = setInterval(() => {
     axios.get(`/activities/bulk-publish-status`).then((res) => {
       const response = res.data;
       if ('data' in response) {
-        activities.value = response.data.activities;
+        store.state.bulkActivityPublishStatus.publishing.response =
+          response.data;
+        store.state.bulkActivityPublishStatus.publishing.activities =
+          response.data.activities;
         completed.value = response.data.status;
         emit('activityPublishedData', response.data);
         // saving in local storage
@@ -272,38 +282,12 @@ const bulkPublishStatus = async () => {
       }
     });
     if (count > 5) {
+      console.log('count', count);
       clearInterval(checkStatus);
     }
 
     count++;
   }, 1000);
-
-  await axios.get(`/activities/bulk-publish-status`).then((res) => {
-    const response = res.data;
-    if (!response.publishing) {
-      emit('close');
-    }
-
-    if ('data' in response) {
-      activities.value = response.data.activities;
-      completed.value = response.data.status;
-      emit('activityPublishedData', response.data);
-      // saving in local storage
-      paStorage.value = {
-        publishingActivities: {
-          activities: response.data.activities,
-          status: response.data.status,
-          message: response.data.message,
-        },
-      };
-
-      if (response.data.status !== 'completed') {
-        pollingForBulkpublishData();
-      }
-    } else {
-      completed.value = 'completed';
-    }
-  });
 };
 
 const retryPublishing = () => {
@@ -314,7 +298,8 @@ const retryPublishing = () => {
     hasFailedActivities.data[key].status = 'processing';
   }
 
-  activities.value = hasFailedActivities.data;
+  store.state.bulkActivityPublishStatus.publishing.activities =
+    hasFailedActivities.data;
 
   // api endpoint call
   const endpoint = `/activities/start-bulk-publish?activities=[${hasFailedActivities.ids}]`;
@@ -392,9 +377,12 @@ const percentageWidth = computed(() => {
 });
 
 watch(
-  () => [activities.value, bulkPublishLength.value],
+  () => [
+    store.state.bulkActivityPublishStatus.publishing.activities,
+    bulkPublishLength.value,
+  ],
   () => {
-    if (activities.value) {
+    if (store.state.bulkActivityPublishStatus.publishing.activities) {
       emit('hideLoader');
     }
   }
@@ -412,8 +400,11 @@ watch(
   (value) => emit('toggle', value)
 );
 const getDataFromLocalstorage = () => {
-  activities.value = localStorage.getItem('bulkPublishActivities');
-  activities.value = isJson(activities.value) && JSON.parse(activities.value);
+  store.state.bulkActivityPublishStatus.publishing.activities =
+    localStorage.getItem('bulkPublishActivities');
+  store.state.bulkActivityPublishStatus.publishing.activities =
+    isJson(store.state.bulkActivityPublishStatus.publishing.activities) &&
+    JSON.parse(store.state.bulkActivityPublishStatus.publishing.activities);
 };
 
 const setDataToLocalstorage = () => {

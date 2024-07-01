@@ -38,7 +38,6 @@
       </button>
     </div>
     <div class="max-h-[600px] space-y-6 overflow-y-scroll p-6">
-      {{ store.state.bulkActivityPublishStatus.validationStats }}
       <div>
         <ActivityValidation
           v-if="showValidationPopup"
