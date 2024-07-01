@@ -400,6 +400,7 @@ class TransactionXmlTest extends XmlBaseTest
     {
         $rows = $this->sector_at_one_transaction_empty_at_another_transaction_data();
         $flattenErrors = $this->getErrors($rows);
+//        dd($flattenErrors);
         $this->assertContains('You have declared sector at transaction level so you must declare sector for all the transactions.', $flattenErrors);
     }
 

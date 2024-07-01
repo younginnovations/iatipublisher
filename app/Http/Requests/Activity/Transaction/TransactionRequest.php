@@ -71,9 +71,9 @@ class TransactionRequest extends ActivityBaseRequest
         $rules = [];
 
         $tempRules = [
-            $this->getCriticalErrorForSector($formFields['sector'], $fileUpload, Arr::get($activityData, 'sector', []), $multipleTransactions),
-            $this->getCriticalErrorForRecipientRegion($formFields['recipient_region'], $fileUpload, Arr::get($activityData, 'recipient_region', [])),
-            $this->getCriticalErrorForRecipientCountry($formFields['recipient_country'], $fileUpload, Arr::get($activityData, 'recipient_country', [])),
+            $this->getCriticalErrorForSector(Arr::get($formFields, 'sector', []), $fileUpload, Arr::get($activityData, 'sector', []), $multipleTransactions),
+            $this->getCriticalErrorForRecipientRegion(Arr::get($formFields, 'recipient_region', []), $fileUpload, Arr::get($activityData, 'recipient_region', [])),
+            $this->getCriticalErrorForRecipientCountry(Arr::get($formFields, 'recipient_country', []), $fileUpload, Arr::get($activityData, 'recipient_country', [])),
         ];
 
         foreach ($tempRules as $tempRule) {
@@ -106,14 +106,14 @@ class TransactionRequest extends ActivityBaseRequest
         });
 
         $tempRules = [
-            $this->getTransactionDateRules($formFields['transaction_date']),
-            $this->getValueRules($formFields['value']),
-            $this->getDescriptionRules($formFields['description']),
-            $this->getSectorsRules($formFields['sector'], $fileUpload, Arr::get($activityData, 'sector', []), $multipleTransactions),
-            $this->getWarningForProviderOrg($formFields['provider_organization']),
-            $this->getWarningForReceiverOrg($formFields['receiver_organization']),
-            $this->getWarningForRecipientRegion($formFields['recipient_region'], $fileUpload, Arr::get($activityData, 'recipient_region', [])),
-            $this->getWarningForRecipientCountry($formFields['recipient_country'], $fileUpload, Arr::get($activityData, 'recipient_country', [])),
+            $this->getTransactionDateRules(Arr::get($formFields, 'transaction_date', [])),
+            $this->getValueRules(Arr::get($formFields, 'value', [])),
+            $this->getDescriptionRules(Arr::get($formFields, 'description', [])),
+            $this->getSectorsRules(Arr::get($formFields, 'sector', []), $fileUpload, Arr::get($activityData, 'sector', []), $multipleTransactions),
+            $this->getWarningForProviderOrg(Arr::get($formFields, 'provider_organization', [])),
+            $this->getWarningForReceiverOrg(Arr::get($formFields, 'receiver_organization', [])),
+            $this->getWarningForRecipientRegion(Arr::get($formFields, 'recipient_region', []), $fileUpload, Arr::get($activityData, 'recipient_region', [])),
+            $this->getWarningForRecipientCountry(Arr::get($formFields, 'recipient_country', []), $fileUpload, Arr::get($activityData, 'recipient_country', [])),
         ];
 
         foreach ($tempRules as $tempRule) {
@@ -171,14 +171,14 @@ class TransactionRequest extends ActivityBaseRequest
         ));
 
         $tempRules = [
-            $this->getCriticalTransactionDateRules($formFields['transaction_date']),
-            $this->getCriticalValueRules($formFields['value']),
-            $this->getCriticalDescriptionRules($formFields['description']),
-            $this->getCriticalSectorsRules($formFields['sector'], $fileUpload, Arr::get($activityData, 'sector', [])),
-            $this->getErrorsForProviderOrg($formFields['provider_organization']),
-            $this->getErrorsForReceiverOrg($formFields['receiver_organization']),
-            $this->getErrorsForRecipientRegion($formFields['recipient_region'], $fileUpload, Arr::get($activityData, 'recipient_region', [])),
-            $this->getErrorsForRecipientCountry($formFields['recipient_country'], $fileUpload, Arr::get($activityData, 'recipient_country', [])),
+            $this->getCriticalTransactionDateRules(Arr::get($formFields, 'transaction_date', [])),
+            $this->getCriticalValueRules(Arr::get($formFields, 'value', [])),
+            $this->getCriticalDescriptionRules(Arr::get($formFields, 'description', [])),
+            $this->getCriticalSectorsRules(Arr::get($formFields, 'sector', []), $fileUpload, Arr::get($activityData, 'sector', [])),
+            $this->getErrorsForProviderOrg(Arr::get($formFields, 'provider_organization', [])),
+            $this->getErrorsForReceiverOrg(Arr::get($formFields, 'receiver_organization', [])),
+            $this->getErrorsForRecipientRegion(Arr::get($formFields, 'recipient_region', []), $fileUpload, Arr::get($activityData, 'recipient_region', [])),
+            $this->getErrorsForRecipientCountry(Arr::get($formFields, 'recipient_country', []), $fileUpload, Arr::get($activityData, 'recipient_country', [])),
         ];
 
         foreach ($tempRules as $tempRule) {
@@ -210,14 +210,14 @@ class TransactionRequest extends ActivityBaseRequest
         $messages['aid_type.0.cash_and_voucher_modalities.in'] = 'The transaction aid type code is invalid.';
         $messages['tied_status.0.tied_status_code.in'] = 'The transaction tied status code is invalid.';
         $tempMessages = [
-            $this->getTransactionDateMessages($formFields['transaction_date']),
-            $this->getValueMessages($formFields['value']),
-            $this->getDescriptionMessages($formFields['description']),
-            $this->getSectorsMessages($formFields['sector']),
-            $this->getMessagesForProviderOrg($formFields['provider_organization']),
-            $this->getMessagesForReceiverOrg($formFields['receiver_organization']),
-            $this->getMessagesForRecipientRegion($formFields['recipient_region']),
-            $this->getMessagesForRecipientCountry($formFields['recipient_country']),
+            $this->getTransactionDateMessages(Arr::get($formFields, 'transaction_date', [])),
+            $this->getValueMessages(Arr::get($formFields, 'value', [])),
+            $this->getDescriptionMessages(Arr::get($formFields, 'description', [])),
+            $this->getSectorsMessages(Arr::get($formFields, 'sector', [])),
+            $this->getMessagesForProviderOrg(Arr::get($formFields, 'provider_organization', [])),
+            $this->getMessagesForReceiverOrg(Arr::get($formFields, 'receiver_organization', [])),
+            $this->getMessagesForRecipientRegion(Arr::get($formFields, 'recipient_region', [])),
+            $this->getMessagesForRecipientCountry(Arr::get($formFields, 'recipient_country', [])),
         ];
 
         foreach ($tempMessages as $tempMessage) {

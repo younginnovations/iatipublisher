@@ -34,22 +34,24 @@ function generateDeprecationMap($element, $compareMap, string $path = ''): array
 {
     $results = [];
 
-    foreach ($element as $key => $value) {
-        if (is_array($value)) {
-            $nestedResults = generateDeprecationMap($value, $compareMap, $path . ($path === '' ? '' : '.') . $key);
-            if (!empty($nestedResults)) {
-                $results[$key] = $nestedResults;
-            }
-        } else {
-            if (isset($compareMap[$key])) {
-                $deprecated = false;
-                foreach ($compareMap[$key] as $item) {
-                    if ($item['code'] == $value) {
-                        $deprecated = (string) $value;
-                        break;
-                    }
+    if ($results) {
+        foreach ($element as $key => $value) {
+            if (is_array($value)) {
+                $nestedResults = generateDeprecationMap($value, $compareMap, $path . ($path === '' ? '' : '.') . $key);
+                if (!empty($nestedResults)) {
+                    $results[$key] = $nestedResults;
                 }
-                $results[$key] = $deprecated;
+            } else {
+                if (isset($compareMap[$key])) {
+                    $deprecated = false;
+                    foreach ($compareMap[$key] as $item) {
+                        if ($item['code'] == $value) {
+                            $deprecated = (string) $value;
+                            break;
+                        }
+                    }
+                    $results[$key] = $deprecated;
+                }
             }
         }
     }

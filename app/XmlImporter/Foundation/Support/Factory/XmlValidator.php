@@ -242,6 +242,9 @@ class XmlValidator
     public function init($activity)
     {
         $this->activity = $activity;
+        $tempFlattened = flattenArrayWithKeys($this->activity);
+        $tempFlattened = changeEmptySpaceValueToNullValue($tempFlattened);
+        $this->activity = convertDotKeysToNestedArray($tempFlattened);
 
         return $this;
     }

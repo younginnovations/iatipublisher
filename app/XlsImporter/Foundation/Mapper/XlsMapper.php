@@ -60,6 +60,10 @@ class XlsMapper
             $xlsMapper->fillOrganizationReportingOrg($reportingOrg);
         }
 
+        $tempFlattened = flattenArrayWithKeys($xlsData);
+        $tempFlattened = changeEmptySpaceValueToNullValue($tempFlattened);
+        $xlsData = convertDotKeysToNestedArray($tempFlattened);
+
         $xlsMapper->map($xlsData)->validateAndStoreData();
 
         return $this;
