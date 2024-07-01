@@ -14,19 +14,31 @@
     >
       Activity
     </div>
+    {{ store.state.bulkActivityPublishStatus.publishing.response }}
     <ul
       class="space-y-4 divide-y divide-n-20 px-6 pb-4 text-sm leading-[22px] tracking-normal text-n-50"
     >
-      <li class="pt-4">EU-Angola Dialogue Facility</li>
-      <li class="pt-4">
-        UNFPA Angola Improved national population data systems to map and
-        address inequalities; to advance the achievement of the Sustainable
-        Development Goals and the commitments of the Programme of Action of the
-        International Conference on Population and Development; and to
-        strengthen interventions in humanitarian crises activities
-      </li>
-      <li class="pt-4">
-        Support Program on Public Finance Management and Financial Sector reform
+      <li
+        v-for="(value, name, index) in store.state.bulkActivityPublishStatus
+          .publishing.activities"
+        :key="index"
+        class="item flex pt-4"
+      >
+        <div class="activity-title grow pr-2 text-sm leading-normal text-n-40">
+          {{ value['activity_title'] }}
+        </div>
+        <div class="shrink-0 text-xl">
+          <svg-vue
+            v-if="value['status'] === 'completed'"
+            class="text-spring-50"
+            icon="tick"
+          />
+          <svg-vue
+            v-else-if="value['status'] === 'failed'"
+            class="text-crimson-50"
+            icon="times-circle"
+          />
+        </div>
       </li>
     </ul>
   </div>
@@ -34,6 +46,9 @@
 
 <script setup lang="ts">
 import RollingLoader from '../RollingLoaderComponent.vue';
+import { useStore } from 'Store/activities/index';
+
+const store = useStore();
 </script>
 
 <style scoped></style>
