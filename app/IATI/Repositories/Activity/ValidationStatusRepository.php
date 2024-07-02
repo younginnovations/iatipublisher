@@ -8,7 +8,7 @@ use App\IATI\Repositories\Repository;
 use App\ValidationStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 
 /**
  * Class ValidationStatusRepository.
@@ -104,11 +104,52 @@ class ValidationStatusRepository extends Repository
      */
     public function getActivitiesValidationStatus(array $activityIds): array
     {
-        return $this->model->whereIn('activity_id', $activityIds)
-                            ->select(DB::raw("response->>'title' as title"), 'status')
-                            ->get()
-                            ->pluck('status', 'title')
-                            ->toArray();
+        $allCompleted = true;
+
+        $response = [];
+        $response['status'] = 'processing';
+        $response['total'] = count($activityIds);
+        $response['complete_count'] = 0;
+        $response['failed_count'] = 0;
+        $response['activities'] = [];
+
+        $activities = $this->model->with('activity')->whereIn('activity_id', $activityIds)->get();
+
+        if ($activities->count()) {
+            $result = [];
+
+            foreach ($activities as $activity) {
+                $act = $activity->activity->title;
+                $result[$activity->activity_id] = [
+                    'title'  => Arr::get($act, '0.narrative', ''),
+                    'status' => $activity->status,
+                ];
+
+                if ($activity->status !== 'completed') {
+                    $allCompleted = false;
+                }
+
+                if ($activity->status === 'failed') {
+                    $response['failed_count']++;
+                }
+
+                if ($activity->status === 'completed') {
+                    $response['complete_count']++;
+                }
+            }
+
+            if ($allCompleted) {
+                $response['status'] = 'completed';
+            } elseif ($response['failed_count'] + $response['complete_count'] === $response['total']) {
+                $response['status'] = 'completed';
+            }
+
+            $response['activities'] = $result;
+
+            return $response;
+        }
+
+        return $response;
     }
 
     /**
