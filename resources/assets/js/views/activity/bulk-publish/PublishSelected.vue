@@ -73,6 +73,7 @@
       </template>
 
       <template v-else-if="bulkPublishStep === 2">
+        {{ store.state.startValidation }}
         <BulkPublishingModal
           :deprecation-status-map="deprecationStatusMap"
           :core-in-completed-activities="coreInCompletedActivities"

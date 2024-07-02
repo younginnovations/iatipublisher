@@ -22,9 +22,6 @@
           :validation-stats="
             store.state.bulkActivityPublishStatus.validationStats
           "
-          :validation-names="
-            store.state.bulkActivityPublishStatus.validationNames
-          "
           :error-tab="store.state.bulkActivityPublishStatus.showValidationError"
           :activities-list="
             store.state.bulkActivityPublishStatus.importedActivitiesList

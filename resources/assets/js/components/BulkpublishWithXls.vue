@@ -3,7 +3,10 @@
     <h3 class="pb-2 text-base font-bold leading-6 text-n-50">Publishing</h3>
     <div class="relative w-full rounded-lg bg-white duration-200">
       <button
-        v-if="hasFailedActivities?.ids?.length > 0"
+        v-if="
+          store.state.bulkActivityPublishStatus.publishing.hasFailedActivities
+            ?.ids?.length > 0
+        "
         class="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 rounded-full bg-white p-[1px]"
         @click="
           () => {
@@ -44,7 +47,10 @@
         </div>
 
         <div
-          v-if="hasFailedActivities?.ids?.length === 0"
+          v-if="
+            store.state.bulkActivityPublishStatus.publishing.hasFailedActivities
+              ?.ids?.length === 0
+          "
           class="mb-3 flex items-center"
         >
           <div
@@ -61,7 +67,10 @@
         </div>
 
         <div
-          v-if="hasFailedActivities?.ids?.length > 0"
+          v-if="
+            store.state.bulkActivityPublishStatus.publishing.hasFailedActivities
+              ?.ids?.length > 0
+          "
           class="py-2 text-sm font-medium text-crimson-50"
         >
           Some activities have failed to publish.
@@ -81,7 +90,10 @@
           </button>
 
           <div
-            v-if="hasFailedActivities?.ids?.length > 0"
+            v-if="
+              store.state.bulkActivityPublishStatus.publishing
+                .hasFailedActivities?.ids?.length > 0
+            "
             class="retry flex cursor-pointer items-center text-crimson-50"
             @click="retryPublishing"
           >
@@ -183,26 +195,18 @@ const emit = defineEmits([
 
 let refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
 
-let hasFailedActivities = reactive({
-  data: {} as actElements,
-  ids: [] as number[],
-  status: false,
-});
-
 onMounted(() => {
   setTimeout(() => {
     emit('hideLoader');
   }, 50);
 
   paStorage.value = store.state.bulkpublishActivities;
-
   completed.value =
     paStorage?.value?.publishingActivities?.status ?? 'processing';
   bulkPublishStatus();
 });
 
 const pollingForBulkpublishData = () => {
-  console.log('pollingForBulkpublishData');
   bulkPublishLength.value = store.state.bulkPublishLength;
   const intervalID = setInterval(() => {
     axios.get(`/activities/bulk-publish-status`).then((res) => {
@@ -212,6 +216,8 @@ const pollingForBulkpublishData = () => {
         clearInterval(intervalID);
       }
       if ('data' in response) {
+        store.state.bulkActivityPublishStatus.publishing.response =
+          response.data;
         store.state.bulkActivityPublishStatus.publishing.activities =
           response.data.activities;
         completed.value = response.data.status;
@@ -227,9 +233,12 @@ const pollingForBulkpublishData = () => {
 
         if (completed.value === 'completed') {
           clearInterval(intervalID);
-
+          store.state.bulkActivityPublishStatus.completedSteps = [1, 2];
           failedActivities(paStorage.value.publishingActivities.activities);
-          if (hasFailedActivities?.ids?.length > 0) {
+          if (
+            store.state.bulkActivityPublishStatus.publishing.hasFailedActivities
+              ?.ids?.length > 0
+          ) {
             refreshToastMsg.visibility = true;
             refreshToastMsg.refreshMessageType = false;
             refreshToastMsg.refreshMessage =
@@ -252,7 +261,6 @@ const pollingForBulkpublishData = () => {
 
 const bulkPublishStatus = async () => {
   let count = 0;
-  console.log('bulkPublishStatus');
   const checkStatus = setInterval(() => {
     axios.get(`/activities/bulk-publish-status`).then((res) => {
       const response = res.data;
@@ -273,6 +281,10 @@ const bulkPublishStatus = async () => {
           },
         };
 
+        if (response.data.status === 'completed') {
+          failedActivities(paStorage.value.publishingActivities.activities);
+        }
+
         if (response.data.status !== 'completed') {
           pollingForBulkpublishData();
         }
@@ -282,7 +294,6 @@ const bulkPublishStatus = async () => {
       }
     });
     if (count > 5) {
-      console.log('count', count);
       clearInterval(checkStatus);
     }
 
@@ -294,18 +305,23 @@ const retryPublishing = () => {
   //reset required states
   completed.value = 'processing';
 
-  for (const key in hasFailedActivities.data) {
-    hasFailedActivities.data[key].status = 'processing';
+  for (const key in store.state.bulkActivityPublishStatus.publishing
+    .hasFailedActivities.data) {
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data[
+      key
+    ].status = 'processing';
   }
 
   store.state.bulkActivityPublishStatus.publishing.activities =
-    hasFailedActivities.data;
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data;
 
   // api endpoint call
-  const endpoint = `/activities/start-bulk-publish?activities=[${hasFailedActivities.ids}]`;
-  hasFailedActivities.status = false;
-  hasFailedActivities.ids = [];
-  hasFailedActivities.data = {} as actElements;
+  const endpoint = `/activities/start-bulk-publish?activities=[${store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.ids}]`;
+  store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.status =
+    false;
+  store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.ids = [];
+  store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data =
+    {} as actElements;
 
   axios.get(endpoint).then((res) => {
     const response = res.data;
@@ -332,16 +348,22 @@ const failedActivities = (nestedObject: object) => {
   const failedActivitiesData = filtered && Object.fromEntries(filtered);
 
   if (failedActivitiesID?.length > 0) {
-    hasFailedActivities.status = true;
-    hasFailedActivities.ids = failedActivitiesID;
-    hasFailedActivities.data = failedActivitiesData as actElements;
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.status =
+      true;
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.ids =
+      failedActivitiesID;
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data =
+      failedActivitiesData as actElements;
     refreshToastMsg.refreshMessageType = false;
     refreshToastMsg.refreshMessage =
       'Some activities have failed to publish. Refresh to see changes.';
   } else {
-    hasFailedActivities.status = false;
-    hasFailedActivities.ids = [];
-    hasFailedActivities.data = {} as actElements;
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.status =
+      false;
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.ids =
+      [];
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data =
+      {} as actElements;
   }
 };
 
@@ -441,6 +463,7 @@ watch(
       publishingActivities: localStorage.getItem('publishingActivities') ?? {},
     });
     emptybulkPublishStatus();
+    console.log('bulkPublishLength');
     bulkPublishStatus();
     Object.assign(
       publishingActivities,

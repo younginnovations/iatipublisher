@@ -30,8 +30,8 @@
         </div>
         <ul class="space-y-2 divide-y divide-n-20 px-6 pb-4 duration-200">
           <li
-            v-for="(value, index) in activitiesList"
-            :key="index"
+            v-for="(value, key) in activitiesList"
+            :key="key"
             class="pt-4 text-sm leading-[22px] tracking-normal text-n-50"
           >
             <div class="flex items-center justify-between">
@@ -40,12 +40,12 @@
                   <input
                     v-model="store.state.selectedActivities"
                     type="checkbox"
-                    :value="value.id"
+                    :value="key"
                   />
                   <span class="checkmark"></span>
                 </label>
                 <div class="pl-6">
-                  {{ value.activityName ?? '' }}
+                  {{ value.title ?? '' }}
                 </div>
               </div>
               <div class="flex items-center gap-6">
@@ -54,7 +54,7 @@
                   class="text-xl"
                   icon="warning-activity"
                 />
-                <a :href="`${permalink}${value.id}`" target="_blank" class="">
+                <a :href="`${permalink}${key}`" target="_blank" class="">
                   <svg-vue class="text-sm" icon="open-link" />
                 </a>
               </div>
@@ -90,10 +90,7 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  validationNames: {
-    type: Array,
-    required: true,
-  },
+
   errorTab: {
     type: Boolean,
     required: true,

@@ -15,6 +15,11 @@ interface StateInterface {
   validatingActivities: string;
   validatingActivitiesNames: string[];
 }
+interface actElements {
+  activity_id: number;
+  activity_title: string;
+  status: string;
+}
 
 const state = {
   selectedActivities: [],
@@ -60,6 +65,11 @@ const state = {
     publishing: {
       response: null as any,
       activities: null as any,
+      hasFailedActivities: {
+        data: {} as actElements,
+        ids: [] as number[],
+        status: false,
+      },
     },
   },
 };

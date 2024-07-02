@@ -13,7 +13,10 @@
                   ? 'Checked'
                   : 'Checking'
                 : completedSteps.includes(step.id)
-                ? 'Published'
+                ? store.state.bulkActivityPublishStatus.publishing
+                    .hasFailedActivities
+                  ? 'Failed'
+                  : 'Published'
                 : completedSteps.length == 0
                 ? 'Publish'
                 : 'Publishing'
@@ -69,6 +72,8 @@
 
 <script lang="ts" setup>
 import { defineProps } from 'vue';
+import { useStore } from 'Store/activities/index';
+const store = useStore();
 const steps = [
   {
     name: 'Checking',

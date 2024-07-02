@@ -1,83 +1,90 @@
 <template>
-  <div
-    v-if="
-      showBulkpublishLoader ||
-      (showBulkpublish && activities && Object.keys(activities).length > 0) ||
-      (downloading && !downloadCompleted && !cancelDownload) ||
-      (xlsData && showXlsStatus) ||
-      showValidationPopup
-    "
-    ref="parentElementRef"
-    :style="minimize ? { bottom: `${-(height - 57)}px` } : {}"
-    class="fixed bottom-0 right-5 z-[100] w-[412px] rounded-t-lg bg-n-10 shadow-[0px_2px_12px_0px_rgba(0,0,0,0.12)] transition-all duration-200 ease-linear xl:right-10"
-  >
+  {{ showValidationPopup }}
+  <div>
     <div
-      class="flex items-center justify-between rounded-t-lg border-b border-n-20 bg-eggshell px-6 py-4"
+      v-if="
+        showBulkpublishLoader ||
+        (showBulkpublish && activities && Object.keys(activities).length > 0) ||
+        (downloading && !downloadCompleted && !cancelDownload) ||
+        (xlsData && showXlsStatus) ||
+        showValidationPopup
+      "
+      ref="parentElementRef"
+      :style="minimize ? { bottom: `${-(height - 57)}px` } : {}"
+      class="fixed bottom-0 right-5 z-[100] w-[412px] rounded-t-lg bg-n-10 shadow-[0px_2px_12px_0px_rgba(0,0,0,0.12)] transition-all duration-200 ease-linear xl:right-10"
     >
-      <div class="flex space-x-2">
-        <div class="text-base font-bold text-blue-50">Background Tasks</div>
-        <div
-          class="flex items-center justify-center rounded-full bg-spring-10 px-2 py-1 text-xs text-spring-50"
-        >
-          <span class="flex font-bold"
-            >{{ completeActivityCount }}/
-            <ShimmerLoading
-              v-if="showBulkpublishLoader"
-              class="!mx-1 !h-2.5 !w-3"
-            />
-            <span v-else>{{ processingActivityCount }}</span>
-          </span>
+      <div
+        class="flex items-center justify-between rounded-t-lg border-b border-n-20 bg-eggshell px-6 py-4"
+      >
+        <div class="flex space-x-2">
+          <div class="text-base font-bold text-blue-50">Background Tasks</div>
+          <div
+            class="flex items-center justify-center rounded-full bg-spring-10 px-2 py-1 text-xs text-spring-50"
+          >
+            <span class="flex font-bold"
+              >{{ completeActivityCount }}/
+              <ShimmerLoading
+                v-if="showBulkpublishLoader"
+                class="!mx-1 !h-2.5 !w-3"
+              />
+              <span v-else>{{ processingActivityCount }}</span>
+            </span>
+          </div>
         </div>
+        <button @click="() => (minimize = !minimize)">
+          <svg-vue
+            class="h-3 w-3 text-blue-40 duration-300"
+            icon="dropdown-arrow"
+            :class="{ 'rotate-180': minimize }"
+          />
+        </button>
       </div>
-      <button @click="() => (minimize = !minimize)">
-        <svg-vue
-          class="h-3 w-3 text-blue-40 duration-300"
-          icon="dropdown-arrow"
-          :class="{ 'rotate-180': minimize }"
+      <div class="max-h-[600px] space-y-6 overflow-y-scroll p-6">
+        <div>
+          <ActivityValidation
+            v-if="showValidationPopup"
+            :validation-stats="
+              store.state.bulkActivityPublishStatus.validationStats
+            "
+            :validation-names="
+              store.state.bulkActivityPublishStatus.validationNames
+            "
+            :error-tab="
+              store.state.bulkActivityPublishStatus.showValidationError
+            "
+            @stop-validation="cancelValidationPolling"
+            @proceed="proceedValidation"
+          />
+          <BulkpublishWithXls
+            v-if="
+              showBulkpublish &&
+              activities &&
+              Object.keys(activities).length > 0
+            "
+            key="bulkpublish"
+            @close="closeBulkpublish"
+            @activity-published-data="handleActivityPublishedData"
+            @hide-loader="hideBulkpublishLoader"
+          />
+          <BulkpublishLoaderCard v-if="showBulkpublishLoader" />
+        </div>
+
+        <ActivityDownload
+          v-if="downloading && !downloadCompleted && !cancelDownload"
+          key="download"
         />
-      </button>
-    </div>
-    <div class="max-h-[600px] space-y-6 overflow-y-scroll p-6">
-      <div>
-        <ActivityValidation
-          v-if="showValidationPopup"
-          :validation-stats="
-            store.state.bulkActivityPublishStatus.validationStats
-          "
-          :validation-names="
-            store.state.bulkActivityPublishStatus.validationNames
-          "
-          :error-tab="store.state.bulkActivityPublishStatus.showValidationError"
-          @stop-validation="cancelValidationPolling"
-          @proceed="proceedValidation"
+
+        <XlsLoader
+          v-if="xlsData && showXlsStatus"
+          key="xls"
+          :total-count="totalCount"
+          :processed-count="processedCount"
+          :xls-failed="xlsFailed"
+          :activity-name="activityName"
+          :completed="completed"
+          @close="closeXls"
         />
-        <BulkpublishWithXls
-          v-if="
-            showBulkpublish && activities && Object.keys(activities).length > 0
-          "
-          key="bulkpublish"
-          @close="closeBulkpublish"
-          @activity-published-data="handleActivityPublishedData"
-          @hide-loader="hideBulkpublishLoader"
-        />
-        <BulkpublishLoaderCard v-if="showBulkpublishLoader" />
       </div>
-
-      <ActivityDownload
-        v-if="downloading && !downloadCompleted && !cancelDownload"
-        key="download"
-      />
-
-      <XlsLoader
-        v-if="xlsData && showXlsStatus"
-        key="xls"
-        :total-count="totalCount"
-        :processed-count="processedCount"
-        :xls-failed="xlsFailed"
-        :activity-name="activityName"
-        :completed="completed"
-        @close="closeXls"
-      />
     </div>
   </div>
 </template>
@@ -124,7 +131,6 @@ const publishingActivities = ref<string[]>([]);
 const bulkPublishLength = ref(0);
 const activityPublishedData = ref() as Ref<activityPublished>;
 const downloadStatus = inject('xlsDownloadStatus') as Ref;
-const validatedActivitiesList = ref({});
 
 const pa = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
@@ -250,6 +256,7 @@ watch(
   },
   { deep: true }
 );
+
 watch(
   () => store?.state?.startBulkPublish,
   (value) => {
@@ -265,6 +272,7 @@ watch(
 //     }
 //   }
 // );
+
 const checkValidationStatus = () => {
   pollingForValidation = setInterval(() => {
     axios
@@ -277,7 +285,8 @@ const checkValidationStatus = () => {
         store.state.bulkActivityPublishStatus.validationStats.failed = 0;
         const response = res.data;
         if (response.data && typeof response.data === 'object') {
-          validatedActivitiesList.value = response.data;
+          store.state.bulkActivityPublishStatus.importedActivitiesList =
+            response.data.activities;
           store.state.bulkActivityPublishStatus.validationNames = (
             store.state.validatingActivitiesNames?.length
               ? store.state.validatingActivitiesNames
@@ -285,24 +294,14 @@ const checkValidationStatus = () => {
           ) as string[];
 
           store.state.bulkActivityPublishStatus.validationStats.total =
-            localStorage.getItem('validatingActivitiesNames')?.split('|')
-              ?.length as number;
+            response.data.total;
           store.state.bulkActivityPublishStatus.validationStats.complete =
-            Object.values(response.data).filter(
-              (value) => value === 'completed'
-            ).length;
+            response.data.complete_count;
           store.state.bulkActivityPublishStatus.validationStats.failed =
-            Object.values(response.data).filter(
-              (value) => value === 'failed'
-            ).length;
+            response.data.failed_count;
         }
 
-        if (
-          store.state.bulkActivityPublishStatus.validationStats.total ===
-            store.state.bulkActivityPublishStatus.validationStats?.complete +
-              store.state?.bulkActivityPublishStatus?.validationStats.failed &&
-          store.state.bulkActivityPublishStatus.validationStats.total !== 0
-        ) {
+        if (response.data.status == 'completed') {
           clearInterval(pollingForValidation);
           store.state.bulkActivityPublishStatus.iatiValidatorLoader;
         }
@@ -509,36 +508,5 @@ const hideBulkpublishLoader = () => {
 
 const handleActivityPublishedData = (data) => {
   activityPublishedData.value = data;
-};
-
-watch(
-  () => store.state.bulkActivityPublishStatus.validationStats,
-  () => {
-    if (
-      store.state.bulkActivityPublishStatus.validationStats.complete ===
-      store.state.bulkActivityPublishStatus.validationStats.total
-    ) {
-      getActivityList();
-    }
-  },
-  { deep: true }
-);
-
-const getActivityList = async () => {
-  const response = await axios.get(
-    `/activities/checks-for-activity-bulk-validation`
-  );
-  const activities = response.data.activities;
-  store.state.bulkActivityPublishStatus.importedActivitiesList = Object.keys(
-    JSON.parse(activities)
-  ).map((key) => {
-    const activityName = JSON.parse(activities)[key];
-    const status = validatedActivitiesList.value[activityName];
-    return {
-      id: key,
-      activityName: activityName,
-      status: status,
-    };
-  });
 };
 </script>
