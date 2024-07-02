@@ -28,6 +28,7 @@
     <XlsUploadIndicator
       v-if="
         (xlsData ||
+          store.state.startValidation ||
           (downloading && !downloadCompleted) ||
           publishingActivities ||
           startBulkPublish) &&
@@ -207,7 +208,6 @@ export default defineComponent({
           startBulkPublish.value = true;
           publishingActivities.value =
             store.state.bulkpublishActivities.publishingActivities;
-
           return;
         }
         startBulkPublish.value = false;
@@ -387,6 +387,7 @@ export default defineComponent({
     provide('defaultLanguage', props.defaultLanguage);
 
     return {
+      store,
       activities,
       state,
       isEmpty,

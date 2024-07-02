@@ -21,7 +21,7 @@
           class="item flex pt-4"
         >
           <div
-            class="activity-title grow pr-2 text-sm leading-normal text-n-40"
+            class="activity-title grow pr-2 text-sm leading-normal text-n-50"
           >
             {{ value['activity_title'] }}
           </div>

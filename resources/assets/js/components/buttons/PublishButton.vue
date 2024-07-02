@@ -269,11 +269,6 @@ const loader = ref(false);
 
 const coreElementStatus = coreCompleted.value;
 const hasDeprecatedValueInUse = checkIfHasDeprecatedValueInUse();
-console.log(
-  'hasDeprecatedValueInUse',
-  hasDeprecatedValueInUse,
-  props.deprecationStatusMap
-);
 function checkIfHasDeprecatedValueInUse(): boolean {
   function recursiveCheck(item): boolean {
     if (Array.isArray(item)) {

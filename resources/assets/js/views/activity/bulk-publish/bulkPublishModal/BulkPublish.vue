@@ -51,7 +51,10 @@
 
     <template v-if="percentageWidth !== 100">
       <BtnComponent
-        v-if="props.coreInCompletedActivities.length > 0"
+        v-if="
+          props.coreInCompletedActivities.length > 0 ||
+          props.coreCompletedActivities.length > 0
+        "
         class="bg-white px-6 uppercase"
         type="primary"
         text="Continue publishing Anyway"
@@ -64,6 +67,7 @@
         class="bg-white px-6 uppercase"
         type="primary"
         text="Start publishing"
+        :disabled="newSelectedActivities.length === 0"
         @click="startBulkPublish()"
       />
     </template>
@@ -71,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, computed, watch } from 'vue';
+import { defineProps, defineEmits, computed, watch, ref, provide } from 'vue';
 import WizardIndex from '../wizardSteps/WizardIndex.vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import CheckingActivities from './checkingActivities/CheckingActivities.vue';
@@ -83,6 +87,10 @@ import PublishingActivity from './publishingActivity/PublishingActivity.vue';
 const store = useStore();
 const props = defineProps({
   coreInCompletedActivities: {
+    type: Object,
+    default: () => ({}),
+  },
+  coreCompletedActivities: {
     type: Object,
     default: () => ({}),
   },
@@ -107,6 +115,8 @@ const props = defineProps({
     required: true,
   },
 });
+const newSelectedActivities = ref([] as number[]);
+provide('newSelectedActivities', newSelectedActivities);
 
 const emit = defineEmits([
   'resetPublishStep',

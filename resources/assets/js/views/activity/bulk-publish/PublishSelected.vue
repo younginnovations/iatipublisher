@@ -39,7 +39,9 @@
     </Modal>
 
     <Modal
-      :modal-active="publishAlertValue && !showExistingProcessModal"
+      :modal-active="
+        (publishAlertValue && !showExistingProcessModal) || showValidationPopup
+      "
       :width="popUpWidthChange"
     >
       <template v-if="bulkPublishStep === 1">
@@ -73,10 +75,12 @@
       </template>
 
       <template v-else-if="bulkPublishStep === 2">
-        {{ store.state.startValidation }}
+        validate {{ store.state.validatingActivities }} selected
+        {{ store.state.selectedActivities }}
         <BulkPublishingModal
           :deprecation-status-map="deprecationStatusMap"
           :core-in-completed-activities="coreInCompletedActivities"
+          :core-completed-activities="coreCompletedActivities"
           :core-element-loader="coreElementLoader"
           :validation-activity-loader="validationActivityLoader"
           :selected-activities="store.state.selectedActivities"
@@ -214,7 +218,7 @@ const messageOnCancellation = ref('No bulk publish were cancelled');
 const resetPublishStep = () => {
   bulkPublishStep.value = 1;
   publishAlertValue.value = false;
-  selectedActivities.value = [];
+  store.state.selectedActivities = [];
 };
 
 const popUpWidthChange = computed(() => {
@@ -341,37 +345,40 @@ const stopValidating = async () => {
 };
 
 const startValidation = async () => {
-  try {
-    const activities = store.state.selectedActivities.join(',');
-    validationActivityLoader.value = true;
-    await stopValidating();
-    store.dispatch('updateStartValidation', true);
-    store.dispatch('updateValidatingActivities', activities);
-    localStorage.setItem('validatingActivities', activities);
-    store.dispatch('updateStartBulkPublish', false);
-    await cancelBulkPublish();
+  console.log('startValidation');
+  // try {
+  //   const activities = store.state.selectedActivities.join(',');
+  //   validationActivityLoader.value = true;
+  //   await stopValidating();
+  //   // store.dispatch('updateStartValidation', true);
+  //   store.state.startValidation = true;
 
-    const res = await axios.post(
-      `/activities/validate-activities?activities=[${activities}]`
-    );
-    const response = res.data;
-    store.dispatch('updateValidatingActivitiesNames', response.activities);
-    localStorage.setItem(
-      'validatingActivitiesNames',
-      response.activities.join('|')
-    );
-    if (response.success) {
-      validationErrors.value = response.data;
-    } else {
-      displayToast(response.message, response.success);
-    }
-  } catch (error) {
-    console.error('Validation error:', error);
-    // Handle error here, if needed
-  }
+  //   store.dispatch('updateValidatingActivities', activities);
+  //   localStorage.setItem('validatingActivities', activities);
+  //   store.dispatch('updateStartBulkPublish', false);
+  //   await cancelBulkPublish();
+
+  //   const res = await axios.post(
+  //     `/activities/validate-activities?activities=[${activities}]`
+  //   );
+  //   const response = res.data;
+  //   store.dispatch('updateValidatingActivitiesNames', response.activities);
+  //   localStorage.setItem(
+  //     'validatingActivitiesNames',
+  //     response.activities.join('|')
+  //   );
+  //   if (response.success) {
+  //     validationErrors.value = response.data;
+  //   } else {
+  //     displayToast(response.message, response.success);
+  //   }
+  // } catch (error) {
+  //   console.error('Validation error:', error);
+  // }
 };
 
 const validateActivities = async () => {
+  console.log('validateActivities');
   store.state.bulkActivityPublishStatus.iatiValidatorLoader = true;
   let validatorSuccess = false;
   let publishingSuccess = false;
@@ -402,8 +409,8 @@ const validateActivities = async () => {
  * Bulk publishing activities
  */
 
-let selectedActivities: Ref<number[]> = ref([]);
-provide('selectedActivities', selectedActivities);
+// let selectedActivities: Ref<number[]> = ref([]);
+provide('selectedActivities', store.state.selectedActivities);
 
 // local storage for publishing
 interface paType {
@@ -579,6 +586,20 @@ const publishAfterCancel = () => {
   showCancelledPopup.value = false;
   checkPublish();
 };
+
+const showValidationPopup = computed(() => {
+  return store.state.startValidation || store.state.validationRunning;
+});
+
+watch(
+  () => showValidationPopup.value,
+  (value) => {
+    if (value) {
+      bulkPublishStep.value = 2;
+      store.state.bulkActivityPublishStatus.completedSteps = [];
+    }
+  }
+);
 
 provide('paStorage', pa);
 provide('bulkPublishStatus', bulkPublishStatus);

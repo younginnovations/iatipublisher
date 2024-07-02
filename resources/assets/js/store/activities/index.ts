@@ -22,11 +22,12 @@ interface actElements {
 }
 
 const state = {
-  selectedActivities: [],
+  selectedActivities: [] as number[],
   bulkPublishLength: 0,
   cancelUpload: false,
   startBulkPublish: false,
   startValidation: false,
+  validationRunning: false,
   validatingActivities: '',
   maximizeXls: true,
   startXlsDownload: false,
@@ -48,6 +49,7 @@ const state = {
     },
   },
   bulkActivityPublishStatus: {
+    isMinimized: false,
     iatiValidatorLoader: false,
     validationNames: [] as string[],
     validationStats: {

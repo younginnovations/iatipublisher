@@ -1,5 +1,4 @@
 <template>
-  {{ showValidationPopup }}
   <div>
     <div
       v-if="
@@ -16,6 +15,8 @@
       <div
         class="flex items-center justify-between rounded-t-lg border-b border-n-20 bg-eggshell px-6 py-4"
       >
+        {{ store.state.startValidation }}
+        {{ store.state.validationRunning }}
         <div class="flex space-x-2">
           <div class="text-base font-bold text-blue-50">Background Tasks</div>
           <div
@@ -118,7 +119,6 @@ import { useStorage, useElementSize } from '@vueuse/core';
 import ShimmerLoading from './ShimmerLoading.vue';
 
 const downloadCompleted = ref(false);
-const validationRunning = ref(false);
 
 const cancelDownload = ref(false);
 const showBulkpublish = ref(true);
@@ -135,8 +135,6 @@ const downloadStatus = inject('xlsDownloadStatus') as Ref;
 const pa = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
 });
-
-let pollingForValidation;
 
 const props = defineProps({
   activityName: {
@@ -213,7 +211,7 @@ const checkValidation = async () => {
     );
     if (response.data) {
       const activities = response.data.activities;
-      validationRunning.value = !response.data.success;
+      store.state.validationRunning = !response.data.success;
 
       if (activities) {
         localStorage.setItem(
@@ -235,8 +233,7 @@ const checkValidation = async () => {
 };
 
 const cancelValidationPolling = () => {
-  validationRunning.value = false;
-  clearInterval(pollingForValidation);
+  store.state.validationRunning = false;
 };
 
 watch(
@@ -250,7 +247,7 @@ watch(
       publishingActivities.value =
         pa?.value?.publishingActivities &&
         Object.keys(pa.value.publishingActivities);
-
+      store.state.validationRunning = false;
       return;
     }
   },
@@ -274,7 +271,7 @@ watch(
 // );
 
 const checkValidationStatus = () => {
-  pollingForValidation = setInterval(() => {
+  const poll = () => {
     axios
       .get(
         `/activities/get-validation-status?activities=[${store.state.validatingActivities}]`
@@ -302,13 +299,19 @@ const checkValidationStatus = () => {
         }
 
         if (response.data.status == 'completed') {
-          clearInterval(pollingForValidation);
-          store.state.bulkActivityPublishStatus.iatiValidatorLoader;
+          store.state.bulkActivityPublishStatus.iatiValidatorLoader = false; // Assuming you need to set this to false to stop the loader
+        } else {
+          setTimeout(poll, 3000); // Call poll again after 3 seconds
         }
         store.state.bulkActivityPublishStatus.showValidationError =
           !res.data.success;
+      })
+      .catch(() => {
+        setTimeout(poll, 3000); // Retry after 3 seconds in case of an error
       });
-  }, 2500);
+  };
+
+  poll(); // Initial call to start the polling
 };
 
 watch(
@@ -332,15 +335,15 @@ watch(
 );
 
 watch(
-  () => [store.state.startValidation, validationRunning.value],
+  () => [store.state.startValidation, store.state.validationRunning],
   () => {
-    if (store.state.startValidation || validationRunning.value) {
+    if (store.state.startValidation || store.state.validationRunning) {
       showBulkpublish.value = false;
     }
   }
 );
 const showValidationPopup = computed(() => {
-  return store.state.startValidation || validationRunning.value;
+  return store.state.startValidation || store.state.validationRunning;
 });
 
 onUnmounted(() => {

@@ -38,7 +38,7 @@
               <div>
                 <label class="checkbox_container">
                   <input
-                    v-model="store.state.selectedActivities"
+                    v-model="newSelectedActivities"
                     type="checkbox"
                     :value="key"
                   />
@@ -79,7 +79,16 @@
   </div>
 </template>
 <script setup lang="ts">
-import { watch, defineProps, computed, ref, onMounted, defineEmits } from 'vue';
+import {
+  watch,
+  defineProps,
+  computed,
+  ref,
+  onMounted,
+  defineEmits,
+  inject,
+  Ref,
+} from 'vue';
 import { useStore } from 'Store/activities/index';
 import axios from 'axios';
 import RollingLoader from '../RollingLoaderComponent.vue';
@@ -112,9 +121,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['stopValidation', 'proceed']);
+const newSelectedActivities = inject('newSelectedActivities') as Ref<number[]>;
 
 const hasError = ref(false);
-
 //setting data from local storage to vuex ,to preserve state when window is reloaded
 onMounted(() => {
   //to check if validation need to be show of not when navigated or refreshed
@@ -153,6 +162,26 @@ const stopValidating = () => {
 //     store.dispatch('updateSelectedActivities', []);
 //   }
 // };
+
+watch(
+  () => props.activitiesList,
+  (value) => {
+    const ids = Object.keys(value);
+    newSelectedActivities.value = ids.map((key) => parseInt(key));
+  },
+  {
+    deep: true,
+  }
+);
+
+watch(
+  () => newSelectedActivities.value,
+  (value) => {
+    // localStorage.setItem('validatingActivities', value.join(','));
+    store.dispatch('updateValidatingActivities', value.join(','));
+  },
+  { deep: true }
+);
 </script>
 
 <style scoped lang="scss">
