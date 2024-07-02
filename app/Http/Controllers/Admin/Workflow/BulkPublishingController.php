@@ -410,9 +410,9 @@ class BulkPublishingController extends Controller
 
             if (!empty($activityIds)) {
                 $response = $this->bulkPublishingService->getActivityValidationStatus($activityIds);
-                $hasFailedStatus = in_array('failed', $response);
+                $hasFailedStatus = $response['failed_count'] > 0;
 
-                return response()->json(['success' => !$hasFailedStatus, 'data' => $response, 'total' => count($response)]);
+                return response()->json(['success' => !$hasFailedStatus, 'data' => $response]);
             }
 
             return response()->json(['success' => false, 'message' => 'Activity not selected.']);
