@@ -14,7 +14,7 @@
                   : 'Checking'
                 : completedSteps.includes(step.id)
                 ? store.state.bulkActivityPublishStatus.publishing
-                    .hasFailedActivities
+                    .hasFailedActivities.ids.length > 0
                   ? 'Failed'
                   : 'Published'
                 : completedSteps.length == 0

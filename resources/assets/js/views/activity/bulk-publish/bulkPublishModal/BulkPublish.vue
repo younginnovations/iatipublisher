@@ -17,7 +17,7 @@
       <PublishingActivity />
     </div>
     <div v-else>
-      <div v-if="store.state.startValidation">
+      <div v-if="store.state.startValidation || showValidationPopup">
         <IatiValidate
           :validation-stats="
             store.state.bulkActivityPublishStatus.validationStats
@@ -45,9 +45,17 @@
     <BtnComponent
       class="space"
       type=""
-      text="Go Back"
-      @click="resetPublishStep()"
+      text="Cancel"
+      @click="cancelPublishing()"
     />
+    <button
+      className="flex items-center gap-1.5 font-bold text-bluecoral border border-bluecoral rounded px-2.5 text-xs uppercase"
+      @click="handleMinimize()"
+    >
+      <span> Minimize screen </span>
+
+      <svg-vue icon="open-link" class="rotate-90 text-[10px] text-n-40" />
+    </button>
 
     <template v-if="percentageWidth !== 100">
       <BtnComponent
@@ -114,6 +122,10 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  showValidationPopup: {
+    type: Boolean,
+    required: true,
+  },
 });
 const newSelectedActivities = ref([] as number[]);
 provide('newSelectedActivities', newSelectedActivities);
@@ -123,7 +135,7 @@ const emit = defineEmits([
   'validateActivities',
   'startBulkPublish',
 ]);
-const resetPublishStep = () => {
+const cancelPublishing = () => {
   emit('resetPublishStep');
 };
 
@@ -152,6 +164,11 @@ const startBulkPublish = () => {
   // localStorage.removeItem('validatingActivities');
   store.dispatch('updateStartBulkPublish', true);
   localStorage.removeItem('activityValidating');
+  store.state.bulkActivityPublishStatus.completedSteps = [1];
+};
+
+const handleMinimize = () => {
+  store.dispatch('updateMinimizeScreen', true);
 };
 </script>
 

@@ -40,7 +40,9 @@
 
     <Modal
       :modal-active="
-        (publishAlertValue && !showExistingProcessModal) || showValidationPopup
+        ((publishAlertValue && !showExistingProcessModal) ||
+          showValidationPopup) &&
+        !store.state.bulkActivityPublishStatus.isMinimized
       "
       :width="popUpWidthChange"
     >
@@ -75,8 +77,9 @@
       </template>
 
       <template v-else-if="bulkPublishStep === 2">
-        validate {{ store.state.validatingActivities }} selected
-        {{ store.state.selectedActivities }}
+        {{
+          store.state.bulkActivityPublishStatus.cancelValidationAndPublishing
+        }}
         <BulkPublishingModal
           :deprecation-status-map="deprecationStatusMap"
           :core-in-completed-activities="coreInCompletedActivities"
@@ -84,6 +87,7 @@
           :core-element-loader="coreElementLoader"
           :validation-activity-loader="validationActivityLoader"
           :selected-activities="store.state.selectedActivities"
+          :showValidationPopup="showValidationPopup"
           :permalink="permalink"
           @reset-publish-step="() => resetPublishStep()"
           @validate-activities="() => validateActivities()"
@@ -216,9 +220,9 @@ const messageOnCancellation = ref('No bulk publish were cancelled');
 
 // reset step to zero after closing modal
 const resetPublishStep = () => {
-  bulkPublishStep.value = 1;
   publishAlertValue.value = false;
   store.state.selectedActivities = [];
+  store.state.bulkActivityPublishStatus.cancelValidationAndPublishing = true;
 };
 
 const popUpWidthChange = computed(() => {
@@ -297,13 +301,20 @@ const verifyCoreElements = () => {
     .then((res) => {
       const response = res.data;
       if (response.success) {
+        if (
+          response.data.deprecation_status_map.length == 0 &&
+          response.data.core_elements_completion.incomplete == 0 &&
+          response.data.core_elements_completion.complete !== 0
+        ) {
+          store.dispatch('updateStartValidation', true);
+          validateActivities();
+        }
         coreCompletedActivities.value =
           response.data.core_elements_completion.complete;
         coreInCompletedActivities.value =
           response.data.core_elements_completion.incomplete;
 
         deprecationStatusMap.value = response.data.deprecation_status_map;
-        // bulkPublishStep.value = 2;
       } else {
         coreElementLoader.value = false;
         resetPublishStep();
@@ -345,36 +356,35 @@ const stopValidating = async () => {
 };
 
 const startValidation = async () => {
-  console.log('startValidation');
-  // try {
-  //   const activities = store.state.selectedActivities.join(',');
-  //   validationActivityLoader.value = true;
-  //   await stopValidating();
-  //   // store.dispatch('updateStartValidation', true);
-  //   store.state.startValidation = true;
+  try {
+    const activities = store.state.selectedActivities.join(',');
+    validationActivityLoader.value = true;
+    await stopValidating();
+    // store.dispatch('updateStartValidation', true);
+    store.state.startValidation = true;
 
-  //   store.dispatch('updateValidatingActivities', activities);
-  //   localStorage.setItem('validatingActivities', activities);
-  //   store.dispatch('updateStartBulkPublish', false);
-  //   await cancelBulkPublish();
+    store.dispatch('updateValidatingActivities', activities);
+    localStorage.setItem('validatingActivities', activities);
+    store.dispatch('updateStartBulkPublish', false);
+    await cancelBulkPublish();
 
-  //   const res = await axios.post(
-  //     `/activities/validate-activities?activities=[${activities}]`
-  //   );
-  //   const response = res.data;
-  //   store.dispatch('updateValidatingActivitiesNames', response.activities);
-  //   localStorage.setItem(
-  //     'validatingActivitiesNames',
-  //     response.activities.join('|')
-  //   );
-  //   if (response.success) {
-  //     validationErrors.value = response.data;
-  //   } else {
-  //     displayToast(response.message, response.success);
-  //   }
-  // } catch (error) {
-  //   console.error('Validation error:', error);
-  // }
+    const res = await axios.post(
+      `/activities/validate-activities?activities=[${activities}]`
+    );
+    const response = res.data;
+    store.dispatch('updateValidatingActivitiesNames', response.activities);
+    localStorage.setItem(
+      'validatingActivitiesNames',
+      response.activities.join('|')
+    );
+    if (response.success) {
+      validationErrors.value = response.data;
+    } else {
+      displayToast(response.message, response.success);
+    }
+  } catch (error) {
+    console.error('Validation error:', error);
+  }
 };
 
 const validateActivities = async () => {

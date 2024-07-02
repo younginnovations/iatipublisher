@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<iati-activities version="2.03" generated-datetime="2024-07-03T10:38:56+00:00">
-  <iati-activity last-updated-datetime="2024-07-03T10:38:56+00:00" xml:lang="aa">
+<iati-activities version="2.03" generated-datetime="2024-07-04T11:33:52+00:00">
+  <iati-activity last-updated-datetime="2024-07-04T11:33:52+00:00" xml:lang="aa">
     <iati-identifier>AF-CBR-8888-yipl-test-bulk-publish</iati-identifier>
     <reporting-org type="11" ref="AF-CBR-8888" secondary-reporter="0">
       <narrative xml:lang="aa">My org's name - editted</narrative>

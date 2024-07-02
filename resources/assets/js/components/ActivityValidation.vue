@@ -1,6 +1,15 @@
 <template>
   <div class="relative w-[365px] bg-n-10">
-    <h6 class="mb-2 font-bold">Validating</h6>
+    <div class="flex justify-between">
+      <h6 class="mb-2 font-bold">Publishing Activity</h6>
+      <button
+        class="flex items-center gap-1.5 text-xs font-bold text-bluecoral"
+        @click="handleMinimize"
+      >
+        <span>EXPAND</span>
+        <svg-vue class="text-[9px]" icon="open-link" />
+      </button>
+    </div>
     <div class="relative rounded-lg border border-n-20 bg-white p-4">
       <button
         v-if="percentageWidth === 100 || hasError"
@@ -98,7 +107,15 @@
   </div>
 </template>
 <script setup lang="ts">
-import { watch, defineProps, computed, ref, onMounted, defineEmits } from 'vue';
+import {
+  watch,
+  defineProps,
+  computed,
+  ref,
+  onMounted,
+  defineEmits,
+  watchEffect,
+} from 'vue';
 import { useStore } from 'Store/activities/index';
 import axios from 'axios';
 
@@ -170,5 +187,15 @@ const percentageWidth = computed(() => {
       ? props.validationStats.complete / props.validationStats.total
       : 0) * 100
   );
+});
+
+const handleMinimize = () => {
+  store.dispatch('updateMinimizeScreen', false);
+};
+
+watchEffect(() => {
+  if (store.state.bulkActivityPublishStatus.cancelValidationAndPublishing) {
+    stopValidating();
+  }
 });
 </script>

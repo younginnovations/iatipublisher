@@ -15,8 +15,6 @@
       <div
         class="flex items-center justify-between rounded-t-lg border-b border-n-20 bg-eggshell px-6 py-4"
       >
-        {{ store.state.startValidation }}
-        {{ store.state.validationRunning }}
         <div class="flex space-x-2">
           <div class="text-base font-bold text-blue-50">Background Tasks</div>
           <div
@@ -284,6 +282,7 @@ const checkValidationStatus = () => {
         if (response.data && typeof response.data === 'object') {
           store.state.bulkActivityPublishStatus.importedActivitiesList =
             response.data.activities;
+
           store.state.bulkActivityPublishStatus.validationNames = (
             store.state.validatingActivitiesNames?.length
               ? store.state.validatingActivitiesNames
@@ -512,4 +511,10 @@ const hideBulkpublishLoader = () => {
 const handleActivityPublishedData = (data) => {
   activityPublishedData.value = data;
 };
+
+const validationFailedActivities = computed(() => {
+  return Object.values(
+    store.state.bulkActivityPublishStatus.importedActivitiesList
+  ).some((item) => item.is_valid === 'failed');
+});
 </script>

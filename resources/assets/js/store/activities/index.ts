@@ -14,6 +14,18 @@ interface StateInterface {
   startValidation: boolean;
   validatingActivities: string;
   validatingActivitiesNames: string[];
+  validationRunning: boolean;
+  bulkActivityPublishStatus: {
+    isMinimized: boolean;
+    iatiValidatorLoader: boolean;
+    validationNames: string[];
+    validationStats: {
+      complete: number;
+      total: number;
+      failed: number;
+    };
+    cancelValidationAndPublishing: boolean;
+  };
 }
 interface actElements {
   activity_id: number;
@@ -58,9 +70,9 @@ const state = {
       failed: 0,
     },
     importedActivitiesList: [] as {
-      id: string;
-      activityName: any;
+      title: any;
       status: any;
+      is_valid: any;
     }[],
     showValidationError: false,
     completedSteps: [] as number[],
@@ -73,6 +85,7 @@ const state = {
         status: false,
       },
     },
+    cancelValidationAndPublishing: false,
   },
 };
 
@@ -132,6 +145,15 @@ const mutations = {
     payload: string
   ) {
     state.validatingActivities = payload;
+  },
+  mutateMinimizeScreen: function (state: StateInterface, payload: boolean) {
+    state.bulkActivityPublishStatus.isMinimized = payload;
+  },
+  mutateCancelValidationAndPublishing: function (
+    state: StateInterface,
+    payload: boolean
+  ) {
+    state.validationRunning = payload;
   },
 };
 
@@ -210,6 +232,21 @@ const actions = {
     payload: string
   ) {
     commit('mutateValidatingActivities', payload);
+  },
+
+  updateMinimizeScreen: function (
+    { commit }: CommitFunction,
+    payload: boolean
+  ) {
+    commit('mutateMinimizeScreen', payload);
+  },
+
+  updateCancelValidationAndPublishing: function (
+    { commit }: CommitFunction,
+    payload: boolean
+  ) {
+    console.log('payload', payload);
+    commit('mutateCancelValidationAndPublishing', payload);
   },
 };
 

@@ -50,7 +50,7 @@
               </div>
               <div class="flex items-center gap-6">
                 <svg-vue
-                  v-if="value.status === 'failed'"
+                  v-if="value?.is_valid === false"
                   class="text-xl"
                   icon="warning-activity"
                 />
@@ -177,8 +177,13 @@ watch(
 watch(
   () => newSelectedActivities.value,
   (value) => {
-    // localStorage.setItem('validatingActivities', value.join(','));
-    store.dispatch('updateValidatingActivities', value.join(','));
+    if (
+      store.state.bulkActivityPublishStatus.validationStats.total ==
+      store.state.bulkActivityPublishStatus.validationStats.complete +
+        store.state.bulkActivityPublishStatus.validationStats.failed
+    ) {
+      store.dispatch('updateValidatingActivities', value.join(','));
+    }
   },
   { deep: true }
 );
