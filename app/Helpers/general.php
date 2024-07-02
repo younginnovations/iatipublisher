@@ -1325,7 +1325,11 @@ if (!function_exists('changeEmptySpaceValueToNullValue')) {
     function changeEmptySpaceValueToNullValue(array $arr): array
     {
         foreach ($arr as &$value) {
-            if ($value === ' ') {
+            if (is_string($value)) {
+                $value = trim($value);
+            }
+
+            if ($value === '') {
                 $value = null;
             }
         }
