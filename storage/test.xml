@@ -1,40 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<iati-activities version="2.03" generated-datetime="2024-07-03T04:35:57+00:00">
-  <iati-activity last-updated-datetime="2024-07-03T04:35:57+00:00" xml:lang="aa">
-    <iati-identifier>AF-CBR-8888-test1</iati-identifier>
-    <reporting-org type="11" ref="AF-CBR-8888" secondary-reporter="0">
-      <narrative xml:lang="aa">My org's name - editted</narrative>
+<iati-activities version="2.03" generated-datetime="2024-07-03T08:29:14+00:00">
+  <iati-activity last-updated-datetime="2024-07-03T08:29:14+00:00" xml:lang="en" default-currency="DKK" hierarchy="2" budget-not-provided="2" linked-data-uri="-">
+    <iati-identifier>DK-CVR-18243717-asd</iati-identifier>
+    <reporting-org type="21" ref="DK-CVR-18243717" secondary-reporter="0">
+      <narrative xml:lang="en">ActionAid Denmark (Mellemfolkeligt Samvirke)</narrative>
     </reporting-org>
     <title>
-      <narrative xml:lang="aa">yipl-test-1</narrative>
+      <narrative xml:lang="en">Asd</narrative>
     </title>
-    <description type="1">
-      <narrative xml:lang="ab">test</narrative>
-    </description>
-    <participating-org ref="123" type="11" role="1" activity-id="123">
-      <narrative xml:lang="ae">123</narrative>
-    </participating-org>
-    <activity-status code="2"/>
-    <activity-date type="2" iso-date="2024-06-22">
-      <narrative xml:lang="aa">123</narrative>
-    </activity-date>
-    <recipient-country code="AX" percentage="100">
-      <narrative xml:lang="ab">123</narrative>
-    </recipient-country>
-    <sector code="1"/>
-    <default-flow-type code="22"/>
-    <default-finance-type code="1100"/>
-    <default-aid-type code="1" vocabulary="2"/>
+    <collaboration-type code="3"/>
+    <default-flow-type code="10"/>
+    <default-finance-type code="110"/>
+    <default-aid-type code="B03" vocabulary="1"/>
     <default-tied-status code="5"/>
-    <budget type="1" status="1">
-      <period-start iso-date="2024-06-28"/>
-      <period-end iso-date="2024-07-06"/>
-      <value value-date="2024-06-22">1</value>
-    </budget>
-    <transaction>
-      <transaction-type code="3"/>
-      <transaction-date iso-date="2024-06-22"/>
-      <value currency="ANG" value-date="2024-06-06">1</value>
-    </transaction>
   </iati-activity>
 </iati-activities>

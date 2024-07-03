@@ -113,28 +113,29 @@ class ValidationStatusRepository extends Repository
         $response['failed_count'] = 0;
         $response['activities'] = [];
 
-        $activities = $this->model->with('activity')->whereIn('activity_id', $activityIds)->get();
+        $validatorStatuses = $this->model->with('activity')->whereIn('activity_id', $activityIds)->get();
 
-        if ($activities->count()) {
+        if ($validatorStatuses->count()) {
             $result = [];
 
-            foreach ($activities as $activity) {
-                $act = $activity->activity->title;
-                $result[$activity->activity_id] = [
+            foreach ($validatorStatuses as $validatorStatus) {
+                $act = $validatorStatus->activity->title;
+                $result[$validatorStatus->activity_id] = [
                     'title'  => Arr::get($act, '0.narrative', ''),
-                    'status' => $activity->status,
+                    'status' => $validatorStatus->status,
                 ];
 
-                if ($activity->status !== 'completed') {
+                if ($validatorStatus->status !== 'completed') {
                     $allCompleted = false;
                 }
 
-                if ($activity->status === 'failed') {
+                if ($validatorStatus->status === 'failed') {
                     $response['failed_count']++;
                 }
 
-                if ($activity->status === 'completed') {
+                if ($validatorStatus->status === 'completed') {
                     $response['complete_count']++;
+                    $result[$validatorStatus->activity_id]['is_valid'] = json_decode($validatorStatus->response, true)['response']['valid'];
                 }
             }
 
