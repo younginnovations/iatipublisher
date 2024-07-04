@@ -409,7 +409,20 @@ class BulkPublishingController extends Controller
             $activityIds = json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR);
 
             if (!empty($activityIds)) {
-                $response = $this->bulkPublishingService->getActivityValidationStatus($activityIds);
+                $activities = $this->activityService->getActivitiesHavingIds($activityIds);
+
+                //Only continue with activityIds of activities that are not published
+                $filteredActivityIds = array_filter($activityIds, function ($activityId) use ($activities) {
+                    foreach ($activities as $activity) {
+                        if ($activity['id'] == $activityId && !$activity['linked_to_iati']) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                });
+
+                $response = $this->bulkPublishingService->getActivityValidationStatus($filteredActivityIds);
                 $hasFailedStatus = $response['failed_count'] > 0;
 
                 return response()->json(['success' => !$hasFailedStatus, 'data' => $response]);
@@ -424,7 +437,7 @@ class BulkPublishingController extends Controller
     }
 
     /**
-     * Get Validation responses of activites.
+     * Get Validation responses of activities.
      *
      * @param Request $request
      *

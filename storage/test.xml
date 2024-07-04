@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<iati-activities version="2.03" generated-datetime="2024-07-04T11:33:52+00:00">
-  <iati-activity last-updated-datetime="2024-07-04T11:33:52+00:00" xml:lang="aa">
-    <iati-identifier>AF-CBR-8888-yipl-test-bulk-publish</iati-identifier>
-    <reporting-org type="11" ref="AF-CBR-8888" secondary-reporter="0">
-      <narrative xml:lang="aa">My org's name - editted</narrative>
+<iati-activities version="2.03" generated-datetime="2024-07-04T12:01:05+00:00">
+  <iati-activity last-updated-datetime="2024-07-04T12:01:05+00:00" xml:lang="en" default-currency="DKK" hierarchy="2" budget-not-provided="2" linked-data-uri="-">
+    <iati-identifier>DK-CVR-18243717-aaaa</iati-identifier>
+    <reporting-org type="21" ref="DK-CVR-18243717" secondary-reporter="0">
+      <narrative xml:lang="en">ActionAid Denmark (Mellemfolkeligt Samvirke)</narrative>
     </reporting-org>
     <title>
-      <narrative xml:lang="ab">yipl-test-bulk-publish</narrative>
+      <narrative xml:lang="en">asd</narrative>
     </title>
+    <collaboration-type code="3"/>
+    <default-flow-type code="10"/>
+    <default-finance-type code="110"/>
+    <default-aid-type code="B03" vocabulary="1"/>
+    <default-tied-status code="5"/>
   </iati-activity>
 </iati-activities>
