@@ -193,9 +193,13 @@ const handleMinimize = () => {
   store.dispatch('updateMinimizeScreen', false);
 };
 
-watchEffect(() => {
-  if (store.state.bulkActivityPublishStatus.cancelValidationAndPublishing) {
-    stopValidating();
-  }
-});
+watch(
+  () => store.state.bulkActivityPublishStatus.cancelValidationAndPublishing,
+  (value) => {
+    if (value) {
+      stopValidating();
+    }
+  },
+  { deep: true }
+);
 </script>

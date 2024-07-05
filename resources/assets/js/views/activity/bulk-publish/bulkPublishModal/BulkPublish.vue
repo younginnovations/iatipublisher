@@ -13,7 +13,7 @@
     <WizardIndex
       :completed-steps="store.state.bulkActivityPublishStatus.completedSteps"
     />
-    <div v-if="store?.state?.startBulkPublish">
+    <div v-if="store?.state?.startBulkPublish || showPublishingActivityModal">
       <PublishingActivity />
     </div>
     <div v-else>
@@ -43,41 +43,65 @@
   </div>
   <div class="flex justify-end gap-6 pt-2.5">
     <BtnComponent
-      class="space"
-      type=""
-      text="Cancel"
+      v-if="
+        store.state.bulkActivityPublishStatus.publishing.response?.status ===
+        'completed'
+      "
+      type="primary"
+      text="Close"
+      class="bg-white px-6 uppercase"
       @click="cancelPublishing()"
     />
-    <button
-      className="flex items-center gap-1.5 font-bold text-bluecoral border border-bluecoral rounded px-2.5 text-xs uppercase"
-      @click="handleMinimize()"
-    >
-      <span> Minimize screen </span>
-
-      <svg-vue icon="open-link" class="rotate-90 text-[10px] text-n-40" />
-    </button>
-
-    <template v-if="percentageWidth !== 100">
-      <BtnComponent
-        v-if="
-          props.coreInCompletedActivities.length > 0 ||
-          props.coreCompletedActivities.length > 0
-        "
-        class="bg-white px-6 uppercase"
-        type="primary"
-        text="Continue publishing Anyway"
-        @click="validateActivities()"
-      />
-    </template>
-
     <template v-else>
       <BtnComponent
-        class="bg-white px-6 uppercase"
-        type="primary"
-        text="Start publishing"
-        :disabled="newSelectedActivities.length === 0"
-        @click="startBulkPublish()"
+        class="space"
+        type=""
+        text="Cancel"
+        @click="cancelPublishing()"
       />
+      <button
+        v-if="
+          coreElementLoader ||
+          store.state.bulkActivityPublishStatus.iatiValidatorLoader
+        "
+        className="flex items-center gap-1.5 font-bold text-bluecoral border border-bluecoral rounded px-2.5 py-3 text-xs uppercase"
+        @click="handleMinimize()"
+      >
+        <span> Minimize screen </span>
+        <svg-vue icon="open-link" class="rotate-90 text-[10px] text-n-40" />
+      </button>
+      <template v-if="percentageWidth !== 100">
+        <template
+          v-if="
+            (props.coreInCompletedActivities.length > 0 ||
+              props.coreCompletedActivities.length > 0) &&
+            !coreElementLoader
+          "
+        >
+          <BtnComponent
+            v-if="
+              !store.state.bulkActivityPublishStatus.iatiValidatorLoader &&
+              !store?.state?.startBulkPublish
+            "
+            class="bg-white px-6 uppercase"
+            type="primary"
+            text="Continue publishing Anyway"
+            @click="validateActivities()"
+          />
+        </template>
+      </template>
+
+      <template v-else>
+        <template v-if="!store?.state?.startBulkPublish">
+          <BtnComponent
+            class="bg-white px-6 uppercase"
+            type="primary"
+            text="Start publishing"
+            :disabled="newSelectedActivities.length === 0"
+            @click="startBulkPublish()"
+          />
+        </template>
+      </template>
     </template>
   </div>
 </template>
@@ -126,6 +150,10 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  publishingActivities: {
+    type: Object,
+    default: () => ({}),
+  },
 });
 const newSelectedActivities = ref([] as number[]);
 provide('newSelectedActivities', newSelectedActivities);
@@ -170,6 +198,13 @@ const startBulkPublish = () => {
 const handleMinimize = () => {
   store.dispatch('updateMinimizeScreen', true);
 };
+
+const showPublishingActivityModal = computed(() => {
+  return (
+    props.publishingActivities &&
+    Object.keys(props.publishingActivities).length > 0
+  );
+});
 </script>
 
 <style scoped></style>

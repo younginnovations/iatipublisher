@@ -198,7 +198,6 @@ onMounted(async () => {
 
 const proceedValidation = () => {
   showBulkpublishLoader.value = true;
-
   cancelValidationPolling();
 };
 
@@ -299,6 +298,13 @@ const checkValidationStatus = () => {
 
         if (response.data.status == 'completed') {
           store.state.bulkActivityPublishStatus.iatiValidatorLoader = false; // Assuming you need to set this to false to stop the loader
+          if (!validationFailedActivities.value) {
+            store.dispatch('updateStartValidation', false);
+            // localStorage.removeItem('validatingActivities');
+            store.dispatch('updateStartBulkPublish', true);
+            localStorage.removeItem('activityValidating');
+            store.state.bulkActivityPublishStatus.completedSteps = [1];
+          }
         } else {
           setTimeout(poll, 3000); // Call poll again after 3 seconds
         }
@@ -515,6 +521,15 @@ const handleActivityPublishedData = (data) => {
 const validationFailedActivities = computed(() => {
   return Object.values(
     store.state.bulkActivityPublishStatus.importedActivitiesList
-  ).some((item) => item.is_valid === 'failed');
+  ).some((item) => item.is_valid === false);
 });
+
+watch(
+  () => store.state.stopPublishing,
+  (value) => {
+    if (value) {
+      closeBulkpublish();
+    }
+  }
+);
 </script>

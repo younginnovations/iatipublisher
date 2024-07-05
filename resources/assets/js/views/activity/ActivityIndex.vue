@@ -348,8 +348,6 @@ export default defineComponent({
       tableLoader.value = false;
     }
 
-    console.log(activities, 'activities');
-
     const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
       flush: 'sync',
     });

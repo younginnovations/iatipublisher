@@ -12,6 +12,7 @@ interface StateInterface {
   bulkpublishActivities: object;
   startBulkPublish: boolean;
   startValidation: boolean;
+  startCoreValidation: boolean;
   validatingActivities: string;
   validatingActivitiesNames: string[];
   validationRunning: boolean;
@@ -26,6 +27,7 @@ interface StateInterface {
     };
     cancelValidationAndPublishing: boolean;
   };
+  stopPublishing: boolean;
 }
 interface actElements {
   activity_id: number;
@@ -39,6 +41,7 @@ const state = {
   cancelUpload: false,
   startBulkPublish: false,
   startValidation: false,
+  startCoreValidation: false,
   validationRunning: false,
   validatingActivities: '',
   maximizeXls: true,
@@ -87,6 +90,8 @@ const state = {
     },
     cancelValidationAndPublishing: false,
   },
+  stopPublishing: false,
+  publishAlertValue: false,
 };
 
 const mutations = {
@@ -154,6 +159,12 @@ const mutations = {
     payload: boolean
   ) {
     state.validationRunning = payload;
+  },
+  mutateStopPublishing(state: StateInterface, payload: boolean) {
+    state.stopPublishing = payload;
+  },
+  mutateStartCoreValidation(state: StateInterface, payload: boolean) {
+    state.startCoreValidation = payload;
   },
 };
 
@@ -241,12 +252,27 @@ const actions = {
     commit('mutateMinimizeScreen', payload);
   },
 
+  // stop validation and publishing
   updateCancelValidationAndPublishing: function (
     { commit }: CommitFunction,
     payload: boolean
   ) {
-    console.log('payload', payload);
     commit('mutateCancelValidationAndPublishing', payload);
+  },
+
+  // stop publishing
+  updateStopPublishing: function (
+    { commit }: CommitFunction,
+    payload: boolean
+  ) {
+    commit('mutateStopPublishing', payload);
+  },
+
+  updateStartCoreValidation: function (
+    { commit }: CommitFunction,
+    payload: boolean
+  ) {
+    commit('mutateStartCoreValidation', payload);
   },
 };
 

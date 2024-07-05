@@ -1,7 +1,12 @@
 <template>
   <div class="wizard flex items-end pb-4">
     <div class="h-1.5 flex-1 rounded-3xl bg-turquoise" />
-    <div v-for="step in steps" :key="step.id" class="wizard-step flex-1">
+    <div
+      v-for="step in steps"
+      :key="step.id"
+      class="wizard-step"
+      :class="step.id === 1 ? 'flex-[2_1_0%]' : 'flex-1'"
+    >
       <div class="wizard-step__header">
         <div
           class="wizard-step__header__title pb-3 text-xs font-bold leading-[22px] tracking-normal text-n-50"
