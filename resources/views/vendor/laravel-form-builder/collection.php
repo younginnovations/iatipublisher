@@ -36,16 +36,16 @@
                 </div>' : '';
             $helper_text= (isset($options['options']['helper_text']) && $options['options']['helper_text']!=='')?('<div class="bg-eggshell flex space-x-2 my-2 py-2 px-4 rounded-lg">
                         <svg-vue icon="exclamation-warning" class="h-6 -translate-y-1.5"></svg-vue>
-                        <div class=" font-normal text-n-50 text-xs">' . $options['options']['helper_text'] .' </div> 
+                        <div class=" font-normal text-n-50 text-xs">' . $options['options']['helper_text'] .' </div>
                     </div>'): '';
-            
+
             $label = strtolower(str_replace(' ', '-', $options['label']));
             $error = '';
             $errorSection = '';
 
             if(isset($options['options']['info_text']) && !empty($options['options']['info_text']))
             {
-                $error = '<div class="text-danger-error">' . $options['options']['info_text'] . '</div>';
+                $error = '<div class="text-danger-info">' . $options['options']['info_text'] . '</div>';
                 $errorSection = '<section class="collection_error">' . $error . '</section>';
             }
 
@@ -73,7 +73,7 @@
                     '<div class="flex items-center">' .
                     $help_text . $hover_text .
                     '</div>' .
-                    '</div>' . $errorSection. '</div>' 
+                    '</div>' . $errorSection. '</div>'
                     . $helper_text .
                 '</div>';
             ?>

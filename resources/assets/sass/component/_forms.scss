@@ -327,13 +327,19 @@ aside {
   padding-top: 8px !important;
   padding-bottom: 8px !important;
 }
-.text-danger-error {
+.text-danger-info {
   font-style: italic;
   font-size: 12px;
   line-height: 18px;
   font-weight: 400;
 }
-
+.text-danger-error {
+  color: #d1001e;
+  font-style: italic;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 400;
+}
 .freeze {
   .delete.delete-item {
     background-color: rgba(var(--n-20));

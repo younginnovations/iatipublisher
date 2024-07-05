@@ -652,7 +652,6 @@ class TransactionService
             if ($key === '') {
                 return $transaction->deprecation_status_map;
             }
-            dd($id, $key);
 
             return Arr::get($transaction->deprecation_status_map, $key, []);
         }

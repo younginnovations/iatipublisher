@@ -7,6 +7,7 @@ namespace App\XmlImporter\Foundation\Support\Factory;
 use App\Http\Requests\Activity\Identifier\IdentifierRequest;
 use App\Http\Requests\Activity\ReportingOrg\ReportingOrgRequest;
 use App\Http\Requests\Activity\Title\TitleRequest;
+use App\XmlImporter\Foundation\Support\Factory\Traits\CriticalErrorValidationRules;
 use App\XmlImporter\Foundation\Support\Factory\Traits\ErrorValidationRules;
 use App\XmlImporter\Foundation\Support\Factory\Traits\ValidationMessages;
 use App\XmlImporter\Foundation\Support\Factory\Traits\WarningValidationRules;
@@ -19,6 +20,7 @@ use JsonException;
  */
 class XmlValidator
 {
+    use CriticalErrorValidationRules;
     use ErrorValidationRules;
     use WarningValidationRules;
     use ValidationMessages;
@@ -172,6 +174,7 @@ class XmlValidator
             (new TitleRequest())->getCriticalErrorsForTitle('title'),
             (new IdentifierRequest())->getErrorsForIdentifier(true, 'identifier'),
             $reportingOrgRequest->getCriticalErrorsForReportingOrganization(Arr::get($activity, 'reporting_org')),
+            $this->getCriticalErrorsForTransactions($activity),
         ];
 
         foreach ($tempRules as $index => $tempRule) {
@@ -239,6 +242,9 @@ class XmlValidator
     public function init($activity)
     {
         $this->activity = $activity;
+        $tempFlattened = flattenArrayWithKeys($this->activity);
+        $tempFlattened = changeEmptySpaceValueToNullValue($tempFlattened);
+        $this->activity = convertDotKeysToNestedArray($tempFlattened);
 
         return $this;
     }
