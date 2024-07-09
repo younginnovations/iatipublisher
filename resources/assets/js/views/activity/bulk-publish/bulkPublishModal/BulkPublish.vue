@@ -17,7 +17,13 @@
       <PublishingActivity />
     </div>
     <div v-else>
-      <div v-if="store.state.startValidation || showValidationPopup">
+      <div
+        v-if="
+          store.state.bulkActivityPublishStatus.iatiValidatorLoader ||
+          store.state.startValidation ||
+          showValidationPopup
+        "
+      >
         <IatiValidate
           :validation-stats="
             store.state.bulkActivityPublishStatus.validationStats
@@ -50,15 +56,29 @@
       type="primary"
       text="Close"
       class="bg-white px-6 uppercase"
-      @click="cancelPublishing()"
+      @click="
+        () => {
+          cancelActivityPublishing();
+        }
+      "
     />
     <template v-else>
       <BtnComponent
+        v-if="store?.state?.startBulkPublish || showPublishingActivityModal"
         class="space"
         type=""
         text="Cancel"
-        @click="cancelPublishing()"
+        @click="cancelActivityPublishing()"
       />
+
+      <BtnComponent
+        v-else
+        class="space"
+        type=""
+        text="Cancel"
+        @click="cancelValidation()"
+      />
+
       <button
         v-if="
           coreElementLoader ||
@@ -159,13 +179,11 @@ const newSelectedActivities = ref([] as number[]);
 provide('newSelectedActivities', newSelectedActivities);
 
 const emit = defineEmits([
-  'resetPublishStep',
+  'cancelValidation',
   'validateActivities',
   'startBulkPublish',
+  'cancelBulkPublishing',
 ]);
-const cancelPublishing = () => {
-  emit('resetPublishStep');
-};
 
 const validateActivities = () => {
   emit('validateActivities');
@@ -205,6 +223,14 @@ const showPublishingActivityModal = computed(() => {
     Object.keys(props.publishingActivities).length > 0
   );
 });
+
+const cancelActivityPublishing = () => {
+  emit('cancelBulkPublishing');
+};
+
+const cancelValidation = () => {
+  emit('cancelValidation');
+};
 </script>
 
 <style scoped></style>

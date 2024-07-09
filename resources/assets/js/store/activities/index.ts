@@ -13,6 +13,7 @@ interface StateInterface {
   startBulkPublish: boolean;
   startValidation: boolean;
   startCoreValidation: boolean;
+  startPublishingRetry: boolean;
   validatingActivities: string;
   validatingActivitiesNames: string[];
   validationRunning: boolean;
@@ -42,6 +43,7 @@ const state = {
   startBulkPublish: false,
   startValidation: false,
   startCoreValidation: false,
+  startPublishingRetry: false,
   validationRunning: false,
   validatingActivities: '',
   maximizeXls: true,
@@ -158,13 +160,16 @@ const mutations = {
     state: StateInterface,
     payload: boolean
   ) {
-    state.validationRunning = payload;
+    state.bulkActivityPublishStatus.cancelValidationAndPublishing = payload;
   },
   mutateStopPublishing(state: StateInterface, payload: boolean) {
     state.stopPublishing = payload;
   },
   mutateStartCoreValidation(state: StateInterface, payload: boolean) {
     state.startCoreValidation = payload;
+  },
+  mutatePublishRetry(state: StateInterface, payload: boolean) {
+    state.startBulkPublish = payload;
   },
 };
 
@@ -273,6 +278,9 @@ const actions = {
     payload: boolean
   ) {
     commit('mutateStartCoreValidation', payload);
+  },
+  updatePublishRetry: function ({ commit }: CommitFunction, payload: number) {
+    commit('mutatePublishRetry', payload);
   },
 };
 

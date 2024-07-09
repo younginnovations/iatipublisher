@@ -1,25 +1,38 @@
 <template>
   <div>
-    <h3 class="pb-2 text-base font-bold leading-6 text-n-50">Publishing</h3>
-    <div class="relative w-full rounded-lg bg-white duration-200">
-      <button
+    <div class="flex items-center justify-between">
+      <h3
+        class="flex items-center gap-2 pb-2 text-base font-bold leading-6 text-n-50"
+      >
+        <span> Publishing Activities </span>
+        <span
+          v-if="
+            percentageWidth === 100 &&
+            store.state.bulkActivityPublishStatus.publishing.hasFailedActivities
+              ?.ids?.length === 0
+          "
+          class="inline-block rounded-full bg-turquoise px-2 py-0.5 text-xs font-medium leading-[18px] text-[#3C7080]"
+        >
+          completed
+        </span>
+      </h3>
+      <div
         v-if="
           store.state.bulkActivityPublishStatus.publishing.hasFailedActivities
             ?.ids?.length > 0
         "
-        class="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 rounded-full bg-white p-[1px]"
-        @click="
-          () => {
-            $emit('close');
-          }
-        "
+        class="retry flex cursor-pointer items-center font-bold text-bluecoral"
+        @click="retryPublishing"
       >
-        <svg-vue class="text-sm" icon="cross-icon" />
-      </button>
+        <svg-vue class="mr-1" icon="redo" />
+        <span class="text-xs uppercase">Retry</span>
+      </div>
+    </div>
+    <div class="relative w-full rounded-lg bg-white duration-200">
       <div class="rounded-lg border border-n-20 bg-white p-4">
-        <div class="flex items-center justify-between pb-4">
+        <div class="flex items-center justify-between">
           <h3 class="flex items-center space-x-2 text-sm text-n-50">
-            <span>Multiple Activities</span>
+            <span>Activities</span>
             <span
               class="flex h-6 w-6 items-center justify-center rounded-full bg-lagoon-10 text-lagoon-50"
               >{{
@@ -35,36 +48,43 @@
             </span>
           </h3>
           <button
-            class="rounded-full bg-white p-[1px]"
+            v-if="percentageWidth === 100"
+            class="text-xs font-bold uppercase text-bluecoral"
+          >
+            View detail
+          </button>
+          <button
+            v-else
+            class="text-xs font-bold uppercase text-bluecoral"
             @click="
               () => {
                 $emit('close');
               }
             "
           >
-            <svg-vue icon="delete" class="text-sm text-n-40" />
+            <svg-vue icon="cross" class="mt-2 text-lg text-bluecoral" />
+            <span>Cancel</span>
           </button>
         </div>
 
-        <div
-          v-if="
-            store.state.bulkActivityPublishStatus.publishing.hasFailedActivities
-              ?.ids?.length === 0
-          "
-          class="mb-3 flex items-center"
-        >
+        <template v-if="percentageWidth !== 100">
           <div
-            class="mr-2 flex h-1 flex-1 justify-start rounded-full bg-spring-10"
+            v-if="
+              store.state.bulkActivityPublishStatus.publishing
+                .hasFailedActivities?.ids?.length === 0
+            "
+            class="mb-3 flex items-center pt-4"
           >
             <div
-              :style="{ width: percentageWidth + '%' }"
-              class="h-full rounded-full bg-spring-50"
-            ></div>
+              class="flex h-1 flex-1 justify-start rounded-full bg-spring-10"
+            >
+              <div
+                :style="{ width: percentageWidth + '%' }"
+                class="h-full rounded-full bg-spring-50"
+              ></div>
+            </div>
           </div>
-          <span class="text-sm text-[#344054]">
-            {{ Math.trunc(percentageWidth) }}%
-          </span>
-        </div>
+        </template>
 
         <div
           v-if="
@@ -73,67 +93,11 @@
           "
           class="py-2 text-sm font-medium text-crimson-50"
         >
-          Some activities have failed to publish.
-        </div>
-
-        <div class="flex items-center justify-between">
-          <button
-            class="space-x-1.5 text-sm leading-[22px] text-blue-50"
-            @click="openModel = !openModel"
-          >
-            <span v-text="!openModel ? 'Show details' : 'Hide details'" />
-            <svg-vue
-              :class="{ 'rotate-180': openModel }"
-              class="cursor-pointer text-[7px] text-bluecoral duration-200"
-              icon="dropdown-arrow"
-            />
-          </button>
-
-          <div
-            v-if="
-              store.state.bulkActivityPublishStatus.publishing
-                .hasFailedActivities?.ids?.length > 0
-            "
-            class="retry flex cursor-pointer items-center text-crimson-50"
-            @click="retryPublishing"
-          >
-            <svg-vue class="mr-1" icon="redo" />
-            <span class="text-xs uppercase">Retry</span>
+          <div class="flex items-center gap-6">
+            <div class="h-1 w-full bg-crimson-50"></div>
+            <svg-vue icon="warning-fill" class="flex-shrink-0 text-lg" />
           </div>
-        </div>
-
-        <div v-if="openModel">
-          <div
-            class="bulk-activities max-h-[240px] overflow-y-auto overflow-x-hidden pt-3 transition-all duration-500"
-          >
-            <ul class="space-y-3">
-              <li
-                v-for="(value, name, index) in store.state
-                  .bulkActivityPublishStatus.publishing.activities"
-                :key="index"
-                class="item flex"
-              >
-                <div
-                  class="activity-title grow pr-2 text-sm leading-normal text-n-40"
-                >
-                  {{ value['activity_title'] }}
-                </div>
-                <div class="shrink-0 text-xl">
-                  <svg-vue
-                    v-if="value['status'] === 'completed'"
-                    class="text-spring-50"
-                    icon="tick"
-                  />
-                  <svg-vue
-                    v-else-if="value['status'] === 'failed'"
-                    class="text-crimson-50"
-                    icon="times-circle"
-                  />
-                  <span v-else class="rolling"></span>
-                </div>
-              </li>
-            </ul>
-          </div>
+          <div class="pt-2">Validation failed</div>
         </div>
       </div>
     </div>
@@ -303,34 +267,35 @@ const bulkPublishStatus = async () => {
 
 const retryPublishing = () => {
   //reset required states
-  completed.value = 'processing';
+  // completed.value = 'processing';
 
-  for (const key in store.state.bulkActivityPublishStatus.publishing
-    .hasFailedActivities.data) {
-    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data[
-      key
-    ].status = 'processing';
-  }
+  // for (const key in store.state.bulkActivityPublishStatus.publishing
+  //   .hasFailedActivities.data) {
+  //   store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data[
+  //     key
+  //   ].status = 'processing';
+  // }
 
-  store.state.bulkActivityPublishStatus.publishing.activities =
-    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data;
+  // store.state.bulkActivityPublishStatus.publishing.activities =
+  //   store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data;
 
-  // api endpoint call
-  const endpoint = `/activities/start-bulk-publish?activities=[${store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.ids}]`;
-  store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.status =
-    false;
-  store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.ids = [];
-  store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data =
-    {} as actElements;
+  // // api endpoint call
+  // const endpoint = `/activities/start-bulk-publish?activities=[${store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.ids}]`;
+  // store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.status =
+  //   false;
+  // store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.ids = [];
+  // store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data =
+  //   {} as actElements;
 
-  axios.get(endpoint).then((res) => {
-    const response = res.data;
+  // axios.get(endpoint).then((res) => {
+  //   const response = res.data;
 
-    if (response.success) {
-      paStorage.value.publishingActivities = response.data;
-      bulkPublishStatus();
-    }
-  });
+  //   if (response.success) {
+  //     paStorage.value.publishingActivities = response.data;
+  //     bulkPublishStatus();
+  //   }
+  // });
+  alert('retry');
 };
 
 const failedActivities = (nestedObject: object) => {
@@ -470,6 +435,13 @@ watch(
     );
   },
   { deep: true }
+);
+
+watch(
+  () => store.state.startPublishingRetry,
+  () => {
+    retryPublishing();
+  }
 );
 </script>
 <style lang="scss" scoped>

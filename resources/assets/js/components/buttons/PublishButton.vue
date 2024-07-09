@@ -511,48 +511,6 @@ const checkPublish = () => {
   });
 };
 
-// const publishFunction = () => {
-//   publishValue.value = false;
-
-//   loaderText.value = 'Publishing Activity';
-//   // publishStep.value = 0;
-//   axios.get(`/activities/start-bulk-publish?activities=[${id}]`).then((res) => {
-//     const response = res.data;
-//     store.dispatch('updateUnPublished', response.success);
-//     store.dispatch('updateShowPublished', !response.success);
-
-//     setTimeout(() => {
-//       location.reload();
-//     }, 1000);
-//   });
-// };
-
-// const startBulkPublish = async () => {
-//   let responseData = false;
-//   await axios
-//     .get(
-//       `/activities/start-bulk-publish?activities=[${
-//         localStorage.getItem('validatingActivities') ?? id
-//       }]`
-//     )
-//     .then((res) => {
-//       const response = res.data;
-
-//       if (response.success) {
-//         pa.value.publishingActivities = response.data;
-//         responseData = response.data;
-//       }
-//     })
-//     .then(() => {
-//       validationStore.dispatch('updateBulkpublishActivities', responseData);
-//       validationStore.dispatch('updateStartBulkPublish', true);
-//     });
-
-//   // setTimeout(() => {
-//   //   location.reload();
-//   // }, 1000);
-// };
-
 // publish-republish
 const publishStatus = reactive({
   linked_to_iati: linkedToIati.value,

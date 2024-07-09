@@ -16,7 +16,7 @@
         class="flex items-center justify-between rounded-t-lg border-b border-n-20 bg-eggshell px-6 py-4"
       >
         <div class="flex space-x-2">
-          <div class="text-base font-bold text-blue-50">Background Tasks</div>
+          <div class="text-base font-bold text-blue-50">Ongoing Tasks</div>
           <div
             class="flex items-center justify-center rounded-full bg-spring-10 px-2 py-1 text-xs text-spring-50"
           >
@@ -526,10 +526,8 @@ const validationFailedActivities = computed(() => {
 
 watch(
   () => store.state.stopPublishing,
-  (value) => {
-    if (value) {
-      closeBulkpublish();
-    }
+  () => {
+    closeBulkpublish();
   }
 );
 </script>

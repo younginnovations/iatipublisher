@@ -80,7 +80,8 @@
           :show-validation-popup="showValidationPopup"
           :publishing-activities="pa?.publishingActivities"
           :permalink="permalink"
-          @reset-publish-step="() => resetPublishStep()"
+          @cancelValidation="() => cancelValidation()"
+          @cancelBulkPublishing="() => cancelBulkPublishing()"
           @validate-activities="() => validateActivities()"
         />
       </template>
@@ -88,7 +89,7 @@
 
     <Modal :modal-active="showCancelConfirmationPopup" width="583">
       <div>
-        <BulkPublishingErrorPopup></BulkPublishingErrorPopup>
+        <BulkPublishingErrorPopup />
 
         <div class="mt-4 flex justify-between space-x-4">
           <button
@@ -208,12 +209,38 @@ const showCancelledPopup = ref(false);
 const messageOnCancellation = ref('No bulk publish were cancelled');
 
 // reset step to zero after closing modal
-const resetPublishStep = () => {
+const cancelValidation = () => {
+  store.state.bulkActivityPublishStatus = {
+    ...store.state.bulkActivityPublishStatus,
+    cancelValidationAndPublishing: true,
+    iatiValidatorLoader: false,
+    validationStats: {
+      ...store.state.bulkActivityPublishStatus.validationStats,
+      complete: 0,
+      total: 0,
+      failed: 0,
+    },
+  };
   store.state.publishAlertValue = false;
-  store.state.selectedActivities = [];
-  store.dispatch('updateStopPublishing', true);
-  store.dispatch('updateStartCoreValidation', false);
-  bulkPublishStep.value = 1;
+  validationActivityLoader.value = false;
+  setTimeout(() => {
+    bulkPublishStep.value = 1;
+  }, 1000);
+};
+
+const cancelBulkPublishing = () => {
+  store.dispatch('updateStopPublishing', !store.state.stopPublishing);
+  pa.value.publishingActivities = {};
+  store.state.bulkActivityPublishStatus.publishing = {
+    ...store.state.bulkActivityPublishStatus.publishing,
+    response: null,
+    hasFailedActivities: {
+      data: {} as any,
+      ids: [],
+      status: false,
+    },
+  };
+  cancelValidation();
 };
 
 const popUpWidthChange = computed(() => {
@@ -227,7 +254,6 @@ const popUpWidthChange = computed(() => {
       break;
     default:
   }
-
   return width.value;
 });
 
@@ -285,6 +311,7 @@ let deprecationStatusMap = ref();
 
 const verifyCoreElements = () => {
   coreElementLoader.value = true;
+  store.dispatch('updateCancelValidationAndPublishing', false);
   const activities = store.state.selectedActivities.join(',');
   axios
     .get(`/activities/core-elements-completed?activities=[${activities}]`)
@@ -308,7 +335,7 @@ const verifyCoreElements = () => {
         deprecationStatusMap.value = response.data.deprecation_status_map;
       } else {
         coreElementLoader.value = false;
-        resetPublishStep();
+        cancelValidation();
 
         if (response?.in_progress) {
           emptybulkPublishStatus();
@@ -372,8 +399,7 @@ const startValidation = async () => {
     const activities = store.state.selectedActivities.join(',');
     validationActivityLoader.value = true;
     await stopValidating();
-    // store.dispatch('updateStartValidation', true);
-    store.state.startValidation = true;
+    store.dispatch('updateStartValidation', true);
 
     store.dispatch('updateValidatingActivities', activities);
     localStorage.setItem('validatingActivities', activities);
@@ -469,7 +495,7 @@ const startBulkPublish = () => {
         pa.value.publishingActivities = response.data;
       } else {
         loader.value = false;
-        resetPublishStep();
+        cancelValidation();
 
         if (response?.in_progress) {
           emptybulkPublishStatus();

@@ -85,7 +85,6 @@ import PageTitle from './components/sections/PageTitle.vue';
 import LoadingState from './components/Loader.vue';
 import SystemVersion from './views/superadmin/SystemVersion.vue';
 import VueApexCharts from 'vue3-apexcharts';
-
 const app = createApp({});
 app.use(VueApexCharts);
 
