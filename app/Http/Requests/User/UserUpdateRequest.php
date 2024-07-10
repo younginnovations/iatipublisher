@@ -38,8 +38,8 @@ class UserUpdateRequest extends FormRequest
         ];
 
         if (!empty(Arr::get($request, 'password', null))) {
-            $rules['password'] = ['required', 'string', 'min:6', 'max:255', 'confirmed'];
-            $rules['password_confirmation'] = ['required', 'string', 'min:6', 'max:255'];
+            $rules['password'] = ['required', 'string', 'min:8', 'max:255', 'confirmed'];
+            $rules['password_confirmation'] = ['required', 'string', 'min:8', 'max:255'];
         }
         if ($role === 'admin') {
             $rules['role_id'] = 'required';
