@@ -141,7 +141,7 @@ class XmlQueueWriter
     {
         $activity_identifier = Arr::get($mappedActivity, 'iati_identifier.activity_identifier');
         $xmlValidator = (app(XmlValidator::class))->reportingOrganisationInOrganisation($this->organizationReportingOrg);
-        $existing = $this->activityAlreadyExists($activity_identifier);
+        $existence = $this->activityAlreadyExists($activity_identifier);
         $duplicate = $this->activityIsDuplicate(Arr::get($mappedActivity, 'iati_identifier.iati_identifier_text'));
         $isIdentifierValid = $this->isIdentifierValid(Arr::get($mappedActivity, 'iati_identifier.iati_identifier_text'));
 
@@ -152,19 +152,21 @@ class XmlQueueWriter
         $mappedActivity['org_id'] = $this->orgId;
         $this->success++;
 
-        $this->appendDataIntoFile($mappedActivity, $errors, $existing);
+        $this->appendDataIntoFile($mappedActivity, $errors, $existence);
 
         return true;
     }
 
     /**
-     * @param $identifier
+     * @param $currentActivityIdentifier
      *
      * @return bool
      */
-    public function activityAlreadyExists($identifier): bool
+    public function activityAlreadyExists($currentActivityIdentifier): bool
     {
-        return in_array($identifier, $this->dbIatiIdentifiers, true);
+        $currentActivityIdentifier = trim($currentActivityIdentifier);
+
+        return in_array(trim($currentActivityIdentifier), trimStringValueInArray($this->dbIatiIdentifiers), true);
     }
 
     /**

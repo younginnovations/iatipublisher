@@ -662,7 +662,10 @@ class ActivityRow extends Row
      */
     public function checkExistence($row): static
     {
-        if (in_array(Arr::get($row, 'activity_identifier.0', null), $this->activityIdentifiers)) {
+        $currentActivityIdentifier = Arr::get($row, 'activity_identifier.0', null);
+        $currentActivityIdentifier = trim($currentActivityIdentifier);
+
+        if (in_array($currentActivityIdentifier, array_map('trim', $this->activityIdentifiers))) {
             $this->existence = true;
         }
 

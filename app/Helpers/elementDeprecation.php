@@ -11,7 +11,7 @@ function hasDeprecatedValue($element, $compareMap): bool
             }
         } else {
             if (isset($compareMap[$key])) {
-                foreach ($compareMap[$key] ?? [] as $item) {
+                foreach ($compareMap[$key] as $item) {
                     if ($item['code'] == $value) {
                         return true;
                     }

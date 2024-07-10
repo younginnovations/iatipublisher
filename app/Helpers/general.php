@@ -1350,3 +1350,16 @@ if (!function_exists('convertDotKeysToNestedArray')) {
         return $result;
     }
 }
+
+if (!function_exists('trimStringValueInArray')) {
+    function trimStringValueInArray($array): array
+    {
+        return array_map(function ($item) {
+            if (is_string($item)) {
+                return trim($item);
+            }
+
+            return $item;
+        }, $array);
+    }
+}
