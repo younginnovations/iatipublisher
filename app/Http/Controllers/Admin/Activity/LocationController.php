@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\LocationService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class LocationController
@@ -44,7 +45,8 @@ class LocationController extends Controller
         try {
             $element = getElementSchema('location');
             $activity = $this->locationService->getActivityData($id);
-            $form = $this->locationService->formGenerator($id);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'location', []);
+            $form = $this->locationService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'location'];
 
             return view('admin.activity.location.edit', compact('form', 'activity', 'data'));

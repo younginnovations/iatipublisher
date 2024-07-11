@@ -47,7 +47,16 @@ class BudgetService
      */
     public function update($id, $activityBudget): bool
     {
-        return $this->activityRepository->update($id, ['budget' => array_values($this->setBudgets($activityBudget['budget']))]);
+        $budget = array_values($this->setBudgets($activityBudget['budget']));
+
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['budget'] = doesBudgetHaveDeprecatedCode($budget);
+
+        return $this->activityRepository->update($activity->id, [
+            'budget'                 => $budget,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -85,13 +94,13 @@ class BudgetService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('budget');
         $model['budget'] = $this->activityRepository->find($id)->budget;
         $this->parentCollectionFormCreator->url = route('admin.activity.budget.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

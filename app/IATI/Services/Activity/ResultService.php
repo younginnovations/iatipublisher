@@ -121,6 +121,7 @@ class ResultService
     public function create(array $resultData): Model
     {
         $resultData['result'] = $this->sanitizeData($resultData['result']);
+        $resultData['deprecation_status_map'] = refreshResultDeprecationStatusMap($resultData['result']);
 
         return $this->resultRepository->store($resultData);
     }
@@ -136,6 +137,7 @@ class ResultService
     public function update($resultId, array $resultData): bool
     {
         $resultData['result'] = $this->sanitizeData($resultData['result']);
+        $resultData['deprecation_status_map'] = refreshResultDeprecationStatusMap($resultData['result']);
 
         return $this->resultRepository->update($resultId, $resultData);
     }
@@ -283,30 +285,39 @@ class ResultService
      * @return Form
      * @throws \JsonException
      */
-    public function createFormGenerator($activityId): Form
+    public function createFormGenerator($activityId, $activityDefaultFieldValues): Form
     {
         $element = getElementSchema('result');
         $this->resultElementFormCreator->url = route('admin.activity.result.store', $activityId);
 
-        return $this->resultElementFormCreator->editForm([], $element, 'POST', '/activity/' . $activityId);
+        return $this->resultElementFormCreator->editForm([], $element, 'POST', '/activity/' . $activityId, overRideDefaultFieldValue : $activityDefaultFieldValues);
     }
 
     /**
      * Generates result edit form.
      *
-     * @param $activityId
      * @param $resultId
      *
+     * @param $activityId
+     * @param $activityDefaultFieldValues
      * @return Form
      * @throws \JsonException
      */
-    public function editFormGenerator($resultId, $activityId): Form
+    public function editFormGenerator($resultId, $activityId, $activityDefaultFieldValues): Form
     {
         $element = getElementSchema('result');
         $activityResult = $this->getResult($resultId);
+        $deprecationStatusMap = Arr::get($activityResult->toArray(), 'deprecation_status_amp', []);
         $this->resultElementFormCreator->url = route('admin.activity.result.update', [$activityId, $resultId]);
 
-        return $this->resultElementFormCreator->editForm($activityResult->result, $element, 'PUT', '/activity/' . $activityId);
+        return $this->resultElementFormCreator->editForm(
+            $activityResult->result,
+            $element,
+            method: 'PUT',
+            parent_url: '/activity/' . $activityId,
+            overRideDefaultFieldValue: $activityDefaultFieldValues,
+            deprecationStatusMap: $deprecationStatusMap
+        );
     }
 
     /**
@@ -369,7 +380,7 @@ class ResultService
                     ],
                     'document-link' => $this->buildDocumentLink(Arr::get($result, 'document_link', [])),
                     'reference'     => $this->buildReference(Arr::get($result, 'reference', []), 'vocabulary-uri'),
-                    'indicator'     => $this->buildIndicator($totalResult->indicators()->orderBy('created_at', 'asc')->get()),
+                    'indicator'     => $this->buildIndicator($totalResult->indicators->sortBy('created_at')),
                 ];
             }
         }
@@ -406,7 +417,7 @@ class ResultService
                     'document-link' => $this->buildDocumentLink(Arr::get($indicator, 'document_link', [])),
                     'reference'     => $this->buildReference(Arr::get($indicator, 'reference', []), 'indicator-uri', 'indicator_uri'),
                     'baseline'      => $this->buildBaseline(Arr::get($indicator, 'baseline', []), Arr::get($indicator, 'measure', null)),
-                    'period'        => $this->buildPeriod($totalIndicator->periods()->orderBy('created_at', 'asc')->get(), Arr::get($indicator, 'measure', null)),
+                    'period'        => $this->buildPeriod($totalIndicator->periods->sortBy('created_at'), Arr::get($indicator, 'measure', null)),
                 ];
             }
         }
@@ -542,5 +553,20 @@ class ResultService
     public function insert($results): bool
     {
         return $this->resultRepository->insert($results);
+    }
+
+    public function getDeprecationStatusMap($id = '', $key = '')
+    {
+        if ($id) {
+            $result = $this->resultRepository->find($id);
+
+            if (!$key) {
+                return $result->deprecation_status_map;
+            }
+
+            return Arr::get($result->deprecation_status_map, $key, []);
+        }
+
+        return [];
     }
 }

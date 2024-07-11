@@ -75,24 +75,30 @@ class NameService
     public function update($id, $organizationName): bool
     {
         $organizationName = array_values($organizationName['narrative']);
+        $organization = $this->organizationRepository->find($id);
+        $deprecationStatusMap = $organization->deprecation_status_map;
+        $deprecationStatusMap['name'] = doesOrganisationNameHaveDeprecatedCode($organizationName);
 
-        return $this->organizationRepository->update($id, ['name' => ['narrative'=>$organizationName]]);
+        return $this->organizationRepository->update($id, [
+            'name'                   => ['narrative' => $organizationName],
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
      * Generates name form.
      *
      * @param $id
-     *
+     * @param array $deprecationStatusMap
      * @return Form
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $deprecationStatusMap = []): Form
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
         $model['narrative'] = $this->getNameData($id);
         $this->baseFormCreator->url = route('admin.organisation.name.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['name'], 'PUT', '/organisation');
+        return $this->baseFormCreator->editForm($model, $element['name'], 'PUT', '/organisation', deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

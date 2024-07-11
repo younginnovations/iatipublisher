@@ -32,17 +32,9 @@ class CollaborationTypeRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getErrorsForCollaborationType($collaboration = null): array
+    public function getWarningForCollaborationType($collaboration = null): array
     {
-        if ($collaboration && is_array($collaboration)) {
-            return [
-                'collaboration_type' => 'nullable|size:1',
-            ];
-        }
-
-        return [
-            'collaboration_type' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('CollaborationType', 'Activity', false)))),
-        ];
+        return [];
     }
 
     /**
@@ -52,9 +44,19 @@ class CollaborationTypeRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getWarningForCollaborationType($collaboration = null): array
+    public function getErrorsForCollaborationType($collaboration = null): array
     {
-        return [];
+        if ($collaboration && is_array($collaboration)) {
+            return [
+                'collaboration_type' => 'nullable|size:1',
+            ];
+        }
+
+        return [
+            'collaboration_type' => sprintf('nullable|in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('CollaborationType', 'Activity', false)
+            ))),
+        ];
     }
 
     /**
@@ -65,8 +67,8 @@ class CollaborationTypeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => 'The collaboration type does not exist.',
-            'size'      => 'The collaboration type cannot have more than one value.',
+            'in'   => 'The collaboration type does not exist.',
+            'size' => 'The collaboration type cannot have more than one value.',
         ];
     }
 }

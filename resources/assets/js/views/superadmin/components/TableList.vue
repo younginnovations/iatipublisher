@@ -63,7 +63,7 @@
         <div
           class="flex h-full w-full justify-between align-middle text-xs font-bold uppercase text-bluecoral"
         >
-          <span>Publisher Type</span>
+          <span>Organisation Type</span>
           <span class="flex items-center">
             <span
               v-if="filter.publisher_type.length"
@@ -96,7 +96,7 @@
           >
             <MultiSelectWithSearch
               class="relative !z-[1000]"
-              header="Publisher Type"
+              header="Organisation Type"
               :list-items="publisherTypes"
               @change-selected-publisher="setSelectedPublisher"
               @close="showMultiSelectWithSearch = false"
@@ -106,13 +106,13 @@
       </div> -->
       <span
         class="multiselect-label-wrapper"
-        :style="generateLabel('publisher type')"
+        :style="generateLabel('Organisation Type')"
       >
         <Multiselect
           id="publisher-type"
           v-model="filter.publisher_type"
           :options="publisherTypes"
-          placeholder="PUBLISHER TYPE"
+          placeholder="Organisation Type"
           mode="multiple"
           :taggable="true"
           :close-on-select="true"
@@ -171,7 +171,7 @@
       <span
         v-for="(item, index) in filter.country"
         :key="index"
-        class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+        class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
       >
         <span class="text-n-40">Country:</span>
         <span
@@ -188,7 +188,7 @@
 
     <span v-show="filter.completeness" class="inline-flex flex-wrap gap-2">
       <span
-        class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+        class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
       >
         <span class="text-n-40">Setup Completeness:</span>
         <span
@@ -205,7 +205,7 @@
 
     <span v-show="filter.registration_type" class="inline-flex flex-wrap gap-2">
       <span
-        class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+        class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
       >
         <span class="text-n-40">Registration Type:</span>
         <span
@@ -227,9 +227,9 @@
       <span
         v-for="(item, index) in filter.publisher_type"
         :key="index"
-        class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+        class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
       >
-        <span class="text-n-40">Publisher type:</span>
+        <span class="text-n-40">Organisation Type:</span>
         <span
           class="max-w-[500px] overflow-x-hidden text-ellipsis whitespace-nowrap"
           >{{ publisherTypes[item] }}
@@ -249,7 +249,7 @@
       <span
         v-for="(item, index) in filter.data_license"
         :key="index"
-        class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+        class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
       >
         <span class="text-n-40">Data License:</span>
         <span
@@ -268,7 +268,7 @@
       class="inline-flex flex-wrap gap-2"
     >
       <span
-        class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+        class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
       >
         <span>
           <span class="text-n-40"> Date range: </span>
@@ -427,7 +427,7 @@
                     }-arrow`"
                   />
                 </span>
-                <span>Publisher Type</span>
+                <span>Organisation Type</span>
               </a>
             </th>
             <th id="data_licence" scope="col" style="width: 173px">
@@ -484,7 +484,7 @@
                     {{ data?.user?.email }}
                   </div>
                   <div
-                    class="absolute top-full left-0 hidden rounded bg-eggshell p-2 shadow-sm group-hover:block"
+                    class="absolute left-0 top-full hidden rounded bg-eggshell p-2 shadow-sm group-hover:block"
                   >
                     {{ data?.user?.email }}
                   </div>
@@ -585,7 +585,7 @@
                 {{ showMappedData('data_license', data, dataLicenses) }}
               </div>
             </td>
-            <td>
+            <td class="border-this flex">
               <div>
                 <BtnComponent
                   text="proxy"
@@ -594,6 +594,9 @@
                   @click="proxyUser(<number>data?.user?.id)"
                 />
               </div>
+              <button @click="openDeleteModal(data)">
+                <svg-vue class="w-10 text-lg text-n-40" icon="delete" />
+              </button>
             </td>
           </tr>
         </tbody>
@@ -609,6 +612,30 @@
     </div>
     <div></div>
   </div>
+  <PopupModal :modal-active="deleteModal" @close="toggleDeleteConfirmation">
+    <div class="title mb-6 flex">
+      <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
+      <b>Delete organisation</b>
+    </div>
+    <p class="rounded-lg bg-rose p-4">
+      Are you sure you want to delete <b> {{ deleteOrgName }}</b> ?
+    </p>
+    <p class="flex items-center gap-2 px-2">
+      <label class="checkbox">
+        <input id="markAsSpam" v-model="markAsSpam" type="checkbox" />
+        <span class="checkmark" />
+      </label>
+      <label for="markAsSpam"> Mark associated emails as spam.</label>
+    </p>
+    <div class="mt-6 flex justify-end space-x-2">
+      <button class="secondary-btn font-bold" @click="toggleDeleteConfirmation">
+        Cancel
+      </button>
+      <button class="primary-btn !px-10" @click="deleteOrg(deleteId)">
+        Delete <SpinnerLoader v-if="showLoader"></SpinnerLoader>
+      </button>
+    </div>
+  </PopupModal>
 </template>
 <script lang="ts">
 import {
@@ -635,10 +662,14 @@ import Multiselect from '@vueform/multiselect';
 import { watchIgnorable } from '@vueuse/core';
 import DateRangeWidget from 'Components/DateRangeWidget.vue';
 import { useStore } from 'Store/activities/index';
+import PopupModal from 'Components/PopupModal.vue';
+import SpinnerLoader from 'Components/spinnerLoader.vue';
 
 export default defineComponent({
   name: 'TableList',
   components: {
+    SpinnerLoader,
+    PopupModal,
     BtnComponent: BtnComponent,
     Pagination: Pagination,
     Multiselect: Multiselect,
@@ -676,6 +707,48 @@ export default defineComponent({
     const dateType = ref('All Time');
 
     const store = useStore();
+
+    const deleteId = ref('');
+    const deleteOrgName = ref('');
+    const deleteModal = ref(false);
+    const markAsSpam = ref(false);
+    const showLoader = ref(false);
+
+    function toggleDeleteConfirmation() {
+      deleteModal.value = !deleteModal.value;
+      markAsSpam.value = false;
+      showLoader.value = false;
+    }
+
+    const openDeleteModal = (organization) => {
+      deleteModal.value = true;
+      deleteId.value = organization.id;
+      deleteOrgName.value = organization.name[0]?.narrative;
+    };
+
+    const deleteOrg = async (orgId) => {
+      showLoader.value = true;
+
+      const response = await axios.delete(
+        `/organization/${orgId}` + (markAsSpam.value ? '?markAsSpam=true' : '')
+      );
+
+      showLoader.value = false;
+      deleteModal.value = false;
+      markAsSpam.value = false;
+      toastMessage.message = response.data.message;
+      toastMessage.type = response.data.success;
+      toastMessage.visibility = true;
+
+      if (response.data.success) {
+        fetchOrganisation();
+      }
+
+      setTimeout(() => {
+        toastMessage.visibility = false;
+        toastMessage.message = '';
+      }, 3000);
+    };
 
     //typeface
     interface organizationInterface {
@@ -1112,7 +1185,15 @@ export default defineComponent({
       showMappedData,
       totalOrganisation,
       countriesWithPrefix,
+      deleteModal,
+      deleteOrgName,
+      deleteId,
       generateLabel,
+      toggleDeleteConfirmation,
+      openDeleteModal,
+      deleteOrg,
+      markAsSpam,
+      showLoader,
     };
   },
 });

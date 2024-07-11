@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Setting;
 
+use App\Exceptions\PublisherIdChangeByIatiAdminException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Setting\DefaultFormRequest;
 use App\Http\Requests\Setting\PublisherFormRequest;
-use App\IATI\Services\ApiLog\ApiLogService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
-use GuzzleHttp\Client;
+use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -18,7 +18,10 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use JsonException;
+use Throwable;
 
 /**
  * Class SettingController.
@@ -27,7 +30,7 @@ class SettingController extends Controller
 {
     protected OrganizationService $organizationService;
     protected SettingService $settingService;
-    protected ApiLogService $apiLogService;
+
     protected DatabaseManager $db;
 
     /**
@@ -35,14 +38,12 @@ class SettingController extends Controller
      *
      * @param OrganizationService $organizationService
      * @param SettingService      $settingService
-     * @param ApiLogService   $apiLogService
      * @param DatabaseManager     $db
      */
-    public function __construct(OrganizationService $organizationService, SettingService $settingService, ApiLogService $apiLogService, DatabaseManager $db)
+    public function __construct(OrganizationService $organizationService, SettingService $settingService, DatabaseManager $db)
     {
         $this->organizationService = $organizationService;
         $this->settingService = $settingService;
-        $this->apiLogService = $apiLogService;
         $this->db = $db;
     }
 
@@ -54,19 +55,19 @@ class SettingController extends Controller
     public function index(): Factory|View|Application|RedirectResponse
     {
         try {
-            $currencies = getCodeList('Currency', 'Organization');
-            $languages = getCodeList('Language', 'Organization');
+            $currencies = getCodeList('Currency', 'Organization', filterDeprecated: true);
+            $languages = getCodeList('Language', 'Organization', filterDeprecated: true);
             $humanitarian = trans('setting.humanitarian_types');
-            $budgetNotProvided = getCodeList('BudgetNotProvided', 'Activity');
-            $defaultCollaborationType = getCodeList('CollaborationType', 'Activity');
-            $defaultFlowType = getCodeList('FlowType', 'Activity');
-            $defaultFinanceType = getCodeList('FinanceType', 'Activity');
-            $defaultAidType = getCodeList('AidType', 'Activity');
-            $defaultTiedStatus = getCodeList('TiedStatus', 'Activity');
+            $budgetNotProvided = getCodeList('BudgetNotProvided', 'Activity', filterDeprecated: true);
+            $defaultCollaborationType = getCodeList('CollaborationType', 'Activity', filterDeprecated: true);
+            $defaultFlowType = getCodeList('FlowType', 'Activity', filterDeprecated: true);
+            $defaultFinanceType = getCodeList('FinanceType', 'Activity', filterDeprecated: true);
+            $defaultAidType = getCodeList('AidType', 'Activity', filterDeprecated: true);
+            $defaultTiedStatus = getCodeList('TiedStatus', 'Activity', filterDeprecated: true);
             $userRole = Auth::user()->role->role;
 
             return view('admin.settings.index', compact('currencies', 'languages', 'humanitarian', 'budgetNotProvided', 'userRole', 'defaultCollaborationType', 'defaultFlowType', 'defaultFinanceType', 'defaultAidType', 'defaultTiedStatus'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.index')->with('error', 'Error while rendering setting page');
@@ -75,15 +76,45 @@ class SettingController extends Controller
 
     /**
      * @return JsonResponse
+     *
+     * @throws GuzzleException
      */
     public function getSetting(): JsonResponse
     {
+        $setting = null;
+
         try {
             $setting = $this->settingService->getSetting();
 
+            $publisherData = [
+                'publisher_id' => $setting->publishing_info['publisher_id'],
+                'api_token'    => Arr::get($setting->publishing_info, 'api_token', false),
+            ];
+
+            $verifyPublisherInfo = $this->verifyPublisher($publisherData);
+            $verifyApiInfo = $this->verifyApi($publisherData);
+            [$tokenStatus] = $this->getTokenStatusAndMessage($verifyPublisherInfo, $verifyApiInfo);
+
+            $publishing_info = $setting->publishing_info;
+            $publishing_info['token_status'] = $tokenStatus;
+
+            $setting->publishing_info = $publishing_info;
+            $setting->save();
+
             return response()->json(['success' => true, 'message' => 'Settings fetched successfully', 'data' => $setting]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
+
+            if ($e instanceof GuzzleException && $e->getCode() === 404) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Publisher does not exist in registry.',
+                    'errors' => [
+                        'publisher_id' => 'Publisher does not exist in registry.',
+                    ],
+                    'data' => $setting,
+                ]);
+            }
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
         }
@@ -101,19 +132,38 @@ class SettingController extends Controller
     {
         try {
             $publisherData = $request->all();
+            $verifyPublisherInfo = $this->verifyPublisher($publisherData);
+            $verifyApiInfo = $this->verifyApi($publisherData);
 
-            $publisherData['publisher_id'] = Auth::user()->organization->publisher_id;
-            $publisherData['publisher_verification'] = ($this->verifyPublisher($publisherData))['validation'];
-            $publisherData['token_verification'] = ($this->verifyApi($publisherData))['validation'];
-            $message = $publisherData['publisher_verification'] ?
-                ($publisherData['token_verification'] ? 'API token verified successfully' : 'API token incorrect. Please enter valid API token.')
-                : 'API token incorrect. Please make sure that your publisher is approved in IATI Registry.';
+            $publisherData['publisher_verification'] = $verifyPublisherInfo['validation'];
+            $publisherData['token_verification'] = $verifyApiInfo['validation'];
+
+            [$tokenStatus, $message] = $this->getTokenStatusAndMessage($verifyPublisherInfo, $verifyApiInfo);
+            $publisherData['token_status'] = $tokenStatus;
 
             return response()->json(['success' => true, 'message' => $message, 'data' => $publisherData]);
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+        } catch (Exception $e) {
+            logger()->error($e);
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while verify publisher']);
+            $publisherData['publisher_verification'] = false;
+            $publisherData['token_verification'] = false;
+
+            if ($e instanceof GuzzleException && $e->getCode() === 404) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Publisher does not exist in registry.',
+                    'data' => $publisherData,
+                     'errors' => [
+                        'publisher_id' => 'Publisher does not exist in registry.',
+                     ],
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error occurred while verify publisher',
+                'data' => $publisherData,
+            ]);
         }
     }
 
@@ -123,41 +173,61 @@ class SettingController extends Controller
      * @param PublisherFormRequest $request
      *
      * @return JsonResponse
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function storePublishingInfo(PublisherFormRequest $request): JsonResponse
     {
+        $this->db->beginTransaction();
+
         try {
-            $publisherData = $request->all();
-            $publisherData['publisher_id'] = Auth::user()->organization->publisher_id;
-            $publisher_verification = $this->verifyPublisher($publisherData);
-            $token_verification = $this->verifyApi($publisherData);
+            $settingData = $request->all();
 
-            if (isset($token_verification['success'])) {
-                $publisherData['publisher_verification'] = $publisher_verification['validation'];
-                $publisherData['token_verification'] = $token_verification['validation'];
+            $verifyPublisherInfo = $this->verifyPublisher($settingData);
+            $verifyApiInfo = $this->verifyApi($settingData);
 
-                $this->db->beginTransaction();
+            if (isset($verifyApiInfo['success'])) {
+                [$tokenStatus] = $this->getTokenStatusAndMessage($verifyPublisherInfo, $verifyApiInfo);
+                $settingData['token_status'] = $tokenStatus;
+                $settingData['token_verification'] = $tokenStatus === 'Correct';
 
-                $this->settingService->storePublishingInfo($publisherData);
+                if (isSuperAdmin()) {
+                    $this->organizationService->updateBySuperadmin($settingData);
+                } else {
+                    $this->settingService->storePublishingInfo($settingData);
+                }
 
                 $this->db->commit();
 
-                return response()->json(['success' => true, 'message' => 'Publisher setting stored successfully', 'data' => $publisherData]);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Publisher setting stored successfully',
+                    'data'    => $settingData,
+                ]);
             }
 
-            return response()->json(
-                [
-                    'success' => false,
-                    'message' => 'Error occurred while verifying data',
-                    'data'    => $publisherData,
-                    'error'   => ['token' => $token_verification, 'publisher_verification' => $publisher_verification],
-                ]
-            );
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error occurred while verifying data',
+                'data'    => $settingData,
+                'error'   => ['token' => $verifyApiInfo, 'publisher_verification' => $verifyPublisherInfo],
+            ]);
+        } catch (Exception $e) {
+            $this->db->rollBack();
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while storing setting']);
+            logger()->error($e);
+
+            $settingData['publisher_verification'] = false;
+            $settingData['token_verification'] = false;
+
+            if ($e instanceof PublisherIdChangeByIatiAdminException) {
+                return response()->json(['success' => false, 'message' => 'Publisher Id or API Token incorrect.', 'data' => $settingData]);
+            }
+
+            if ($e instanceof GuzzleException && $e->getCode() === 404) {
+                return response()->json(['success' => false, 'message' => 'Publisher does not exist in registry.', 'data' => $settingData]);
+            }
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while verify publisher', 'data' => $settingData]);
         }
     }
 
@@ -167,7 +237,7 @@ class SettingController extends Controller
      * @param DefaultFormRequest $request
      *
      * @return JsonResponse
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function storeDefaultForm(DefaultFormRequest $request): JsonResponse
     {
@@ -179,7 +249,7 @@ class SettingController extends Controller
             $this->db->commit();
 
             return response()->json(['success' => true, 'message' => 'Default setting stored successfully', 'data' => $setting]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->db->rollBack();
             logger()->error($e->getMessage());
 
@@ -194,34 +264,14 @@ class SettingController extends Controller
      *
      * @return array
      * @throws GuzzleException
+     * @throws JsonException
      */
     public function verifyPublisher(array $data): array
     {
-        try {
-            $client = new Client(
-                [
-                    'base_uri' => env('IATI_API_ENDPOINT'),
-                    'headers'  => [
-                        'X-CKAN-API-Key' => env('IATI_API_KEY'),
-                    ],
-                ]
-            );
-            $requestOption = [
-                'auth'            => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
-                'query'           => ['id' => $data['publisher_id']],
-                'connect_timeout' => 500,
-            ];
+        $result = $this->settingService->verifyPublisher($data);
+        $state = $result ? $result->state : 'approval_needed';
 
-            $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOption);
-            $this->apiLogService->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOption, $res));
-            $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
-
-            return ['success' => true, 'validation' => (bool) $response];
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return ['success' => 'error', 'message' => $e->getMessage()];
-        }
+        return ['success' => true, 'validation' => (bool) $result, 'state' => $state];
     }
 
     /**
@@ -231,37 +281,17 @@ class SettingController extends Controller
      *
      * @return array
      * @throws GuzzleException
+     * @throws JsonException
      */
     public function verifyApi(array $data): array
     {
-        try {
-            if ($data['api_token']) {
-                $client = new Client(
-                    [
-                        'base_uri' => env('IATI_API_ENDPOINT'),
-                        'headers'  => [
-                            'X-CKAN-API-Key' => $data['api_token'],
-                        ],
-                    ]
-                );
-                $requestOptions = [
-                    'auth'            => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
-                    'connect_timeout' => 500,
-                ];
+        if ($data['api_token']) {
+            $response = $this->settingService->verifyApi($data);
 
-                $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', $requestOptions);
-                $this->apiLogService->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', $requestOptions, $res));
-                $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
-
-                return ['success' => true, 'validation' => in_array($data['publisher_id'], array_column($response, 'name'), true)];
-            }
-
-            return ['success' => true, 'validation' => false];
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return ['success' => false, 'message' => $e->getMessage()];
+            return ['success' => true, 'validation' => in_array($data['publisher_id'], array_column($response, 'name'), true)];
         }
+
+        return ['success' => true, 'validation' => false];
     }
 
     /**
@@ -279,7 +309,7 @@ class SettingController extends Controller
                 'message' => 'Setting status successfully retrieved.',
                 'data' => $status,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json([
@@ -287,5 +317,31 @@ class SettingController extends Controller
                 'message' => $e->getMessage(),
             ]);
         }
+    }
+
+    /**
+     * Returns token status and message.
+     *
+     * @param array $verifyPublisherInfo
+     * @param array $verifyApiInfo
+     *
+     * @return string[]
+     */
+    private function getTokenStatusAndMessage(array $verifyPublisherInfo, array $verifyApiInfo): array
+    {
+        $message = 'API token incorrect. Please enter valid API token.';
+        $tokenStatus = 'Incorrect';
+
+        if ($verifyPublisherInfo['success'] && $verifyPublisherInfo['validation']) {
+            if ($verifyApiInfo['success'] && $verifyApiInfo['validation']) {
+                $message = 'API token verified successfully.';
+                $tokenStatus = 'Correct';
+            } elseif ($verifyPublisherInfo['state'] === 'approval_needed') {
+                $message = 'Your account is pending approval by the IATI team - someone should be in touch within two working days.';
+                $tokenStatus = 'Pending';
+            }
+        }
+
+        return [$tokenStatus, $message];
     }
 }

@@ -4,15 +4,17 @@
       class="main__container rounded-lg bg-bluecoral pb-8 sm:mb-10 md:mb-20 md:flex md:bg-none md:pb-0"
     >
       <div
-        class="left flex flex-col items-center justify-center bg-bluecoral px-3 pt-5 pb-72 text-white sm:rounded-r-lg sm:rounded-l-lg sm:px-5 sm:pt-10 md:basis-2/4 md:rounded-r-none md:pb-16 lg:pt-44 lg:pb-44 xl:px-24"
+        class="left flex flex-col items-center justify-center bg-bluecoral px-3 pb-72 pt-5 text-white sm:rounded-l-lg sm:rounded-r-lg sm:px-5 sm:pt-10 md:basis-2/4 md:rounded-r-none md:pb-16 lg:pb-44 lg:pt-44 xl:px-24"
       >
         <div class="left__container rounded-lg p-5 sm:p-10">
-          <span class="left__title font-bold">IATI Publishing Tool</span>
-          <p class="pt-2 sm:pt-6 sm:pb-8">
-            Welcome to IATI Publisher. Publish IATI data on your organisation’s
-            development and humanitarian financing and activities. Enter your
-            login information if you’re already a user or create a new account
-            if you’re new here.
+          <span class="left__title font-bold">IATI Publisher</span>
+          <p class="pt-2 sm:pb-8 sm:pt-6">
+            Welcome to IATI Publisher. This lets you publish IATI data on your
+            organisation's development and humanitarian activities.
+            <br />
+            <span v-if="pageContent !== 'Join Now'">
+              Use this page to create a new account for your organisation.
+            </span>
           </p>
           <div class="block">
             <span class="flex flex-wrap">

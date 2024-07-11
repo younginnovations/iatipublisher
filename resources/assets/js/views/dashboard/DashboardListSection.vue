@@ -6,12 +6,12 @@
     <div v-if="currentView === 'user'">
       <h6 class="text-xs uppercase text-n-40">users by organisation</h6>
       <div class="w-full overflow-x-scroll">
-        <table class="mt-2 mb-8 w-full overflow-x-scroll text-left">
+        <table class="mb-8 mt-2 w-full overflow-x-scroll text-left">
           <thead class="bg-n-10 text-xs font-bold uppercase text-n-40">
             <tr>
               <th>
                 <div
-                  class="flex min-w-[400px] items-center space-x-2 py-3 px-8"
+                  class="flex min-w-[400px] items-center space-x-2 px-8 py-3"
                 >
                   <button class="p-1" @click="toggleSort('organisation')">
                     <svg-vue
@@ -32,7 +32,7 @@
                 </div>
               </th>
               <th>
-                <div class="flex items-center space-x-2 py-3 px-8">
+                <div class="flex items-center space-x-2 px-8 py-3">
                   <button class="p-1" @click="toggleSort('admin')">
                     <svg-vue
                       v-if="filter.sort === 'asc' && filter.orderBy === 'admin'"
@@ -49,7 +49,7 @@
                 </div>
               </th>
               <th>
-                <div class="flex items-center space-x-2 py-3 px-8">
+                <div class="flex items-center space-x-2 px-8 py-3">
                   <button class="p-1" @click="toggleSort('general')">
                     <svg-vue
                       v-if="
@@ -68,7 +68,7 @@
                 </div>
               </th>
               <th>
-                <div class="flex items-center space-x-2 py-3 px-8">
+                <div class="flex items-center space-x-2 px-8 py-3">
                   <button class="p-1" @click="toggleSort('active')">
                     <svg-vue
                       v-if="
@@ -87,7 +87,7 @@
                 </div>
               </th>
               <th>
-                <div class="flex items-center space-x-2 py-3 px-8">
+                <div class="flex items-center space-x-2 px-8 py-3">
                   <button class="p-1" @click="toggleSort('deactivated')">
                     <svg-vue
                       v-if="
@@ -107,7 +107,7 @@
                 </div>
               </th>
               <th>
-                <div class="flex items-center space-x-2 py-3 px-8">
+                <div class="flex items-center space-x-2 px-8 py-3">
                   <button class="p-1" @click="toggleSort('total')">
                     <svg-vue
                       v-if="filter.sort === 'asc' && filter.orderBy === 'total'"
@@ -141,7 +141,7 @@
             >
               <td>
                 <a
-                  class="... block cursor-pointer truncate py-3 px-8"
+                  class="... block cursor-pointer truncate px-8 py-3"
                   @click="
                     NavigateWithFilter(
                       'users',
@@ -153,31 +153,31 @@
                 >
               </td>
               <td>
-                <p class="block py-3 px-8 text-center">
+                <p class="block px-8 py-3 text-center">
                   {{ organisation.admin_user_count }}
                 </p>
               </td>
 
               <td>
-                <p class="block py-3 px-8 text-center">
+                <p class="block px-8 py-3 text-center">
                   {{ organisation.general_user_count }}
                 </p>
               </td>
 
               <td>
-                <p class="block py-3 px-8 text-center">
+                <p class="block px-8 py-3 text-center">
                   {{ organisation.active_user_count }}
                 </p>
               </td>
 
               <td>
-                <p class="block py-3 px-8 text-center">
+                <p class="block px-8 py-3 text-center">
                   {{ organisation.deactivated_user_count }}
                 </p>
               </td>
 
               <td>
-                <p class="block py-3 px-8 text-center">
+                <p class="block px-8 py-3 text-center">
                   {{ organisation.total_user_count }}
                 </p>
               </td>
@@ -208,7 +208,7 @@
           <h6 v-else class="text-xs uppercase text-n-40">
             Publisher segregated by
           </h6>
-          <ul class="mt-4 mr-6 min-h-[300px]">
+          <ul class="mr-6 mt-4 min-h-[300px]">
             <li
               v-for="item in currentNavList"
               :key="item.label"
@@ -224,7 +224,7 @@
               "
             >
               <div
-                class="py-4 px-3"
+                class="px-3 py-4"
                 :class="activeClass === item?.label ? 'activeNav' : ''"
               >
                 {{ item?.label }}
@@ -701,7 +701,7 @@ const activityNavList = [
   { label: 'Activity Completion', apiParams: 'completeness' },
 ];
 const publisherNavList = [
-  { label: 'Publisher Type', apiParams: 'publisher-type' },
+  { label: 'Organisation Type', apiParams: 'publisher-type' },
   { label: 'Data Licence', apiParams: 'data-license' },
   { label: 'Country', apiParams: 'country' },
   { label: 'Registration Type', apiParams: 'registration-type' },
@@ -713,7 +713,7 @@ const filter = ref({ orderBy: '', sort: '' });
 const sortElement = ref({ label: '', apiParams: '' });
 const userNavlist = [{ label: 'user', apiParams: '' }];
 const currentItem = ref({
-  label: 'Publisher Type',
+  label: 'Organisation Type',
   apiParams: 'publisher-type',
 });
 const currentNavList = ref(publisherNavList);
@@ -749,7 +749,7 @@ watch(
       currentNavList.value = activityNavList;
     } else if (value === 'publisher') {
       currentItem.value = {
-        label: 'Publisher Type',
+        label: 'Organisation Type',
         apiParams: 'publisher-type',
       };
 

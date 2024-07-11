@@ -32,7 +32,7 @@
             "required": true,
             "criteria": "mandatory",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/'>For more information</a>",
-            "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
+            "help_text": "If no language is selected, your default language is assumed."
           }
         },
         "sub_elements": {}
@@ -89,7 +89,7 @@
     "sub_elements": {
       "narrative": {
         "name": "narrative",
-        "label": "narrative",
+        "label": "name",
         "type": "textarea",
         "placeholder": "",
         "required": true,
@@ -112,7 +112,7 @@
             "required": false,
             "criteria": "recommended",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/narrative/'>For more information</a>",
-            "help_text": "Select the language of the text you provided in the narrative. If no language is selected, then your default language is assumed.",
+            "help_text": "If no language is selected, your default language is assumed.",
             "read_only": true
           }
         },
@@ -217,7 +217,7 @@
                 "required": false,
                 "criteria": "recommended",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/participating-org/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text you provided in the narrative. If no language is selected, then your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -268,7 +268,7 @@
             "required": true,
             "criteria": "mandatory",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-            "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
+            "help_text": "If no language is selected, your default language is assumed."
           }
         },
         "sub_elements": {}
@@ -347,7 +347,7 @@
             "required": false,
             "criteria": "recommended",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/activity-date/narrative/'>For more information</a>",
-            "help_text": "Select the language of the text you provided in the narrative. If no language is selected, the default language is assumed."
+            "help_text": "If no language is selected, your default language is assumed."
           }
         },
         "sub_elements": {}
@@ -426,7 +426,7 @@
             "required": false,
             "criteria": "recommended",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/recipient-country/narrative/'>For more information</a>",
-            "help_text": "Select the language of the text you provided in the narrative. If no language is selected, then your default language is assumed."
+            "help_text": "If no language is selected, your default language is assumed."
           }
         },
         "sub_elements": {}
@@ -535,7 +535,7 @@
             "required": false,
             "criteria": "recommended",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/recipient-country/narrative/'>For more information</a>",
-            "help_text": "Select the language of the text you provided in the narrative. If no language is selected, then your default value is assumed."
+            "help_text": "If no language is selected, your default language is assumed."
           }
         },
         "sub_elements": {}
@@ -692,7 +692,7 @@
             "required": false,
             "criteria": "",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/sector/narrative/'>For more information</a>",
-            "help_text": "Select the language of the text in the description. If no language is selected, your default language is assumed."
+            "help_text": "If no language is selected, your default language is assumed."
           }
         },
         "sub_elements": {}
@@ -811,7 +811,7 @@
             "required": false,
             "criteria": "recommended",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/narrative/'>For more information</a>",
-            "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+            "help_text": "If no language is selected, your default language is assumed."
           }
         },
         "sub_elements": {}
@@ -923,7 +923,7 @@
             "required": false,
             "criteria": "recommended",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<br>This value should be on the Language codelist.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/narrative/'>For more information</a>",
-            "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+            "help_text": "If no language is selected, your default language is assumed."
           }
         },
         "sub_elements": {}
@@ -1181,7 +1181,7 @@
                     "choices": "Activity/Language.json",
                     "criteria": "recommended",
                     "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/country-budget-items/budget-item/description/narrative/'>For more information</a>",
-                    "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                    "help_text": "If no language is selected, your default language is assumed."
                   }
                 },
                 "sub_elements": {}
@@ -1279,7 +1279,7 @@
             "required": false,
             "criteria": "recommended",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/narrative/'>For more information</a>",
-            "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+            "help_text": "If no language is selected, your default language is assumed."
           }
         },
         "sub_elements": {}
@@ -1403,7 +1403,7 @@
                 "required": false,
                 "criteria": "recommended",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -1524,7 +1524,7 @@
                 "required": false,
                 "criteria": "recommended",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -1561,7 +1561,7 @@
                 "required": false,
                 "criteria": "recommended",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the description. If no language is selected, your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -1681,7 +1681,7 @@
                 "required": true,
                 "criteria": "mandatory",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/contact-info/organisation/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text you provided in the narrative. If no language is selected, then your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -1718,7 +1718,7 @@
                 "required": true,
                 "criteria": "mandatory",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/contact-info/department/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -1755,7 +1755,7 @@
                 "required": false,
                 "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/contact-info/department/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text you provided in the narrative. If no language is selected, the default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -1792,7 +1792,7 @@
                 "required": true,
                 "criteria": "mandatory",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/contact-info/department/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text you provided in the narrative. If no language is selected, then your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -1886,7 +1886,7 @@
                 "required": true,
                 "criteria": "mandatory",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/contact-info/mailing-address/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -1997,7 +1997,7 @@
                 "required": true,
                 "criteria": "mandatory",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/name/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text you provided in the narrative. If no language is selected, then your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -2033,7 +2033,7 @@
                 "required": true,
                 "criteria": "mandatory",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/description/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -2070,7 +2070,7 @@
                 "required": true,
                 "criteria": "mandatory",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/activity-description/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -2315,7 +2315,7 @@
             "required": true,
             "criteria": "mandatory",
             "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/value/'>For more information</a>",
-            "help_text": "Select the currency that you have provided the value in. If no value is selected, default value is assumed."
+            "help_text": "If no currency is selected, your default currency is assumed."
           },
           "value_date": {
             "name": "value_date",
@@ -2393,7 +2393,7 @@
                 "required": false,
                 "criteria": "recommended",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/provider-org/narrative/'>For more information</a>",
-                "help_text": "Select the language of the name provided. If no language is selected, your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -2463,7 +2463,7 @@
                 "required": false,
                 "criteria": "recommended",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text you provided in the narrative. If no language is selected, then your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -2558,7 +2558,7 @@
             "required": false,
             "criteria": "recommended",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/participating-org/narrative/'>For more information</a>",
-            "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
+            "help_text": "If no language is selected, your default language is assumed."
           }
         },
         "sub_elements": {}
@@ -2663,7 +2663,7 @@
             "required": false,
             "criteria": "recommended",
             "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
-            "help_text": "Select the currency that you have provided the value in."
+            "help_text": "If no currency is selected, your default currency is assumed."
           },
           "value_date": {
             "name": "value_date",
@@ -2746,7 +2746,7 @@
                 "required": false,
                 "criteria": "recommended",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text that you provided in the narrative. If no language is selected, then your default value is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -2783,7 +2783,7 @@
                 "required": false,
                 "criteria": "recommended",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/description/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text that you provided in the narrative. If no language is selected, your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -2850,7 +2850,7 @@
                     "required": true,
                     "criteria": "mandatory",
                     "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/title/narrative/'>For more information</a>",
-                    "help_text": "Select the language of the text that you provided in the narrative. If no language is selected, your default language is assumed."
+                    "help_text": "If no language is selected, your default language is assumed."
                   }
                 },
                 "sub_elements": {}
@@ -2886,7 +2886,7 @@
                     "required": true,
                     "criteria": "mandatory",
                     "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/description/narrative/'>For more information</a>",
-                    "help_text": "Select the language of the text that you provided in the narrative. If no language is selected, your default language is assumed."
+                    "help_text": "If no language is selected, your default language is assumed."
                   }
                 },
                 "sub_elements": {}
@@ -3081,7 +3081,7 @@
                 "required": true,
                 "criteria": "mandatory",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/title/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -3118,7 +3118,7 @@
                 "required": true,
                 "criteria": "mandatory",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/description/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text that you provided in the narrative. If no language is selected, your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -3185,7 +3185,7 @@
                     "required": true,
                     "criteria": "mandatory",
                     "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/title/narrative/'>For more information</a>",
-                    "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
+                    "help_text": "If no language is selected, your default language is assumed."
                   }
                 },
                 "sub_elements": {}
@@ -3221,7 +3221,7 @@
                     "required": true,
                     "criteria": "mandatory",
                     "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/description/narrative/'>For more information</a>",
-                    "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
+                    "help_text": "If no language is selected, your default language is assumed."
                   }
                 },
                 "sub_elements": {}
@@ -3402,7 +3402,7 @@
                     "required": true,
                     "criteria": "mandatory",
                     "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/comment/narrative/'>For more information</a>",
-                    "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
+                    "help_text": "If no language is selected, your default language is assumed."
                   }
                 },
                 "sub_elements": {}
@@ -3502,7 +3502,7 @@
                         "required": true,
                         "criteria": "mandatory",
                         "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/title/narrative/'>For more information</a>",
-                        "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
+                        "help_text": "If no language is selected, your default language is assumed."
                       }
                     },
                     "sub_elements": {}
@@ -3539,7 +3539,7 @@
                         "required": true,
                         "criteria": "mandatory",
                         "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/description/narrative/'>For more information</a>",
-                        "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
+                        "help_text": "If no language is selected, your default language is assumed."
                       }
                     },
                     "sub_elements": {}
@@ -3731,7 +3731,7 @@
                     "required": false,
                     "criteria": "",
                     "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/comment/narrative/'>For more information</a>",
-                    "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
+                    "help_text": "If no language is selected, your default language is assumed."
                   }
                 },
                 "sub_elements": {}
@@ -3827,7 +3827,7 @@
                         "required": true,
                         "criteria": "mandatory",
                         "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/title/narrative/'>For more information</a>",
-                        "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
+                        "help_text": "If no language is selected, your default language is assumed."
                       }
                     },
                     "sub_elements": {}
@@ -3863,7 +3863,7 @@
                         "required": true,
                         "criteria": "mandatory",
                         "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/description/narrative/'>For more information</a>",
-                        "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
+                        "help_text": "If no language is selected, your default language is assumed."
                       }
                     },
                     "sub_elements": {}
@@ -4004,7 +4004,7 @@
                     "required": true,
                     "criteria": "mandatory",
                     "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/comment/narrative/'>For more information</a>",
-                    "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
+                    "help_text": "If no language is selected, your default language is assumed."
                   }
                 },
                 "sub_elements": {}
@@ -4101,7 +4101,7 @@
                         "required": true,
                         "criteria": "mandatory",
                         "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/title/narrative/'>For more information</a>",
-                        "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
+                        "help_text": "If no language is selected, your default language is assumed."
                       }
                     },
                     "sub_elements": {}
@@ -4137,7 +4137,7 @@
                         "required": true,
                         "criteria": "mandatory",
                         "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/description/narrative/'>For more information</a>",
-                        "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
+                        "help_text": "If no language is selected, your default language is assumed."
                       }
                     },
                     "sub_elements": {}
@@ -4402,7 +4402,7 @@
                 "required": false,
                 "criteria": "recommended",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/description/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -4473,7 +4473,7 @@
                 "required": false,
                 "criteria": "recommended",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <br></br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/provider-org/narrative'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -4544,7 +4544,7 @@
                 "required": false,
                 "criteria": "recommended",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/receiver-org/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -4712,7 +4712,7 @@
                 "required": false,
                 "criteria": "recommended",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/sector/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -4762,7 +4762,7 @@
                 "required": false,
                 "criteria": "recommended",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-country/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}
@@ -4856,7 +4856,7 @@
                 "required": false,
                 "criteria": "recommended",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "help_text": "If no language is selected, your default language is assumed."
               }
             },
             "sub_elements": {}

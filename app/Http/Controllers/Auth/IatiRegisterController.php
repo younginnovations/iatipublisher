@@ -201,6 +201,7 @@ class IatiRegisterController extends Controller
                     'email',
                     'password',
                     'password_confirmation',
+                    'default_language',
                 ]
             );
 
@@ -229,7 +230,7 @@ class IatiRegisterController extends Controller
 
             return response()->json(['success' => true, 'message' => 'User registered successfully']);
         } catch (Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error has occured while trying to register user. Please try again later.']);
         }
@@ -278,8 +279,8 @@ class IatiRegisterController extends Controller
             $this->db->commit();
 
             return ['success' => true, 'user' => $user];
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+        } catch (Exception $e) {
+            logger()->error($e);
         }
     }
 
@@ -292,16 +293,17 @@ class IatiRegisterController extends Controller
     {
         try {
             $types = [
-                'country' => getCodeList('Country', 'Organization'),
-                'registrationAgency' => getCodeList('OrganizationRegistrationAgency', 'Organization'),
-                'publisherType' => getCodeList('OrganizationType', 'Organization'),
-                'dataLicense' => getCodeList('DataLicense', 'Activity', false),
-                'source' => getCodeList('Source', 'Activity', false),
+                'country'                               => getCodeList('Country', 'Organization', filterDeprecated: true),
+                'registrationAgency'                    => getCodeList('OrganizationRegistrationAgency', 'Organization', filterDeprecated: true),
+                'publisherType'                         => getCodeList('OrganizationType', 'Organization', filterDeprecated: true),
+                'dataLicense'                           => getCodeList('DataLicense', 'Activity', false, filterDeprecated: true),
+                'source'                                => getCodeList('Source', 'Activity', false, filterDeprecated: true),
                 'uncategorizedRegistrationAgencyPrefix' => Enums::UNCATEGORIZED_ORGANISATION_AGENCY_PREFIX,
+                'languages'                             => getCodeList('Language', 'Activity', filterDeprecated: true),
             ];
 
             return view('web.iati_register', compact('types'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return view('web.welcome');

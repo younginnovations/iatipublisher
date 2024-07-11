@@ -47,22 +47,23 @@ class IatiRegisterFormRequest extends FormRequest
                 break;
             case '2':
                 $rules = [
-                    'contact_email' => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,}$/ix', 'max:255'],
+                    'contact_email' => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,}$/ix', 'max:255', 'not_in_spam_emails'],
                     'website' => ['nullable', 'url'],
                 ];
                 break;
             case '3':
                 $rules = [
-                    'source'          => ['required', sprintf('in:%s', implode(',', array_keys(getCodeList('Source', 'Activity', false))))],
+                    'source'           => ['required', sprintf('in:%s', implode(',', array_keys(getCodeList('Source', 'Activity', false))))],
+                    'default_language' => ['required', sprintf('in:%s', implode(',', array_keys(getCodeList('Language', 'Activity', false, false))))],
                 ];
                 break;
             case '4':
                 $rules = [
-                    'username'              => ['required', 'max:255', 'string', 'regex:/^[a-z]([0-9a-z-_])*$/', 'unique:users,username'],
+                    'username'              => ['required', 'max:255', 'string', 'unique:users,username', 'regex:/^[a-z]([0-9a-z-_])*$/'],
                     'full_name'             => ['required', 'string', 'max:255'],
-                    'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,}$/ix', 'max:255', 'unique:users,email'],
-                    'password'              => ['required', 'string', 'min:6', 'max:255', 'confirmed'],
-                    'password_confirmation' => ['required', 'string', 'min:6', 'max:255'],
+                    'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,}$/ix', 'max:255', 'unique:users,email', 'not_in_spam_emails'],
+                    'password'              => ['required', 'string', 'min:8', 'max:255', 'confirmed'],
+                    'password_confirmation' => ['required', 'string', 'min:8', 'max:255'],
                 ];
                 break;
         }

@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\PlannedDisbursementService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class PlannedDisbursementController
@@ -44,7 +45,8 @@ class PlannedDisbursementController extends Controller
         try {
             $element = getElementSchema('planned_disbursement');
             $activity = $this->plannedDisbursementService->getActivityData($id);
-            $form = $this->plannedDisbursementService->formGenerator($id);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'planned_disbursement', []);
+            $form = $this->plannedDisbursementService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap:  $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'planned_disbursement'];
 
             return view('admin.activity.plannedDisbursement.edit', compact('form', 'activity', 'data'));

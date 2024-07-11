@@ -102,7 +102,7 @@ button {
   @apply relative text-n-30;
 
   button {
-    @apply rounded-3xl border border-solid border-n-30 py-1.5 px-2.5;
+    @apply rounded-3xl border border-solid border-n-30 px-2.5 py-1.5;
   }
 
   svg {
@@ -110,7 +110,7 @@ button {
   }
 
   &__content {
-    @apply absolute top-full left-0 hidden w-[352px];
+    @apply absolute left-0 top-full hidden w-[352px];
 
     .content {
       @apply mt-6 rounded bg-eggshell text-n-50;
@@ -220,7 +220,7 @@ button {
 }
 
 .panel-btn {
-  @apply h-10 space-x-1 rounded border border-n-30 bg-eggshell py-3 px-2;
+  @apply h-10 space-x-1 rounded border border-n-30 bg-eggshell px-2 py-3;
   width: 43px;
 
   &:hover {

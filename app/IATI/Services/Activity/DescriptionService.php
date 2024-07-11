@@ -74,7 +74,13 @@ class DescriptionService
      */
     public function update($descriptionActivity, $activity): bool
     {
-        return $this->activityRepository->update($activity->id, ['description' => $this->sanitizeDescriptionData($descriptionActivity)]);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['description'] = doesDescriptionHaveDeprecatedCode($this->sanitizeDescriptionData($descriptionActivity));
+
+        return $this->activityRepository->update($activity->id, [
+            'description'            => $this->sanitizeDescriptionData($descriptionActivity),
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -85,13 +91,13 @@ class DescriptionService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('description');
         $model['description'] = $this->getDescriptionData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.description.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

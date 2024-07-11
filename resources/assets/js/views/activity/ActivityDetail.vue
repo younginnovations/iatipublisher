@@ -16,7 +16,7 @@
     >
       <svg-vue icon="chevron" class="rotate-180 pb-2 text-3xl text-white" />
     </div>
-    <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
+    <div class="relative bg-paper px-5 pb-[71px] pt-4 xl:px-10">
       <!-- title section -->
       <div class="page-title mb-6">
         <div class="pb-4 text-caption-c1 text-n-40">
@@ -107,6 +107,7 @@
                   :status="activityProps.status"
                   :core-completed="coreCompleted"
                   :activity-id="activityProps.id"
+                  :deprecation-status-map="deprecationStatusMap"
                 />
               </div>
             </div>
@@ -114,7 +115,7 @@
             <Errors
               v-if="store.state.publishErrors.length > 0 || importActivityError"
               :error-data="store.state.publishErrors"
-              class="absolute right-0 bottom-[calc(100%-52px)]"
+              class="absolute bottom-[calc(100%-52px)] right-0"
             />
           </div>
         </div>
@@ -299,7 +300,7 @@
           <div class="activities__content--elements -mx-3 flex flex-wrap">
             <template v-for="(post, key, index) in groupedData" :key="index">
               <div
-                class="elements-title relative mx-3 mt-3 mb-1 flex w-full items-center text-sm uppercase text-n-40"
+                class="elements-title relative mx-3 mb-1 mt-3 flex w-full items-center text-sm uppercase text-n-40"
               >
                 <div :id="key" class="mr-4 shrink-0">
                   {{ formatTitle(key) }}
@@ -325,6 +326,11 @@
                     :warning_info_text="element.warning_info_text ?? ''"
                     :has-ever-been-published="
                       publishStatus.has_ever_been_published
+                    "
+                    :deprecation-code-usage="
+                      String(name) === 'transactions'
+                        ? onlyDeprecatedStatusMap(element.content)
+                        : deprecationStatusMap[name]
                     "
                     class="elements-card"
                   />
@@ -399,6 +405,7 @@ import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
 // Vuex Store
 import { detailStore } from 'Store/activities/show';
 import { useStore } from 'Store/activities/index';
+import { onlyDeprecatedStatusMap } from 'Composable/utils';
 
 export default defineComponent({
   components: {
@@ -466,6 +473,10 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    deprecationStatusMap: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     interface paType {
@@ -492,6 +503,7 @@ export default defineComponent({
     const { types, coreCompleted } = toRefs(props);
     let removed = sessionStorage.getItem('removed');
 
+    console.log('types', types);
     const store = detailStore();
     const indexStore = useStore();
     const showSidebar = ref(false);
@@ -540,7 +552,7 @@ export default defineComponent({
         if (removed) {
           toastData.type = true;
           toastData.visibility = true;
-          toastData.message = 'Removed succesfully';
+          toastData.message = 'Removed successfully';
           sessionStorage.clear();
         }
       };
@@ -814,5 +826,6 @@ export default defineComponent({
       width,
     };
   },
+  methods: { onlyDeprecatedStatusMap },
 });
 </script>

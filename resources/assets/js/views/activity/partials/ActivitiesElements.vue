@@ -38,31 +38,31 @@
         >
           <ul class="w-full bg-eggshell py-2">
             <li
-              class="flex py-1.5 px-3.5 hover:bg-white"
+              class="flex px-3.5 py-1.5 hover:bg-white"
               @click="dropdownFilter('')"
             >
               <svg-vue class="mr-1 text-lg" icon="box" />
               <span>All Elements</span>
             </li>
             <li
-              class="flex py-1.5 px-3.5 hover:bg-white"
+              class="flex px-3.5 py-1.5 hover:bg-white"
               @click="dropdownFilter('core')"
             >
               <svg-vue class="mr-1 text-lg" icon="core" />
               <span>Core</span>
             </li>
             <li
-              class="flex py-1.5 px-3.5 hover:bg-white"
+              class="flex px-3.5 py-1.5 hover:bg-white"
               @click="dropdownFilter('completed')"
             >
               <svg-vue class="mr-1 text-lg" icon="double-tick" />
               <span>Completed</span>
             </li>
             <li
-              class="flex py-1.5 px-3.5 hover:bg-white"
+              class="flex px-3.5 py-1.5 hover:bg-white"
               @click="dropdownFilter('not_completed')"
             >
-              <svg-vue class="ml-1 !mr-1.5" icon="red-cross"></svg-vue>
+              <svg-vue class="!mr-1.5 ml-1" icon="red-cross"></svg-vue>
               <span>Not Completed</span>
             </li>
           </ul>
@@ -80,7 +80,7 @@
           :href="getLink(post.has_data, index.toString())"
         >
           <div
-            class="status_icons absolute top-0 right-0 mt-1 mr-1 inline-flex"
+            class="status_icons absolute right-0 top-0 mr-1 mt-1 inline-flex"
           >
             <svg-vue
               v-if="post.completed"
@@ -245,7 +245,7 @@ function getLink(has_data: number, index: string) {
     min-width: 150px;
 
     li {
-      @apply flex py-1.5 px-3.5 hover:bg-white;
+      @apply flex px-3.5 py-1.5 hover:bg-white;
 
       svg {
         @apply mr-1;

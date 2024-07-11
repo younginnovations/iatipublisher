@@ -22,24 +22,24 @@ class Location extends Element
      * @var array
      */
     private array $_csvHeaders
-    = [
-        'location_reference',
-        'location_reach_code',
-        'location_id_vocabulary',
-        'location_id_code',
-        'location_name',
-        'location_description',
-        'location_activity_description',
-        'location_administrative_vocabulary',
-        'location_administrative_code',
-        'location_administrative_level',
-        'location_point_srsname',
-        'pos_latitude',
-        'pos_longitude',
-        'location_exactness',
-        'location_class',
-        'feature_designation',
-    ];
+        = [
+            'location_reference',
+            'location_reach_code',
+            'location_id_vocabulary',
+            'location_id_code',
+            'location_name',
+            'location_description',
+            'location_activity_description',
+            'location_administrative_vocabulary',
+            'location_administrative_code',
+            'location_administrative_level',
+            'location_point_srsname',
+            'pos_latitude',
+            'pos_longitude',
+            'location_exactness',
+            'location_class',
+            'feature_designation',
+        ];
 
     /**
      * Index under which the data is stored within the object.

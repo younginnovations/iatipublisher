@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\RelatedActivityService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class RelatedActivityController.
@@ -41,7 +42,8 @@ class RelatedActivityController extends Controller
         try {
             $element = getElementSchema('related_activity');
             $activity = $this->relatedActivityService->getActivityData($id);
-            $form = $this->relatedActivityService->formGenerator($id);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'related_activity', []);
+            $form = $this->relatedActivityService->formGenerator($id, deprecationStatusMap: $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'related_activity'];
 
             return view('admin.activity.relatedActivity.edit', compact('form', 'activity', 'data'));

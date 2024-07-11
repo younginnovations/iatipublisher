@@ -80,7 +80,14 @@ class ConditionService
 
         $activityCondition['condition'] = array_values($activityCondition['condition']);
 
-        return $this->activityRepository->update($id, ['conditions' => $activityCondition]);
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['conditions'] = doesConditionsHaveDeprecatedCode($activityCondition);
+
+        return $this->activityRepository->update($id, [
+            'conditions'             => $activityCondition,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -91,13 +98,13 @@ class ConditionService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('conditions');
         $model = $this->getConditionData($id) ?: [];
         $this->multilevelSubElementFormCreator->url = route('admin.activity.conditions.update', [$id]);
 
-        return $this->multilevelSubElementFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->multilevelSubElementFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, overRideDefaultFieldValue: $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

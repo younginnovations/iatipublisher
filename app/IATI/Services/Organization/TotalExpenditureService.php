@@ -85,7 +85,14 @@ class TotalExpenditureService
 
         $totalExpenditure = $totalExpenditure['total_expenditure'];
 
-        return $this->organizationRepository->update($id, ['total_expenditure' => $totalExpenditure]);
+        $organization = $this->organizationRepository->find($id);
+        $deprecationStatusMap = $organization->deprecation_status_map;
+        $deprecationStatusMap['total_expenditure'] = doesOrganisationTotalExpenditureHaveDeprecatedCode($totalExpenditure);
+
+        return $this->organizationRepository->update($id, [
+            'total_expenditure'      => $totalExpenditure,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -93,7 +100,7 @@ class TotalExpenditureService
      *
      * @param $id
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $deprecationStatusMap = []): Form
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
         $model['total_expenditure'] = $this->getTotalExpenditureData($id) ?? [];

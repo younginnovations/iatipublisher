@@ -43,6 +43,10 @@ trait FillDefaultValuesTrait
     public function populateDefaultFields(&$data, $defaultValues): array
     {
         foreach ($data as $key => &$datum) {
+            if ($key === 'deprecation_status_map') {
+                continue;
+            }
+
             if (is_array($datum)) {
                 $this->populateDefaultFields($datum, $defaultValues);
             }
@@ -139,6 +143,21 @@ trait FillDefaultValuesTrait
     {
         $defaultFieldValues = $this->resolveDefaultValues($data);
         $data = $this->populateDefaultFields($data, $defaultFieldValues);
+
+        if (
+            Arr::get($data, 'migrated_from_aidstream', false) &&
+            !$this->model->getModel() instanceof Activity
+        ) {
+            foreach ($data as $key => $datum) {
+                $this->model->{$key} = $datum;
+            }
+
+            $this->model->setTouchedRelations([]);
+            $this->model->save();
+
+            return $this->model;
+        }
+
         $data['default_field_values'] = $defaultFieldValues;
 
         return $this->model->create($data);
@@ -150,13 +169,13 @@ trait FillDefaultValuesTrait
      *
      * @param $id
      * @param $data
-     * @param $refillDefaultValues
+     * @param bool $refillDefaultValues
      *
      * @inheritDoc
      *
      * @return bool
      */
-    public function update($id, $data, $refillDefaultValues = false): bool
+    public function update($id, $data, bool $refillDefaultValues = false, $isDeleteOperation = false, $deleteElement = ''): bool
     {
         $defaultFieldValues = $this->getDefaultValuesFromActivity($id, $this->getModel());
 
@@ -166,6 +185,15 @@ trait FillDefaultValuesTrait
         }
 
         $data = $this->populateDefaultFields($data, $defaultFieldValues);
+
+        if (!$isDeleteOperation) {
+            return $this->model->find($id)->update($data);
+        }
+
+        $model = $this->model->find($id);
+        $deprecatedStatusMap = $model->deprecation_status_map;
+        $deprecatedStatusMap[$deleteElement] = [];
+        $data['deprecation_status_map'] = $deprecatedStatusMap;
 
         return $this->model->find($id)->update($data);
     }

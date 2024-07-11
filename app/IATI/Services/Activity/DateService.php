@@ -78,7 +78,15 @@ class DateService
             $activityDate['activity_date'][$key]['narrative'] = array_values($activity_date['narrative']);
         }
 
-        return $this->activityRepository->update($id, ['activity_date' => array_values($activityDate['activity_date'])]);
+        $activityDate = array_values($activityDate['activity_date']);
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['activity_date'] = doesActivityDateHaveDeprecatedCode($activityDate);
+
+        return $this->activityRepository->update($id, [
+            'activity_date'          => $activityDate,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -89,13 +97,13 @@ class DateService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('activity_date');
         $model['activity_date'] = $this->getDateData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.date.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

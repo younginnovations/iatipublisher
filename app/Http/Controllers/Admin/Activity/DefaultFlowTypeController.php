@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\DefaultFlowTypeService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class DefaultFlowTypeController.
@@ -43,7 +44,8 @@ class DefaultFlowTypeController extends Controller
         try {
             $element = getElementSchema('default_flow_type');
             $activity = $this->defaultFlowTypeService->getActivityData($id);
-            $form = $this->defaultFlowTypeService->formGenerator($id);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'default_flow_type', []);
+            $form = $this->defaultFlowTypeService->formGenerator($id, $activity->default_field_values, deprecationStatusMap: $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'default_flow_type'];
 
             return view('admin.activity.defaultFlowType.edit', compact('form', 'activity', 'data'));
@@ -67,7 +69,7 @@ class DefaultFlowTypeController extends Controller
         try {
             $activityDefaultFlowType = $request->get('default_flow_type') !== null ? (int) $request->get('default_flow_type') : null;
 
-            if (!$this->defaultFlowTypeService->update($id, $activityDefaultFlowType)) {
+            if (!$this->defaultFlowTypeService->update($id, ['code' => $activityDefaultFlowType])) {
                 return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default-flow-type.');
             }
 

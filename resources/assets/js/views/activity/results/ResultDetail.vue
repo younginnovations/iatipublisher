@@ -1,8 +1,8 @@
 <template>
-  <div class="bg-paper px-5 pt-4 pb-[71px] xl:px-10">
+  <div class="bg-paper px-5 pb-[71px] pt-4 xl:px-10">
     <div
       v-if="showSidebar"
-      class="fixed top-0 left-0 z-[50] h-screen w-screen bg-black/10 lg:hidden"
+      class="fixed left-0 top-0 z-[50] h-screen w-screen bg-black/10 lg:hidden"
       @click="
         () => {
           showSidebar = !showSidebar;
@@ -246,6 +246,11 @@ export default defineComponent({
     let { result, activity } = toRefs(props);
     const hasIndicators = result.value.indicators.length > 0 ? true : false;
     const resultsData = result.value.result;
+    console.log('resultData', resultsData);
+    const deprecationStatusMap = resultsData.deprecation_status_map;
+    console.log('deprecationStatusMap', deprecationStatusMap);
+    delete resultsData.deprecation_status_map;
+    console.log(deprecationStatusMap);
 
     const activityId = activity.value.id,
       activityTitle = activity.value.title,

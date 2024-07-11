@@ -48,7 +48,9 @@ class RelatedActivityRequest extends ActivityBaseRequest
     public function getErrorsForRelatedActivity(array $formFields): array
     {
         $rules = [];
-        $relatedActivityType = implode(',', array_keys(getCodeList('RelatedActivityType', 'Activity', false)));
+        $relatedActivityType = implode(',', array_keys(
+            $this->getCodeListForRequestFiles('RelatedActivityType', 'Activity', false)
+        ));
 
         foreach ($formFields as $index => $formField) {
             $baseForm = sprintf('related_activity.%s', $index);

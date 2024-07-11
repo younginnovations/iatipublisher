@@ -74,7 +74,17 @@ class PolicyMarkerService
      */
     public function update($id, $activityPolicyMarker): bool
     {
-        return $this->activityRepository->update($id, ['policy_marker' => $this->sanitizePolicyMarkerData($activityPolicyMarker)]);
+        $activityPolicyMarker = $this->sanitizePolicyMarkerData($activityPolicyMarker);
+
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+
+        $deprecationStatusMap['policy_marker'] = doesPolicyMarkerHaveDeprecatedCode($activityPolicyMarker);
+
+        return $this->activityRepository->update($id, [
+            'policy_marker'          => $activityPolicyMarker,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -85,13 +95,13 @@ class PolicyMarkerService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('policy_marker');
         $model['policy_marker'] = $this->getPolicyMarkerData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.policy-marker.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

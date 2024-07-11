@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Activity;
 
+use App\Constants\CoreElements;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
@@ -141,6 +142,33 @@ class ActivityService
             ];
         }
 
+        $orgOldIdentifiers = $authUser->organization->old_identifiers;
+        $activityOtherIdentifiers = null;
+
+        if (!empty($orgOldIdentifiers)) {
+            $activityOtherIdentifiers = [];
+
+            foreach ($orgOldIdentifiers as $oldIdentifier) {
+                $appendableOtherIdentifier = [
+                    'reference'      => $oldIdentifier['identifier'],
+                    'reference_type' => 'B1',
+                    'owner_org'      => [
+                        [
+                            'ref'       => null,
+                            'narrative' => [
+                                [
+                                    'narrative' => null,
+                                    'language'  => null,
+                                ],
+                            ],
+                        ],
+                    ],
+                ];
+
+                $activityOtherIdentifiers[] = $appendableOtherIdentifier;
+            }
+        }
+
         return $this->activityRepository->store([
             'iati_identifier' => $activity_identifier,
             'title' => $activity_title,
@@ -153,6 +181,7 @@ class ActivityService
             'element_status' => $defaultElementStatus,
             'default_field_values' => $this->getDefaultValues(),
             'reporting_org' => $authUser->organization->reporting_org,
+            'other_identifier' => $activityOtherIdentifiers,
         ]);
     }
 
@@ -164,7 +193,7 @@ class ActivityService
      */
     public function deleteElement($id, $element): bool
     {
-        return $this->activityRepository->update($id, [$element => null]);
+        return $this->activityRepository->update($id, [$element => null], isDeleteOperation: true, deleteElement: $element);
     }
 
     /**
@@ -250,7 +279,7 @@ class ActivityService
      */
     public function activityPublishingProgress($activity): float|int
     {
-        $core_elements = getCoreElements();
+        $core_elements = CoreElements::all();
         $completed_core_element_count = 0;
 
         foreach ($core_elements as $core_element) {
@@ -774,5 +803,20 @@ class ActivityService
     public function updateActivity($activityId, $data): bool
     {
         return $this->activityRepository->update($activityId, $data);
+    }
+
+    public function getDeprecationStatusMap($id = '', $key = '')
+    {
+        if ($id) {
+            $activity = $this->activityRepository->find($id);
+
+            if (!$key) {
+                return $activity->deprecation_status_map;
+            }
+
+            return Arr::get($activity->deprecation_status_map, $key, []);
+        }
+
+        return [];
     }
 }

@@ -69,7 +69,14 @@ class CollaborationTypeService
      */
     public function update($id, $activityCollaborationType): bool
     {
-        return $this->activityRepository->update($id, ['collaboration_type' => $activityCollaborationType]);
+        $activity = $this->activityRepository->find($id, );
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['collaboration_type'] = doesCollaborationTypeHaveDeprecatedCode($activityCollaborationType);
+
+        return $this->activityRepository->update($id, [
+            'collaboration_type'     => $activityCollaborationType,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -80,13 +87,13 @@ class CollaborationTypeService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('collaboration_type');
         $model['collaboration_type'] = $this->getCollaborationTypeData($id);
         $this->baseFormCreator->url = route('admin.activity.collaboration-type.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->baseFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, overRideDefaultFieldValue: $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

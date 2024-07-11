@@ -26,14 +26,6 @@ class ScopeRequest extends ActivityBaseRequest
     }
 
     /**
-     * Return general rules for scope.
-     */
-    public function getWarningForActivityScope(): array
-    {
-        return [];
-    }
-
-    /**
      * Returns critical error for scope.
      *
      * @param $scope
@@ -49,8 +41,18 @@ class ScopeRequest extends ActivityBaseRequest
         }
 
         return [
-            'activity_scope' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ActivityScope', 'Activity', false)))),
+            'activity_scope' => sprintf('nullable|in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('ActivityScope', 'Activity', false)
+            ))),
         ];
+    }
+
+    /**
+     * Return general rules for scope.
+     */
+    public function getWarningForActivityScope(): array
+    {
+        return [];
     }
 
     /**
@@ -61,8 +63,8 @@ class ScopeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => 'The activity scope does not exist.',
-            'size'      => 'The activity scope cannot have more than one value.',
+            'in'   => 'The activity scope does not exist.',
+            'size' => 'The activity scope cannot have more than one value.',
         ];
     }
 }

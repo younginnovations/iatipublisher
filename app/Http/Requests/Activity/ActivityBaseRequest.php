@@ -6,7 +6,9 @@ namespace App\Http\Requests\Activity;
 
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\IndicatorService;
+use App\IATI\Services\Activity\PeriodService;
 use App\IATI\Services\Activity\ResultService;
+use App\IATI\Services\Activity\TransactionService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
@@ -21,6 +23,8 @@ class ActivityBaseRequest extends FormRequest
      * @var ActivityService
      */
     protected ActivityService $activityService;
+
+    private string|null $requestScope = null;
 
     /**
      * ActivityBaseRequest constructor.
@@ -212,7 +216,7 @@ class ActivityBaseRequest extends FormRequest
             $activity = app()->make(ActivityService::class)->getActivity($parameters['id']);
         }
 
-        return $activity->default_field_values;
+        return $activity->default_field_values ?? [];
     }
 
     /**
@@ -236,7 +240,11 @@ class ActivityBaseRequest extends FormRequest
             $validator->addReplacer(
                 'unique_default_lang',
                 function ($message) use ($validator, $defaultLanguage) {
-                    return str_replace(':language', getCodeList('Languages', 'Activity')[$defaultLanguage], $message);
+                    return str_replace(
+                        ':language',
+                        $this->getCodeListForRequestFiles('Language', 'Activity')[$defaultLanguage],
+                        $message
+                    );
                 }
             );
 
@@ -335,11 +343,15 @@ class ActivityBaseRequest extends FormRequest
      * @param      $formBase
      *
      * @return array
+     *
+     * @throws \JsonException
      */
     public function getErrorsForNarrative($formFields, $formBase): array
     {
         $rules = [];
-        $validLanguages = implode(',', array_keys(getCodeList('Language', 'Activity', false)));
+        $validLanguages = implode(',', array_keys(
+            $this->getCodeListForRequestFiles('Language', 'Activity', false, false)
+        ));
 
         foreach ($formFields as $narrativeIndex => $narrative) {
             $rules[sprintf('%s.narrative.%s.language', $formBase, $narrativeIndex)][] = 'nullable';
@@ -368,17 +380,20 @@ class ActivityBaseRequest extends FormRequest
                 '%s.narrative.%s.narrative.required_with_language',
                 $formBase,
                 $narrativeIndex
-            )] = 'The narrative field is required with @xml:lang field.';
+            )]
+                = 'The narrative field is required with @xml:lang field.';
             $messages[sprintf(
                 '%s.narrative.%s.language.in',
                 $formBase,
                 $narrativeIndex
-            )] = 'The @xml:lang field is invalid.';
+            )]
+                = 'The @xml:lang field is invalid.';
             $messages[sprintf(
                 '%s.narrative.%s.narrative.required',
                 $formBase,
                 $narrativeIndex
-            )] = 'The Narrative field is required.';
+            )]
+                = 'The Narrative field is required.';
         }
 
         return $messages;
@@ -526,7 +541,9 @@ class ActivityBaseRequest extends FormRequest
         if (!empty($formFields)) {
             foreach ($formFields as $documentLinkIndex => $documentLink) {
                 $documentLinkForm = $formBase ? sprintf('%s.document_link.%s', $formBase, $documentLinkIndex) : sprintf('document_link.%s', $documentLinkIndex);
-                $rules[sprintf('%s.format', $documentLinkForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('FileFormat', 'Activity', false)));
+                $rules[sprintf('%s.format', $documentLinkForm)] = 'nullable|in:' . implode(',', array_keys(
+                    $this->getCodeListForRequestFiles('FileFormat', 'Activity', false)
+                ));
 
                 if (Arr::get($documentLink, 'url', null) !== '') {
                     $rules[sprintf('%s.url', $documentLinkForm)] = 'nullable|url';
@@ -541,12 +558,18 @@ class ActivityBaseRequest extends FormRequest
                 }
 
                 foreach (array_keys($documentLink['category']) as $index) {
-                    $rules[sprintf('%s.category.%s.code', $documentLinkForm, $index)] = 'nullable|in:' . implode(',', array_keys(getCodeList('DocumentCategory', 'Activity', false)));
+                    $rules[sprintf('%s.category.%s.code', $documentLinkForm, $index)] = 'nullable|in:' . implode(',', array_keys(
+                        $this->getCodeListForRequestFiles('DocumentCategory', 'Activity', false)
+                    ));
                 }
 
                 foreach (array_keys($documentLink['language']) as $index) {
-                    $rules[sprintf('%s.language.%s.language', $documentLinkForm, $index)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Language', 'Activity', false)));
-                    $rules[sprintf('%s.language.%s.code', $documentLinkForm, $index)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Language', 'Activity', false)));
+                    $rules[sprintf('%s.language.%s.language', $documentLinkForm, $index)] = 'nullable|in:' . implode(',', array_keys(
+                        $this->getCodeListForRequestFiles('Language', 'Activity', false, false)
+                    ));
+                    $rules[sprintf('%s.language.%s.code', $documentLinkForm, $index)] = 'nullable|in:' . implode(',', array_keys(
+                        $this->getCodeListForRequestFiles('Language', 'Activity', false, false)
+                    ));
                 }
 
                 $narrativeTitleRules = $this->getErrorsForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm));
@@ -715,10 +738,53 @@ class ActivityBaseRequest extends FormRequest
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('%s.value.%s', $formBase, $valueIndex);
             $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric|min:0';
-            $rules[sprintf('%s.currency', $valueForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Currency', 'Activity', false)));
+            $rules[sprintf('%s.currency', $valueForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('Currency', 'Activity', false)
+            ));
             $rules[sprintf('%s.value_date', $valueForm)] = 'nullable|date';
         }
 
         return $rules;
+    }
+
+    protected function getDeprecatedStatusMap()
+    {
+        if (is_null($this->route())) {
+            /* Some tests do not make actual request, so route is null */
+            return [];
+        }
+
+        $parameters = $this->route()->parameters();
+        $routeParam = explode('.', $this->route()->getName());
+
+        /** @var PeriodService|IndicatorService|ResultService|TransactionService|ActivityService $service */
+        $element = '';
+        if (in_array('period', $routeParam)) {
+            $elementId = $this->id ?? '';
+            $service = app()->make(PeriodService::class);
+        } elseif (in_array('indicator', $routeParam)) {
+            $elementId = $this->indicatorId ?? '';
+            $service = app()->make(IndicatorService::class);
+        } elseif (in_array('result', $routeParam)) {
+            $elementId = $this->resultId ?? '';
+            $service = app()->make(ResultService::class);
+        } elseif (in_array('transaction', $routeParam)) {
+            $elementId = $this->transactionId ?? '';
+            $service = app()->make(TransactionService::class);
+        } else {
+            $elementId = $this->id ?? '';
+            $service = app()->make(ActivityService::class);
+            $element = str_replace('-', '_', Arr::get($routeParam, 2, ''));
+        }
+
+        return $service->getDeprecationStatusMap($elementId, $element);
+    }
+
+    /**
+     * @throws \JsonException
+     */
+    protected function getCodeListForRequestFiles($listName, $listType, bool $code = true): array
+    {
+        return getCodeList($listName, $listType, $code, filterDeprecated: true, deprecationStatusMap: $this->getDeprecatedStatusMap());
     }
 }

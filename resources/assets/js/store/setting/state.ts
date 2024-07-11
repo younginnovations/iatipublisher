@@ -1,7 +1,9 @@
 export const state = {
   publishingForm: {
+    organization_id: '',
     publisher_id: '',
     api_token: '',
+    token_status: '',
   },
   publishingInfo: {
     publisher_verification: false,

@@ -30,7 +30,9 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
             }
 
             $recipientCountryBudgetForm = sprintf('recipient_country_budget.%s', $recipientCountryBudgetIndex);
-            $rules[$recipientCountryBudgetForm . '.status'] = ['nullable', sprintf('in:%s', implode(',', array_keys(getCodeList('BudgetStatus', 'Activity'))))];
+            $rules[$recipientCountryBudgetForm . '.status'] = ['nullable', sprintf('in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('BudgetStatus', 'Activity')
+            )))];
             $budgetWarning = $this->getRecipientCountryBudgetWarning($recipientCountryBudget['recipient_country'], $recipientCountryBudgetForm);
 
             foreach ($budgetWarning as $key => $budgetRule) {
@@ -83,7 +85,9 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
         foreach ($formFields as $valueKey => $valueVal) {
             $valueForm = $formBase . '.value.' . $valueKey;
             $rules[$valueForm . '.amount'] = 'nullable|numeric|min:0';
-            $rules[$valueForm . '.currency'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Currency', 'Activity'))));
+            $rules[$valueForm . '.currency'] = sprintf('nullable|in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('Currency', 'Activity')
+            )));
             $rules[$valueForm . '.value_date'] = $valueDateRule;
         }
 
@@ -107,7 +111,9 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
 
         foreach ($formField as $budgetLineIndex => $budgetLine) {
             $rules[$formBase . '.value.' . $budgetLineIndex . '.amount'] = 'nullable|numeric|min:0';
-            $rules[$formBase . '.value.' . $budgetLineIndex . '.currency'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Currency', 'Activity'))));
+            $rules[$formBase . '.value.' . $budgetLineIndex . '.currency'] = sprintf('nullable|in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('Currency', 'Activity')
+            )));
             $rules[$formBase . '.value.' . $budgetLineIndex . '.value_date'] = $valueDateRule;
         }
 
@@ -135,6 +141,7 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
             $messages[$valueForm . '.value_date.date'] = 'The @value-date must be date.';
             $messages[sprintf('%s.value_date.after_or_equal', $valueForm)] = 'The value date field must be a date between period start and period end';
             $messages[sprintf('%s.value_date.before_or_equal', $valueForm)] = 'The value date field must be a date between period start and period end';
+            $messages[sprintf('%s.currency.in', $valueForm)] = 'The value currency is invalid.';
         }
 
         return $messages;
@@ -200,7 +207,9 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('%s.recipient_country.%s', $formBase, $recipientCountryIndex);
-            $rules[sprintf('%s.code', $recipientCountryForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Country', 'Activity'))));
+            $rules[sprintf('%s.code', $recipientCountryForm)] = sprintf('nullable|in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('Country', 'Activity')
+            )));
             $narrativeRules = $this->getWarningForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 
             foreach ($narrativeRules as $key => $narrativeRule) {

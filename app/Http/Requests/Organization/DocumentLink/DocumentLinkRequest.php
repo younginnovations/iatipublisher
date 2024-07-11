@@ -58,7 +58,9 @@ class DocumentLinkRequest extends OrganizationBaseRequest
                 $documentLinkIndex
             );
             $rules[sprintf('document_link.%s.url', $documentLinkIndex)] = 'nullable|url';
-            $rules[sprintf('document_link.%s.format', $documentLinkIndex)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('FileFormat', 'Activity'))));
+            $rules[sprintf('document_link.%s.format', $documentLinkIndex)] = sprintf('nullable|in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('FileFormat', 'Activity')
+            )));
             $rules[sprintf('document_link.%s.document_date.0.date', $documentLinkIndex)] = 'nullable|date';
             $rules = array_merge(
                 $rules,
@@ -93,7 +95,8 @@ class DocumentLinkRequest extends OrganizationBaseRequest
             $messages[sprintf(
                 'document_link.%s.url.url',
                 $documentLinkIndex
-            )] = trans('validation.url');
+            )]
+                                                                                                 = trans('validation.url');
             $messages[sprintf('document_link.%s.format.required', $documentLinkIndex)] = trans('validation.required', ['attribute' => trans('elementForm.format')]);
             $messages[sprintf('document_link.%s.document_date.0.date.date', $documentLinkIndex)] = trans('validation.date', ['attribute' => trans('elementForm.date')]);
             $messages = array_merge(
@@ -123,7 +126,9 @@ class DocumentLinkRequest extends OrganizationBaseRequest
         $rules[sprintf('%s.category', $formIndex)] = 'unique_category';
 
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
-            $rules[sprintf('%s.category.%s.code', $formIndex, $documentCategoryIndex)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('DocumentCategory', 'Activity'))));
+            $rules[sprintf('%s.category.%s.code', $formIndex, $documentCategoryIndex)] = sprintf('nullable|in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('DocumentCategory', 'Organization')
+            )));
         }
 
         return $rules;
@@ -143,14 +148,16 @@ class DocumentLinkRequest extends OrganizationBaseRequest
         $messages[sprintf(
             '%s.category.unique_category',
             $formIndex
-        )] = 'The category @code field must be unique.';
+        )]
+                  = 'The category @code field must be unique.';
 
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
             $messages[sprintf(
                 '%s.category.%s.code.required',
                 $formIndex,
                 $documentCategoryIndex
-            )] = 'The @code field is required.';
+            )]
+                = 'The @code field is required.';
         }
 
         return $messages;
@@ -170,7 +177,9 @@ class DocumentLinkRequest extends OrganizationBaseRequest
         $rules[sprintf('%s.language', $formIndex)] = 'unique_language';
 
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
-            $rules[sprintf('%s.language.%s.language', $formIndex, $documentCategoryIndex)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Language', 'Activity'))));
+            $rules[sprintf('%s.language.%s.language', $formIndex, $documentCategoryIndex)] = sprintf('nullable|in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('Language', 'Activity')
+            )));
         }
 
         return $rules;
@@ -190,14 +199,16 @@ class DocumentLinkRequest extends OrganizationBaseRequest
         $messages[sprintf(
             '%s.language.unique_language',
             $formIndex
-        )] = 'The language @code field must be unique.';
+        )]
+                  = 'The language @code field must be unique.';
 
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
             $messages[sprintf(
                 '%s.language.%s.code.required',
                 $formIndex,
                 $documentCategoryIndex
-            )] = 'The @code field is required.';
+            )]
+                = 'The @code field is required.';
         }
 
         return $messages;
@@ -217,7 +228,9 @@ class DocumentLinkRequest extends OrganizationBaseRequest
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountryVal) {
             $budgetItemForm = sprintf('%s.recipient_country.%s', $formIndex, $recipientCountryIndex);
-            $rules[sprintf('%s.code', $budgetItemForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Country', 'Activity'))));
+            $rules[sprintf('%s.code', $budgetItemForm)] = sprintf('nullable|in:%s', implode(',', array_keys(
+                $this->getCodeListForRequestFiles('Country', 'Activity')
+            )));
 
             foreach ($this->getWarningForNarrative($recipientCountryVal['narrative'], $budgetItemForm) as $index => $rule) {
                 $rules[$index] = $rule;

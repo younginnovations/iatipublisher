@@ -9,6 +9,7 @@ use App\Http\Requests\Organization\RecipientRegionBudget\RecipientRegionBudgetRe
 use App\IATI\Services\Organization\RecipientRegionBudgetService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -24,7 +25,7 @@ class RecipientRegionBudgetController extends Controller
     /**
      * RecipientRegionBudgetController Constructor.
      *
-     * @param recipientRegionBudgetService    $recipientRegionBudgetService
+     * @param RecipientRegionBudgetService    $recipientRegionBudgetService
      */
     public function __construct(RecipientRegionBudgetService $recipientRegionBudgetService)
     {
@@ -42,7 +43,7 @@ class RecipientRegionBudgetController extends Controller
             $id = Auth::user()->organization_id;
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
             $organization = $this->recipientRegionBudgetService->getOrganizationData($id);
-            $form = $this->recipientRegionBudgetService->formGenerator($id);
+            $form = $this->recipientRegionBudgetService->formGenerator($id, Arr::get($organization->deprecation_status_map, 'recipient_region_budget', []));
             $data = ['title' => $element['recipient_region_budget']['label'], 'name' => 'recipient_region_budget'];
 
             return view('admin.organisation.forms.recipientRegionBudget.recipientRegionBudget', compact('form', 'organization', 'data'));

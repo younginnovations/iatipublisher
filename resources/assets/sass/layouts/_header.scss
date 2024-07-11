@@ -81,7 +81,7 @@
   }
 }
 .dropdown__content {
-  @apply invisible absolute right-0 top-7 hidden h-56 bg-white py-7 px-8 opacity-0 duration-300 xl:block;
+  @apply invisible absolute right-0 top-7 hidden h-56 bg-white px-8 py-7 opacity-0 duration-300 xl:block;
   width: 424px;
   height: auto;
   line-height: 22px;

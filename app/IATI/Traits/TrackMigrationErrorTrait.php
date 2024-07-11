@@ -86,7 +86,7 @@ trait TrackMigrationErrorTrait
             $this->populateMigrationXlsx($worksheet, Arr::get($errorsArray, $key, []), $sheetHeaders);
         }
 
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer = new Xlsx($spreadsheet);
         $writer->save(storage_path('app/Migration/Migration-errors.xlsx'));
     }
 

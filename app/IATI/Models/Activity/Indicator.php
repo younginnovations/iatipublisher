@@ -34,6 +34,7 @@ class Indicator extends Model implements Auditable
         'updated_at',
         'migrated_from_aidstream',
         'indicator_code',
+        'deprecation_status_map',
     ];
 
     /**
@@ -42,6 +43,7 @@ class Indicator extends Model implements Auditable
     protected $casts
         = [
             'indicator' => 'json',
+            'deprecation_status_map' => 'json',
         ];
 
     /**

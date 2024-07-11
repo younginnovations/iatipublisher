@@ -20,7 +20,7 @@ class OrganizationIdentifierRequest extends FormRequest
     {
         return [
             'organization_registration_agency' => 'required',
-            'registration_number' => ['required', 'not_regex:/(&|!|\/|\||\?)/'],
+            'registration_number'              => ['required', 'not_regex:/(&|!|\/|\||\?)/'],
         ];
     }
 

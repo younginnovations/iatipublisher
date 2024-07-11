@@ -1,32 +1,36 @@
 {
-  "date-last-modified": "2017-07-03T16:29:56.952661+00:00",
-  "version": "",
-  "name": "DisbursementChannel",
-  "xml:lang": "en",
-  "DisbursementChannel": [
-    {
-      "code": "1",
-      "name": "Money is disbursed through central Ministry of Finance or Treasury",
-      "language": "en",
-      "description": "Money is disbursed through central Ministry of Finance or Treasury"
-    },
-    {
-      "code": "2",
-      "name": "Money is disbursed directly to the implementing institution and managed through a separate bank account",
-      "language": "en",
-      "description": "Money is disbursed directly to the implementing institution and managed through a separate bank account"
-    },
-    {
-      "code": "3",
-      "name": "Aid in kind: Donors utilise third party agencies, e.g. NGOs or management companies",
-      "language": "en",
-      "description": "Aid in kind: Donors utilise third party agencies, e.g. NGOs or management companies"
-    },
-    {
-      "code": "4",
-      "name": "Aid in kind: Donors manage funds themselves",
-      "language": "en",
-      "description": "Aid in kind: Donors manage funds themselves"
-    }
-  ]
+    "date-last-modified": "2024-06-19 06:11:18",
+    "version": "",
+    "name": "DisbursementChannel",
+    "xml:lang": "en",
+    "DisbursementChannel": [
+        {
+            "code": "1",
+            "name": "Money is disbursed through central Ministry of Finance or Treasury",
+            "description": "Money is disbursed through central Ministry of Finance or Treasury",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "2",
+            "name": "Money is disbursed directly to the implementing institution and managed through a separate bank account",
+            "description": "Money is disbursed directly to the implementing institution and managed through a separate bank account",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "3",
+            "name": "Aid in kind: Donors utilise third party agencies, e.g. NGOs or management companies",
+            "description": "Aid in kind: Donors utilise third party agencies, e.g. NGOs or management companies",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "4",
+            "name": "Aid in kind: Donors manage funds themselves",
+            "description": "Aid in kind: Donors manage funds themselves",
+            "status": "active",
+            "language": "en"
+        }
+    ]
 }

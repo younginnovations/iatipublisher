@@ -1,5 +1,5 @@
 <template>
-  <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
+  <div class="relative bg-paper px-5 pb-[71px] pt-4 xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       title="Transaction List"

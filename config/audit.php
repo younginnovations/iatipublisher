@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'implementation' => \App\IATI\Models\Audit\Audit::class,
+    'implementation' => App\IATI\Models\Audit\Audit::class,
 
     /*
     |--------------------------------------------------------------------------

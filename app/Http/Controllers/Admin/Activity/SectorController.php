@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\SectorService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 use JsonException;
 
 /**
@@ -44,7 +45,8 @@ class SectorController extends Controller
         try {
             $activity = $this->sectorService->getActivityData($id);
             $element = $this->getSectorManipulatedElementSchema($activity);
-            $form = $this->sectorService->formGenerator($id, $element);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'sector', []);
+            $form = $this->sectorService->formGenerator($id, $element, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'sector'];
 
             return view('admin.activity.sector.edit', compact('form', 'activity', 'data'));

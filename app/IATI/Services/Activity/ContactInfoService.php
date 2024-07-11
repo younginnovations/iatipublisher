@@ -83,7 +83,15 @@ class ContactInfoService
             }
         }
 
-        return $this->activityRepository->update($id, ['contact_info' => array_values($contactInfo['contact_info'])]);
+        $contactInfo = array_values($contactInfo['contact_info']);
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['contact_info'] = doesContactInfoHaveDeprecatedCode($contactInfo);
+
+        return $this->activityRepository->update($id, [
+            'contact_info'           => $contactInfo,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -94,13 +102,13 @@ class ContactInfoService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('contact_info');
         $model['contact_info'] = $this->getContactInfoData($id) ?: [];
         $this->parentCollectionFormCreator->url = route('admin.activity.contact-info.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Constants\CoreElements;
 use App\IATI\Models\User\Role;
+use App\IATI\Services\Setting\SettingService;
 use Carbon\Carbon;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
@@ -58,7 +61,7 @@ if (!function_exists('readElementGroup')) {
     {
         $completePath = 'AppData/Data/Activity/ElementGroup.json';
 
-        return json_decode(Cache::get($completePath) ?? file_get_contents(public_path($completePath)), true);
+        return json_decode(getJsonFromSource($completePath), true);
     }
 }
 
@@ -207,34 +210,6 @@ if (!function_exists('getDefaultOrganizationElementStatus')) {
     }
 }
 
-if (!function_exists('getCoreElements')) {
-    /**
-     * Returns Core Elements.
-     *
-     * @return array
-     */
-    function getCoreElements(): array
-    {
-        return [
-            'reporting_org',
-            'iati_identifier',
-            'title',
-            'description',
-            'participating_org',
-            'activity_status',
-            'activity_date',
-            'recipient_country',
-            'recipient_region',
-            'sector',
-            'collaboration_type',
-            'default_flow_type',
-            'default_finance_type',
-            'default_aid_type',
-            'budget',
-            'transactions',
-        ];
-    }
-}
 if (!function_exists('getMandatoryElements')) {
     /**
      * Returns Core Elements.
@@ -253,35 +228,6 @@ if (!function_exists('getMandatoryElements')) {
             'recipient_country_budget',
             'recipient_region_budget',
             'document_link',
-        ];
-    }
-}
-
-if (!function_exists('getCoreElementsWithTrueValue')) {
-    /**
-     * Returns Core Elements with true value.
-     *
-     * @return array
-     */
-    function getCoreElementsWithTrueValue(): array
-    {
-        return [
-            'reporting_org' => true,
-            'iati_identifier' => true,
-            'title' => true,
-            'description' => true,
-            'participating_org' => true,
-            'activity_status' => true,
-            'activity_date' => true,
-            'recipient_country' => true,
-            'recipient_region' => true,
-            'sector' => true,
-            'collaboration_type' => true,
-            'default_flow_type' => true,
-            'default_finance_type' => true,
-            'default_aid_type' => true,
-            'budget' => true,
-            'transactions' => true,
         ];
     }
 }
@@ -318,7 +264,7 @@ if (!function_exists('isCoreElementCompleted')) {
      */
     function isCoreElementCompleted($elementStatus): bool
     {
-        return empty(array_diff_assoc(getCoreElementsWithTrueValue(), $elementStatus));
+        return empty(array_diff_assoc(CoreElements::getCoreElementsWithTrueValue(), $elementStatus));
     }
 }
 
@@ -358,16 +304,29 @@ if (!function_exists('getCodeList')) {
      * @param      $listName
      * @param      $listType
      * @param bool $code
+     * @param bool $filterDeprecated
+     * @param array $deprecationStatusMap
      *
      * @return array
      * @throws JsonException
      */
-    function getCodeList($listName, $listType, bool $code = true): array
+    function getCodeList($listName, $listType, bool $code = true, bool $filterDeprecated = false, $deprecationStatusMap = []): array
     {
         $completePath = "AppData/Data/$listType/$listName.json";
-        $codeListFromFile = Cache::get($completePath) ?? file_get_contents(public_path($completePath));
+        $codeListFromFile = getJsonFromSource($completePath);
         $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
         $codeList = $codeLists[$listName];
+
+        if ($filterDeprecated) {
+            $possibleSuffixes = getKeysThatUseThisCodeList($completePath);
+
+            $deprecatedCodesInUse = filterArrayByKeyEndsWithPossibleSuffixes(flattenArrayWithKeys($deprecationStatusMap), $possibleSuffixes);
+
+            $codeList = array_filter($codeList, function ($item) use ($deprecatedCodesInUse) {
+                return filterDeprecated($item, Arr::flatten($deprecatedCodesInUse));
+            });
+        }
+
         $data = [];
 
         foreach ($codeList as $list) {
@@ -391,7 +350,7 @@ if (!function_exists('getCodeListArray')) {
     function getCodeListArray($listName, $listType, bool $code = true): array
     {
         $completePath = "AppData/Data/$listType/$listName.json";
-        $content = Cache::get($completePath) ?? file_get_contents(public_path($completePath));
+        $content = getJsonFromSource($completePath);
         $codeListFromFile = json_decode($content);
         $data = [];
 
@@ -416,7 +375,7 @@ if (!function_exists('getList')) {
     function getList(string $filePath, bool $code = true): array
     {
         $completePath = "AppData/Data/$filePath";
-        $codeListFromFile = Cache::get($completePath) ?? file_get_contents(public_path($completePath));
+        $codeListFromFile = getJsonFromSource($completePath);
         $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
         $codeList = last($codeLists);
         $data = [];
@@ -444,26 +403,26 @@ if (!function_exists('getTransactionTypes')) {
     function getTransactionTypes(): array
     {
         return [
-            'transactionType' => getCodeList('TransactionType', 'Activity', false),
-            'organizationType' => getCodeList('OrganizationType', 'Organization', false),
-            'disbursementChannel' => getCodeList('DisbursementChannel', 'Activity', false),
-            'sectorVocabulary' => getCodeList('SectorVocabulary', 'Activity', false),
-            'sectorCode' => getCodeList('SectorCode', 'Activity', false),
-            'sectorCategory' => getCodeList('SectorCategory', 'Activity', false),
-            'unsdgGoals' => getCodeList('UNSDG-Goals', 'Activity', false),
-            'unsdgTargets' => getCodeList('UNSDG-Targets', 'Activity', false),
-            'countryCode' => getCodeList('Country', 'Activity', false),
-            'regionVocabulary' => getCodeList('RegionVocabulary', 'Activity', false),
-            'regionCode' => getCodeList('Region', 'Activity', false),
-            'flowType' => getCodeList('FlowType', 'Activity', false),
-            'financeType' => getCodeList('FinanceType', 'Activity', false),
-            'tiedStatusType' => getCodeList('TiedStatus', 'Activity', false),
-            'aidTypeVocabulary' => getCodeList('AidTypeVocabulary', 'Activity', false),
-            'aidType' => getCodeList('AidType', 'Activity', false),
+            'transactionType'          => getCodeList('TransactionType', 'Activity', false),
+            'organizationType'         => getCodeList('OrganizationType', 'Organization', false),
+            'disbursementChannel'      => getCodeList('DisbursementChannel', 'Activity', false),
+            'sectorVocabulary'         => getCodeList('SectorVocabulary', 'Activity', false),
+            'sectorCode'               => getCodeList('SectorCode', 'Activity', false),
+            'sectorCategory'           => getCodeList('SectorCategory', 'Activity', false),
+            'unsdgGoals'               => getCodeList('UNSDG-Goals', 'Activity', false),
+            'unsdgTargets'             => getCodeList('UNSDG-Targets', 'Activity', false),
+            'countryCode'              => getCodeList('Country', 'Activity', false),
+            'regionVocabulary'         => getCodeList('RegionVocabulary', 'Activity', false),
+            'regionCode'               => getCodeList('Region', 'Activity', false),
+            'flowType'                 => getCodeList('FlowType', 'Activity', false),
+            'financeType'              => getCodeList('FinanceType', 'Activity', false),
+            'tiedStatusType'           => getCodeList('TiedStatus', 'Activity', false),
+            'aidTypeVocabulary'        => getCodeList('AidTypeVocabulary', 'Activity', false),
+            'aidType'                  => getCodeList('AidType', 'Activity', false),
             'cashAndVoucherModalities' => getCodeList('CashandVoucherModalities', 'Activity', false),
-            'earMarkingCategory' => getCodeList('EarmarkingCategory', 'Activity', false),
-            'earMarkingModality' => getCodeList('EarmarkingModality', 'Activity', false),
-            'languages' => getCodeList('Language', 'Activity', false),
+            'earMarkingCategory'       => getCodeList('EarmarkingCategory', 'Activity', false),
+            'earMarkingModality'       => getCodeList('EarmarkingModality', 'Activity', false),
+            'languages'                => getCodeList('Language', 'Activity', false),
         ];
     }
 }
@@ -478,10 +437,10 @@ if (!function_exists('getResultTypes')) {
     function getResultTypes(): array
     {
         return [
-            'resultType' => getCodeList('ResultType', 'Activity', false),
+            'resultType'       => getCodeList('ResultType', 'Activity', false),
             'resultVocabulary' => getCodeList('ResultVocabulary', 'Activity', false),
             'indicatorMeasure' => getCodeList('IndicatorMeasure', 'Activity', false),
-            'language' => getCodeList('Language', 'Activity', false),
+            'language'         => getCodeList('Language', 'Activity', false),
             'documentCategory' => getCodeList('DocumentCategory', 'Activity', false),
         ];
     }
@@ -498,10 +457,10 @@ if (!function_exists('getIndicatorTypes')) {
     {
         return [
             'indicatorVocabulary' => getCodeList('IndicatorVocabulary', 'Activity'),
-            'indicatorMeasure' => getCodeList('IndicatorMeasure', 'Activity', false),
-            'language' => getCodeList('Language', 'Activity', false),
-            'documentCategory' => getCodeList('DocumentCategory', 'Activity', false),
-            'fileFormat' => getCodeList('FileFormat', 'Activity', false),
+            'indicatorMeasure'    => getCodeList('IndicatorMeasure', 'Activity', false),
+            'language'            => getCodeList('Language', 'Activity', false),
+            'documentCategory'    => getCodeList('DocumentCategory', 'Activity', false),
+            'fileFormat'          => getCodeList('FileFormat', 'Activity', false),
         ];
     }
 }
@@ -517,9 +476,9 @@ if (!function_exists('getPeriodTypes')) {
     {
         return [
             'indicatorMeasure' => getCodeList('IndicatorMeasure', 'Activity', false),
-            'language' => getCodeList('Language', 'Activity', false),
+            'language'         => getCodeList('Language', 'Activity', false),
             'documentCategory' => getCodeList('DocumentCategory', 'Activity', false),
-            'fileFormat' => getCodeList('FileFormat', 'Activity', false),
+            'fileFormat'       => getCodeList('FileFormat', 'Activity', false),
         ];
     }
 }
@@ -551,7 +510,7 @@ if (!function_exists('isCoreElement')) {
      */
     function isCoreElement($element): bool
     {
-        return in_array($element, getCoreElements(), true);
+        return in_array($element, CoreElements::all(), true);
     }
 }
 
@@ -588,7 +547,7 @@ if (!function_exists('getTableConfig')) {
             'organisation' => [
                 'orderBy'   => ['updated_at', 'all_activities_count', 'name', 'registered_on', 'publisher_type', 'data_license', 'country', 'last_logged_in'],
                 'direction' => ['asc', 'desc'],
-                'filters'=>[
+                'filters' => [
                     'completeness'      => 'single',
                     'registration_type' => 'single',
                     'country'           => 'multiple',
@@ -865,7 +824,7 @@ if (!function_exists('getAllocatedPercentageOfRecipientRegion')) {
      *
      * @return float
      */
-    function getAllocatedPercentageOfRecipientRegion($activity):float
+    function getAllocatedPercentageOfRecipientRegion($activity): float
     {
         $data = $activity->recipient_region;
         $groupedRegion = [];
@@ -1016,5 +975,378 @@ if (!function_exists('getTimestampFromSingleXml')) {
         }
 
         return $activity->updated_at->toIso8601String();
+    }
+}
+
+if (!function_exists('getJsonFromSource')) {
+    /**
+     * Return codelist json.
+     *
+     * @param string $completePath
+     *
+     * @return string
+     */
+    function getJsonFromSource(string $completePath): string
+    {
+        if (env('APP_ENV') === 'local') {
+            return file_get_contents(public_path($completePath));
+        }
+
+        $jsonString = Cache::get($completePath);
+
+        if (!$jsonString) {
+            $jsonString = awsGetFile($completePath);
+
+            Cache::set($completePath, $jsonString);
+        }
+
+        return $jsonString;
+    }
+}
+
+if (!function_exists('getDefaultValue')) {
+    /**
+     * Returns Default value.
+     *
+     * @param $defaultValueList
+     * @param $selectDefaultValueKey
+     *
+     * @return string|null
+     *
+     * @throws JsonException
+     */
+    function getDefaultValue($defaultValueList, $selectDefaultValueKey, $location = []): ?string
+    {
+        $defaultValueKeys = [
+            'language'  => 'default_language',
+            'currency'  => 'default_currency',
+            'default_aid_type'   => 'default_aid_type',
+            'collaboration_type'    => 'default_collaboration_type',
+            'default_flow_type'     => 'default_flow_type',
+            'default_finance_type'  => 'default_finance_type',
+            'default_tied_status'   => 'default_tied_status',
+        ];
+
+        if (isset($defaultValueKeys[$selectDefaultValueKey]) && isset($defaultValueList[$defaultValueKeys[$selectDefaultValueKey]])) {
+            $explodedLocation = explode('/', $location);
+            $type = $explodedLocation[0];
+            $jsonFile = str_replace('.json', '', $explodedLocation[1]);
+            $codeList = getCodeList($jsonFile, $type, filterDeprecated: true);
+            $defaultValue = $defaultValueList[$defaultValueKeys[$selectDefaultValueKey]];
+
+            return $codeList[$defaultValue] ?? null;
+        }
+
+        return null;
+    }
+}
+
+if (!function_exists('getSettingDefaultLanguage')) {
+    /**
+     * Returns default language from settings.
+     *
+     * @return string|null
+     * @throws JsonException
+     *
+     * @throws BindingResolutionException
+     */
+    function getSettingDefaultLanguage(): ?string
+    {
+        $settingService = app()->make(SettingService::class);
+        $settingsDefaultValue = $settingService->getSetting()->default_values ?? [];
+
+        return getDefaultValue($settingsDefaultValue, 'language', 'Activity/Language.json' ?? []);
+    }
+}
+
+if (!function_exists('getTimestampFromOrganizationXml')) {
+    /**
+     * Returns timestamp from xml file or last updated at if xml not exists.
+     *
+     * @param string $publisherId
+     *
+     * @return string
+     */
+    function getTimestampFromOrganizationXml(string $publisherId, App\IATI\Models\Organization\Organization $organization): string
+    {
+        $xmlName = "$publisherId-organisation.xml";
+        $xmlPath = "organizationXmlFiles/$xmlName";
+
+        if (awsHasFile($xmlPath)) {
+            $xmlString = awsGetFile($xmlPath);
+
+            if ($xmlString) {
+                $xmlContent = new SimpleXMLElement($xmlString);
+
+                $lastUpdatedDatetime = (string) $xmlContent->xpath('//iati-organisation/@last-updated-datetime')[0];
+
+                if ($lastUpdatedDatetime) {
+                    $carbonDate = Carbon::parse($lastUpdatedDatetime);
+
+                    return $carbonDate->toIso8601String();
+                }
+            }
+        }
+
+        return $organization->updated_at->toIso8601String();
+    }
+}
+
+if (!function_exists('addAdditionalLabel')) {
+    /**
+     * @param string $parentElement
+     * @param string $elementName
+     *
+     * @return string
+     */
+    function generateAddAdditionalLabel(string $parentElement, string $elementName): string
+    {
+        $elementName = str_replace('_', '', $elementName);
+
+        if ($parentElement === 'reporting_org' && $elementName === 'narrative') {
+            $elementName = 'name';
+        }
+
+        return "Add additional $elementName";
+    }
+}
+
+if (!function_exists('arrayToLowercase')) {
+    function arrayToLowercase(array $array)
+    {
+        $lowercaseArray = [];
+
+        foreach ($array as $key => $value) {
+            $lowercaseKey = is_string($key) ? strtolower($key) : $key;
+
+            if (is_array($value)) {
+                $lowercaseValue = arrayToLowercase($value);
+            } elseif (is_string($value)) {
+                $lowercaseValue = strtolower($value);
+            } else {
+                $lowercaseValue = $value;
+            }
+
+            $lowercaseArray[$lowercaseKey] = $lowercaseValue;
+        }
+
+        return $lowercaseArray;
+    }
+}
+
+if (!function_exists('flattenArrayWithKeys')) {
+    function flattenArrayWithKeys($array, $prefix = ''): array
+    {
+        $result = [];
+
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $result = array_merge($result, flattenArrayWithKeys($value, $prefix . $key . '.'));
+            } else {
+                $result[$prefix . $key] = $value;
+            }
+        }
+
+        return $result;
+    }
+}
+
+if (!function_exists('refreshActivityDeprecationStatusMap')) {
+    function refreshActivityDeprecationStatusMap(array $activity): array
+    {
+        $deprecationMap = [];
+
+        foreach ($activity as $attribute => $value) {
+            $callable = match ($attribute) {
+                'iati_identifier' => 'doesIdentifierHaveDeprecatedCode',
+                'title' => 'doesTitleHaveDeprecatedCode',
+                'default_field_values' => 'doesDefaultFieldValuesHaveDeprecatedCode',
+                'description' => 'doesDescriptionHaveDeprecatedCode',
+                'activity_date' => 'doesActivityDateHaveDeprecatedCode',
+                'participating_org',
+                'participating_organization' => 'doesParticipatingOrgHaveDeprecatedCode',
+                'recipient_country' => 'doesRecipientCountryHaveDeprecatedCode',
+                'recipient_region' => 'doesRecipientRegionHaveDeprecatedCode',
+                'sector' => 'doesSectorHaveDeprecatedCode',
+                'activity_scope' => 'doesActivityScopeHaveDeprecatedCode',
+                'activity_status' => 'doesActivityStatusHaveDeprecatedCode',
+                'budget' => 'doesBudgetHaveDeprecatedCode',
+                'policy_marker' => 'doesPolicyMarkerHaveDeprecatedCode',
+                'related_activity' => 'doesRelatedActivityHaveDeprecatedCode',
+                'contact_info' => 'doesContactInfoHaveDeprecatedCode',
+                'other_identifier' => 'doesOtherIdentifierHaveDeprecatedCode',
+                'tag' => 'doesTagHaveDeprecatedCode',
+                'collaboration_type' => 'doesCollaborationTypeHaveDeprecatedCode',
+                'default_flow_type' => 'doesDefaultFlowTypeHaveDeprecatedCode',
+                'default_finance_type' => 'doesDefaultFinanceTypeHaveDeprecatedCode',
+                'default_tied_status' => 'doesDefaultTiedStatusHaveDeprecatedCode',
+                'default_aid_type' => 'doesDefaultAidTypeHaveDeprecatedCode',
+                'country_budget_item' => 'doesCountryBudgetItemHaveDeprecatedCode',
+                'humanitarian_scope' => 'doesHumanitarianScopeHaveDeprecatedCode',
+                'capital_spend' => 'doesCapitalSpendHaveDeprecatedCode',
+                'condition' => 'doesConditionHaveDeprecatedCode',
+                'legacy_data' => 'doesLegacyDataHaveDeprecatedCode',
+                'document_link' => 'doesDocumentLinkHaveDeprecatedCode',
+                'location' => 'doesLocationHaveDeprecatedCode',
+                'planned_disbursement' => 'doesPlannedDisbursementHaveDeprecatedCode',
+                default => 'default'
+            };
+
+            if (is_callable($callable)) {
+                if (in_array($attribute, ['activity_scope', 'activity_status', 'default_flow_type', 'default_finance_type', 'default_tied_status'])) {
+                    $element = ['code'=>$value];
+                } else {
+                    $element = $value;
+                }
+
+                $deprecationMap[$attribute] = call_user_func($callable, $element);
+            }
+        }
+
+        return $deprecationMap;
+    }
+}
+
+if (!function_exists('refreshTransactionDeprecationStatusMap')) {
+    function refreshTransactionDeprecationStatusMap(array $transaction): array
+    {
+        return [
+            'humanitarian'          => doesHumanitarianHaveDeprecatedCode($transaction['humanitarian'] ?? []),
+            'transaction_type'      => doesTransactionTypeHaveDeprecatedCode($transaction['transaction_type'] ?? []),
+            'description'           => doesDescriptionHaveDeprecatedCode($transaction['description'] ?? []),
+            'provider_organization' => doesProviderOrganizationHaveDeprecatedCode($transaction['provider_organization'] ?? []),
+            'receiver_organization' => doesReceiverOrganizationHaveDeprecatedCode($transaction['receiver_organization'] ?? []),
+            'disbursement_channel'  => doesDisbursementChannelHaveDeprecatedCode($transaction['disbursement_channel'] ?? []),
+            'sector'                => doesRecipientRegionHaveDeprecatedCode($transaction['sector'] ?? []),
+            'recipient_country'     => doesRecipientCountryHaveDeprecatedCode($transaction['recipient_country'] ?? []),
+            'recipient_region'      => doesRecipientRegionHaveDeprecatedCode($transaction['recipient_region'] ?? []),
+            'flow_type'             => doesFlowTypeHaveDeprecatedCode($transaction['flow_type'] ?? []),
+            'finance_type'          => doesFinanceTypeHaveDeprecatedCode($transaction['finance_type'] ?? []),
+            'aid_type'              => doesAidTypeHaveDeprecatedCode($transaction['aid_type'] ?? []),
+            'tied_status'           => doesTiedStatusHaveDeprecatedCode($transaction['tied_status'] ?? []),
+            'value'                 => doesValueHaveDeprecatedCode($transaction['value'] ?? []),
+        ];
+    }
+}
+
+if (!function_exists('refreshResultDeprecationStatusMap')) {
+    function refreshResultDeprecationStatusMap(array $results): array
+    {
+        $compareMap = [
+            'type'       => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/TagVocabulary.json'),
+            'format'     => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/TagVocabulary.json'),
+            'code'       => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/DocumentCategory.json'),
+            'language'   => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/Language.json'),
+            'vocabulary' => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/ResultVocabulary.json'),
+        ];
+
+        return generateDeprecationMap($results, $compareMap);
+    }
+}
+
+if (!function_exists('refreshIndicatorDeprecationStatusMap')) {
+    function refreshIndicatorDeprecationStatusMap(array $indicators): array
+    {
+        return [
+            'measure'       => doesMeasureHaveDeprecatedCode(['code' => Arr::get($indicators, 'measure', [])]),
+            'title'         => doesTitleHaveDeprecatedCode(Arr::get($indicators, 'title', [])),
+            'description'   => doesDescriptionHaveDeprecatedCode(Arr::get($indicators, 'description', [])),
+            'document_link' => doesDocumentLinkHaveDeprecatedCode(Arr::get($indicators, 'document_link', [])),
+            'reference'     => doesReferenceHaveDeprecatedCode(Arr::get($indicators, 'reference', [])),
+            'baseline'      => doesBaselineHaveDeprecatedCode(Arr::get($indicators, 'baseline', []))];
+    }
+}
+
+if (!function_exists('refreshPeriodDeprecationStatusMap')) {
+    function refreshPeriodDeprecationStatusMap(array $periods): array
+    {
+        $compareMap = [
+            'format'     => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/TagVocabulary.json'),
+            'code'       => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/DocumentCategory.json'),
+            'language'   => onlyDeprecatedItemsFromCodeList('AppData/Data/Activity/Language.json'),
+        ];
+
+        return generateDeprecationMap($periods, $compareMap);
+    }
+}
+
+if (!function_exists('unsetDeprecatedFieldValues')) {
+    /**
+     * @param $activity
+     *
+     * @return array
+     */
+    function unsetDeprecatedFieldValues($activity): array
+    {
+        if (isset($activity['transaction'])) {
+            $flattenedTransaction = flattenArrayWithKeys(
+                ['transaction'=>refreshTransactionDeprecationStatusMap(Arr::only($activity, 'transaction', []))]
+            );
+        }
+
+        if (isset($activity['transactions'])) {
+            $flattenedTransactions = flattenArrayWithKeys(
+                ['transactions'=>refreshTransactionDeprecationStatusMap(Arr::only($activity, 'transactions', []))]
+            );
+        }
+
+        if (isset($activity['results'])) {
+            $flattenResult = flattenArrayWithKeys(
+                ['results'=>refreshResultDeprecationStatusMap(Arr::only($activity, 'results', []))]
+            );
+        }
+
+        if (isset($activity['results'])) {
+            $flattenResult = flattenArrayWithKeys(
+                ['results'=>refreshResultDeprecationStatusMap(Arr::only($activity, 'results', []))]
+            );
+        }
+
+        if (isset($activity['results'])) {
+            $flattenResult = flattenArrayWithKeys(
+                ['results'=>refreshResultDeprecationStatusMap(Arr::only($activity, 'results', []))]
+            );
+        }
+
+        $flattenActivity = flattenArrayWithKeys(refreshActivityDeprecationStatusMap(Arr::except($activity, ['transaction', 'transactions', 'results'])));
+        $flattened = array_merge($flattenActivity, $flattenedTransaction ?? [], $flattenedTransactions ?? [], $flattenResult ?? []);
+
+        foreach ($flattened as $key => $value) {
+            if ($value) {
+                Arr::set($activity, $key, null);
+            }
+        }
+
+        return $activity;
+    }
+}
+
+if (!function_exists('changeEmptySpaceValueToNullValue')) {
+    function changeEmptySpaceValueToNullValue(array $arr): array
+    {
+        foreach ($arr as &$value) {
+            if (is_string($value)) {
+                $value = trim($value);
+            }
+
+            if ($value === '') {
+                $value = null;
+            }
+        }
+
+        return $arr;
+    }
+}
+
+if (!function_exists('convertDotKeysToNestedArray')) {
+    function convertDotKeysToNestedArray(array $array): array
+    {
+        $result = [];
+
+        foreach ($array as $key => $value) {
+            Arr::set($result, $key, $value);
+        }
+
+        return $result;
     }
 }

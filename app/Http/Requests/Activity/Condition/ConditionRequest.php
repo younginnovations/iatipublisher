@@ -24,39 +24,6 @@ class ConditionRequest extends ActivityBaseRequest
     }
 
     /**
-     * Get the error message as required.
-     *
-     * @return array
-     */
-    public function messages(): array
-    {
-        return $this->getMessagesForCondition($this->get('condition'));
-    }
-
-    /**
-     * Returns rules for related activity.
-     *
-     * @param array $formFields
-     *
-     * @return array
-     */
-    public function getErrorsForCondition(array $formFields): array
-    {
-        $rules = [];
-
-        foreach ($formFields as $conditionIndex => $condition) {
-            $conditionForm = sprintf('condition.%s', $conditionIndex);
-            $rules[sprintf('%s.condition_type', $conditionForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('ConditionType', 'Activity', false)));
-
-            foreach ($this->getErrorsForNarrative($condition['narrative'], $conditionForm) as $conditionNarrativeIndex => $conditionNarrativeRules) {
-                $rules[$conditionNarrativeIndex] = $conditionNarrativeRules;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
      * Returns rules for related activity.
      *
      * @param array $formFields
@@ -76,6 +43,41 @@ class ConditionRequest extends ActivityBaseRequest
         }
 
         return $rules;
+    }
+
+    /**
+     * Returns rules for related activity.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getErrorsForCondition(array $formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $conditionIndex => $condition) {
+            $conditionForm = sprintf('condition.%s', $conditionIndex);
+            $rules[sprintf('%s.condition_type', $conditionForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('ConditionType', 'Activity', false)
+            ));
+
+            foreach ($this->getErrorsForNarrative($condition['narrative'], $conditionForm) as $conditionNarrativeIndex => $conditionNarrativeRules) {
+                $rules[$conditionNarrativeIndex] = $conditionNarrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Get the error message as required.
+     *
+     * @return array
+     */
+    public function messages(): array
+    {
+        return $this->getMessagesForCondition($this->get('condition'));
     }
 
     /**

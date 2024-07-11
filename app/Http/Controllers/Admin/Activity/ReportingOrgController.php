@@ -9,6 +9,7 @@ use App\Http\Requests\Activity\ReportingOrg\ReportingOrgRequest;
 use App\IATI\Services\Activity\ReportingOrgService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -24,7 +25,7 @@ class ReportingOrgController extends Controller
     /**
      * ReportingOrgController Constructor.
      *
-     * @param reportingOrgService    $reportingOrgService
+     * @param ReportingOrgService    $reportingOrgService
      */
     public function __construct(ReportingOrgService $reportingOrgService)
     {
@@ -44,12 +45,13 @@ class ReportingOrgController extends Controller
             $element = getElementSchema('reporting_org');
             $activity = $this->reportingOrgService->getActivityData($id);
 
-            $form = $this->reportingOrgService->formGenerator($id);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'reporting_org', []);
+            $form = $this->reportingOrgService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'reporting_org'];
 
             return view('admin.activity.reportingOrg.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening activity reporting_org form.');
         }

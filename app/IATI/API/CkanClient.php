@@ -134,7 +134,7 @@ class CkanClient
      * @return mixed
      *
      * @throws \CKAN\NotFoundHttpException
-     * @throws \Exception
+     * @throws Exception
      *
      * @link http://docs.ckan.org/en/latest/api/#ckan.logic.action.create.resource_create
      */
@@ -459,7 +459,7 @@ class CkanClient
      * @link http://docs.ckan.org/en/latest/api/index.html#ckan.logic.action.delete.package_delete
      *
      * @throws \CKAN\NotFoundHttpException
-     * @throws \Exception
+     * @throws Exception
      */
     public function package_delete($package_id)
     {
@@ -470,7 +470,7 @@ class CkanClient
 
         return $this->make_request(
             'POST',
-            'action/package_delete',
+            'action/dataset_purge',
             $data
         );
     }

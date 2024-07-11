@@ -6,6 +6,9 @@ namespace App\IATI\Services\Setting;
 
 use App\IATI\Models\Setting\Setting;
 use App\IATI\Repositories\Setting\SettingRepository;
+use App\IATI\Services\ApiLog\ApiLogService;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -18,24 +21,29 @@ class SettingService
     /**
      * @var SettingRepository
      */
-    private $settingRepo;
+    private SettingRepository $settingRepo;
+
+    /**
+     * @var ApiLogService
+     */
+    private ApiLogService $apiLogService;
 
     /**
      * Sett constructor.
      *
      * @param SettingRepository $settingRepo
+     * @param ApiLogService $apiLogService
      */
-    public function __construct(SettingRepository $settingRepo)
+    public function __construct(SettingRepository $settingRepo, ApiLogService $apiLogService)
     {
         $this->settingRepo = $settingRepo;
+        $this->apiLogService = $apiLogService;
     }
 
     /**
      * Store user.
      *
-     * @param array $data
-     *
-     * @return Setting
+     * @return Setting|null
      */
     public function getSetting(): ?Setting
     {
@@ -58,6 +66,7 @@ class SettingService
                 'api_token' => $data['api_token'],
                 'publisher_verification' => $data['publisher_verification'],
                 'token_verification' => $data['token_verification'],
+                'token_status' => $data['token_status'],
             ],
         ]);
     }
@@ -102,7 +111,9 @@ class SettingService
 
         return [
             'default_status'   => $setting && $this->defaultSettingsCompleted($setting->default_values, $setting->activity_default_values),
-            'publisher_status' => $setting && $setting['publishing_info'] ? ($setting['publishing_info']['api_token'] && $setting['publishing_info']['token_verification'] ? true : false) : false,
+            'publisher_status' => $setting && $setting['publishing_info']
+                ? ($setting['publishing_info']['api_token'] && $setting['publishing_info']['token_verification'] ? true : false)
+                : false,
             'token_status' => Arr::get($setting, 'publishing_info.token_verification', false),
         ];
     }
@@ -121,12 +132,33 @@ class SettingService
             return false;
         }
 
-        unset($activity_default_values['budget_not_provided']);
+        $propertiesThatDoNotAffectCompletion = [
+            'default_collaboration_type',
+            'budget_not_provided',
+            'linked_data_uri',
+        ];
 
-        return !in_array(null, array_values($default_values), true) &&
-               !in_array('', array_values($default_values), true) &&
-               !in_array(null, array_values($activity_default_values), true) &&
-               !in_array('', array_values($activity_default_values), true);
+        $propertiesThatAffectCompletion = [
+            'hierarchy',
+            'default_flow_type',
+            'default_finance_type',
+            'default_aid_type',
+            'default_tied_status',
+            'humanitarian',
+        ];
+
+        $activity_default_values = Arr::except($activity_default_values, $propertiesThatDoNotAffectCompletion);
+
+        $completeLanguageAndCurrency = Arr::get($default_values, 'default_language', false) && Arr::get($default_values, 'default_currency', false);
+        $completeActivityDefaults = Arr::has($activity_default_values, $propertiesThatAffectCompletion)
+            && !empty($activity_default_values['hierarchy'])
+            && !empty($activity_default_values['default_flow_type'])
+            && !empty($activity_default_values['default_finance_type'])
+            && !empty($activity_default_values['default_aid_type'])
+            && !empty($activity_default_values['default_tied_status'])
+            && isset($activity_default_values['humanitarian']);
+
+        return $completeLanguageAndCurrency && $completeActivityDefaults;
     }
 
     /**
@@ -139,5 +171,56 @@ class SettingService
     public function create($data): Model
     {
         return $this->settingRepo->store($data);
+    }
+
+    /**
+     * @throws GuzzleException
+     * @throws \JsonException
+     */
+    public function verifyPublisher(array $data)
+    {
+        $client = new Client(
+            [
+                'base_uri' => env('IATI_API_ENDPOINT'),
+                'headers'  => [
+                    'X-CKAN-API-Key' => env('IATI_API_KEY'),
+                ],
+            ]
+        );
+        $requestOption = [
+            'auth'            => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
+            'query'           => ['id' => $data['publisher_id']],
+            'connect_timeout' => 500,
+        ];
+
+        $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOption);
+        $this->apiLogService->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOption, $res));
+
+        return json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
+    }
+
+    /**
+     * @throws GuzzleException
+     * @throws \JsonException
+     */
+    public function verifyApi(array $data)
+    {
+        $client = new Client(
+            [
+                'base_uri' => env('IATI_API_ENDPOINT'),
+                'headers'  => [
+                    'X-CKAN-API-Key' => $data['api_token'],
+                ],
+            ]
+        );
+        $requestOptions = [
+            'auth'            => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
+            'connect_timeout' => 500,
+        ];
+
+        $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', $requestOptions);
+        $this->apiLogService->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', $requestOptions, $res));
+
+        return json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
     }
 }

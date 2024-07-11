@@ -238,6 +238,7 @@ class RegisterTest extends TestCase
             'email'                 => 'test+1@gmail.com',
             'password'              => $password,
             'password_confirmation' => $password,
+            'default_language'      => 'en',
         ])->assertJsonStructure([
             'success',
         ])->assertJson(

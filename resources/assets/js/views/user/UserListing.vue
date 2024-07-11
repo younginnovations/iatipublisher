@@ -358,7 +358,7 @@
           </span>
           <div class="open-text h-[38px]">
             <svg-vue
-              class="absolute top-1/2 left-2 w-10 -translate-y-1/2 text-base"
+              class="absolute left-2 top-1/2 w-10 -translate-y-1/2 text-base"
               icon="magnifying-glass"
             />
             <input
@@ -383,7 +383,7 @@
           <span
             v-for="(item, index) in filter.organization"
             :key="index"
-            class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+            class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
           >
             <span class="text-n-40">Org:</span
             ><span
@@ -416,7 +416,7 @@
           <span
             v-for="(item, index) in filter.status"
             :key="index"
-            class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+            class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
           >
             <span class="text-n-40">Status:</span
             ><span>{{ textBubbledata(item, 'status') }}</span>
@@ -436,7 +436,7 @@
           class="inline-flex flex-wrap gap-2"
         >
           <span
-            class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+            class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
           >
             <span class="text-n-40">Date:</span
             ><span>{{
@@ -501,7 +501,7 @@
                 <span>Email</span>
               </th>
 
-              <th id="title" scope="col">
+              <th v-if="isSuperadmin" id="title" scope="col">
                 <span class="inline-flex items-center">
                   <span
                     v-if="
@@ -612,7 +612,7 @@
                   {{ user['email'] }}
                 </span>
               </td>
-              <td v-if="userRole === 'superadmin' || userRole === 'iati_admin'">
+              <td v-if="isSuperadmin">
                 <div class="ellipsis relative">
                   <p
                     class="w-32 overflow-x-hidden overflow-ellipsis whitespace-nowrap"
@@ -649,18 +649,24 @@
                 v-if="userRole !== 'general_user'"
                 class="flex h-full items-center space-x-6"
               >
-                <p @click="editUser(user)">
+                <p v-if="currentUserId !== user['id']" @click="editUser(user)">
                   <svg-vue
                     class="cursor-pointer text-base"
                     icon="edit-action"
                   />
                 </p>
                 <!-- <p @click="deleteUser(user['id'])"> -->
-                <p @click="openDeletemodel(user)">
+                <p
+                  v-if="currentUserId !== user['id']"
+                  @click="openDeletemodel(user)"
+                >
                   <svg-vue class="cursor-pointer text-base" icon="delete" />
                 </p>
 
-                <p @click="openStatusModel(user)">
+                <p
+                  v-if="currentUserId !== user['id']"
+                  @click="openStatusModel(user)"
+                >
                   <span
                     :class="user['status'] ? 'bg-spring-50' : 'bg-n-40'"
                     class="relative block h-4 w-7 cursor-pointer rounded-full"
@@ -669,13 +675,15 @@
                       :class="
                         user['status'] ? 'translate-x-0' : 'translate-x-full'
                       "
-                      class="absolute top-1/2 left-[2px] block h-3 w-3 -translate-y-1/2 rounded-full bg-white duration-200"
+                      class="absolute left-[2px] top-1/2 block h-3 w-3 -translate-y-1/2 rounded-full bg-white duration-200"
                     />
                   </span>
                 </p>
               </td>
-              <td>
-                <span class="relative h-5 w-5"
+              <td class="space-2">
+                <span
+                  v-if="currentUserId !== user['id']"
+                  class="relative h-5 w-5"
                   ><input
                     v-model="checklist"
                     class="user-checklist"
@@ -719,11 +727,13 @@ import moment from 'moment';
 import Pagination from 'Components/TablePagination.vue';
 import { watchIgnorable } from '@vueuse/core';
 import DateRangeWidget from 'Components/DateRangeWidget.vue';
+import { generateUsername, kebabCaseToSnakecase } from 'Composable/utils';
 
 const props = defineProps({
   organizations: { type: Object, required: true },
   status: { type: Object, required: true },
   roles: { type: Object, required: true },
+  currentUserId: { type: Object, required: true },
   userRole: { type: String, required: true },
   oldestDates: { type: String, required: true },
 });
@@ -769,6 +779,9 @@ const currentpageData = ref([]);
 const clearDate = ref(false);
 const editUserId = ref('');
 const dateType = ref('All Time');
+const isSuperadmin = ref(false);
+isSuperadmin.value =
+  props.userRole === 'superadmin' || props.userRole === 'iati_admin';
 
 const dropdownRange = {
   created_at: 'User created date',
@@ -794,7 +807,6 @@ const formError = reactive({
   password: '',
   password_confirmation: '',
 });
-import { kebabCaseToSnakecase } from 'Composable/utils';
 
 const isFilterApplied = computed(() => {
   return (
@@ -807,6 +819,13 @@ const isFilterApplied = computed(() => {
 const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
   flush: 'sync',
 });
+
+watch(
+  () => formData.full_name,
+  (fullname) => {
+    formData.username = generateUsername(fullname);
+  }
+);
 
 watch(
   () => toastData.visibility,

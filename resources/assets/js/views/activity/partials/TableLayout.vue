@@ -35,11 +35,13 @@
             <span class="hidden">Publish</span>
           </th>
           <th id="cb" scope="col">
-            <span
-              class="cursor-pointer"
-              @click="toggleSelectAll(data.data, selectAllValue)"
-            >
-              <svg-vue icon="checkbox" />
+            <span>
+              <span
+                class="cursor-pointer"
+                @click="toggleSelectAll(data.data, selectAllValue)"
+              >
+                <svg-vue icon="checkbox" />
+              </span>
             </span>
           </th>
         </tr>
@@ -59,7 +61,7 @@
             >
               <PreviouslyPublished
                 v-if="datum['linked_to_iati'] && datum['status'] === 'draft'"
-                class="absolute top-0 left-0"
+                class="absolute left-0 top-0"
               />
               <div class="ellipsis relative w-full">
                 <a
@@ -141,6 +143,7 @@
                 type="outline"
                 :activity-id="datum['id']"
                 :publish="false"
+                :deprecation-status-map="datum['deprecation_status_map']"
               />
             </div>
           </td>

@@ -47,9 +47,9 @@ class XmlGeneratorService
      * @param $settings
      * @param $organization
      *
-     * @return DomDocument|null
+     * @return DOMDocument|null
      */
-    public function generateActivityXml($activity, $transaction, $result, $settings, $organization): ?DomDocument
+    public function generateActivityXml($activity, $transaction, $result, $settings, $organization): ?DOMDocument
     {
         return $this->xmlGenerator->generateActivityXml($activity, $transaction, $result, $settings, $organization);
     }
@@ -105,16 +105,17 @@ class XmlGeneratorService
     /**
      * Appends generated/new XML content to merged xml and uploads to S3.
      *
-     * @param DomDocument $generatedXmlContent
+     * @param DOMDocument $generatedXmlContent
      * @param $settings
+     * @param string $targetIdentifier
      *
      * @return void
      *
      * @throws Exception
      */
-    public function appendCompleteActivityXmlToMergedXml(DomDocument $generatedXmlContent, $settings): void
+    public function appendCompleteActivityXmlToMergedXml(DOMDocument $generatedXmlContent, $settings, $activity, $organization): void
     {
-        $this->xmlGenerator->appendCompleteActivityXmlToMergedXml($generatedXmlContent, $settings);
+        $this->xmlGenerator->appendCompleteActivityXmlToMergedXml($generatedXmlContent, $settings, $activity, $organization);
     }
 
     /**

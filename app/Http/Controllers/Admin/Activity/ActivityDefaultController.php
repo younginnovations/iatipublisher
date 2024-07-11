@@ -42,10 +42,10 @@ class ActivityDefaultController extends Controller
     public function edit($activityId): View|RedirectResponse
     {
         try {
-            $currencies = getCodeList('Currency', 'Organization');
-            $languages = getCodeList('Language', 'Organization');
+            $currencies = getCodeList('Currency', 'Organization', filterDeprecated: true);
+            $languages = getCodeList('Language', 'Organization', filterDeprecated: true);
             $humanitarian = trans('setting.humanitarian_types');
-            $budgetNotProvided = getCodeList('BudgetNotProvided', 'Activity');
+            $budgetNotProvided = getCodeList('BudgetNotProvided', 'Activity', filterDeprecated: true);
 
             return view(
                 'admin.activity.defaultValue.edit',

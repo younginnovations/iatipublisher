@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\DefaultTiedStatusService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class DefaultTiedStatusController.
@@ -43,7 +44,8 @@ class DefaultTiedStatusController extends Controller
         try {
             $element = getElementSchema('default_tied_status');
             $activity = $this->defaultTiedStatusService->getActivityData($id);
-            $form = $this->defaultTiedStatusService->formGenerator($id);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'default_tied_status', []);
+            $form = $this->defaultTiedStatusService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'default_tied_status'];
 
             return view('admin.activity.defaultTiedStatus.edit', compact('form', 'activity', 'data'));

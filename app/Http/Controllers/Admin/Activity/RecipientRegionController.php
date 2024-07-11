@@ -11,6 +11,7 @@ use App\IATI\Services\Activity\RecipientRegionService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class RecipientRegionController.
@@ -53,7 +54,8 @@ class RecipientRegionController extends Controller
         try {
             $activity = $this->recipientRegionService->getActivityData($id);
             $element = $this->activityService->getRecipientRegionOrCountryManipulatedElementSchema($activity, 'recipient_region');
-            $form = $this->recipientRegionService->formGenerator($id, $element);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'recipient_region', []);
+            $form = $this->recipientRegionService->formGenerator($id, $element, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'recipient_region'];
 
             return view('admin.activity.recipientRegion.edit', compact('form', 'activity', 'data'));

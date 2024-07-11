@@ -361,7 +361,7 @@ trait MigrateActivityPublishedTrait
                 $existingContents = $this->replaceDocumentLinkInXml($existingContents, $iatiOrganization->id);
                 awsUploadFile($iatiMergedFile, $existingContents);
             } else {
-                $this->xmlGenerator->getMergeXml($publishedFiles, $iatiMergedFilename);
+                $this->xmlGenerator->getMergeXml($publishedFiles, $iatiMergedFilename, $activityPublished);
                 $mergedContents = awsGetFile($iatiMergedFile);
                 $mergedContents = $this->replaceDocumentLinkInXml($mergedContents, $iatiOrganization->id);
                 awsUploadFile($iatiMergedFile, $mergedContents);
@@ -447,7 +447,7 @@ trait MigrateActivityPublishedTrait
                     'Completed unpublishing segmented files for Aidstream org: ' . $aidstreamOrganizationId . '.'
                 );
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $message = "Error while unpublishing segmented files for Aidstream org: {$aidstreamOrganizationId} with error: {$exception->getMessage()}.";
             $this->setGeneralError($message)->setDetailedError(
                 $message,

@@ -70,7 +70,7 @@ class TransactionController extends Controller
 
             return view('admin.activity.transaction.transaction', compact('activity', 'transactions', 'types', 'toast'));
         } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return redirect()->route('admin.activity.show', $activityId)->with(
                 'error',
@@ -116,12 +116,12 @@ class TransactionController extends Controller
         try {
             $activity = $this->activityService->getActivity($activityId);
             $element = $this->transactionService->getManipulatedTransactionElementSchema($activity);
-            $form = $this->transactionService->createFormGenerator($activityId, $element);
+            $form = $this->transactionService->createFormGenerator($activityId, $element, $activity->default_field_values ?? []);
             $data = ['title' => $element['label'], 'name' => 'transactions'];
 
             return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return redirect()->route('admin.activity.show', $activityId)->with(
                 'error',

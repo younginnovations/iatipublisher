@@ -139,7 +139,7 @@ class ActivityWorkflowService
         );
 
         if ($generatedXmlContent) {
-            $this->xmlGeneratorService->appendCompleteActivityXmlToMergedXml($generatedXmlContent, $settings);
+            $this->xmlGeneratorService->appendCompleteActivityXmlToMergedXml($generatedXmlContent, $settings, $activity, $organization);
         } else {
             throw new \Exception('Failed appending new activity to merged xml.');
         }
@@ -248,6 +248,10 @@ class ActivityWorkflowService
      */
     public function validateActivityOnIATIValidator($activity): string
     {
+        if (!$activity->relationLoaded('transactions') || !$activity->relationLoaded('results.indicators.periods')) {
+            $activity->load(['transactions', 'results.indicators.periods']);
+        }
+
         $organization = $activity->organization;
         $settings = $organization->settings;
 

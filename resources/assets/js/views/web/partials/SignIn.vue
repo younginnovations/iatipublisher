@@ -1,17 +1,17 @@
 <template>
   <div
     id="right"
-    class="right m-auto flex basis-2/4 items-center rounded-l-lg rounded-r-lg bg-white py-5 px-5 sm:py-10 sm:px-10 md:my-0 md:rounded-l-none lg:px-14 lg:py-28 xl:px-24"
+    class="right m-auto flex basis-2/4 items-center rounded-l-lg rounded-r-lg bg-white px-5 py-5 sm:px-10 sm:py-10 md:my-0 md:rounded-l-none lg:px-14 lg:py-28 xl:px-24"
   >
     <Loader v-if="isLoaderVisible"></Loader>
 
     <div class="right__container flex w-full flex-col" @keyup.enter="login">
-      <h2 class="mb-2 hidden sm:block">Sign In.</h2>
+      <h2 class="mb-2 hidden sm:block">Sign In</h2>
       <span class="text-n-40">Welcome back! Please enter your details.</span>
       <div
         v-if="
           message !== '' &&
-          !(errorData.username || errorData.password) &&
+          !(errorData.emailOrUsername || errorData.password) &&
           intent === 'verify'
         "
         class="error mt-2 text-xs"
@@ -33,25 +33,25 @@
           </span>
         </div>
       </div>
-      <div class="relative mt-6 mb-4 flex flex-col text-sm text-bluecoral">
-        <label for="Username">Username</label>
+      <div class="relative mb-4 mt-6 flex flex-col text-sm text-bluecoral">
+        <label for="username">Email / Username</label>
         <input
           id="username"
-          v-model="formData.username"
+          v-model="formData.emailOrUsername"
           class="username input sm:h-16"
           :class="{
-            error_input: errorData.username,
+            error_input: errorData.emailOrUsername,
           }"
           type="text"
-          placeholder="Enter a registered username"
+          placeholder="Enter a registered email or username"
         />
-        <svg-vue class="absolute top-12 left-5 text-xl sm:left-6" icon="user" />
+        <svg-vue class="absolute left-5 top-12 text-xl sm:left-6" icon="user" />
         <span
-          v-if="errorData.username !== ''"
+          v-if="errorData.emailOrUsername !== ''"
           class="error text-xs"
           role="alert"
         >
-          {{ errorData.username }}
+          {{ errorData.emailOrUsername }}
         </span>
       </div>
       <div class="relative mb-4 flex flex-col text-sm text-bluecoral">
@@ -61,13 +61,13 @@
           v-model="formData.password"
           class="password input sm:h-16"
           :class="{
-            error__input: errorData.password || errorData.username,
+            error__input: errorData.password || errorData.emailOrUsername,
           }"
           type="password"
           placeholder="Enter a correct password"
         />
         <svg-vue
-          class="absolute top-12 left-5 text-xl sm:left-6"
+          class="absolute left-5 top-12 text-xl sm:left-6"
           icon="pw-lock"
         />
         <span v-if="errorData.password" class="error" role="alert">{{
@@ -115,11 +115,11 @@ export default defineComponent({
   },
   setup() {
     const formData = reactive({
-      username: '',
+      emailOrUsername: '',
       password: '',
     });
     const errorData = reactive({
-      username: '',
+      emailOrUsername: '',
       password: '',
     });
     const isLoaderVisible = ref(false);
@@ -128,7 +128,7 @@ export default defineComponent({
       isLoaderVisible.value = true;
 
       let form = {
-        username: formData.username,
+        emailOrUsername: formData.emailOrUsername,
         password: encrypt(
           formData.password,
           process.env.MIX_ENCRYPTION_KEY ?? ''
@@ -138,7 +138,7 @@ export default defineComponent({
       axios
         .post('/login', form)
         .then((response) => {
-          errorData.username = '';
+          errorData.emailOrUsername = '';
           errorData.password = '';
 
           if (!('errors' in response)) {
@@ -147,7 +147,9 @@ export default defineComponent({
         })
         .catch((error) => {
           const { errors } = error.response.data;
-          errorData.username = errors.username ? errors.username[0] : '';
+          errorData.emailOrUsername = errors.emailOrUsername
+            ? errors.emailOrUsername[0]
+            : '';
           errorData.password = errors.password ? errors.password[0] : '';
           isLoaderVisible.value = false;
         });

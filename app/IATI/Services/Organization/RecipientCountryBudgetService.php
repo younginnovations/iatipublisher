@@ -90,7 +90,14 @@ class RecipientCountryBudgetService
 
         $recipientCountryBudget = $recipientCountryBudget['recipient_country_budget'];
 
-        return $this->organizationRepository->update($id, ['recipient_country_budget' => $recipientCountryBudget]);
+        $organization = $this->organizationRepository->find($id);
+        $deprecationStatusMap = $organization->deprecation_status_map;
+        $deprecationStatusMap['recipient_country_budget'] = doesOrganisationRecipientCountryBudgetHaveDeprecatedCode($recipientCountryBudget);
+
+        return $this->organizationRepository->update($id, [
+            'recipient_country_budget' => $recipientCountryBudget,
+            'deprecation_status_map'   => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -100,13 +107,13 @@ class RecipientCountryBudgetService
      *
      * @return Form
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $deprecationStatusMap = []): Form
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
         $model['recipient_country_budget'] = $this->getRecipientCountryBudgetData($id) ?? [];
         $this->parentCollectionFormCreator->url = route('admin.organisation.recipient-country-budget.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element['recipient_country_budget'], 'PUT', '/organisation');
+        return $this->parentCollectionFormCreator->editForm($model, $element['recipient_country_budget'], 'PUT', '/organisation', deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

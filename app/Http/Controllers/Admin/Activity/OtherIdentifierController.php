@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\OtherIdentifierService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class OtherIdentifierController.
@@ -17,14 +18,14 @@ use Illuminate\Http\RedirectResponse;
 class OtherIdentifierController extends Controller
 {
     /**
-     * @var otherIdentifierService
+     * @var OtherIdentifierService
      */
     protected OtherIdentifierService $otherIdentifierService;
 
     /**
      * OtherIdentifierController Constructor.
      *
-     * @param otherIdentifierService $otherIdentifierService
+     * @param OtherIdentifierService $otherIdentifierService
      */
     public function __construct(OtherIdentifierService $otherIdentifierService)
     {
@@ -36,14 +37,20 @@ class OtherIdentifierController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View|void
      */
     public function edit(int $id): View|RedirectResponse
     {
         try {
             $element = getElementSchema('other_identifier');
             $activity = $this->otherIdentifierService->getActivityData($id);
-            $form = $this->otherIdentifierService->formGenerator($id);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'other_identifier', []);
+
+            $form = $this->otherIdentifierService->formGenerator(
+                id:$id,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap: $deprecationStatusMap
+            );
             $data = ['title' => $element['label'], 'name' => 'other_identifier'];
 
             return view('admin.activity.otherIdentifier.edit', compact('form', 'activity', 'data'));

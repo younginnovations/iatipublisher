@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto w-screen max-w-[1400px] py-8 px-6">
+  <div class="mx-auto w-screen max-w-[1400px] px-6 py-8">
     <div class="mb-3 flex flex-wrap justify-between border-b border-n-20 pb-3">
       <div class="flex gap-x-2">
         <button
@@ -85,7 +85,7 @@ interface tableDaypeteType {
 }
 
 const currentNav = ref({
-  label: 'Publisher Type',
+  label: 'Organisation Type',
   apiParams: 'publisher-type',
 });
 const tableData = ref<tableDaypeteType>({});

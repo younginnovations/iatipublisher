@@ -1,32 +1,46 @@
 {
-  "date-last-modified": "2018-06-21T16:35:13.050941+00:00",
-  "version": "",
-  "name": "TagVocabulary",
-  "xml:lang": "en",
-  "TagVocabulary": [
-    {
-      "code": "1",
-      "name": "Agrovoc",
-      "language": "en",
-      "description": "A controlled vocabulary covering all areas of interest of the Food and Agriculture Organization (FAO) of the United Nations, including food, nutrition, agriculture, fisheries, forestry, environment etc."
-    },
-    {
-      "code": "2",
-      "name": "UN Sustainable Development Goals (SDG)",
-      "language": "en",
-      "description": "A value from the top-level list of UN sustainable development goals (SDGs) (e.g. ‘1’)"
-    },
-    {
-      "code": "3",
-      "name": "UN Sustainable Development Goals (SDG) Targets",
-      "language": "en",
-      "description": "A value from the second-level list of UN sustainable development goals (SDGs) (e.g. ‘1.1’)"
-    },
-    {
-      "code": "99",
-      "name": "Reporting Organisation",
-      "language": "en",
-      "description": ""
-    }
-  ]
+    "date-last-modified": "2024-06-19 06:11:18",
+    "version": "",
+    "name": "TagVocabulary",
+    "xml:lang": "en",
+    "TagVocabulary": [
+        {
+            "code": "1",
+            "url": "https://agrovoc.fao.org/browse/agrovoc/en/",
+            "name": "Agrovoc",
+            "description": "A controlled vocabulary covering all areas of interest of the Food and Agriculture Organization (FAO) of the United Nations, including food, nutrition, agriculture, fisheries, forestry, environment etc.",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "2",
+            "url": "http://reference.iatistandard.org/codelists/UNSDG-Goals/",
+            "name": "UN Sustainable Development Goals (SDG)",
+            "description": "A value from the top-level list of UN sustainable development goals (SDGs) (e.g. ‘1’)",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "3",
+            "url": "http://reference.iatistandard.org/codelists/UNSDG-Targets/",
+            "name": "UN Sustainable Development Goals (SDG) Targets",
+            "description": "A value from the second-level list of UN sustainable development goals (SDGs) (e.g. ‘1.1’)",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "4",
+            "url": "https://europa.eu/capacity4dev/joint-programming/documents/tei-codes-0",
+            "name": "Team Europe Initiatives",
+            "description": "A value from the list of Team Europe Initiatives. Team Europe consists of the European Commission, the EU Member States — including their implementing agencies and public development banks — as well as the European Investment Bank (EIB) and the European Bank for Reconstruction and Development (EBRD).",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "99",
+            "name": "Reporting Organisation",
+            "status": "active",
+            "language": "en"
+        }
+    ]
 }

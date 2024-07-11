@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\HumanitarianScopeService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class HumanitarianScopeController.
@@ -43,7 +44,8 @@ class HumanitarianScopeController extends Controller
         try {
             $element = getElementSchema('humanitarian_scope');
             $activity = $this->humanitarianScopeService->getActivityData($id);
-            $form = $this->humanitarianScopeService->formGenerator($id);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'humanitarian_scope', []);
+            $form = $this->humanitarianScopeService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'humanitarian_scope'];
 
             return view('admin.activity.humanitarianScope.edit', compact('form', 'activity', 'data'));

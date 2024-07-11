@@ -1,5 +1,5 @@
 <template>
-  <div class="listing__page bg-paper pt-4 pb-[71px]">
+  <div class="listing__page bg-paper pb-[71px] pt-4">
     <div class="page-title mb-4 w-screen px-10">
       <div class="flex items-end gap-4">
         <div class="title basis-6/12">

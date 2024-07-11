@@ -1,0 +1,170 @@
+{
+    "date-last-modified": "2024-06-19 06:11:18",
+    "version": "",
+    "name": "DocumentCategory",
+    "xml:lang": "en",
+    "DocumentCategory": {
+        "12": {
+            "code": "B01",
+            "category": "B",
+            "name": "Annual report",
+            "description": null,
+            "status": "active",
+            "category-name": "Organisation Level",
+            "language": "en"
+        },
+        "13": {
+            "code": "B02",
+            "category": "B",
+            "name": "Institutional Strategy paper",
+            "description": null,
+            "status": "active",
+            "category-name": "Organisation Level",
+            "language": "en"
+        },
+        "14": {
+            "code": "B03",
+            "category": "B",
+            "name": "Country strategy paper",
+            "description": null,
+            "status": "active",
+            "category-name": "Organisation Level",
+            "language": "en"
+        },
+        "15": {
+            "code": "B04",
+            "category": "B",
+            "name": "Aid Allocation Policy",
+            "description": null,
+            "status": "active",
+            "category-name": "Organisation Level",
+            "language": "en"
+        },
+        "16": {
+            "code": "B05",
+            "category": "B",
+            "name": "Procurement Policy and Procedure",
+            "description": null,
+            "status": "active",
+            "category-name": "Organisation Level",
+            "language": "en"
+        },
+        "17": {
+            "code": "B06",
+            "category": "B",
+            "name": "Institutional Audit Report",
+            "description": null,
+            "status": "active",
+            "category-name": "Organisation Level",
+            "language": "en"
+        },
+        "18": {
+            "code": "B07",
+            "category": "B",
+            "name": "Country Audit Report",
+            "description": null,
+            "status": "active",
+            "category-name": "Organisation Level",
+            "language": "en"
+        },
+        "19": {
+            "code": "B08",
+            "category": "B",
+            "name": "Exclusions Policy",
+            "description": null,
+            "status": "active",
+            "category-name": "Organisation Level",
+            "language": "en"
+        },
+        "20": {
+            "code": "B09",
+            "category": "B",
+            "name": "Institutional Evaluation Report",
+            "description": null,
+            "status": "active",
+            "category-name": "Organisation Level",
+            "language": "en"
+        },
+        "21": {
+            "code": "B10",
+            "category": "B",
+            "name": "Country Evaluation Report",
+            "description": null,
+            "status": "active",
+            "category-name": "Organisation Level",
+            "language": "en"
+        },
+        "22": {
+            "code": "B11",
+            "category": "B",
+            "name": "Sector strategy",
+            "description": null,
+            "status": "active",
+            "category-name": "Organisation Level",
+            "language": "en"
+        },
+        "23": {
+            "code": "B12",
+            "category": "B",
+            "name": "Thematic strategy",
+            "description": null,
+            "status": "active",
+            "category-name": "Organisation Level",
+            "language": "en"
+        },
+        "24": {
+            "code": "B13",
+            "category": "B",
+            "name": "Country-level Memorandum of Understanding",
+            "description": null,
+            "status": "active",
+            "category-name": "Organisation Level",
+            "language": "en"
+        },
+        "25": {
+            "code": "B14",
+            "category": "B",
+            "name": "Evaluations policy",
+            "description": null,
+            "status": "active",
+            "category-name": "Organisation Level",
+            "language": "en"
+        },
+        "26": {
+            "code": "B15",
+            "category": "B",
+            "name": "General Terms and Conditions",
+            "description": null,
+            "status": "active",
+            "category-name": "Organisation Level",
+            "language": "en"
+        },
+        "27": {
+            "code": "B16",
+            "category": "B",
+            "name": "Organisation web page",
+            "description": null,
+            "status": "active",
+            "category-name": "Organisation Level",
+            "language": "en"
+        },
+        "28": {
+            "code": "B17",
+            "category": "B",
+            "name": "Country/Region web page",
+            "description": null,
+            "status": "active",
+            "category-name": "Organisation Level",
+            "language": "en"
+        },
+        "29": {
+            "code": "B18",
+            "category": "B",
+            "name": "Sector web page",
+            "description": null,
+            "status": "active",
+            "category-name": "Organisation Level",
+            "language": "en"
+        }
+    }
+}

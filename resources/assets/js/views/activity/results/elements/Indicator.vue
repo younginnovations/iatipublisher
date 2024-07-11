@@ -39,6 +39,7 @@
           </div>
         </div>
       </div>
+      <HelperText :helper-text="onlyDeprecatedStatusMap(indicatorData)" />
       <div class="divider mb-4 h-px w-full border-b border-n-20"></div>
       <div class="indicator">
         <template v-for="(post, ri) in indicatorData" :key="ri">
@@ -623,11 +624,13 @@ import NotYet from 'Components/sections/HaveNotAddedYet.vue';
 import Btn from 'Components/buttons/Link.vue';
 
 // helper function
-import { countDocumentLink } from 'Composable/utils';
+import { countDocumentLink, onlyDeprecatedStatusMap } from 'Composable/utils';
+import HelperText from 'Components/HelperText.vue';
 
 export default defineComponent({
   name: 'ResultIndicator',
   components: {
+    HelperText,
     NotYet,
     Btn,
   },
@@ -653,5 +656,6 @@ export default defineComponent({
 
     return { indicatorData, dateFormat, getActivityTitle, countDocumentLink };
   },
+  methods: { onlyDeprecatedStatusMap },
 });
 </script>

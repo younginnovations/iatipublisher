@@ -60,7 +60,9 @@ class TitleRequest extends ActivityBaseRequest
     public function getErrorsForTitle($name, $titles = []): array
     {
         $rules = [];
-        $validLanguages = implode(',', array_keys(getCodeList('Language', 'Activity', false)));
+        $validLanguages = implode(',', array_keys(
+            $this->getCodeListForRequestFiles('Language', 'Activity', false, false)
+        ));
 
         if (is_array($titles) && count($titles)) {
             foreach ($titles as $key => $title) {

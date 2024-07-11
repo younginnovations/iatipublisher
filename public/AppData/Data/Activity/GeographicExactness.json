@@ -1,20 +1,22 @@
 {
-  "date-last-modified": "2017-07-03T16:29:55.514274+00:00",
-  "version": "",
-  "name": "GeographicExactness",
-  "xml:lang": "en",
-  "GeographicExactness": [
-    {
-      "code": "1",
-      "name": "Exact",
-      "language": "en",
-      "description": "The designated geographic location is exact"
-    },
-    {
-      "code": "2",
-      "name": "Approximate",
-      "language": "en",
-      "description": "The designated geographic location is approximate"
-    }
-  ]
+    "date-last-modified": "2024-06-19 06:11:18",
+    "version": "",
+    "name": "GeographicExactness",
+    "xml:lang": "en",
+    "GeographicExactness": [
+        {
+            "code": "1",
+            "name": "Exact",
+            "description": "The designated geographic location is exact",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "2",
+            "name": "Approximate",
+            "description": "The designated geographic location is approximate",
+            "status": "active",
+            "language": "en"
+        }
+    ]
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Traits;
 
 use App\Exceptions\PublishException;
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\User\Role;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use DOMException;
@@ -458,7 +459,7 @@ trait MigrateActivityTrait
         $activityIdentifier = Arr::get(json_decode($aidstreamActivity->identifier, true, 512, JSON_THROW_ON_ERROR), 'activity_identifier', null);
         $orgReportingOrg = json_decode($aidStreamOrganization->reporting_org);
         $organizationIdentifier = $orgReportingOrg[0]->reporting_organization_identifier;
-        $iatiIdentifierText = "$organizationIdentifier-$activityIdentifier";
+        $iatiIdentifierText = Arr::get(json_decode($aidstreamActivity->identifier, true, 512, JSON_THROW_ON_ERROR), 'iati_identifier_text', null);
 
         $newActivity['iati_identifier'] = $aidstreamActivity->identifier ? [
             'activity_identifier' => $activityIdentifier,

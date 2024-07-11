@@ -84,7 +84,16 @@ class DocumentLinkService
             }
         }
 
-        return $this->organizationRepository->update($id, ['document_link' => $this->sanitizeData($documentLink['document_link'])]);
+        $sanitizedDocumentLink = $this->sanitizeData($documentLink['document_link']);
+
+        $organisation = $this->organizationRepository->find($id);
+        $deprecationStatusMap = $organisation->deprecation_status_map;
+        $deprecationStatusMap['document_link'] = doesOrganisationDocumentLinkHaveDeprecatedCode($sanitizedDocumentLink);
+
+        return $this->organizationRepository->update($id, [
+            'document_link'          => $sanitizedDocumentLink,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -94,10 +103,11 @@ class DocumentLinkService
      *
      * @return Form
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $deprecationStatusMap = []): Form
     {
         $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
         $model['document_link'] = $this->getDocumentLinkData($id) ?? [];
+
         $this->parentCollectionFormCreator->url = route('admin.organisation.document-link.update', [$id]);
 
         return $this->parentCollectionFormCreator->editForm($model, $element['document_link'], 'PUT', '/organisation');
@@ -133,6 +143,18 @@ class DocumentLinkService
                     ];
                 }
 
+                $recipientCountries = [];
+
+                foreach (Arr::get($documentLink, 'recipient_country', []) as $recipient_country) {
+                    $recipientCountries[] = [
+                        '@attributes' => [
+                            'code'       => Arr::get($recipient_country, 'code', null),
+                            'percentage' => Arr::get($recipient_country, 'percentage', null),
+                        ],
+                        'narrative'   => $this->buildNarrative(Arr::get($recipient_country, 'narrative', null)),
+                    ];
+                }
+
                 $organizationData[] = [
                     '@attributes'   => [
                         'url'    => Arr::get($documentLink, 'url', null),
@@ -152,6 +174,7 @@ class DocumentLinkService
                             'iso-date' => Arr::get($documentLink, 'document_date.0.date', null),
                         ],
                     ],
+                    'recipient-country' => $recipientCountries,
                 ];
             }
         }

@@ -67,7 +67,9 @@ class RecipientCountryRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
-            $rules[sprintf('%s.country_code', $recipientCountryForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Country', 'Activity', false)));
+            $rules[sprintf('%s.country_code', $recipientCountryForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('Country', 'Activity', false)
+            ));
             $rules[$recipientCountryForm . '.percentage'] = 'nullable|numeric|min:0';
 
             $narrativeRules = $this->getErrorsForNarrative($recipientCountry['narrative'], $recipientCountryForm);

@@ -62,6 +62,8 @@ class Organization extends Model implements Auditable
         'migrated_from_aidstream',
         'created_at',
         'updated_at',
+        'old_identifiers',
+        'deprecation_status_map',
     ];
 
     /**
@@ -79,6 +81,8 @@ class Organization extends Model implements Auditable
         'name' => 'json',
         'element_status' => 'json',
         'is_published' => 'boolean',
+        'old_identifiers' => 'json',
+        'deprecation_status_map'=>'json',
     ];
 
     /**
@@ -126,6 +130,16 @@ class Organization extends Model implements Auditable
     public function settings(): HasOne
     {
         return $this->hasOne(Setting::class, 'organization_id', 'id');
+    }
+
+    /**
+     * Organization has Organization Published file.
+     *
+     * @return HasOne
+     */
+    public function organizationPublished(): HasOne
+    {
+        return $this->hasOne(OrganizationPublished::class, 'organization_id', 'id');
     }
 
     /**
@@ -228,12 +242,10 @@ class Organization extends Model implements Auditable
     }
 
     /**
-     * Returns the users of the organization including deleted users.
-     *
-     * @return HasMany
+     * @return HasOne
      */
-    public function usersIncludingDeleted(): HasMany
+    public function activityPublished(): HasOne
     {
-        return $this->hasMany(User::class, 'organization_id', 'id')->withTrashed();
+        return $this->hasOne(ActivityPublished::class, 'organization_id', 'id');
     }
 }

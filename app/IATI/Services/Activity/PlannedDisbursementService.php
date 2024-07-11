@@ -75,7 +75,17 @@ class PlannedDisbursementService
      */
     public function update($id, $plannedDisbursement): bool
     {
-        return $this->activityRepository->update($id, ['planned_disbursement' => $this->sanitizePlannedDisbursementData($plannedDisbursement)]);
+        $plannedDisbursement = $this->sanitizePlannedDisbursementData($plannedDisbursement);
+
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+
+        $deprecationStatusMap['planned_disbursement'] = doesPlannedDisbursementHaveDeprecatedCode($plannedDisbursement);
+
+        return $this->activityRepository->update($id, [
+            'planned_disbursement'   => $plannedDisbursement,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -86,13 +96,13 @@ class PlannedDisbursementService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('planned_disbursement');
         $model['planned_disbursement'] = $this->getPlannedDisbursementData($id) ?: [];
         $this->parentCollectionFormCreator->url = route('admin.activity.planned-disbursement.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

@@ -453,7 +453,7 @@ trait WarningValidationRules
      */
     protected function loadCodeList($codeList, string $directory = 'Activity'): mixed
     {
-        return getCodeList($codeList, $directory, false);
+        return getCodeList($codeList, $directory, false, filterDeprecated: true);
     }
 
     /**

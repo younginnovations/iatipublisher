@@ -56,7 +56,6 @@ class FetchOrganisationRegistrationAgency extends Command
             if ($response->successful()) {
                 $jsonValue = $response->json()['lists'];
                 $iatiJsonValues = collect($jsonValue)
-                    ->filter(fn ($rawJson) => !isset($rawJson['deprecated']) || !$rawJson['deprecated'])
                     ->map(fn ($rawJson) => $this->parseToIatiOrganisationRegistrationAgencyJson($rawJson))
                     ->all();
 
@@ -72,6 +71,7 @@ class FetchOrganisationRegistrationAgency extends Command
                 $filePath = 'AppData/Data/Organization/OrganizationRegistrationAgency.json';
 
                 if (awsUploadFile($filePath, $newJsonString)) {
+                    file_put_contents(public_path($filePath), $newJsonString);
                     Cache::put($filePath, $newJsonString, now()->addHours(24));
 
                     $this->info(' Completed.');
@@ -95,7 +95,7 @@ class FetchOrganisationRegistrationAgency extends Command
     public function parseToIatiOrganisationRegistrationAgencyJson($data): array
     {
         $category = $data['coverage'][0] ?? '';
-        $status = isset($data['deprecated']) && $data['deprecated'] === false ? 'active' : null;
+        $status = isset($data['deprecated']) && $data['deprecated'] === true ? 'withdrawn' : 'active';
 
         return [
             'code'            => data_get($data, 'code', ''),

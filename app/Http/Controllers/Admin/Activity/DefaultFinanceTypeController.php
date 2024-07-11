@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\DefaultFinanceTypeService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class DefaultFinanceTypeController.
@@ -43,7 +44,8 @@ class DefaultFinanceTypeController extends Controller
         try {
             $element = getElementSchema('default_finance_type');
             $activity = $this->defaultFinanceTypeService->getActivityData($id);
-            $form = $this->defaultFinanceTypeService->formGenerator($id);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'default_finance_type', []);
+            $form = $this->defaultFinanceTypeService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
             $data = [
                 'title' => $element['label'],
                 'name' => 'default_finance_type',
@@ -70,7 +72,7 @@ class DefaultFinanceTypeController extends Controller
         try {
             $activityDefaultFinanceType = $request->get('default_finance_type') !== null ? (int) $request->get('default_finance_type') : null;
 
-            if (!$this->defaultFinanceTypeService->update($id, $activityDefaultFinanceType)) {
+            if (!$this->defaultFinanceTypeService->update($id, ['code' => $activityDefaultFinanceType])) {
                 return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default-finance-type.');
             }
 

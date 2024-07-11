@@ -11,6 +11,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class DocumentLinkController
@@ -54,7 +55,8 @@ class DocumentLinkController extends Controller
         try {
             $element = getElementSchema('document_link');
             $activity = $this->documentLinkService->getActivityData($id);
-            $form = $this->documentLinkService->formGenerator($id);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'document_link', []);
+            $form = $this->documentLinkService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
             $data = ['title' => $element['label'], 'name' => 'document_link'];
 
             return view('admin.activity.documentLink.edit', compact('form', 'activity', 'data'));

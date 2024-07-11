@@ -31,7 +31,7 @@
         <svg-vue class="text-[6px]" icon="dropdown-arrow" />
       </span>
     </div>
-    <div v-if="showErrors" class="mt-6 py-2 px-7">
+    <div v-if="showErrors" class="mt-6 px-7 py-2">
       <div
         v-if="Object.keys(activity['errors']).indexOf('critical') !== -1"
         :style="`width: ${width - 70}px;`"

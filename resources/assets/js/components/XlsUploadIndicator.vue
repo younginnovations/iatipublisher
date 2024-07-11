@@ -9,7 +9,7 @@
     "
     ref="parentElementRef"
     :style="minimize ? { bottom: `${-(height - 57)}px` } : {}"
-    class="fixed right-5 bottom-0 z-[100] w-[412px] rounded-t-lg bg-n-10 shadow-[0px_2px_12px_0px_rgba(0,0,0,0.12)] transition-all duration-200 ease-linear xl:right-10"
+    class="fixed bottom-0 right-5 z-[100] w-[412px] rounded-t-lg bg-n-10 shadow-[0px_2px_12px_0px_rgba(0,0,0,0.12)] transition-all duration-200 ease-linear xl:right-10"
   >
     <div
       class="flex items-center justify-between rounded-t-lg border-b border-n-20 bg-eggshell px-6 py-4"
@@ -17,7 +17,7 @@
       <div class="flex space-x-2">
         <div class="text-base font-bold text-blue-50">Background Tasks</div>
         <div
-          class="flex items-center justify-center rounded-full bg-spring-10 py-1 px-2 text-xs text-spring-50"
+          class="flex items-center justify-center rounded-full bg-spring-10 px-2 py-1 text-xs text-spring-50"
         >
           <span class="flex font-bold"
             >{{ completeActivityCount }}/
@@ -190,7 +190,6 @@ onMounted(async () => {
 
 const proceedValidation = () => {
   showBulkpublishLoader.value = true;
-  console.log('proceed validation', showBulkpublishLoader.value);
 
   cancelValidationPolling();
 };
@@ -243,7 +242,6 @@ watch(
 watch(
   () => store?.state?.startBulkPublish,
   (value) => {
-    console.log('fron watcher');
     showBulkpublish.value = value;
   },
   { deep: true }
@@ -320,7 +318,6 @@ watch(
   () => [store.state.startValidation, validationRunning.value],
   () => {
     if (store.state.startValidation || validationRunning.value) {
-      console.log('start validation');
       showBulkpublish.value = false;
     }
   }
@@ -498,18 +495,9 @@ const completeActivityCount = computed(() => {
 });
 const hideBulkpublishLoader = () => {
   showBulkpublishLoader.value = false;
-  console.log('emitted');
 };
 
 const handleActivityPublishedData = (data) => {
   activityPublishedData.value = data;
 };
-
-watch(
-  () => showBulkpublishLoader.value,
-  (value) => {
-    console.log(value, 'watcher');
-  },
-  { deep: true }
-);
 </script>

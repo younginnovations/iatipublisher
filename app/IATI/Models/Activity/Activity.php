@@ -75,6 +75,7 @@ class Activity extends Model implements Auditable
         'created_at',
         'updated_at',
         'has_ever_been_published',
+        'deprecation_status_map',
     ];
 
     /**
@@ -114,6 +115,7 @@ class Activity extends Model implements Auditable
         'element_status'       => 'json',
         'linked_to_iati'       => 'boolean',
         'complete_percentage'  => 'float',
+        'deprecation_status_map'=>'json',
     ];
 
     /**
@@ -249,7 +251,7 @@ class Activity extends Model implements Auditable
             }
         }
 
-        if (empty($value) && empty($this->recipient_region)) {
+        if (is_array_value_empty($value) && empty($this->recipient_country)) {
             $elementStatus['recipient_country'] = false;
         }
 
@@ -281,7 +283,7 @@ class Activity extends Model implements Auditable
             }
         }
 
-        if (empty($value) && empty($this->recipient_region)) {
+        if (is_array_value_empty($value) && empty($this->recipient_region)) {
             $elementStatus['recipient_region'] = false;
         }
 

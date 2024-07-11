@@ -11,7 +11,6 @@ use App\IATI\Services\ElementCompleteService;
 use App\IATI\Traits\XmlBaseElement;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
-use JsonException;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -92,11 +91,18 @@ class RecipientCountryService
      */
     public function update($id, $activityRecipientCountry): bool
     {
+        $recipientCountryData = $this->sanitizeRecipientCountryData($activityRecipientCountry);
+
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['recipient_country'] = doesRecipientCountryHaveDeprecatedCode($recipientCountryData);
+
         $data = [
-            'recipient_country' => $this->sanitizeRecipientCountryData($activityRecipientCountry),
+            'recipient_country'      => $recipientCountryData,
+            'deprecation_status_map' => $deprecationStatusMap,
         ];
         $totalRecipientCountry = $activityRecipientCountry['total_country_percentage'] ?? 0;
-        $data = $this->setRecipientRegionStatus((int) $id, $data, $totalRecipientCountry);
+        $data = $this->setRecipientRegionStatus((int) $id, $data, $totalRecipientCountry, $activity);
 
         return $this->activityRepository->update($id, $data);
     }
@@ -109,12 +115,12 @@ class RecipientCountryService
      *
      * @return Form
      */
-    public function formGenerator($id, $element): Form
+    public function formGenerator($id, $element, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $model['recipient_country'] = $this->getRecipientCountryData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.recipient-country.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**
@@ -166,15 +172,12 @@ class RecipientCountryService
      * @param int $id
      * @param array $data
      * @param $totalRecipientCountry
+     * @param $activity
      *
      * @return array
-     *
-     * @throws BindingResolutionException
-     * @throws JsonException
      */
-    public function setRecipientRegionStatus(int $id, array &$data, $totalRecipientCountry): array
+    public function setRecipientRegionStatus(int $id, array &$data, $totalRecipientCountry, $activity): array
     {
-        $activity = $this->activityRepository->find($id);
         $currentRecipientRegionPercent = getAllocatedPercentageOfRecipientRegion($activity);
         $totalPercentage = $totalRecipientCountry + $currentRecipientRegionPercent;
         $elementStatus['element_status'] = $activity->element_status;

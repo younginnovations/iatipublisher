@@ -337,7 +337,8 @@ trait MigrateSettingTrait
                 empty(Arr::get($iatiSettings->publishing_info, 'publisher_id', null)) ||
                 empty(Arr::get($iatiSettings->publishing_info, 'api_token', null)) ||
                 !Arr::get($iatiSettings->publishing_info, 'publisher_verification', false) ||
-                !Arr::get($iatiSettings->publishing_info, 'token_verification', false)
+                !Arr::get($iatiSettings->publishing_info, 'token_verification', false) ||
+                Arr::get($iatiSettings->publishing_info, 'token_status', 'Incorrect') !== 'Correct'
             ) {
                 $newPublishingInfo = $this->getPublishingInfo($aidstreamSettings->registry_info, $iatiOrganization->publisher_id);
 

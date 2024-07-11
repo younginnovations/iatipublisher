@@ -77,10 +77,18 @@ class LocationRequest extends ActivityBaseRequest
         foreach ($formFields as $locationIndex => $location) {
             $locationForm = 'location.' . $locationIndex;
             $rules[sprintf('%s.ref', $locationForm)] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
-            $rules[sprintf('%s.location_reach.0.code', $locationForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('GeographicLocationReach', 'Activity', false)));
-            $rules[sprintf('%s.exactness.0.code', $locationForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('GeographicExactness', 'Activity', false)));
-            $rules[sprintf('%s.location_class.0.code', $locationForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('GeographicLocationClass', 'Activity', false)));
-            $rules[sprintf('%s.feature_designation.0.code', $locationForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('LocationType', 'Activity', false)));
+            $rules[sprintf('%s.location_reach.0.code', $locationForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('GeographicLocationReach', 'Activity', false)
+            ));
+            $rules[sprintf('%s.exactness.0.code', $locationForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('GeographicExactness', 'Activity', false)
+            ));
+            $rules[sprintf('%s.location_class.0.code', $locationForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('GeographicLocationClass', 'Activity', false)
+            ));
+            $rules[sprintf('%s.feature_designation.0.code', $locationForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('LocationType', 'Activity', false)
+            ));
 
             $tempRules = [
                 $this->getWarningForLocationId($location['location_id'], $locationForm),
@@ -150,7 +158,9 @@ class LocationRequest extends ActivityBaseRequest
 
         foreach ($formFields as $locationIdIndex => $locationId) {
             $locationIdForm = sprintf('%s.location_id.%s', $formBase, $locationIdIndex);
-            $rules[sprintf('%s.vocabulary', $locationIdForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('GeographicVocabulary', 'Activity', false)));
+            $rules[sprintf('%s.vocabulary', $locationIdForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('GeographicVocabulary', 'Activity', false)
+            ));
         }
 
         return $rules;
@@ -396,8 +406,12 @@ class LocationRequest extends ActivityBaseRequest
 
         foreach ($formFields as $administrativeIndex => $administrative) {
             $administrativeForm = sprintf('%s.administrative.%s', $formBase, $administrativeIndex);
-            $rules[sprintf('%s.vocabulary', $administrativeForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('GeographicVocabulary', 'Activity', false)));
-            $rules[sprintf('%s.code', $administrativeForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Country', 'Activity', false)));
+            $rules[sprintf('%s.vocabulary', $administrativeForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('GeographicVocabulary', 'Activity', false)
+            ));
+            $rules[sprintf('%s.code', $administrativeForm)] = 'nullable|in:' . implode(',', array_keys(
+                $this->getCodeListForRequestFiles('Country', 'Activity', false)
+            ));
             $rules[sprintf('%s.level', $administrativeForm)] = 'nullable|min:0|integer';
         }
 

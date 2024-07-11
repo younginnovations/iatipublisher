@@ -28,14 +28,15 @@
             </div>
             <input
               id="publisher-id"
-              class="register__input mb-2 hover:cursor-not-allowed"
+              v-model="publisherId"
+              class="register__input mb-2"
               :class="{
                 error__input: publishingError.publisher_id,
+                'hover:cursor-not-allowed': !isSuperadmin,
               }"
               type="text"
               placeholder="Type Publisher ID here"
-              :value="organization.publisher_id"
-              disabled="true"
+              :disabled="!isSuperadmin"
               @input="updateStore('publisher_id')"
             />
           </div>
@@ -56,26 +57,33 @@
               </button>
             </div>
 
-            <input
-              id="api-token"
-              v-model="publishingForm.api_token"
-              class="register__input mb-2"
-              :class="{
-                error__input: publishingError.api_token,
-              }"
-              :disabled="userRole !== 'admin' ? true : false"
-              type="text"
-              placeholder="Type API Token here"
-              @input="updateStore('api_token')"
-            />
+            <div class="relative">
+              <input
+                id="api-token"
+                v-model="publishingForm.api_token"
+                class="register__input mb-2"
+                :class="{
+                  error__input: publishingError.api_token,
+                }"
+                :disabled="userRole !== 'admin'"
+                type="text"
+                placeholder="Type API Token here"
+                @input="updateStore('api_token')"
+              />
+              <ShimmerLoading
+                v-if="!initialApiCallCompleted"
+                class="!absolute top-[50%] !m-0 !ml-2 !h-8 !w-[96%] -translate-y-1/2"
+              />
+            </div>
             <span
-              v-if="publishingInfo.isVerificationRequested"
+              v-if="showTag && publishingInfo.isVerificationRequested"
               :class="{
-                tag__correct: publishingInfo.token_verification,
-                tag__incorrect: !publishingInfo.token_verification,
+                tag__correct: publishingForm.token_status === 'Correct',
+                tag__pending: publishingForm.token_status === 'Pending',
+                tag__incorrect: publishingForm.token_status === 'Incorrect',
               }"
             >
-              {{ publishingInfo.token_verification ? 'Correct' : 'Incorrect' }}
+              {{ publishingForm.token_status }}
             </span>
           </div>
           <span v-if="publishingError.api_token" class="error" role="alert">
@@ -94,19 +102,29 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, computed, inject } from 'vue';
+import { defineComponent, ref, computed, inject, watch } from 'vue';
 import { useStore } from '../../store';
 import { ActionTypes } from '../../store/setting/actions';
 import HoverText from './../../components/HoverText.vue';
+import ShimmerLoading from 'Components/ShimmerLoading.vue';
 
 export default defineComponent({
   components: {
+    ShimmerLoading,
     HoverText,
   },
   props: {
     organization: {
       type: Object,
       required: true,
+    },
+    initialApiCallCompleted: {
+      type: Boolean,
+      required: false,
+    },
+    showTag: {
+      type: Boolean,
+      require: false,
     },
   },
   emits: ['submitPublishing'],
@@ -115,6 +133,18 @@ export default defineComponent({
     const tab = ref('publish');
     const store = useStore();
     const userRole = inject('userRole');
+    const isSuperadmin = inject('isSuperadmin');
+    const publisherId = ref(props.organization.publisher_id);
+
+    watch(
+      () => publisherId.value,
+      (publisherId) => {
+        store.dispatch(ActionTypes['UPDATE_PUBLISHING_FORM'], {
+          key: 'publisher_id',
+          value: publisherId,
+        });
+      }
+    );
 
     interface ObjectType {
       [key: string]: string;
@@ -161,6 +191,8 @@ export default defineComponent({
       toggleTab,
       updateStore,
       autoVerify,
+      isSuperadmin,
+      publisherId,
     };
   },
 });

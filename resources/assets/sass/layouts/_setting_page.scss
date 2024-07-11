@@ -8,7 +8,7 @@
     padding: 16px 0px 24px;
 
     &__container {
-      @apply relative rounded-lg bg-white p-7 md:py-14 md:px-20;
+      @apply relative rounded-lg bg-white p-7 md:px-20 md:py-14;
       max-height: 65vh;
 
       @media screen and (max-width: 440px) {
@@ -46,6 +46,11 @@
           @apply absolute right-2 top-10 flex h-5 cursor-pointer items-center justify-center rounded bg-salmon-50 text-center text-xs text-white;
           width: 61px;
         }
+
+        .tag__pending {
+          @apply bg-organeish absolute right-2 top-10 flex h-5 cursor-pointer items-center justify-center rounded text-center text-xs text-white;
+          width: 61px;
+        }
       }
       .verify-btn {
         width: 120px;
@@ -55,7 +60,7 @@
     }
     .register__input {
       @apply mt-2 w-full border border-n-30 outline-none duration-300;
-      padding: 13px 16px;
+      padding: 8px 16px;
       border-radius: 4px;
 
       @media screen and (max-width: 440px) {

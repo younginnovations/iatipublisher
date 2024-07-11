@@ -80,7 +80,14 @@ class CountryBudgetItemService
 
         $activityCountryBudgetItem['budget_item'] = array_values($activityCountryBudgetItem['budget_item']);
 
-        return $this->activityRepository->update($id, ['country_budget_items' => $activityCountryBudgetItem]);
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['country_budget_items'] = doesCountryBudgetItemsHaveDeprecatedCode($activityCountryBudgetItem);
+
+        return $this->activityRepository->update($id, [
+            'country_budget_items'   => $activityCountryBudgetItem,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -91,13 +98,13 @@ class CountryBudgetItemService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('country_budget_items');
         $model = $this->getCountryBudgetItemData($id) ?: [];
         $this->multilevelSubElementFormCreator->url = route('admin.activity.country-budget-items.update', [$id]);
 
-        return $this->multilevelSubElementFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->multilevelSubElementFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, overRideDefaultFieldValue: $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

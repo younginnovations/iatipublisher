@@ -30,11 +30,11 @@ class AuthenticationTest extends TestCase
      *
      * @return void
      */
-    public function test_must_enter_username_and_password(): void
+    public function test_prevent_login_attempt_with_empty_fields(): void
     {
         $this->post('/login')
             ->assertRedirect('/')
-            ->assertSessionHasErrors('username')
+            ->assertSessionHasErrors('emailOrUsername')
             ->assertSessionHasErrors('password');
     }
 
@@ -45,7 +45,7 @@ class AuthenticationTest extends TestCase
      */
     public function test_must_enter_password(): void
     {
-        $this->post('/login', ['username' => 'manish@gmail.com'])
+        $this->post('/login', ['emailOrUsername' => 'manish@gmail.com'])
             ->assertRedirect('/')
             ->assertSessionHasErrors('password');
     }
@@ -56,11 +56,11 @@ class AuthenticationTest extends TestCase
      * @return void
      * @throws \Exception
      */
-    public function test_must_enter_email(): void
+    public function test_must_enter_email_or_username(): void
     {
         $this->post('/login', ['password' => encryptString('password')])
             ->assertRedirect('/')
-            ->assertSessionHasErrors('username');
+            ->assertSessionHasErrors('emailOrUsername');
     }
 
     /**
@@ -71,9 +71,9 @@ class AuthenticationTest extends TestCase
      */
     public function test_invalid_credentials(): void
     {
-        $this->post('/login', ['username' => 'admin123', 'password' => encryptString('password')])
+        $this->post('/login', ['emailOrUsername' => 'admin123', 'password' => encryptString('password')])
             ->assertRedirect('/')
-            ->assertSessionHasErrors('username');
+            ->assertSessionHasErrors('emailOrUsername');
     }
 
     /**
@@ -82,13 +82,26 @@ class AuthenticationTest extends TestCase
      * @return void
      * @throws \Exception
      */
-    public function test_successful_login(): void
+    public function test_successful_login_with_username_and_password(): void
     {
         $role = Role::factory()->create();
-        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
+        $org = Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();
 
         $response = $this->post('/login', [
-            'username' => $org->user->username,
+            'emailOrUsername' => $org->user->username,
+            'password' => encryptString('password'),
+        ]);
+
+        $response->assertRedirect('/activities');
+    }
+
+    public function test_successful_login_with_email_and_password(): void
+    {
+        $role = Role::factory()->create();
+        $org = Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();
+
+        $response = $this->post('/login', [
+            'emailOrUsername' => $org->user->email,
             'password' => encryptString('password'),
         ]);
 

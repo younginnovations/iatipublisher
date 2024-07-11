@@ -33,6 +33,7 @@ class Transaction extends Model implements Auditable
         'migrated_from_aidstream',
         'created_at',
         'updated_at',
+        'deprecation_status_map',
     ];
 
     /**
@@ -40,6 +41,7 @@ class Transaction extends Model implements Auditable
      */
     protected $casts = [
         'transaction' => 'json',
+        'deprecation_status_map' => 'json',
     ];
 
     /**

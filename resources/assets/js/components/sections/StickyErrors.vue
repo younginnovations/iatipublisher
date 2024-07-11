@@ -61,7 +61,7 @@
             @click="deleteErrors"
           >
             <svg-vue class="text-sm text-bluecoral" icon="delete"></svg-vue>
-            <span class="mt-1 ml-0.5 text-bluecoral">REMOVE</span>
+            <span class="ml-0.5 mt-1 text-bluecoral">REMOVE</span>
           </button>
           <button
             class="validation__toggle text-bluecoral"
@@ -212,7 +212,7 @@ const deleteErrors = () => {
 
 <style lang="scss" scoped>
 .validation {
-  @apply rounded-tl-lg rounded-bl-lg border transition-all duration-500;
+  @apply rounded-bl-lg rounded-tl-lg border transition-all duration-500;
   box-shadow: 0px 4px 40px rgba(0, 0, 0, 0.1);
 
   &__errorHead {
@@ -221,7 +221,7 @@ const deleteErrors = () => {
   }
 
   &__errors {
-    @apply absolute top-0 right-0 z-10 flex w-[595px] flex-col overflow-hidden border-white bg-white;
+    @apply absolute right-0 top-0 z-10 flex w-[595px] flex-col overflow-hidden border-white bg-white;
     max-height: calc(100vh - 60px);
   }
 

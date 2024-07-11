@@ -9,7 +9,7 @@
       <div class="group relative">
         <svg-vue class="text-[4px] text-n-30" icon="question-mark" />
         <div
-          class="invisible absolute -left-[148px] -bottom-6 z-50 w-[352px] translate-y-full rounded bg-eggshell p-4 text-left normal-case opacity-0 duration-200 group-hover:visible group-hover:opacity-100"
+          class="invisible absolute -bottom-6 -left-[148px] z-50 w-[352px] translate-y-full rounded bg-eggshell p-4 text-left normal-case opacity-0 duration-200 group-hover:visible group-hover:opacity-100"
         >
           <p class="mb-2 font-bold text-bluecoral">What is code?</p>
           <p class="mb-1.5 text-n-50">

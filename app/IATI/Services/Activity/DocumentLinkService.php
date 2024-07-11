@@ -109,7 +109,16 @@ class DocumentLinkService
             $documentLinks['document_link'][$index] = $documentLink;
         }
 
-        return $this->activityRepository->update($id, ['document_link' => $this->sanitizeDocumentLinkData($documentLinks)]);
+        $documentLinks = $this->sanitizeDocumentLinkData($documentLinks);
+
+        $activity = $this->activityRepository->find($id);
+        $deprecationStatusMap = $activity->deprecation_status_map;
+        $deprecationStatusMap['document_link'] = doesDocumentLinkHaveDeprecatedCode($documentLinks);
+
+        return $this->activityRepository->update($activity->id, [
+            'document_link'          => $documentLinks,
+            'deprecation_status_map' => $deprecationStatusMap,
+        ]);
     }
 
     /**
@@ -120,7 +129,7 @@ class DocumentLinkService
      * @return Form
      * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $activityDefaultFieldValues, $deprecationStatusMap = []): Form
     {
         $element = getElementSchema('document_link');
         $activity = $this->getActivityData($id);
@@ -137,7 +146,7 @@ class DocumentLinkService
 
         $this->parentCollectionFormCreator->url = route('admin.activity.document-link.update', [$id]);
 
-        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id);
+        return $this->parentCollectionFormCreator->editForm($model, $element, 'PUT', '/activity/' . $id, $activityDefaultFieldValues, deprecationStatusMap: $deprecationStatusMap);
     }
 
     /**

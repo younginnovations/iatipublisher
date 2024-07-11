@@ -1,7 +1,7 @@
 <template>
   <div
     id="activity-listing-page"
-    class="page-height bg-paper px-5 pt-4 pb-[71px] xl:px-10"
+    class="page-height bg-paper px-5 pb-[71px] pt-4 xl:px-10"
   >
     <div id="activity">
       <Loader v-if="isLoading"></Loader>
@@ -9,6 +9,7 @@
       <div class="overflow-hidden" :class="{ 'bg-white': isEmpty }">
         <ErrorMessage :is-empty="isEmpty"></ErrorMessage>
         <EmptyActivity v-if="isEmpty" />
+
         <TableLayout
           v-if="!isEmpty"
           :data="activities"
@@ -80,6 +81,10 @@ export default defineComponent({
   },
   props: {
     toast: {
+      type: Object,
+      required: true,
+    },
+    defaultLanguage: {
       type: Object,
       required: true,
     },
@@ -343,6 +348,8 @@ export default defineComponent({
       tableLoader.value = false;
     }
 
+    console.log(activities, 'activities');
+
     const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
       flush: 'sync',
     });
@@ -377,6 +384,7 @@ export default defineComponent({
     provide('closeModel', closeModel as Ref);
     provide('activities', publishingActivities as Ref);
     provide('completed', uploadComplete);
+    provide('defaultLanguage', props.defaultLanguage);
 
     return {
       activities,

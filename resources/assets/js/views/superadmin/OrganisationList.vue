@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-paper px-10 pt-4 pb-[71px]">
+  <div class="bg-paper px-10 pb-[71px] pt-4">
     <div class="my-4 flex justify-between">
       <h4 class="mr-4 text-3xl font-bold xl:text-heading-4">Organisations</h4>
       <div class="inline-flex items-center">

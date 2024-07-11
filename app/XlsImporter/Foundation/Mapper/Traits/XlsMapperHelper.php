@@ -119,7 +119,7 @@ trait XlsMapperHelper
         if (is_string($location)) {
             $locationArr = explode('/', $location);
 
-            $dropDownValues = array_flip(getCodeList(explode('.', $locationArr[1])[0], $locationArr[0]));
+            $dropDownValues = array_flip(getCodeList(explode('.', $locationArr[1])[0], $locationArr[0], filterDeprecated: true));
             $key = Arr::get($dropDownValues, $value, $value);
 
             return $key;

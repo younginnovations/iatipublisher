@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\DefaultAidTypeService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class DefaultAidTypeController.
@@ -43,7 +44,9 @@ class DefaultAidTypeController extends Controller
         try {
             $element = getElementSchema('default_aid_type');
             $activity = $this->defaultAidTypeService->getActivityData($id);
-            $form = $this->defaultAidTypeService->formGenerator($id);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'default_aid_type', []);
+            $form = $this->defaultAidTypeService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
+
             $data = [
                 'title' => $element['label'],
                 'name' => 'default_aid_type',
@@ -51,7 +54,7 @@ class DefaultAidTypeController extends Controller
 
             return view('admin.activity.defaultAidType.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering default-aid-type form.');
         }

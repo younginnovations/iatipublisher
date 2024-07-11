@@ -98,7 +98,7 @@ class DownloadActivityController extends Controller
             }
 
             $csvData = $this->downloadActivityService->getCsvData($activities);
-            $humanitarianScopeVocabularyArray = getCodeList('HumanitarianScopeVocabulary', 'Activity');
+            $humanitarianScopeVocabularyArray = getCodeList('HumanitarianScopeVocabulary', 'Activity', filterDeprecated: true);
 
             foreach ($csvData as $index => $data) {
                 $csvData[$index]['Humanitarian Scope Vocabulary'] = Arr::get($humanitarianScopeVocabularyArray, $csvData[$index]['Humanitarian Scope Vocabulary']);
@@ -135,8 +135,9 @@ class DownloadActivityController extends Controller
                 return response()->json(['success' => false, 'message' => 'Previous Download on process']);
             }
 
-            $activityIds = ($request->get('activities') && $request->get('activities') !== 'all') ?
-                json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR) : [];
+            $activityIds = ($request->get('activities') && $request->get('activities') !== 'all')
+                ? json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR)
+                : [];
 
             if (request()->get('activities') === 'all') {
                 $activities = $this->downloadActivityService->getAllActivitiesQueryToDownload($this->sanitizeRequest($request), auth()->user());

@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\CapitalSpendService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 
 /**
  * Class CapitalSpendController.
@@ -43,7 +44,8 @@ class CapitalSpendController extends Controller
         try {
             $element = getElementSchema('capital_spend');
             $activity = $this->capitalSpendService->getActivityData($id);
-            $form = $this->capitalSpendService->formGenerator($id);
+            $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'capital_spend', []);
+            $form = $this->capitalSpendService->formGenerator($id, deprecationStatusMap: $deprecationStatusMap);
             $data = [
                 'title' => $element['label'],
                 'name' => 'capital_spend',

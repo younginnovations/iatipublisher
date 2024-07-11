@@ -37,6 +37,7 @@ class Result extends Model implements Auditable
             'created_at',
             'updated_at',
             'result_code',
+            'deprecation_status_map',
         ];
 
     /**
@@ -45,6 +46,7 @@ class Result extends Model implements Auditable
     protected $casts
         = [
             'result' => 'json',
+            'deprecation_status_map' => 'json',
         ];
 
     /**

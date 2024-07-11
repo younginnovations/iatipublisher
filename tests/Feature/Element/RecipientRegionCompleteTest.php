@@ -128,7 +128,6 @@ class RecipientRegionCompleteTest extends ElementCompleteTest
         $this->recipientRegionService->update($activity->id, $data);
         $activity = $this->activityService->getActivity($activity->id);
         $elementStatus = $activity->element_status;
-
         $this->assertTrue($elementStatus['recipient_country']);
         $this->assertTrue($elementStatus['recipient_region']);
     }

@@ -7,8 +7,8 @@
       <div class="section__title">
         <h2>Create IATI Publisher Account</h2>
         <p>
-          Register your organisation to start your IATI publishing journey by
-          creating an account in IATI publisher.
+          Start your IATI publishing journey by creating an account in IATI
+          Publisher
         </p>
       </div>
       <div class="section__wrapper flex justify-center">
@@ -50,16 +50,24 @@
             </ul>
           </aside>
           <div class="form__container">
-            <div class="flex items-center space-x-1">
-              <HoverText
-                v-if="registerForm[getCurrentStep()]['hover_text']"
-                :hover-text="registerForm[getCurrentStep()]['hover_text']"
-                :name="registerForm[getCurrentStep()].title"
-                position="right"
-              />
-              <span class="text-xl font-bold text-n-50 sm:text-2xl">{{
-                registerForm[getCurrentStep()].title
-              }}</span>
+            <div class="flex justify-between">
+              <div class="flex items-center space-x-1">
+                <HoverText
+                  v-if="registerForm[getCurrentStep()]['hover_text']"
+                  :hover-text="registerForm[getCurrentStep()]['hover_text']"
+                  :name="registerForm[getCurrentStep()].title"
+                  position="right"
+                />
+                <span class="text-xl font-bold text-n-50 sm:text-2xl">
+                  {{ registerForm[getCurrentStep()].title }}
+                </span>
+              </div>
+              <div class="flex items-center">
+                <small class="label">
+                  <span class="required-icon px-1">*</span>
+                  <span>Mandatory fields</span>
+                </small>
+              </div>
             </div>
             <div
               v-if="!publisherExists"
@@ -233,7 +241,7 @@
               </div>
               <p
                 v-if="checkStep(key)"
-                class="detail mt-2 mb-6 font-normal xl:pr-2"
+                class="detail mb-6 mt-2 font-normal xl:pr-2"
               >
                 {{ form['description'] }}
               </p>
@@ -246,13 +254,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, watch, toRefs } from 'vue';
+import { computed, defineComponent, reactive, ref, toRefs, watch } from 'vue';
 import axios from 'axios';
 import EmailVerification from './EmailVerification.vue';
 import HoverText from './../../components/HoverText.vue';
 import Multiselect from '@vueform/multiselect';
 import Loader from '../../components/Loader.vue';
 import encrypt from 'Composable/encryption';
+import { generateUsername } from 'Composable/utils';
 
 export default defineComponent({
   components: {
@@ -272,6 +281,10 @@ export default defineComponent({
       required: true,
     },
     uncategorizedOrganisationRegistrationAgency: {
+      type: [Object],
+      required: true,
+    },
+    languages: {
       type: [Object],
       required: true,
     },
@@ -300,6 +313,7 @@ export default defineComponent({
       email: '',
       password: '',
       password_confirmation: '',
+      default_language: '',
     });
 
     const formData: ObjectType = reactive({
@@ -314,6 +328,8 @@ export default defineComponent({
       email: '',
       password: '',
       password_confirmation: '',
+      default_language: '',
+      source: '',
     });
 
     watch(
@@ -331,6 +347,13 @@ export default defineComponent({
           : formData.registration_number;
       },
       { deep: true }
+    );
+
+    watch(
+      () => formData.full_name,
+      () => {
+        formData.username = generateUsername(formData.full_name);
+      }
     );
 
     const registration_agency = computed(() => {
@@ -373,7 +396,7 @@ export default defineComponent({
         title: 'Publisher Information',
         is_complete: false,
         description:
-          'This information will be used to create a Publisher in IATI Publisher',
+          'This information will be used to register your organisation',
         hover_text:
           'Provide information about your organisation. You will need to provide the same information that you used to create your Publisher Account on the IATI Registry (iatiregistry.org).',
         fields: {
@@ -391,7 +414,7 @@ export default defineComponent({
           publisher_id: {
             label: 'Publisher ID',
             name: 'publisher_id',
-            placeholder: 'Type your organisation ID here',
+            placeholder: 'Type your publisher ID here',
             id: 'publisher-id',
             required: true,
             hover_text:
@@ -435,10 +458,10 @@ export default defineComponent({
               'Add the registration number for your organisation that has been provided by the registration agency named above.',
             type: 'text',
             class: 'mb-4 lg:mb-2',
-            help_text: 'for e.g. 123456',
+            help_text: 'E.g. 123456',
           },
           iati_organizational_identifier: {
-            label: 'IATI Organisational Identifier',
+            label: 'IATI Organisation Identifier',
             name: 'identifier',
             placeholder: '',
             id: 'identifier',
@@ -460,6 +483,26 @@ export default defineComponent({
         hover_text:
           'Provide your information to create an admin account here on IATI Publisher.',
         fields: {
+          full_name: {
+            label: 'Full Name',
+            name: 'full_name',
+            placeholder: 'Type your full name here',
+            id: 'full-name',
+            hover_text: '',
+            required: true,
+            type: 'text',
+            class: 'mb-4 lg:mb-2',
+          },
+          email: {
+            label: 'Email Address',
+            name: 'email',
+            placeholder: 'Type valid email here',
+            id: 'email',
+            required: true,
+            hover_text: '',
+            type: 'email',
+            class: 'mb-4 lg:mb-2',
+          },
           username: {
             label: 'Username',
             name: 'username',
@@ -472,24 +515,14 @@ export default defineComponent({
             class: 'mb-4 lg:mb-2',
             help_text: '',
           },
-          full_name: {
-            label: 'Full Name',
-            name: 'full_name',
-            placeholder: 'Type your full name here',
-            id: 'full-name',
-            hover_text: '',
+          default_language: {
+            label: 'Default language',
+            name: 'default_language',
+            placeholder: 'Select your default language',
+            id: 'default-language',
             required: true,
-            type: 'text',
-            class: 'col-start-1 mb-4 lg:mb-2',
-          },
-          email: {
-            label: 'Email Address',
-            name: 'email',
-            placeholder: 'Type valid email here',
-            id: 'email',
-            required: true,
-            hover_text: '',
-            type: 'email',
+            type: 'select',
+            options: props.languages,
             class: 'mb-4 lg:mb-2',
           },
           password: {
@@ -577,6 +610,7 @@ export default defineComponent({
             step.value += 1;
           }
 
+          formData.source = response.data.publisher_source_type;
           isLoaderVisible.value = false;
         })
         .catch(() => {
@@ -701,7 +735,7 @@ export default defineComponent({
         @apply leading-9;
       }
 
-      @apply my-7 mx-3 text-center leading-7 sm:leading-10 lg:mb-10 lg:mt-14;
+      @apply mx-3 my-7 text-center leading-7 sm:leading-10 lg:mb-10 lg:mt-14;
 
       p {
         font-weight: normal;

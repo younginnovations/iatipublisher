@@ -1,23 +1,28 @@
 {
-  "date-last-modified": "2017-07-03T16:35:13.113992+00:00",
-  "version": "",
-  "name": "HumanitarianScopeVocabulary",
-  "xml:lang": "en",
-  "HumanitarianScopeVocabulary": [
-    {
-      "code": "1-2",
-      "name": "Glide",
-      "language": "en"
-    },
-    {
-      "code": "2-1",
-      "name": "Humanitarian Plan",
-      "language": "en"
-    },
-    {
-      "code": "99",
-      "name": "Reporting Organisation",
-      "language": "en"
-    }
-  ]
+    "date-last-modified": "2024-06-19 06:11:18",
+    "version": "",
+    "name": "HumanitarianScopeVocabulary",
+    "xml:lang": "en",
+    "HumanitarianScopeVocabulary": [
+        {
+            "code": "1-2",
+            "url": "http://glidenumber.net/glide/public/search/search.jsp",
+            "name": "Glide",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "2-1",
+            "url": "https://fts.unocha.org/plan-code-list-iati",
+            "name": "Humanitarian Plan",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "99",
+            "name": "Reporting Organisation",
+            "status": "active",
+            "language": "en"
+        }
+    ]
 }

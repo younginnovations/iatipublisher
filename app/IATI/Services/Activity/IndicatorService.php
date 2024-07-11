@@ -10,6 +10,7 @@ use App\IATI\Traits\DataSanitizeTrait;
 use Auth;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -121,6 +122,7 @@ class IndicatorService
     {
         $indicatorData['indicator'] = $this->sanitizeData($indicatorData['indicator']);
         $indicatorData['indicator_code'] = Auth::user() ? Auth::user()->id . time() : time();
+        $indicatorData['deprecation_status_map'] = refreshIndicatorDeprecationStatusMap($indicatorData['indicator']);
 
         return $this->indicatorRepository->store($indicatorData);
     }
@@ -136,6 +138,7 @@ class IndicatorService
     public function update($id, array $indicatorData): bool
     {
         $indicatorData['indicator'] = $this->sanitizeData($indicatorData['indicator']);
+        $indicatorData['deprecation_status_map'] = refreshIndicatorDeprecationStatusMap($indicatorData['indicator']);
 
         return $this->indicatorRepository->update($id, $indicatorData);
     }
@@ -169,9 +172,17 @@ class IndicatorService
     {
         $element = getElementSchema('indicator');
         $resultIndicator = $this->getIndicator($indicatorId);
+        $deprecationStatusMap = Arr::get($resultIndicator->toArray(), 'deprecation_status_map', []);
+
         $this->resultElementFormCreator->url = route('admin.result.indicator.update', [$resultId, $indicatorId]);
 
-        return $this->resultElementFormCreator->editForm($resultIndicator->indicator, $element, 'PUT', route('admin.result.indicator.index', $resultId));
+        return $this->resultElementFormCreator->editForm(
+            $resultIndicator->indicator,
+            $element,
+            method:'PUT',
+            parent_url: route('admin.result.indicator.index', $resultId),
+            deprecationStatusMap: $deprecationStatusMap
+        );
     }
 
     /**
@@ -216,5 +227,20 @@ class IndicatorService
         $measure = $this->getIndicatorMeasure($indicatorId);
 
         return ['qualitative' => $measure === '5', 'non_qualitative' => in_array($measure, ['1', '2', '3', '4'])];
+    }
+
+    public function getDeprecationStatusMap($id = '', $key = '')
+    {
+        if ($id) {
+            $activity = $this->indicatorRepository->find($id);
+
+            if (!$key) {
+                return $activity->deprecation_status_map;
+            }
+
+            return Arr::get($activity->deprecation_status_map, $key, []);
+        }
+
+        return [];
     }
 }

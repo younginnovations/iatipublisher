@@ -123,7 +123,7 @@
         <table class="w-full">
           <thead>
             <tr class="bg-n-10">
-              <td class="py-4 px-6 text-xs font-bold uppercase text-n-40">
+              <td class="px-6 py-4 text-xs font-bold uppercase text-n-40">
                 users
               </td>
               <td class="py-4 text-xs font-bold uppercase text-n-40">active</td>

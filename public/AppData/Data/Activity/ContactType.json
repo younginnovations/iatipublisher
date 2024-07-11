@@ -1,32 +1,36 @@
 {
-  "date-last-modified": "2017-07-03T16:29:55.512125+00:00",
-  "version": "",
-  "name": "ContactType",
-  "xml:lang": "en",
-  "ContactType": [
-    {
-      "code": "1",
-      "name": "General Enquiries",
-      "language": "en",
-      "description": "General Enquiries"
-    },
-    {
-      "code": "2",
-      "name": "Project Management",
-      "language": "en",
-      "description": "Project Management"
-    },
-    {
-      "code": "3",
-      "name": "Financial Management",
-      "language": "en",
-      "description": "Financial Management"
-    },
-    {
-      "code": "4",
-      "name": "Communications",
-      "language": "en",
-      "description": "Communications"
-    }
-  ]
+    "date-last-modified": "2024-06-19 06:11:18",
+    "version": "",
+    "name": "ContactType",
+    "xml:lang": "en",
+    "ContactType": [
+        {
+            "code": "1",
+            "name": "General Enquiries",
+            "description": "General Enquiries",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "2",
+            "name": "Project Management",
+            "description": "Project Management",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "3",
+            "name": "Financial Management",
+            "description": "Financial Management",
+            "status": "active",
+            "language": "en"
+        },
+        {
+            "code": "4",
+            "name": "Communications",
+            "description": "Communications",
+            "status": "active",
+            "language": "en"
+        }
+    ]
 }

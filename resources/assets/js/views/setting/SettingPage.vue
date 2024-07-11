@@ -4,7 +4,7 @@
     <div class="setting input__field">
       <span class="text-xs font-bold text-n-40">Settings</span>
       <div class="flex items-center justify-between">
-        <div class="my-2 flex items-center sm:mt-4 sm:mb-6">
+        <div class="my-2 flex items-center sm:mb-6 sm:mt-4">
           <a href="/activities"><svg-vue icon="left-arrow" /></a>
           <h2 class="ml-3 text-heading-5 font-bold text-n-50 sm:text-heading-4">
             Settings
@@ -45,6 +45,8 @@
         <SettingPublishingForm
           v-if="tab === 'publish'"
           :organization="props.organization"
+          :initial-api-call-completed="initialApiCallCompleted"
+          :show-tag="showTokenTag"
           @keyup.enter="submitForm"
           @submit-publishing="submitForm"
         />
@@ -64,7 +66,7 @@
       </div>
     </div>
     <div
-      class="fixed bottom-0 left-0 w-full bg-eggshell py-5 px-6 shadow-dropdown sm:pr-40"
+      class="fixed bottom-0 left-0 w-full bg-eggshell px-6 py-5 shadow-dropdown sm:pr-40"
     >
       <div class="flex items-center justify-end">
         <a
@@ -121,7 +123,7 @@ export default defineComponent({
       required: true,
     },
     organization: {
-      type: [String, Object],
+      type: [Object],
       required: true,
     },
     budgetNotProvided: {
@@ -152,15 +154,21 @@ export default defineComponent({
       type: [String, Object],
       required: true,
     },
+    isSuperadmin: {
+      type: Boolean,
+      required: false,
+    },
   },
 
   setup(props) {
+    let toastTimeoutId;
+    let initialApiCallCompleted = ref(false);
     const tab = ref('publish');
     const store = useStore();
     const loaderVisibility = ref(false);
     const toastVisibility = ref(false);
     const toastMessage = ref('');
-    const toastType = ref(false);
+    const toastType = ref<boolean | string>(false);
 
     const publishingForm = computed(() => store.state.publishingForm);
 
@@ -171,6 +179,8 @@ export default defineComponent({
     const defaultForm = computed(() => store.state.defaultForm);
 
     const defaultError = computed(() => store.state.defaultError);
+
+    const showTokenTag = ref(false);
 
     function updateStore(
       name: keyof typeof ActionTypes,
@@ -183,9 +193,25 @@ export default defineComponent({
       });
     }
 
+    updateStore(
+      ActionTypes.UPDATE_PUBLISHING_FORM,
+      'publisher_id',
+      props.organization.publisher_id
+    );
+
     onMounted(async () => {
       const { data } = await axios.get('/setting/data');
+      initialApiCallCompleted.value = true;
       const settingData = data.data;
+
+      updateStore(
+        'UPDATE_PUBLISHING_FORM',
+        'organization_id',
+        props.organization.id
+      );
+
+      const errors = data.errors ?? {};
+      setErrors(errors);
 
       if (settingData) {
         const defaultValues = settingData.default_values
@@ -232,6 +258,18 @@ export default defineComponent({
       }
     });
 
+    function setErrors(errors: object) {
+      if (Object.keys(errors).length > 0) {
+        for (const key in errors) {
+          updateStore('UPDATE_PUBLISHING_ERROR', key, errors[key]);
+        }
+
+        showTokenTag.value = false;
+      } else {
+        showTokenTag.value = true;
+      }
+    }
+
     function toggleTab(page: string) {
       toastVisibility.value = false;
       tab.value = page;
@@ -242,6 +280,7 @@ export default defineComponent({
         updateStore('UPDATE_DEFAULT_ERROR', data, '');
       }
       loaderVisibility.value = true;
+      clearTimeout(toastTimeoutId);
 
       axios
         .post('/setting/store/default', defaultForm.value)
@@ -249,7 +288,10 @@ export default defineComponent({
           const response = res.data;
           loaderVisibility.value = false;
           toastVisibility.value = true;
-          setTimeout(() => (toastVisibility.value = false), 5000);
+          toastTimeoutId = setTimeout(
+            () => (toastVisibility.value = false),
+            5000
+          );
           toastMessage.value = response.message;
           toastType.value = response.success;
 
@@ -272,6 +314,7 @@ export default defineComponent({
 
     function submitPublishing(url: string) {
       loaderVisibility.value = true;
+      clearTimeout(toastTimeoutId);
 
       for (const data in publishingError.value) {
         updateStore('UPDATE_PUBLISHING_ERROR', data, '');
@@ -284,7 +327,17 @@ export default defineComponent({
         })
         .then((res) => {
           const response = res.data;
+          const errors = response.errors ?? {};
+
+          setErrors(errors);
+
           toastType.value = response.success;
+
+          updateStore(
+            'UPDATE_PUBLISHER_INFO',
+            'token_verification',
+            response.data.token_verification ?? false
+          );
 
           if (response.success) {
             updateStore(
@@ -294,9 +347,9 @@ export default defineComponent({
             );
 
             updateStore(
-              'UPDATE_PUBLISHER_INFO',
-              'token_verification',
-              response.data.token_verification
+              'UPDATE_PUBLISHING_FORM',
+              'token_status',
+              response.data.token_status
             );
 
             updateStore(
@@ -305,15 +358,26 @@ export default defineComponent({
               true
             );
 
-            toastType.value =
-              response.data.publisher_verification &&
-              response.data.token_verification;
+            if (url === 'setting/verify') {
+              if (response.data.token_status.toLowerCase() === 'pending') {
+                toastType.value = 'warning';
+              } else if (
+                response.data.token_status.toLowerCase() === 'correct'
+              ) {
+                toastType.value = true;
+              } else {
+                toastType.value = false;
+              }
+            }
           }
 
+          toastTimeoutId = setTimeout(() => {
+            toastVisibility.value = false;
+          }, 5000);
+
+          toastMessage.value = response.message;
           loaderVisibility.value = false;
           toastVisibility.value = true;
-          setTimeout(() => (toastVisibility.value = false), 5000);
-          toastMessage.value = response.message;
         })
         .catch((error) => {
           const { errors } = error.response.data;
@@ -334,6 +398,7 @@ export default defineComponent({
     }
 
     provide('userRole', props.userRole);
+    provide('isSuperadmin', props.isSuperadmin);
 
     return {
       props,
@@ -347,6 +412,8 @@ export default defineComponent({
       toastType,
       toggleTab,
       submitForm,
+      initialApiCallCompleted,
+      showTokenTag,
     };
   },
 });

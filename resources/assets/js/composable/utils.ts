@@ -1,4 +1,5 @@
 import Location from 'Interfaces/utils';
+import { customAlphabet } from 'nanoid';
 
 export function getLocation(data: Location[]) {
   let locations: string[] = [];
@@ -76,4 +77,30 @@ export function truncateText(text, maxLength) {
     return text.substring(0, maxLength) + '...';
   }
   return text;
+}
+
+export function generateUsername(fullname: string) {
+  if (fullname.length > 0) {
+    const snakeCaseString = fullname.toLowerCase().replace(/\s+/g, '_');
+    const randomDigits = customAlphabet('0123456789', 2);
+
+    return snakeCaseString + '_' + parseInt(randomDigits());
+  }
+
+  return '';
+}
+
+export function onlyDeprecatedStatusMap(elements) {
+  const deprecatedStatus = [];
+
+  console.log('elements', elements);
+  for (let i = 0; i < Object.keys(elements).length; i++) {
+    if (i in elements && 'deprecation_status_map' in elements[i]) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      deprecatedStatus.push(elements[i]['deprecation_status_map']);
+    }
+  }
+
+  return deprecatedStatus;
 }
