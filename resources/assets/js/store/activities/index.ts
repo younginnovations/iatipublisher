@@ -169,7 +169,7 @@ const mutations = {
     state.startCoreValidation = payload;
   },
   mutatePublishRetry(state: StateInterface, payload: boolean) {
-    state.startBulkPublish = payload;
+    state.startPublishingRetry = payload;
   },
 };
 

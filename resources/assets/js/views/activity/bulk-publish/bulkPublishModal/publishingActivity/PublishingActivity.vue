@@ -79,8 +79,7 @@ import { useStore } from 'Store/activities/index';
 const store = useStore();
 
 const retryPublishing = () => {
-  alert('retry here');
-  // store.dispatch('updatePublishRetry', !store.state.startPublishingRetry);
+  store.dispatch('updatePublishRetry', !store.state.startPublishingRetry);
 };
 </script>
 

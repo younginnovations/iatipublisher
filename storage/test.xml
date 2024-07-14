@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<iati-activities version="2.03" generated-datetime="2024-07-09T20:08:15+00:00">
-  <iati-activity last-updated-datetime="2024-07-09T20:08:15+00:00" xml:lang="aa">
-    <iati-identifier>AF-CBR-8888-yipl-publish-test</iati-identifier>
+<iati-activities version="2.03" generated-datetime="2024-07-14T08:56:12+00:00">
+  <iati-activity last-updated-datetime="2024-07-14T08:56:12+00:00" xml:lang="aa">
+    <iati-identifier>AF-CBR-8888-12313</iati-identifier>
     <reporting-org type="11" ref="AF-CBR-8888" secondary-reporter="0">
       <narrative xml:lang="aa">My org's name - editted</narrative>
     </reporting-org>
     <title>
-      <narrative xml:lang="aa">yipl publish test</narrative>
+      <narrative xml:lang="aa">yipl testing</narrative>
     </title>
   </iati-activity>
 </iati-activities>

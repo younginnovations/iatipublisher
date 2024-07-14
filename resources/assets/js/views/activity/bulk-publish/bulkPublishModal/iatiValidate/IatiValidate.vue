@@ -24,8 +24,11 @@
         >
           <svg-vue class="text-xl" icon="warning-activity" />
           <span class="text-xs font-bold">
-            There may be data quality issues with 24/90 activities. You can
-            still continue to publish
+            There may be data quality issues with
+            {{ totalValidationFailedActivities }}/{{
+              store.state.bulkActivityPublishStatus.validationStats.total
+            }}
+            activities. You can still continue to publish
           </span>
         </div>
         <ul class="space-y-2 divide-y divide-n-20 px-6 pb-4 duration-200">
@@ -72,7 +75,7 @@
           class="inline-block pl-3 pt-1 text-xs font-bold uppercase leading-[18px]"
           >Select all</span
         >
-        <input type="checkbox" id="selectAll" @change="selectAllActivities" :checked="areAllSelected"  />
+        <input type="checkbox" id="selectAll"  />
         <span class="checkmark"></span>
       </label>
     </div> -->
@@ -82,13 +85,14 @@
 import {
   watch,
   defineProps,
-  computed,
   ref,
   onMounted,
   defineEmits,
   inject,
   Ref,
+  computed,
 } from 'vue';
+
 import { useStore } from 'Store/activities/index';
 import axios from 'axios';
 import RollingLoader from '../RollingLoaderComponent.vue';
@@ -187,6 +191,11 @@ watch(
   },
   { deep: true }
 );
+
+const totalValidationFailedActivities = computed(() => {
+  return Object.values(props.activitiesList).filter((item) => !item.is_valid)
+    .length;
+});
 </script>
 
 <style scoped lang="scss">

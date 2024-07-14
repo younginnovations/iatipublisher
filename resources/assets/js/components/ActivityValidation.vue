@@ -73,10 +73,12 @@
             class="flex-shrink-0 text-base text-[#E34D5B]"
           ></svg-vue>
           <span>
-            There may be data quality issues with 24 activities. You can still
+            There may be data quality issues with
+            {{ totalValidationFailedActivities }} activities. You can still
             continue to publish
           </span>
         </div>
+
         <div class="flex justify-center pt-2">
           <div class="flex flex-1 items-center justify-center">
             <button
@@ -169,34 +171,32 @@ watch(
 //   });
 // };
 
-// const { refetch: validationCancelHandler } = useQuery({
-//   queryKey: ['validationCancelQuery'],
-//   queryFn: async () => {
-//     return await axios
-//       .get(`/activities/delete-validation-status`)
-//       .then((res) => {
-//         emit('stopValidation');
-//         store.dispatch('updateStartValidation', false);
-//         store.dispatch('updateValidatingActivities', '');
-//         store.state.bulkActivityPublishStatus.publishing.hasFailedActivities = {
-//           ...store.state.bulkActivityPublishStatus.publishing
-//             .hasFailedActivities,
-//           status: false,
-//           data: {} as any,
-//           ids: [],
-//         };
-//         localStorage.removeItem('validatingActivities');
-//         localStorage.removeItem('activityValidating');
-//       })
-//       .catch((error) => {
-//         console.error(error);
-//       });
-//   },
-//   refetchOnWindowFocus: false,
-//   refetchOnMount: false,
-//   refetchOnReconnect: false,
-//   enabled: false,
-// });
+const validationCancelHandler = async () => {
+  try {
+    const res = await axios.get(`/activities/delete-validation-status`);
+
+    // Emitting stop validation event
+    emit('stopValidation');
+
+    // Dispatching actions to update the store
+    store.dispatch('updateStartValidation', false);
+    store.dispatch('updateValidatingActivities', '');
+
+    // Updating the hasFailedActivities status in the store
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities = {
+      ...store.state.bulkActivityPublishStatus.publishing.hasFailedActivities,
+      status: false,
+      data: {} as any,
+      ids: [],
+    };
+
+    // Removing items from localStorage
+    localStorage.removeItem('validatingActivities');
+    localStorage.removeItem('activityValidating');
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const startBulkPublish = () => {
   store.dispatch('updateStartValidation', false);
@@ -226,6 +226,12 @@ watch(
     }
   }
 );
+
+const totalValidationFailedActivities = computed(() => {
+  return Object.values(
+    store.state.bulkActivityPublishStatus.importedActivitiesList
+  ).filter((item) => !item.is_valid).length;
+});
 
 defineExpose({
   // validationCancelHandler,

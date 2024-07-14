@@ -283,6 +283,7 @@ const emptybulkPublishStatus = () => {
  */
 const checkPublish = () => {
   isLoading.value = true;
+  store.state.bulkActivityPublishStatus.iatiValidatorLoader = false;
   axios
     .get(`/activities/checks-for-activity-bulk-publish`)
     .then((res) => {

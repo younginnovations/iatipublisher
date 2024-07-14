@@ -203,13 +203,13 @@ const proceedValidation = () => {
 
 const checkValidation = async () => {
   try {
+    store.state.bulkActivityPublishStatus.iatiValidatorLoader = true;
     const response = await axios.get(
       `/activities/checks-for-activity-bulk-validation`
     );
     if (response.data) {
       const activities = response.data.activities;
       store.state.validationRunning = !response.data.success;
-
       if (activities) {
         localStorage.setItem(
           'validatingActivitiesNames',

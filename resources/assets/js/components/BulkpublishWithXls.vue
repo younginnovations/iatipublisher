@@ -266,36 +266,35 @@ const bulkPublishStatus = async () => {
 };
 
 const retryPublishing = () => {
-  //reset required states
-  // completed.value = 'processing';
+  completed.value = 'processing';
+  store.state.bulkActivityPublishStatus.completedSteps = [1];
+  store.state.bulkActivityPublishStatus.publishing.response = null;
+  for (const key in store.state.bulkActivityPublishStatus.publishing
+    .hasFailedActivities.data) {
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data[
+      key
+    ].status = 'processing';
+  }
 
-  // for (const key in store.state.bulkActivityPublishStatus.publishing
-  //   .hasFailedActivities.data) {
-  //   store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data[
-  //     key
-  //   ].status = 'processing';
-  // }
+  store.state.bulkActivityPublishStatus.publishing.activities =
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data;
 
-  // store.state.bulkActivityPublishStatus.publishing.activities =
-  //   store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data;
+  // api endpoint call
+  const endpoint = `/activities/start-bulk-publish?activities=[${store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.ids}]`;
+  store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.status =
+    false;
+  store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.ids = [];
+  store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data =
+    {} as actElements;
 
-  // // api endpoint call
-  // const endpoint = `/activities/start-bulk-publish?activities=[${store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.ids}]`;
-  // store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.status =
-  //   false;
-  // store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.ids = [];
-  // store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data =
-  //   {} as actElements;
+  axios.get(endpoint).then((res) => {
+    const response = res.data;
 
-  // axios.get(endpoint).then((res) => {
-  //   const response = res.data;
-
-  //   if (response.success) {
-  //     paStorage.value.publishingActivities = response.data;
-  //     bulkPublishStatus();
-  //   }
-  // });
-  alert('retry');
+    if (response.success) {
+      paStorage.value.publishingActivities = response.data;
+      bulkPublishStatus();
+    }
+  });
 };
 
 const failedActivities = (nestedObject: object) => {
