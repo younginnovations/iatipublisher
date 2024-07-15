@@ -202,7 +202,7 @@ class ActivityRepository extends Repository
         $defaultAidType = $this->autoFillDefaultAidTypeSettingValue($this->getActivityElement($mappedActivity, 'default_aid_type'));
 
         $data = [
-            'iati_identifier' => $mappedActivity['iati_identifier'],
+            'iati_identifier' => trimStringValueInArray($mappedActivity['iati_identifier']),
             'title' => $this->getActivityElement($mappedActivity, 'title'),
             'description' => $this->getActivityElement($mappedActivity, 'description'),
             'activity_status' => $this->getSingleValuedActivityElement($mappedActivity, 'activity_status'),
@@ -306,7 +306,7 @@ class ActivityRepository extends Repository
         $defaultAidType = $this->autoFillDefaultAidTypeSettingValue($this->getActivityElement($activityData, 'default_aid_type'));
 
         $activity = [
-            'iati_identifier' => $activityData['identifier'],
+            'iati_identifier' => trimStringValueInArray($activityData['identifier']),
             'title' => $this->getActivityElement($activityData, 'title'),
             'description' => $this->getActivityElement($activityData, 'description'),
             'activity_status' => $this->getSingleValuedActivityElement($activityData, 'activity_status'),
@@ -418,7 +418,7 @@ class ActivityRepository extends Repository
     public function updateActivity($id, array $activityData): bool
     {
         $activity = [
-            'iati_identifier' => $activityData['identifier'],
+            'iati_identifier' => trimStringValueInArray($activityData['identifier']),
             'title' => $this->getActivityElement($activityData, 'title'),
             'description' => $this->getActivityElement($activityData, 'description'),
             'activity_status' => $this->getSingleValuedActivityElement($activityData, 'activity_status'),

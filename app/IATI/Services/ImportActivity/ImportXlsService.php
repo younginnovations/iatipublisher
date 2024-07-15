@@ -245,6 +245,7 @@ class ImportXlsService
 
                 $activityData['iati_identifier']['iati_identifier_text'] = $organizationIdentifier . '-' . $activityData['iati_identifier']['activity_identifier'];
                 $activityData['iati_identifier']['present_organization_identifier'] = $organizationIdentifier;
+                $activityData['iati_identifier'] = trimStringValueInArray($activityData['iati_identifier']);
 
                 if (isset($defaultValues['default_aid_type']) && !empty($defaultValues['default_aid_type'])) {
                     $activityData['default_aid_type'] = [

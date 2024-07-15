@@ -244,6 +244,8 @@ class XmlValidator
         $this->activity = $activity;
         $tempFlattened = flattenArrayWithKeys($this->activity);
         $tempFlattened = changeEmptySpaceValueToNullValue($tempFlattened);
+        $tempFlattened = trimStringValueInArray($tempFlattened);
+
         $this->activity = convertDotKeysToNestedArray($tempFlattened);
 
         return $this;

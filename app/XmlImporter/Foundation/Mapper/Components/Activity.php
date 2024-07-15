@@ -214,7 +214,7 @@ class Activity
         $this->identifier['iati_identifier_text'] = trim((string) $this->value($element));
 
         if ($this->orgRef) {
-            $this->identifier['activity_identifier'] = substr((string) $this->value($element), strlen($this->orgRef) + 1);
+            $this->identifier['activity_identifier'] = substr(trim((string) $this->value($element)), strlen($this->orgRef) + 1);
         }
 
         return $this->identifier;

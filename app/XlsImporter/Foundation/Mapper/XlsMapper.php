@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\XlsImporter\Foundation\Mapper;
 
+use function Aws\map;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
 /**
@@ -52,7 +53,6 @@ class XlsMapper
         $validatedDataFilePath = sprintf('%s/%s/%s/%s', $xls_data_storage_path, $orgId, $userId, 'valid.json');
         $statusFilePath = sprintf('%s/%s/%s/%s', $xls_data_storage_path, $orgId, $userId, 'status.json');
         $globalErrorFilePath = sprintf('%s/%s/%s/%s', $xls_data_storage_path, $orgId, $userId, 'globalError.json');
-
         $xlsMapper = new $mapper();
         $xlsMapper->initMapper($validatedDataFilePath, $statusFilePath, $globalErrorFilePath, $dbIatiIdentifiers);
 
@@ -62,6 +62,7 @@ class XlsMapper
 
         $tempFlattened = flattenArrayWithKeys($xlsData);
         $tempFlattened = changeEmptySpaceValueToNullValue($tempFlattened);
+        $tempFlattened = trimStringValueInArray($tempFlattened);
         $xlsData = convertDotKeysToNestedArray($tempFlattened);
 
         $xlsMapper->map($xlsData)->validateAndStoreData();
