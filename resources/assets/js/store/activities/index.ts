@@ -12,16 +12,39 @@ interface StateInterface {
   bulkpublishActivities: object;
   startBulkPublish: boolean;
   startValidation: boolean;
+  startCoreValidation: boolean;
+  startPublishingRetry: boolean;
   validatingActivities: string;
   validatingActivitiesNames: string[];
+  validationRunning: boolean;
+  bulkActivityPublishStatus: {
+    isMinimized: boolean;
+    iatiValidatorLoader: boolean;
+    validationNames: string[];
+    validationStats: {
+      complete: number;
+      total: number;
+      failed: number;
+    };
+    cancelValidationAndPublishing: boolean;
+  };
+  stopPublishing: boolean;
+}
+interface actElements {
+  activity_id: number;
+  activity_title: string;
+  status: string;
 }
 
 const state = {
-  selectedActivities: [],
+  selectedActivities: [] as number[],
   bulkPublishLength: 0,
   cancelUpload: false,
   startBulkPublish: false,
   startValidation: false,
+  startCoreValidation: false,
+  startPublishingRetry: false,
+  validationRunning: false,
   validatingActivities: '',
   maximizeXls: true,
   startXlsDownload: false,
@@ -31,13 +54,46 @@ const state = {
   validatingActivitiesNames: [],
   bulkpublishActivities: {
     publishingActivities: {
-      activities: { activity_id: 0, activity_title: '', status: '' },
+      activities: {
+        activity_id: 0,
+        activity_title: '',
+        status: '',
+      },
       organization_id: 0,
       job_batch_uuid: '',
       status: '',
       message: '',
     },
   },
+  bulkActivityPublishStatus: {
+    isMinimized: false,
+    iatiValidatorLoader: false,
+    validationNames: [] as string[],
+    validationStats: {
+      complete: 0,
+      total: 0,
+      failed: 0,
+    },
+    importedActivitiesList: [] as {
+      title: any;
+      status: any;
+      is_valid: any;
+    }[],
+    showValidationError: false,
+    completedSteps: [] as number[],
+    publishing: {
+      response: null as any,
+      activities: null as any,
+      hasFailedActivities: {
+        data: {} as actElements,
+        ids: [] as number[],
+        status: false,
+      },
+    },
+    cancelValidationAndPublishing: false,
+  },
+  stopPublishing: false,
+  publishAlertValue: false,
 };
 
 const mutations = {
@@ -96,6 +152,24 @@ const mutations = {
     payload: string
   ) {
     state.validatingActivities = payload;
+  },
+  mutateMinimizeScreen: function (state: StateInterface, payload: boolean) {
+    state.bulkActivityPublishStatus.isMinimized = payload;
+  },
+  mutateCancelValidationAndPublishing: function (
+    state: StateInterface,
+    payload: boolean
+  ) {
+    state.bulkActivityPublishStatus.cancelValidationAndPublishing = payload;
+  },
+  mutateStopPublishing(state: StateInterface, payload: boolean) {
+    state.stopPublishing = payload;
+  },
+  mutateStartCoreValidation(state: StateInterface, payload: boolean) {
+    state.startCoreValidation = payload;
+  },
+  mutatePublishRetry(state: StateInterface, payload: boolean) {
+    state.startPublishingRetry = payload;
   },
 };
 
@@ -174,6 +248,39 @@ const actions = {
     payload: string
   ) {
     commit('mutateValidatingActivities', payload);
+  },
+
+  updateMinimizeScreen: function (
+    { commit }: CommitFunction,
+    payload: boolean
+  ) {
+    commit('mutateMinimizeScreen', payload);
+  },
+
+  // stop validation and publishing
+  updateCancelValidationAndPublishing: function (
+    { commit }: CommitFunction,
+    payload: boolean
+  ) {
+    commit('mutateCancelValidationAndPublishing', payload);
+  },
+
+  // stop publishing
+  updateStopPublishing: function (
+    { commit }: CommitFunction,
+    payload: boolean
+  ) {
+    commit('mutateStopPublishing', payload);
+  },
+
+  updateStartCoreValidation: function (
+    { commit }: CommitFunction,
+    payload: boolean
+  ) {
+    commit('mutateStartCoreValidation', payload);
+  },
+  updatePublishRetry: function ({ commit }: CommitFunction, payload: number) {
+    commit('mutatePublishRetry', payload);
   },
 };
 

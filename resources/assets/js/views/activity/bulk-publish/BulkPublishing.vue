@@ -235,7 +235,7 @@ const bulkPublishStatus = () => {
   intervalID = setInterval(() => {
     axios
       .get(
-        `activities/bulk-publish-status?organization_id=${paStorage.value.publishingActivities.organization_id}&&uuid=${paStorage.value.publishingActivities.job_batch_uuid}`
+        `/activities/bulk-publish-status?organization_id=${paStorage.value.publishingActivities.organization_id}&&uuid=${paStorage.value.publishingActivities.job_batch_uuid}`
       )
       .then((res) => {
         const response = res.data;
@@ -274,7 +274,7 @@ const bulkPublishStatus = () => {
 const closeWindow = () => {
   paStorage.value.publishingActivities = {} as paElements;
   emit('close');
-  axios.delete(`activities/delete-bulk-publish-status`);
+  axios.delete(`/activities/delete-bulk-publish-status`);
 };
 
 /**
@@ -323,7 +323,7 @@ const retryPublishing = () => {
   activities.value = hasFailedActivities.data;
 
   // api endpoint call
-  const endpoint = `activities/start-bulk-publish?activities=[${hasFailedActivities.ids}]`;
+  const endpoint = `/activities/start-bulk-publish?activities=[${hasFailedActivities.ids}]`;
 
   axios.get(endpoint).then((res) => {
     const response = res.data;

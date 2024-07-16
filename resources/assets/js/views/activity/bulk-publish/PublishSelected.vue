@@ -1,19 +1,7 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <div>
-    <BtnComponent
-      v-if="store.state.selectedActivities.length > 0"
-      type="secondary"
-      :text="`Publish Selected (${store.state.selectedActivities.length})`"
-      icon="approved-cloud"
-      @click="checkPublish"
-    />
-
-    <Modal
-      :modal-active="showExistingProcessModal"
-      width="583"
-      @close="showExistingProcessModal = false"
-    >
+    <Modal :modal-active="showExistingProcessModal" width="583">
       <div class="popup mb-4">
         <div class="title mb-6 flex items-center text-sm">
           <svg-vue class="mr-1 text-lg text-spring-50" icon="warning" />
@@ -43,10 +31,13 @@
     </Modal>
 
     <Modal
-      :modal-active="publishAlertValue && !showExistingProcessModal"
+      :modal-active="
+        (store.state.publishAlertValue && !showExistingProcessModal) ||
+        showValidationPopup ||
+        (pa?.publishingActivities &&
+          Object.keys(pa?.publishingActivities).length > 0)
+      "
       :width="popUpWidthChange"
-      @close="publishAlertToggle"
-      @reset="resetPublishStep"
     >
       <template v-if="bulkPublishStep === 1">
         <div class="popup mb-4">
@@ -67,180 +58,38 @@
               class="space"
               text="Continue"
               type="primary"
-              @click="verifyCoreElements()"
+              @click="
+                () => {
+                  bulkPublishStep = 2;
+                  verifyCoreElements();
+                }
+              "
             />
           </div>
         </div>
       </template>
 
       <template v-else-if="bulkPublishStep === 2">
-        <div class="eligible-activities mb-6 text-sm leading-relaxed">
-          <div class="title mb-6 flex">
-            <svg-vue icon="tick" class="mr-1 mt-0.5 text-lg text-spring-50" />
-            <b>Core Elements Complete</b>
-          </div>
-
-          <div class="rounded-lg bg-mint px-6">
-            <div
-              v-if="coreCompletedActivities.length > 0"
-              class="coreCompleted"
-            >
-              <div
-                v-for="(act, i) in coreCompletedActivities"
-                :key="i"
-                class="item py-6"
-                :class="{
-                  'border-b border-n-20':
-                    i != coreCompletedActivities.length - 1,
-                }"
-              >
-                <a :href="`${permalink}${act.activity_id}`" class="">
-                  {{ act.title }}
-                </a>
-              </div>
-            </div>
-            <div v-else class="py-6">No activities found</div>
-          </div>
-        </div>
-
-        <div class="non-eligible-activities mb-6 text-sm leading-relaxed">
-          <div class="title mb-6 flex">
-            <svg-vue
-              icon="warning-fill"
-              class="mr-1 mt-0.5 text-lg text-crimson-40"
-            />
-            <b>Core Elements not Complete</b>
-          </div>
-
-          <div class="rounded-lg bg-rose px-6">
-            <div
-              v-if="coreInCompletedActivities.length > 0"
-              class="notCompleted"
-            >
-              <div
-                v-for="(act, i) in coreInCompletedActivities"
-                :key="i"
-                class="item py-6"
-                :class="{
-                  'border-b border-n-20':
-                    i != coreInCompletedActivities.length - 1,
-                }"
-              >
-                <a
-                  :href="`${permalink}${act.activity_id}`"
-                  target="_blank"
-                  class=""
-                >
-                  {{ act.title }}
-                </a>
-              </div>
-            </div>
-            <div v-else class="py-6">No activities found</div>
-          </div>
-        </div>
-
-        <div
-          v-if="Object.keys(deprecationStatusMap).length > 0"
-          class="non-eligible-activities mb-6 text-sm leading-relaxed"
-        >
-          <div class="title mb-6 flex">
-            <svg-vue
-              icon="exclamation-warning"
-              class="mr-1 mt-0.5 text-lg text-spring-50"
-            />
-            <b>Some elements use deprecated codelist values</b>
-          </div>
-
-          <div class="rounded-lg bg-eggshell px-6">
-            <div class="notCompleted">
-              <div
-                v-for="(act, i) in deprecationStatusMap"
-                :key="i"
-                class="item py-6"
-                :class="{
-                  'border-b border-n-20': i != deprecationStatusMap.length - 1,
-                }"
-              >
-                <a
-                  :href="`${permalink}${act.activity_id}`"
-                  target="_blank"
-                  class=""
-                >
-                  {{ act.title }}
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="flex justify-end">
-          <div class="inline-flex">
-            <BtnComponent
-              v-if="
-                coreCompletedActivities.length > 0 ||
-                coreInCompletedActivities.length > 0
-              "
-              class="bg-white px-6 uppercase"
-              type=""
-              text="Continue Anyway"
-              @click="
-                () => {
-                  bulkPublishStep = 3;
-                }
-              "
-            />
-            <BtnComponent
-              class="space"
-              type="primary"
-              text="Go Back"
-              @click="resetPublishStep()"
-            />
-          </div>
-        </div>
-      </template>
-      <template v-else-if="bulkPublishStep === 3">
-        <div class="title mb-6 flex items-center text-sm">
-          <svg-vue class="mr-1 text-lg text-crimson-40" icon="shield" />
-          <b
-            >{{
-              store.state.selectedActivities.length > 1
-                ? 'Activities'
-                : 'Activity'
-            }}
-            will be validated before publishing</b
-          >
-        </div>
-        <div class="mb-8 bg-eggshell p-4 text-sm">
-          {{
-            store.state.selectedActivities.length > 1
-              ? 'These activities'
-              : 'This Activity'
-          }}
-          will be validated before being published to the IATI Registry.
-        </div>
-        <div class="flex justify-end">
-          <div class="inline-flex">
-            <BtnComponent
-              class="bg-white px-6 uppercase"
-              type=""
-              text="Go back"
-              @click="resetPublishStep()"
-            />
-            <BtnComponent
-              class="space"
-              type="primary"
-              text="Continue"
-              :is-loading="showModalButtonLoader"
-              @click="validateActivities()"
-            />
-          </div>
-        </div>
+        <BulkPublishingModal
+          :deprecation-status-map="deprecationStatusMap"
+          :core-in-completed-activities="coreInCompletedActivities"
+          :core-completed-activities="coreCompletedActivities"
+          :core-element-loader="coreElementLoader"
+          :validation-activity-loader="validationActivityLoader"
+          :selected-activities="store.state.selectedActivities"
+          :show-validation-popup="showValidationPopup"
+          :publishing-activities="pa?.publishingActivities"
+          :permalink="permalink"
+          @cancelValidation="() => cancelValidation()"
+          @cancelBulkPublishing="() => cancelBulkPublishing()"
+          @validate-activities="() => validateActivities()"
+        />
       </template>
     </Modal>
 
     <Modal :modal-active="showCancelConfirmationPopup" width="583">
       <div>
-        <BulkPublishingErrorPopup></BulkPublishingErrorPopup>
+        <BulkPublishingErrorPopup />
 
         <div class="mt-4 flex justify-between space-x-4">
           <button
@@ -283,6 +132,7 @@
         </button>
       </div>
     </Modal>
+
     <PageLoader v-if="isLoading"></PageLoader>
     <Loader
       v-if="loader"
@@ -293,6 +143,14 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * Verify core elements
+ */
+interface actTypeface {
+  title: string;
+  activity_id: number;
+}
+
 import {
   defineProps,
   ref,
@@ -303,7 +161,9 @@ import {
   watch,
   provide,
   inject,
+  defineExpose,
 } from 'vue';
+
 import { useToggle, useStorage } from '@vueuse/core';
 import axios from 'axios';
 
@@ -312,7 +172,7 @@ import BtnComponent from 'Components/ButtonComponent.vue';
 import Modal from 'Components/PopupModal.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import PageLoader from 'Components/Loader.vue';
-
+import BulkPublishingModal from './bulkPublishModal/BulkPublish.vue';
 // Vuex Store
 import { useStore } from 'Store/activities/index';
 import BulkPublishingErrorPopup from 'Components/BulkPublishingErrorPopup.vue';
@@ -325,9 +185,6 @@ defineProps({
  *  Global State
  */
 const store = useStore();
-
-// toggle state for modal popup
-let [publishAlertValue, publishAlertToggle] = useToggle();
 
 // state for step of the flow
 const bulkPublishStep = ref(1);
@@ -342,9 +199,9 @@ const published = ref(false);
 
 // display/hide validator loader
 const loader = ref(false);
-
-// Dynamic text for loader
 const loaderText = ref('Please Wait');
+const coreElementLoader = ref(false);
+const validationActivityLoader = ref(false);
 
 /*States for Bulk publish cancellation flow*/
 const showCancelConfirmationPopup = ref(false);
@@ -352,10 +209,38 @@ const showCancelledPopup = ref(false);
 const messageOnCancellation = ref('No bulk publish were cancelled');
 
 // reset step to zero after closing modal
-const resetPublishStep = () => {
-  bulkPublishStep.value = 1;
-  publishAlertValue.value = false;
-  selectedActivities.value = [];
+const cancelValidation = () => {
+  store.state.bulkActivityPublishStatus = {
+    ...store.state.bulkActivityPublishStatus,
+    cancelValidationAndPublishing: true,
+    iatiValidatorLoader: false,
+    validationStats: {
+      ...store.state.bulkActivityPublishStatus.validationStats,
+      complete: 0,
+      total: 0,
+      failed: 0,
+    },
+  };
+  store.state.publishAlertValue = false;
+  validationActivityLoader.value = false;
+  setTimeout(() => {
+    bulkPublishStep.value = 1;
+  }, 1000);
+};
+
+const cancelBulkPublishing = () => {
+  store.dispatch('updateStopPublishing', !store.state.stopPublishing);
+  pa.value.publishingActivities = {};
+  store.state.bulkActivityPublishStatus.publishing = {
+    ...store.state.bulkActivityPublishStatus.publishing,
+    response: null,
+    hasFailedActivities: {
+      data: {} as any,
+      ids: [],
+      status: false,
+    },
+  };
+  cancelValidation();
 };
 
 const popUpWidthChange = computed(() => {
@@ -369,7 +254,6 @@ const popUpWidthChange = computed(() => {
       break;
     default:
   }
-
   return width.value;
 });
 
@@ -379,6 +263,7 @@ interface MessageTypeface {
   type: boolean;
   visibility: boolean;
 }
+
 const errorData = inject('errorData') as MessageTypeface;
 
 const displayToast = (message, type) => {
@@ -398,13 +283,14 @@ const emptybulkPublishStatus = () => {
  */
 const checkPublish = () => {
   isLoading.value = true;
+  store.state.bulkActivityPublishStatus.iatiValidatorLoader = false;
   axios
     .get(`/activities/checks-for-activity-bulk-publish`)
     .then((res) => {
       const response = res.data;
 
       if (response.success === true) {
-        publishAlertValue.value = true;
+        store.state.publishAlertValue = true;
       } else {
         if (response?.in_progress) {
           emptybulkPublishStatus();
@@ -419,40 +305,38 @@ const checkPublish = () => {
     .finally(() => (isLoading.value = false));
 };
 
-/**
- * Verify core elements
- */
-interface actTypeface {
-  title: string;
-  activity_id: number;
-}
-
 let coreCompletedActivities: Ref<actTypeface[]> = ref([]),
   coreInCompletedActivities: Ref<actTypeface[]> = ref([]),
   permalink = `/activity/`;
 let deprecationStatusMap = ref();
 
 const verifyCoreElements = () => {
-  loader.value = true;
-  loaderText.value = 'Verifying Core Elements';
+  coreElementLoader.value = true;
+  store.dispatch('updateCancelValidationAndPublishing', false);
   const activities = store.state.selectedActivities.join(',');
-
   axios
     .get(`/activities/core-elements-completed?activities=[${activities}]`)
     .then((res) => {
       const response = res.data;
       if (response.success) {
-        console.log('vitra');
+        if (
+          response.data.deprecation_status_map.length == 0 &&
+          response.data.core_elements_completion.incomplete.length == 0 &&
+          response.data.core_elements_completion.complete.length !== 0
+        ) {
+          store.dispatch('updateStartValidation', true);
+          coreElementLoader.value = false;
+          validateActivities();
+        }
         coreCompletedActivities.value =
           response.data.core_elements_completion.complete;
         coreInCompletedActivities.value =
           response.data.core_elements_completion.incomplete;
+
         deprecationStatusMap.value = response.data.deprecation_status_map;
-        console.log('deprecationStatusMap', deprecationStatusMap.value);
-        bulkPublishStep.value = 2;
       } else {
-        loader.value = false;
-        resetPublishStep();
+        coreElementLoader.value = false;
+        cancelValidation();
 
         if (response?.in_progress) {
           emptybulkPublishStatus();
@@ -463,10 +347,7 @@ const verifyCoreElements = () => {
           displayToast(response.message, response.success);
         }
       }
-
-      setTimeout(() => {
-        loader.value = false;
-      }, 2000);
+      coreElementLoader.value = false;
     });
 };
 
@@ -477,15 +358,36 @@ let validationErrors = ref({});
 onMounted(() => {
   axios
     .get(
-      `activities/bulk-publish-status?organization_id=${pa.value?.publishingActivities.organization_id}&&uuid=${pa.value?.publishingActivities.job_batch_uuid}`
+      `/activities/bulk-publish-status?organization_id=${pa.value?.publishingActivities?.organization_id}&&uuid=${pa.value?.publishingActivities?.job_batch_uuid}`
     )
     .then((res) => {
-      Object.assign(pa.value?.publishingActivities, res.data?.data);
+      if (res.data.publishing) {
+        if (pa.value?.publishingActivities && res.data?.data) {
+          try {
+            const data = res.data.data;
+            Object.assign(pa.value.publishingActivities, data);
+
+            if (Object.keys(data).length > 0) {
+              bulkPublishStep.value = 2;
+              if (data.status === 'completed') {
+                store.state.bulkActivityPublishStatus.completedSteps = [1, 2];
+              } else {
+                store.state.bulkActivityPublishStatus.completedSteps = [1];
+              }
+            }
+          } catch (error) {
+            console.error('Error parsing data', error);
+          }
+        }
+      }
+    })
+    .catch((error) => {
+      console.error('Error fetching data', error);
     });
 });
 
 const stopValidating = async () => {
-  await axios.get(`activities/delete-validation-status`).then(() => {
+  await axios.get(`/activities/delete-validation-status`).then(() => {
     store.dispatch('updateStartValidation', false);
     store.dispatch('updateValidatingActivities', '');
     localStorage.removeItem('validatingActivities');
@@ -494,54 +396,51 @@ const stopValidating = async () => {
 };
 
 const startValidation = async () => {
-  const activities = store.state.selectedActivities.join(',');
+  try {
+    const activities = store.state.selectedActivities.join(',');
+    validationActivityLoader.value = true;
+    await stopValidating();
+    store.dispatch('updateStartValidation', true);
 
-  await stopValidating();
-  store.dispatch('updateStartValidation', true);
-  store.dispatch('updateValidatingActivities', activities);
-  localStorage.setItem('validatingActivities', activities);
-  store.dispatch('updateStartBulkPublish', false);
-  await cancelBulkPublish();
+    store.dispatch('updateValidatingActivities', activities);
+    localStorage.setItem('validatingActivities', activities);
+    store.dispatch('updateStartBulkPublish', false);
+    await cancelBulkPublish();
 
-  showExistingProcessModal.value = false;
-  axios
-    .post(`/activities/validate-activities?activities=[${activities}]`)
-    .then((res) => {
-      const response = res.data;
-      store.dispatch('updateValidatingActivitiesNames', response.activities);
-
-      localStorage.setItem(
-        'validatingActivitiesNames',
-        response.activities.join('|')
-      );
-
-      if (response.success) {
-        validationErrors.value = response.data;
-      } else {
-        resetPublishStep();
-        displayToast(response.message, response.success);
-      }
-    });
-  // .finally(() => {
-  //   store.dispatch('updateStartValidation', true);
-  //   store.dispatch('updateValidatingActivities', activities);
-  //   localStorage.setItem('validatingActivities', activities);
-  //   store.dispatch('updateStartBulkPublish', false);
-  // });
+    const res = await axios.post(
+      `/activities/validate-activities?activities=[${activities}]`
+    );
+    const response = res.data;
+    store.dispatch('updateValidatingActivitiesNames', response.activities);
+    localStorage.setItem(
+      'validatingActivitiesNames',
+      response.activities.join('|')
+    );
+    if (response.success) {
+      validationErrors.value = response.data;
+    } else {
+      displayToast(response.message, response.success);
+    }
+  } catch (error) {
+    console.error('Validation error:', error);
+  }
 };
 
 const validateActivities = async () => {
+  store.state.bulkActivityPublishStatus.iatiValidatorLoader = true;
   let validatorSuccess = false;
   let publishingSuccess = false;
   showModalButtonLoader.value = true;
 
-  await axios.get(`activities/checks-for-activity-bulk-publish`).then((res) => {
-    const response = res.data;
-    publishingSuccess = response.success;
-  });
+  await axios
+    .get(`/activities/checks-for-activity-bulk-publish`)
+    .then((res) => {
+      const response = res.data;
+      publishingSuccess = response.success;
+    });
 
   await axios
-    .get(`activities/checks-for-activity-bulk-validation`)
+    .get(`/activities/checks-for-activity-bulk-validation`)
     .then((res) => {
       const response = res.data;
       validatorSuccess = response.success;
@@ -549,19 +448,19 @@ const validateActivities = async () => {
 
   if (!validatorSuccess || !publishingSuccess) {
     showExistingProcessModal.value = true;
+    showModalButtonLoader.value = false;
   } else {
+    showModalButtonLoader.value = false;
     startValidation();
   }
-  showModalButtonLoader.value = false;
-  resetPublishStep();
 };
 
 /**
  * Bulk publishing activities
  */
 
-let selectedActivities: Ref<number[]> = ref([]);
-provide('selectedActivities', selectedActivities);
+// let selectedActivities: Ref<number[]> = ref([]);
+provide('selectedActivities', store.state.selectedActivities);
 
 // local storage for publishing
 interface paType {
@@ -584,7 +483,7 @@ const startBulkPublish = () => {
 
   axios
     .get(
-      `activities/start-bulk-publish?activities=[${store.state.validatingActivities}]`
+      `/activities/start-bulk-publish?activities=[${store.state.validatingActivities}]`
     )
     .then((res) => {
       store.dispatch('updateStartBulkPublish', true);
@@ -594,12 +493,10 @@ const startBulkPublish = () => {
 
       const response = res.data;
       if (response.success) {
-        bulkPublishStep.value = 1;
-        publishAlertValue.value = false;
         pa.value.publishingActivities = response.data;
       } else {
         loader.value = false;
-        resetPublishStep();
+        cancelValidation();
 
         if (response?.in_progress) {
           emptybulkPublishStatus();
@@ -625,6 +522,7 @@ const startBulkPublish = () => {
       }, 1000);
     });
 };
+
 watch(
   () => pa.value,
   () => {
@@ -642,7 +540,7 @@ watch(
 watch(
   () => bulkPublishStep.value,
   () => {
-    if (bulkPublishStep.value === 2 || bulkPublishStep.value === 3) {
+    if (bulkPublishStep.value === 2) {
       const checkSupportButton = setInterval(() => {
         const supportButton: HTMLElement = document.querySelector(
           '#launcher'
@@ -674,13 +572,16 @@ watch(
   () => store.state.startBulkPublish,
   (value) => {
     if (value) {
-      startBulkPublish();
+      if (store.state.startBulkPublish) {
+        startBulkPublish();
+      }
     }
   },
   { deep: true }
 );
+
 const cancelBulkPublish = async () => {
-  await axios.get('activities/cancel-bulk-publish');
+  await axios.get('/activities/cancel-bulk-publish');
 };
 
 /*Cancels on-going bulk publish*/
@@ -690,7 +591,7 @@ const cancelOtherBulkPublish = () => {
   closeCancelConfirmationModal();
   store.dispatch('updateStartBulkPublish', false);
 
-  axios.get('activities/cancel-bulk-publish').then((res) => {
+  axios.get('/activities/cancel-bulk-publish').then((res) => {
     if (res.data.success) {
       setCancellationMessage(res.data.message);
       showCancelledDetailPopup();
@@ -736,7 +637,34 @@ const publishAfterCancel = () => {
   checkPublish();
 };
 
+const showValidationPopup = computed(() => {
+  return store.state.startValidation || store.state.validationRunning;
+});
+
+watch(
+  () => showValidationPopup.value,
+  (value) => {
+    if (value) {
+      bulkPublishStep.value = 2;
+      store.state.bulkActivityPublishStatus.completedSteps = [];
+    }
+  }
+);
+
+watch(
+  () => store.state.startCoreValidation,
+  (value) => {
+    if (value) {
+      bulkPublishStep.value = 2;
+      verifyCoreElements();
+      store.state.publishAlertValue = true;
+    }
+  }
+);
+
 provide('paStorage', pa);
 provide('bulkPublishStatus', bulkPublishStatus);
 provide('startPublish', startPublish);
+
+defineExpose({ checkPublish });
 </script>
