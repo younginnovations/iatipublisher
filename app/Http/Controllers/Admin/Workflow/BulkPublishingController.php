@@ -14,6 +14,7 @@ use App\Jobs\BulkPublishActivities;
 use Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -105,7 +106,7 @@ class BulkPublishingController extends Controller
 
             if (!empty($activityIds)) {
                 $coreElementsCompletion = $this->bulkPublishingService->getCoreElementsCompletedArray($activityIds);
-                $deprecationStatusMap = $this->bulkPublishingService->refreshDeprecationStatus($activityIds);
+                $deprecationStatusMap = $this->bulkPublishingService->getActivitiesWithDeprecatedValueArray($activityIds, $this->activityService);
 
                 DB::commit();
 
@@ -115,6 +116,11 @@ class BulkPublishingController extends Controller
                     'data' => [
                         'core_elements_completion'=> $coreElementsCompletion,
                         'deprecation_status_map'  => $deprecationStatusMap,
+                        'counts' => [
+                            'deprecated_list' => count($deprecationStatusMap ?? []),
+                            'complete_list'   => count(Arr::get($coreElementsCompletion, 'complete', [])),
+                            'incomplete_list' => count(Arr::get($coreElementsCompletion, 'incomplete', [])),
+                        ],
                     ],
                 ]);
             }
@@ -409,10 +415,13 @@ class BulkPublishingController extends Controller
             $activityIds = json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR);
 
             if (!empty($activityIds)) {
-                $response = $this->bulkPublishingService->getActivityValidationStatus($activityIds);
-                $hasFailedStatus = in_array('failed', $response);
+                $activities = $this->activityService->getActivitiesHavingIds($activityIds);
+                $filteredActivityIds = $this->filterOutPublishedStateActivityIds($activityIds, $activities->toArray());
+                $response = $this->bulkPublishingService->getActivityValidationStatus($filteredActivityIds);
 
-                return response()->json(['success' => !$hasFailedStatus, 'data' => $response, 'total' => count($response)]);
+                $hasFailedStatus = $response['failed_count'] > 0;
+
+                return response()->json(['success' => !$hasFailedStatus, 'data' => $response]);
             }
 
             return response()->json(['success' => false, 'message' => 'Activity not selected.']);
@@ -424,7 +433,7 @@ class BulkPublishingController extends Controller
     }
 
     /**
-     * Get Validation responses of activites.
+     * Get Validation responses of activities.
      *
      * @param Request $request
      *
@@ -467,5 +476,24 @@ class BulkPublishingController extends Controller
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while deleting validation status.']);
         }
+    }
+
+    /**
+     * Filter out published state activity id's.
+     *
+     * @param array $activityIds
+     * @param array $activities
+     *
+     * @return array
+     */
+    public function filterOutPublishedStateActivityIds(array $activityIds, array $activities): array
+    {
+        $activityLookup = [];
+
+        foreach ($activities as $activity) {
+            $activityLookup[$activity['id']] = $activity;
+        }
+
+        return array_filter($activityIds, fn ($activityId) => isset($activityLookup[$activityId]) && $activityLookup[$activityId]['status']);
     }
 }

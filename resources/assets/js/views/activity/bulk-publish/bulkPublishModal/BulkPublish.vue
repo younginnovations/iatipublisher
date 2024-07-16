@@ -1,0 +1,312 @@
+<template>
+  <div>
+    <h4
+      class="mb-4 flex items-center gap-1 border-b border-n-20 pb-2 text-sm font-bold"
+    >
+      <span> Publishing Activity </span>
+      <span
+        class="inline-block rounded-full bg-lagoon-10 px-2 py-1 text-xs font-[500] text-spring-50"
+      >
+        {{ publishingActivityCount }}
+      </span>
+    </h4>
+    <WizardIndex
+      :completed-steps="store.state.bulkActivityPublishStatus.completedSteps"
+    />
+
+    <div v-if="store?.state?.startBulkPublish || showPublishingActivityModal">
+      <PublishingActivity />
+    </div>
+    <div v-else>
+      <div
+        v-if="
+          store.state.bulkActivityPublishStatus.iatiValidatorLoader ||
+          store.state.startValidation ||
+          showValidationPopup
+        "
+      >
+        <IatiValidate
+          :validation-stats="
+            store.state.bulkActivityPublishStatus.validationStats
+          "
+          :activities-list="
+            store.state.bulkActivityPublishStatus.importedActivitiesList
+          "
+          :permalink="permalink"
+          :percentage-width="percentageWidth"
+        />
+      </div>
+      <div v-else>
+        <CheckingActivities
+          v-if="!coreElementLoader"
+          :deprecation-status-map="deprecationStatusMap"
+          :core-in-completed-activities="coreInCompletedActivities"
+          :core-completed-activities="coreCompletedActivities"
+          :permalink="permalink"
+        />
+        <RollingLoader v-else header="Checking your data before publication" />
+      </div>
+    </div>
+  </div>
+  <div
+    class="flex gap-6 pt-2.5"
+    :class="
+      store.state.bulkActivityPublishStatus.publishing.response?.status ===
+        'completed' &&
+      store.state.bulkActivityPublishStatus.publishing.hasFailedActivities?.ids
+        ?.length === 0
+        ? ' justify-between '
+        : 'justify-end'
+    "
+  >
+    <div
+      v-if="
+        store.state.bulkActivityPublishStatus.publishing.response?.status ===
+        'completed'
+      "
+      class="flex flex-1 items-center"
+      :class="
+        store.state.bulkActivityPublishStatus.publishing.response?.status ===
+          'completed' &&
+        store.state.bulkActivityPublishStatus.publishing.hasFailedActivities
+          ?.ids?.length === 0
+          ? ' justify-between '
+          : 'justify-end'
+      "
+    >
+      <p
+        v-if="
+          store.state.bulkActivityPublishStatus.publishing.hasFailedActivities
+            ?.ids?.length === 0
+        "
+        class="flex items-center gap-3 rounded-md bg-mint p-3 text-xs"
+      >
+        Activity has been published successfully, Close and refresh to see
+        changes.
+      </p>
+      <BtnComponent
+        type="primary"
+        text="Close"
+        class="bg-white px-6 uppercase"
+        @click="cancelActivityPublishing()"
+      />
+    </div>
+    <template v-else>
+      <BtnComponent
+        v-if="store?.state?.startBulkPublish || showPublishingActivityModal"
+        class="space"
+        type=""
+        text="CANCEL"
+        @click="cancelActivityPublishing()"
+      />
+      <BtnComponent
+        v-else
+        class="space"
+        type=""
+        text="CANCEL"
+        @click="cancelValidation()"
+      />
+      <button
+        v-if="
+          store.state.bulkActivityPublishStatus.iatiValidatorLoader ||
+          (store.state.startBulkPublish &&
+            store.state.bulkActivityPublishStatus.publishing.response
+              ?.status !== 'completed')
+        "
+        className="flex items-center gap-1.5 font-bold text-bluecoral border border-bluecoral rounded px-2.5 py-3 text-xs uppercase"
+        @click="handleMinimize()"
+      >
+        <span> Minimize screen </span>
+        <svg-vue icon="open-link" class="rotate-90 text-[10px] text-n-40" />
+      </button>
+      <template v-if="percentageWidth !== 100">
+        <template
+          v-if="
+            (props.coreInCompletedActivities.length > 0 ||
+              props.coreCompletedActivities.length > 0) &&
+            !coreElementLoader
+          "
+        >
+          <BtnComponent
+            v-if="
+              !store.state.bulkActivityPublishStatus.iatiValidatorLoader &&
+              !store?.state?.startBulkPublish
+            "
+            class="bg-white px-6 uppercase"
+            type="primary"
+            text="Continue publishing Anyway"
+            @click="validateActivities()"
+          />
+        </template>
+      </template>
+
+      <template v-else>
+        <template v-if="!store?.state?.startBulkPublish">
+          <BtnComponent
+            class="bg-white px-6 uppercase"
+            type="primary"
+            :text="`Continue Publishing (${newSelectedActivities.length})`"
+            :disabled="newSelectedActivities.length === 0"
+            @click="startBulkPublish()"
+          />
+        </template>
+      </template>
+    </template>
+  </div>
+</template>
+
+<script setup lang="ts">
+import {
+  defineProps,
+  defineEmits,
+  computed,
+  watch,
+  ref,
+  provide,
+  watchEffect,
+} from 'vue';
+import WizardIndex from '../wizardSteps/WizardIndex.vue';
+import BtnComponent from 'Components/ButtonComponent.vue';
+import CheckingActivities from './checkingActivities/CheckingActivities.vue';
+import RollingLoader from './RollingLoaderComponent.vue';
+import IatiValidate from './iatiValidate/IatiValidate.vue';
+import { useStore } from 'Store/activities/index';
+import PublishingActivity from './publishingActivity/PublishingActivity.vue';
+import { useSharedMinimize } from 'Composable/useSharedLocalStorage';
+
+const store = useStore();
+const props = defineProps({
+  coreInCompletedActivities: {
+    type: Object,
+    default: () => ({}),
+  },
+  coreCompletedActivities: {
+    type: Object,
+    default: () => ({}),
+  },
+  deprecationStatusMap: {
+    type: Object,
+    default: () => ({}),
+  },
+  permalink: {
+    type: String,
+    default: () => '',
+  },
+  coreElementLoader: {
+    type: Boolean,
+    required: true,
+  },
+
+  selectedActivities: {
+    type: Array,
+    required: true,
+  },
+  showValidationPopup: {
+    type: Boolean,
+    required: true,
+  },
+  publishingActivities: {
+    type: Object,
+    default: () => ({}),
+  },
+});
+
+const sharedMinimize = useSharedMinimize();
+const newSelectedActivities = ref([] as number[]);
+provide('newSelectedActivities', newSelectedActivities);
+
+const emit = defineEmits([
+  'cancelValidation',
+  'validateActivities',
+  'startBulkPublish',
+  'cancelBulkPublishing',
+]);
+
+const validateActivities = () => {
+  emit('validateActivities');
+};
+
+const percentageWidth = computed(() => {
+  return (
+    ((store.state.bulkActivityPublishStatus.validationStats.complete +
+      store.state.bulkActivityPublishStatus.validationStats.failed) /
+      store.state.bulkActivityPublishStatus.validationStats.total) *
+    100
+  );
+});
+
+watch(
+  () => percentageWidth?.value,
+  (value) => {
+    localStorage.setItem('validationPercent', (value ?? 0).toString());
+  }
+);
+
+const startBulkPublish = () => {
+  store.dispatch('updateStartValidation', false);
+  // localStorage.removeItem('validatingActivities');
+  store.dispatch('updateStartBulkPublish', true);
+  localStorage.removeItem('activityValidating');
+  store.state.bulkActivityPublishStatus.completedSteps = [1];
+};
+
+const handleMinimize = () => {
+  sharedMinimize.value = true;
+};
+
+const showPublishingActivityModal = computed(() => {
+  return (
+    props.publishingActivities &&
+    Object.keys(props.publishingActivities).length > 0
+  );
+});
+
+const cancelActivityPublishing = () => {
+  localStorage.setItem('vue-use-local-storage', 'publishingActivities:{}');
+  emit('cancelBulkPublishing');
+};
+
+const cancelValidation = () => {
+  store.dispatch('updateStartCoreValidation', false);
+  emit('cancelValidation');
+};
+
+const publishingActivityCount = computed(() => {
+  const { bulkActivityPublishStatus } = store.state;
+  const publishingActivities =
+    bulkActivityPublishStatus?.publishing?.activities;
+  const publishingStatus =
+    bulkActivityPublishStatus?.publishing?.response?.status;
+  const validationStatsTotal =
+    bulkActivityPublishStatus?.validationStats?.total || 0;
+
+  if (publishingActivities && Object.keys(publishingActivities).length > 0) {
+    if (publishingStatus === 'completed' || publishingStatus === 'processing') {
+      return Object.keys(publishingActivities).length;
+    }
+  }
+
+  if (validationStatsTotal > 0) {
+    return validationStatsTotal;
+  }
+
+  const coreCompletedCount = props.coreCompletedActivities?.length || 0;
+  const coreInCompletedCount = props.coreInCompletedActivities?.length || 0;
+
+  return coreCompletedCount + coreInCompletedCount;
+});
+
+watchEffect(() => {
+  if (sharedMinimize.value) {
+    store.state.isPublishedModalMinimized = sharedMinimize.value;
+  }
+});
+
+</script>
+
+<style scoped></style>
+<!-- 
+
+else if (props.selectedActivities) {
+  count = props.selectedActivities.length;
+} -->

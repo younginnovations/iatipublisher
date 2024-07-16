@@ -1,121 +1,132 @@
 <template>
   <div>
-    <h3 class="pb-2 text-base font-bold leading-6 text-n-50">Publishing</h3>
-    <div class="relative w-full rounded-lg bg-white duration-200">
+    <div class="flex items-center justify-between">
+      <h3
+        class="flex items-center gap-2 pb-2 text-base font-bold leading-6 text-n-50"
+      >
+        <span> Publishing Activities </span>
+        <span
+          v-if="
+            percentageWidth === 100 &&
+            store.state.bulkActivityPublishStatus.publishing.hasFailedActivities
+              ?.ids?.length === 0
+          "
+          class="inline-block rounded-full bg-[#CDF8FA] px-2 py-0.5 text-xs font-medium leading-[18px] text-[#3C7080]"
+        >
+          Completed
+        </span>
+        <span
+          v-else
+          class="inline-block rounded-full bg-[#CDF8FA] py-1 px-2 text-xs font-medium text-bluecoral"
+        >
+          2/2
+        </span>
+      </h3>
       <button
-        v-if="hasFailedActivities?.ids?.length > 0"
-        class="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 rounded-full bg-white p-[1px]"
+        v-if="percentageWidth !== 100"
+        class="flex items-center gap-1.5 text-xs font-bold text-bluecoral"
+        @click="handleMinimize"
+      >
+        <span>EXPAND</span>
+        <svg-vue class="text-[9px]" icon="open-link" />
+      </button>
+      <button
+        v-else
+        class="text-xs font-bold uppercase text-bluecoral"
         @click="
           () => {
             $emit('close');
           }
         "
       >
-        <svg-vue class="text-sm" icon="cross-icon" />
+        <svg-vue icon="cross" class="mt-2 text-lg text-bluecoral" />
+        <span>Clear</span>
       </button>
+    </div>
+    <div class="relative w-full rounded-lg bg-white duration-200">
       <div class="rounded-lg border border-n-20 bg-white p-4">
-        <div class="flex items-center justify-between pb-4">
+        <div class="flex items-center justify-between">
           <h3 class="flex items-center space-x-2 text-sm text-n-50">
-            <span>Multiple Activities </span
-            ><span
-              class="flex h-6 w-6 items-center justify-center rounded-full bg-lagoon-10 text-lagoon-50"
+            <span>Activities</span>
+            <span
+              class="flex h-6 w-6 items-center justify-center rounded-full bg-lagoon-10 font-medium text-spring-50"
               >{{
                 bulkPublishLength > 0
                   ? bulkPublishLength
-                  : activities && Object.keys(activities).length
+                  : (store.state.bulkActivityPublishStatus.publishing
+                      .activities &&
+                      Object.keys(
+                        store.state.bulkActivityPublishStatus.publishing
+                          .activities
+                      ).length) ||
+                    0
               }}
             </span>
           </h3>
-          <button
-            class="rounded-full bg-white p-[1px]"
-            @click="
-              () => {
-                $emit('close');
-              }
-            "
-          >
-            <svg-vue icon="delete" class="text-sm text-n-40" />
-          </button>
+          <div class="flex items-center gap-3">
+            <div
+              v-if="
+                store.state.bulkActivityPublishStatus.publishing
+                  .hasFailedActivities?.ids?.length > 0
+              "
+              class="retry flex cursor-pointer items-center font-bold text-bluecoral"
+              @click="retryPublishing"
+            >
+              <svg-vue class="mr-1" icon="redo" />
+              <span class="text-xs">Retry</span>
+            </div>
+            <button
+              v-if="percentageWidth === 100"
+              class="text-xs font-bold capitalize text-bluecoral"
+              @click="handleMinimize"
+            >
+              View detail
+            </button>
+            <button
+              v-else
+              class="text-xs font-bold uppercase text-bluecoral"
+              @click="
+                () => {
+                  $emit('close');
+                }
+              "
+            >
+              <svg-vue icon="cross" class="mt-2 text-lg text-bluecoral" />
+              <span>Cancel</span>
+            </button>
+          </div>
         </div>
-
-        <div
-          v-if="hasFailedActivities?.ids?.length === 0"
-          class="mb-3 flex items-center"
-        >
+        <template v-if="percentageWidth !== 100">
           <div
-            class="mr-2 flex h-1 flex-1 justify-start rounded-full bg-spring-10"
+            v-if="
+              store.state.bulkActivityPublishStatus.publishing
+                .hasFailedActivities?.ids?.length === 0
+            "
+            class="mb-3 flex items-center pt-4"
           >
             <div
-              :style="{ width: percentageWidth + '%' }"
-              class="h-full rounded-full bg-spring-50"
-            ></div>
+              class="flex h-1 flex-1 justify-start rounded-full bg-spring-10"
+            >
+              <div
+                :style="{ width: percentageWidth + '%' }"
+                class="h-full rounded-full bg-spring-50"
+              ></div>
+            </div>
           </div>
-          <span class="text-sm text-[#344054]">
-            {{ Math.trunc(percentageWidth) }}%
-          </span>
-        </div>
+        </template>
 
         <div
-          v-if="hasFailedActivities?.ids?.length > 0"
+          v-if="
+            store.state.bulkActivityPublishStatus.publishing.hasFailedActivities
+              ?.ids?.length > 0
+          "
           class="py-2 text-sm font-medium text-crimson-50"
         >
-          Some activities have failed to publish.
-        </div>
-
-        <div class="flex items-center justify-between">
-          <button
-            class="space-x-1.5 text-sm leading-[22px] text-blue-50"
-            @click="openModel = !openModel"
-          >
-            <span v-text="!openModel ? 'Show details' : 'Hide details'" />
-            <svg-vue
-              :class="{ 'rotate-180': openModel }"
-              class="cursor-pointer text-[7px] text-bluecoral duration-200"
-              icon="dropdown-arrow"
-            />
-          </button>
-
-          <div
-            v-if="hasFailedActivities?.ids?.length > 0"
-            class="retry flex cursor-pointer items-center text-crimson-50"
-            @click="retryPublishing"
-          >
-            <svg-vue class="mr-1" icon="redo" />
-            <span class="text-xs uppercase">Retry</span>
+          <div class="flex items-center gap-6">
+            <div class="h-1 w-full bg-crimson-50"></div>
+            <svg-vue icon="warning-fill" class="flex-shrink-0 text-lg" />
           </div>
-        </div>
-
-        <div v-if="openModel">
-          <div
-            class="bulk-activities max-h-[240px] overflow-y-auto overflow-x-hidden pt-3 transition-all duration-500"
-          >
-            <ul class="space-y-3">
-              <li
-                v-for="(value, name, index) in activities"
-                :key="index"
-                class="item flex"
-              >
-                <div
-                  class="activity-title grow pr-2 text-sm leading-normal text-n-40"
-                >
-                  {{ value['activity_title'] }}
-                </div>
-                <div class="shrink-0 text-xl">
-                  <svg-vue
-                    v-if="value['status'] === 'completed'"
-                    class="text-spring-50"
-                    icon="tick"
-                  />
-                  <svg-vue
-                    v-else-if="value['status'] === 'failed'"
-                    class="text-crimson-50"
-                    icon="times-circle"
-                  />
-                  <span v-else class="rolling"></span>
-                </div>
-              </li>
-            </ul>
-          </div>
+          <div class="pt-2">Validation failed</div>
         </div>
       </div>
     </div>
@@ -176,13 +187,6 @@ const emit = defineEmits([
 ]);
 
 let refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
-let activities = ref();
-
-let hasFailedActivities = reactive({
-  data: {} as actElements,
-  ids: [] as number[],
-  status: false,
-});
 
 onMounted(() => {
   setTimeout(() => {
@@ -190,7 +194,6 @@ onMounted(() => {
   }, 50);
 
   paStorage.value = store.state.bulkpublishActivities;
-
   completed.value =
     paStorage?.value?.publishingActivities?.status ?? 'processing';
   bulkPublishStatus();
@@ -206,7 +209,10 @@ const pollingForBulkpublishData = () => {
         clearInterval(intervalID);
       }
       if ('data' in response) {
-        activities.value = response.data.activities;
+        store.state.bulkActivityPublishStatus.publishing.response =
+          response.data;
+        store.state.bulkActivityPublishStatus.publishing.activities =
+          response.data.activities;
         completed.value = response.data.status;
         emit('activityPublishedData', response.data);
         // saving in local storage
@@ -220,9 +226,12 @@ const pollingForBulkpublishData = () => {
 
         if (completed.value === 'completed') {
           clearInterval(intervalID);
-
+          store.state.bulkActivityPublishStatus.completedSteps = [1, 2];
           failedActivities(paStorage.value.publishingActivities.activities);
-          if (hasFailedActivities?.ids?.length > 0) {
+          if (
+            store.state.bulkActivityPublishStatus.publishing.hasFailedActivities
+              ?.ids?.length > 0
+          ) {
             refreshToastMsg.visibility = true;
             refreshToastMsg.refreshMessageType = false;
             refreshToastMsg.refreshMessage =
@@ -249,7 +258,10 @@ const bulkPublishStatus = async () => {
     axios.get(`/activities/bulk-publish-status`).then((res) => {
       const response = res.data;
       if ('data' in response) {
-        activities.value = response.data.activities;
+        store.state.bulkActivityPublishStatus.publishing.response =
+          response.data;
+        store.state.bulkActivityPublishStatus.publishing.activities =
+          response.data.activities;
         completed.value = response.data.status;
         emit('activityPublishedData', response.data);
         // saving in local storage
@@ -261,6 +273,10 @@ const bulkPublishStatus = async () => {
             message: response.data.message,
           },
         };
+
+        if (response.data.status === 'completed') {
+          failedActivities(paStorage.value.publishingActivities.activities);
+        }
 
         if (response.data.status !== 'completed') {
           pollingForBulkpublishData();
@@ -276,50 +292,29 @@ const bulkPublishStatus = async () => {
 
     count++;
   }, 1000);
-
-  await axios.get(`/activities/bulk-publish-status`).then((res) => {
-    const response = res.data;
-    if (!response.publishing) {
-      emit('close');
-    }
-
-    if ('data' in response) {
-      activities.value = response.data.activities;
-      completed.value = response.data.status;
-      emit('activityPublishedData', response.data);
-      // saving in local storage
-      paStorage.value = {
-        publishingActivities: {
-          activities: response.data.activities,
-          status: response.data.status,
-          message: response.data.message,
-        },
-      };
-
-      if (response.data.status !== 'completed') {
-        pollingForBulkpublishData();
-      }
-    } else {
-      completed.value = 'completed';
-    }
-  });
 };
 
 const retryPublishing = () => {
-  //reset required states
   completed.value = 'processing';
-
-  for (const key in hasFailedActivities.data) {
-    hasFailedActivities.data[key].status = 'processing';
+  store.state.bulkActivityPublishStatus.completedSteps = [1];
+  store.state.bulkActivityPublishStatus.publishing.response = null;
+  for (const key in store.state.bulkActivityPublishStatus.publishing
+    .hasFailedActivities.data) {
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data[
+      key
+    ].status = 'processing';
   }
 
-  activities.value = hasFailedActivities.data;
+  store.state.bulkActivityPublishStatus.publishing.activities =
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data;
 
   // api endpoint call
-  const endpoint = `/activities/start-bulk-publish?activities=[${hasFailedActivities.ids}]`;
-  hasFailedActivities.status = false;
-  hasFailedActivities.ids = [];
-  hasFailedActivities.data = {} as actElements;
+  const endpoint = `/activities/start-bulk-publish?activities=[${store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.ids}]`;
+  store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.status =
+    false;
+  store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.ids = [];
+  store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data =
+    {} as actElements;
 
   axios.get(endpoint).then((res) => {
     const response = res.data;
@@ -346,16 +341,22 @@ const failedActivities = (nestedObject: object) => {
   const failedActivitiesData = filtered && Object.fromEntries(filtered);
 
   if (failedActivitiesID?.length > 0) {
-    hasFailedActivities.status = true;
-    hasFailedActivities.ids = failedActivitiesID;
-    hasFailedActivities.data = failedActivitiesData as actElements;
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.status =
+      true;
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.ids =
+      failedActivitiesID;
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data =
+      failedActivitiesData as actElements;
     refreshToastMsg.refreshMessageType = false;
     refreshToastMsg.refreshMessage =
       'Some activities have failed to publish. Refresh to see changes.';
   } else {
-    hasFailedActivities.status = false;
-    hasFailedActivities.ids = [];
-    hasFailedActivities.data = {} as actElements;
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.status =
+      false;
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.ids =
+      [];
+    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities.data =
+      {} as actElements;
   }
 };
 
@@ -391,9 +392,12 @@ const percentageWidth = computed(() => {
 });
 
 watch(
-  () => [activities.value, bulkPublishLength.value],
+  () => [
+    store.state.bulkActivityPublishStatus.publishing.activities,
+    bulkPublishLength.value,
+  ],
   () => {
-    if (activities.value) {
+    if (store.state.bulkActivityPublishStatus.publishing.activities) {
       emit('hideLoader');
     }
   }
@@ -411,8 +415,11 @@ watch(
   (value) => emit('toggle', value)
 );
 const getDataFromLocalstorage = () => {
-  activities.value = localStorage.getItem('bulkPublishActivities');
-  activities.value = isJson(activities.value) && JSON.parse(activities.value);
+  store.state.bulkActivityPublishStatus.publishing.activities =
+    localStorage.getItem('bulkPublishActivities');
+  store.state.bulkActivityPublishStatus.publishing.activities =
+    isJson(store.state.bulkActivityPublishStatus.publishing.activities) &&
+    JSON.parse(store.state.bulkActivityPublishStatus.publishing.activities);
 };
 
 const setDataToLocalstorage = () => {
@@ -430,6 +437,11 @@ const emptybulkPublishStatus = () => {
   for (const status in publishingActivities) {
     delete publishingActivities[status];
   }
+};
+
+const handleMinimize = () => {
+  store.state.isPublishedModalMinimized = false;
+  localStorage.setItem('isPublishedModalMinimized', 'false');
 };
 
 watch(
@@ -456,6 +468,13 @@ watch(
     );
   },
   { deep: true }
+);
+
+watch(
+  () => store.state.startPublishingRetry,
+  () => {
+    retryPublishing();
+  }
 );
 </script>
 <style lang="scss" scoped>
