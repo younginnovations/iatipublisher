@@ -32,6 +32,7 @@
 
         <button
           v-if="percentageWidth !== 100"
+          @click="validationCancelHandler()"
           class="flex items-center text-xs font-bold uppercase text-bluecoral"
         >
           <svg-vue
@@ -83,6 +84,7 @@
           <div class="flex flex-1 items-center justify-center">
             <button
               v-if="percentageWidth === 100 || hasError"
+              @click="validationCancelHandler()"
               class="flex items-center text-xs font-bold uppercase text-bluecoral"
             >
               <svg-vue icon="cross" class="mt-2 text-lg"></svg-vue>
@@ -222,7 +224,7 @@ watch(
   () => store.state.bulkActivityPublishStatus.cancelValidationAndPublishing,
   (value) => {
     if (value) {
-      // validationCancelHandler();
+      validationCancelHandler();
     }
   }
 );
@@ -234,6 +236,6 @@ const totalValidationFailedActivities = computed(() => {
 });
 
 defineExpose({
-  // validationCancelHandler,
+  validationCancelHandler,
 });
 </script>
