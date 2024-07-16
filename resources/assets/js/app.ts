@@ -85,7 +85,6 @@ import PageTitle from './components/sections/PageTitle.vue';
 import LoadingState from './components/Loader.vue';
 import SystemVersion from './views/superadmin/SystemVersion.vue';
 import VueApexCharts from 'vue3-apexcharts';
-
 const app = createApp({});
 app.use(VueApexCharts);
 
@@ -193,7 +192,6 @@ app.component('AuditListing', AuditListing);
 app.use(SvgVue);
 
 app.use(VueSmoothScroll);
-
 // detect scroll up or down
 let lastScrollTop = 0,
   affixType = 'sticky-none';
