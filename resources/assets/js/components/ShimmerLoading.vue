@@ -20,7 +20,7 @@
   background-repeat: no-repeat;
   background-size: 244px 104px;
   position: relative;
-  height: 19px;
+  height: 8px;
   border-radius: 10px;
   width: 100%;
   margin: 3px 6px 3px 0px;
