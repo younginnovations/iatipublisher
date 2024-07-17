@@ -29,7 +29,12 @@
         />
       </div>
     </Modal>
-
+    {{
+      (store.state.publishAlertValue && !showExistingProcessModal) ||
+      showValidationPopup ||
+      (pa?.publishingActivities &&
+        Object.keys(pa?.publishingActivities).length > 0)
+    }}
     <Modal
       :modal-active="
         (store.state.publishAlertValue && !showExistingProcessModal) ||
