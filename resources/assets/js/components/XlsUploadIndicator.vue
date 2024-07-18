@@ -172,7 +172,7 @@ onMounted(async () => {
   if (!showValidationPopup.value)
     publishingActivities.value =
       pa?.value?.publishingActivities &&
-      Object.keys(pa.value.publishingActivities);
+      Object.keys(pa.value?.publishingActivities);
   const checkSupportButton = setInterval(() => {
     const supportButton: HTMLElement = document.querySelector(
       '#launcher'
@@ -208,6 +208,10 @@ const checkValidation = async () => {
       `/activities/checks-for-activity-bulk-validation`
     );
     if (response.data) {
+      // console.log(response.data.status);
+      if (response.data.status === 'completed') {
+        store.state.bulkActivityPublishStatus.iatiValidatorLoader = false;
+      }
       const activities = response.data.activities;
       store.state.validationRunning = !response.data.success;
       if (activities) {

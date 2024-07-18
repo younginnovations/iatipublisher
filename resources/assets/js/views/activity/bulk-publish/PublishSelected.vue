@@ -29,12 +29,6 @@
         />
       </div>
     </Modal>
-    {{
-      (store.state.publishAlertValue && !showExistingProcessModal) ||
-      showValidationPopup ||
-      (pa?.publishingActivities &&
-        Object.keys(pa?.publishingActivities).length > 0)
-    }}
     <Modal
       :modal-active="
         (store.state.publishAlertValue && !showExistingProcessModal) ||
@@ -215,21 +209,22 @@ const messageOnCancellation = ref('No bulk publish were cancelled');
 
 // reset step to zero after closing modal
 const cancelValidation = () => {
-  store.state.bulkActivityPublishStatus = {
-    ...store.state.bulkActivityPublishStatus,
-    cancelValidationAndPublishing: true,
-    iatiValidatorLoader: false,
-    validationStats: {
-      ...store.state.bulkActivityPublishStatus.validationStats,
-      complete: 0,
-      total: 0,
-      failed: 0,
-    },
-  };
   store.state.publishAlertValue = false;
+  store.state.bulkActivityPublishStatus.cancelValidationAndPublishing = true;
   validationActivityLoader.value = false;
   setTimeout(() => {
+    store.state.bulkActivityPublishStatus = {
+      ...store.state.bulkActivityPublishStatus,
+      iatiValidatorLoader: false,
+      validationStats: {
+        ...store.state.bulkActivityPublishStatus.validationStats,
+        complete: 0,
+        total: 0,
+        failed: 0,
+      },
+    };
     bulkPublishStep.value = 1;
+    store.state.bulkActivityPublishStatus.completedSteps = [];
   }, 1000);
 };
 
@@ -245,6 +240,7 @@ const cancelBulkPublishing = () => {
       status: false,
     },
   };
+  store.state.bulkActivityPublishStatus.completedSteps = [];
   cancelValidation();
 };
 

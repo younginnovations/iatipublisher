@@ -225,10 +225,12 @@ const showPublishingActivityModal = computed(() => {
 });
 
 const cancelActivityPublishing = () => {
+  store.dispatch('updateStartCoreValidation', false);
   emit('cancelBulkPublishing');
 };
 
 const cancelValidation = () => {
+  store.dispatch('updateStartCoreValidation', false);
   emit('cancelValidation');
 };
 </script>

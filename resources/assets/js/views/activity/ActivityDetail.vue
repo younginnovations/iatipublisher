@@ -826,6 +826,7 @@ export default defineComponent({
       refreshToastMsg,
       publishingActivities,
       width,
+      indexStore,
     };
   },
   methods: { onlyDeprecatedStatusMap },
