@@ -290,7 +290,7 @@ class UserService
 
         if (!empty($result)) {
             foreach ($result as $publisher) {
-                if ($publisher->publisher_iati_id === $identifier) {
+                if (Arr::get($publisher, 'publisher_iati_id', false) === $identifier) {
                     return [
                         'identifier' => [
                             0 => 'IATI Organizational Identifier already exists in IATI Registry.',
