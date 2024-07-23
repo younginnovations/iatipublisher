@@ -687,10 +687,6 @@ trait RegistersValidationRules
         $this->extend('budgets_identical', function () {
             return false;
         });
-
-        $this->extend('budget_revised_invalid', function () {
-            return false;
-        });
     }
 
     /**

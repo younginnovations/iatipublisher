@@ -91,24 +91,25 @@ class BudgetCsvTest extends CsvBaseTest
     }
 
     /**
-     * Revised date not matched with one of the budget type original.
+     * Do not throw validation if revised not match with budget period.
+     * Change source: https://github.com/younginnovations/iatipublisher/issues/1493.
      *
      * @return void
      * @test
      * @throws \JsonException
      */
-    public function throw_validation_if_revised_period_do_not_match_one_of_budget_period(): void
+    public function do_not_throw_validation_if_revised_period_do_not_match_one_of_budget_period(): void
     {
         $this->signIn();
         $rows = $this->get_revised_period_not_matched_date();
         $errors = $this->getErrors($rows);
         $flattenErrors = Arr::flatten($errors);
 
-        $this->assertContains('Budget with type revised must have period start and end same to that of one of the budgets having same type original for budgets elements at position 2', $flattenErrors);
+        $this->assertEmpty($flattenErrors);
     }
 
     /**
-     * Invalid reviosed period.
+     * Invalid revised period.
      *
      * @return array
      */

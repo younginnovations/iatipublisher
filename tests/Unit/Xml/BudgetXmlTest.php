@@ -195,16 +195,17 @@ class BudgetXmlTest extends XmlBaseTest
     }
 
     /**
-     * Throw validation if revised not match with budget period.
+     * Do not throw validation if revised not match with budget period.
+     * Change source: https://github.com/younginnovations/iatipublisher/issues/1493.
      *
      * @return void
      * @test
      */
-    public function throw_validation_if_revised_period_do_not_match_one_of_budget_period(): void
+    public function do_not_throw_validation_if_revised_period_do_not_match_one_of_budget_period(): void
     {
         $rows = $this->get_revised_period_not_matched_date();
         $flattenErrors = $this->getErrors($rows);
-        $this->assertContains('Budget with type revised must have period start and end same to that of one of the budgets having same type original for budgets elements at position 2', $flattenErrors);
+        $this->assertEmpty($flattenErrors);
     }
 
     /**
