@@ -107,4 +107,19 @@ class AuthenticationTest extends TestCase
 
         $response->assertRedirect('/activities');
     }
+
+    public function test_successful_login_with_different_email_case(): void
+    {
+        $role = Role::factory()->create();
+        $org = Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();
+
+        $uppercasedEmail = strtoupper($org->user->email);
+
+        $response = $this->post('/login', [
+            'emailOrUsername' => $uppercasedEmail,
+            'password' => encryptString('password'),
+        ]);
+
+        $response->assertRedirect('/activities');
+    }
 }
