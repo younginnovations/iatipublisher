@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Activity;
 
 use App\IATI\Repositories\Activity\ActivityRepository;
+use Illuminate\Support\Arr;
 
 /**
  * Class ActivityDefaultService.
@@ -48,7 +49,7 @@ class ActivityDefaultService
                 'default_currency'    => $data['default_currency'] ?? '',
                 'default_language'    => $data['default_language'] ?? '',
                 'hierarchy'           => $data['hierarchy'] ?? 1,
-                'humanitarian'        => $data['humanitarian'] ?? '1',
+                'humanitarian'        => Arr::get($data, 'humanitarian'),
                 'budget_not_provided' => $data['budget_not_provided'] ?? '',
             ],
         ];

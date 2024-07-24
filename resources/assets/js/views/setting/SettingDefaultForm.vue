@@ -148,9 +148,6 @@
           <span v-if="defaultError.humanitarian" class="error" role="alert">
             {{ defaultError.humanitarian }}
           </span>
-          <p v-if="!defaultError.humanitarian">
-            If not selected, it will be set to 'Yes' in all the activities.
-          </p>
         </div>
         <!-- Humanitarian -->
 
