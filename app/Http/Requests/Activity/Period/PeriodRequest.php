@@ -6,6 +6,7 @@ namespace App\Http\Requests\Activity\Period;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 use App\IATI\Services\Activity\IndicatorService;
+use App\Rules\RequiredEitherNumericTargetValueOrActualValue;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
@@ -59,8 +60,8 @@ class PeriodRequest extends ActivityBaseRequest
         $tempRules = [
             $this->getWarningForIndicatorPeriodStart($formFields['period_start'], 'period_start'),
             $this->getWarningForIndicatorPeriodEnd($formFields['period_end'], 'period_end', $periodBase),
-            $this->getWarningForTarget($formFields['target'], 'target', $fileUpload, $indicator, $indicatorId),
-            $this->getWarningForTarget($formFields['actual'], 'actual', $fileUpload, $indicator, $indicatorId),
+            $this->getWarningForTargetOrActual($formFields, 'target', $fileUpload, $indicator, $indicatorId),
+            $this->getWarningForTargetOrActual($formFields, 'actual', $fileUpload, $indicator, $indicatorId),
         ];
 
         foreach ($tempRules as $index => $tempRule) {
@@ -119,8 +120,8 @@ class PeriodRequest extends ActivityBaseRequest
         $tempMessages = [
             $this->getMessagesForResultPeriod($formFields['period_start'], 'period_start'),
             $this->getMessagesForResultPeriod($formFields['period_end'], 'period_end'),
-            $this->getMessagesForTarget($formFields['target'], 'target', $fileUpload, $indicator, $indicatorId),
-            $this->getMessagesForTarget($formFields['actual'], 'actual', $fileUpload, $indicator, $indicatorId),
+            $this->getMessagesForTargetOrActual($formFields['target'], 'target', $fileUpload, $indicator, $indicatorId),
+            $this->getMessagesForTargetOrActual($formFields['actual'], 'actual', $fileUpload, $indicator, $indicatorId),
         ];
 
         foreach ($tempMessages as $index => $tempMessage) {
@@ -274,8 +275,12 @@ class PeriodRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    protected function getWarningForTarget($formFields, $valueType, $fileUpload, $indicator, $indicatorId): array
+    protected function getWarningForTargetOrActual($formFields, $valueType, $fileUpload, $indicator, $indicatorId): array
     {
+        $targetOrActualFields = $formFields[$valueType];
+        $fieldToValidateAgainst = $valueType == 'target' ? 'actual' : 'target';
+
+        /** @var IndicatorService $indicatorService */
         $rules = [];
         $indicatorService = app()->make(IndicatorService::class);
 
@@ -294,7 +299,12 @@ class PeriodRequest extends ActivityBaseRequest
             return false;
         });
 
-        foreach ($formFields as $targetIndex => $target) {
+        /*
+         * The variables names are not factual.
+         * DO NOT get confused with the variable names.
+         * Since this method is called for both actual and target fields.
+         */
+        foreach ($targetOrActualFields as $targetIndex => $target) {
             $targetForm = sprintf('%s.%s', $valueType, $targetIndex);
             $narrativeRules = $this->getWarningForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
             $docLinkRules = $this->getWarningForDocumentLink(Arr::get($target, 'document_link', []), $targetForm);
@@ -308,7 +318,7 @@ class PeriodRequest extends ActivityBaseRequest
             }
 
             if ($indicatorMeasureType['non_qualitative']) {
-                $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'required|numeric';
+                $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = [new RequiredEitherNumericTargetValueOrActualValue($fieldToValidateAgainst, $formFields)];
             } elseif ($indicatorMeasureType['qualitative'] && !empty($target['value'])) {
                 $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'qualitative_empty';
             }
@@ -361,8 +371,9 @@ class PeriodRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    protected function getMessagesForTarget($formFields, $valueType, $fileUpload, $indicator, $indicatorId): array
+    protected function getMessagesForTargetOrActual($formFields, $valueType, $fileUpload, $indicator, $indicatorId): array
     {
+        /** @var IndicatorService $indicatorService */
         $messages = [];
         $indicatorService = app()->make(IndicatorService::class);
 
@@ -394,9 +405,7 @@ class PeriodRequest extends ActivityBaseRequest
                 $messages[$key] = $docLinkMessage;
             }
 
-            if ($indicatorMeasureType['non_qualitative']) {
-                $messages[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'Value must be filled when the indicator measure is non-qualitative.';
-            } elseif ($indicatorMeasureType['qualitative'] && !empty($target['value'])) {
+            if ($indicatorMeasureType['qualitative'] && !empty($target['value'])) {
                 $messages[sprintf('%s.%s.value.qualitative_empty', $valueType, $targetIndex)] = 'Value must be omitted when the indicator measure is qualitative.';
             }
         }
