@@ -99,10 +99,10 @@ button {
 
 // tooltip button
 .tooltip-btn {
-  @apply relative text-n-30;
+  @apply relative text-n-50;
 
   button {
-    @apply rounded-3xl border border-solid border-n-30 px-2.5 py-1.5;
+    @apply rounded-3xl border border-solid border-n-40 px-2.5 py-1.5;
   }
 
   svg {
@@ -129,6 +129,12 @@ button {
 
   &:hover button {
     @apply border-spring-50 text-spring-50;
+  }
+
+  &.active {
+    button {
+      @apply border-none bg-spring-50 text-white;
+    }
   }
 }
 

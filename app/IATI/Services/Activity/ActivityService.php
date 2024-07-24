@@ -819,4 +819,32 @@ class ActivityService
 
         return [];
     }
+
+    /**
+     * @return array{all: int, published: int, ready_for_republishing: int, draft: int}
+     */
+    public function getActivitiesCountByPublishedStatus(int $orgId): array
+    {
+        $activityStatus = $this->activityRepository->getActivityStatus(false, $orgId);
+        $processedStatus = [
+            'all' => 0,
+            'published' => 0,
+            'ready_for_republishing' => 0,
+            'draft' => 0,
+        ];
+
+        foreach ($activityStatus as $status) {
+            if ($status['status'] === 'published') {
+                $processedStatus['published'] = $status['count'];
+            } elseif ($status['linked_to_iati'] === true) {
+                $processedStatus['ready_for_republishing'] = $status['count'];
+            } else {
+                $processedStatus['draft'] = $status['count'];
+            }
+        }
+
+        $processedStatus['all'] = array_sum($processedStatus);
+
+        return $processedStatus;
+    }
 }

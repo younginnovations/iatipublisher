@@ -3,6 +3,9 @@
     <table>
       <thead>
         <tr class="bg-n-10">
+          <th id="sn" scope="col">
+            <span>S.N</span>
+          </th>
           <th id="title" scope="col">
             <span>Activity Title</span>
           </th>
@@ -48,21 +51,24 @@
       </thead>
       <tbody v-if="data.total > 0">
         <tr
-          v-for="datum in data.data"
+          v-for="(datum, index) in data.data"
           :key="datum['id']"
           :class="{
             'already-published':
               datum['linked_to_iati'] && datum['status'] === 'draft',
           }"
         >
+          <td class="relative">
+            <PreviouslyPublished
+              v-if="datum['linked_to_iati'] && datum['status'] === 'draft'"
+              class="absolute left-0 top-0 inline-block whitespace-nowrap"
+            />
+            {{ (currentPage - 1) * 10 + Number(index) + 1 }}
+          </td>
           <td class="title">
             <div
               class="flex items-start transition duration-500 hover:text-spring-50"
             >
-              <PreviouslyPublished
-                v-if="datum['linked_to_iati'] && datum['status'] === 'draft'"
-                class="absolute left-0 top-0"
-              />
               <div class="ellipsis relative w-full">
                 <a
                   :href="'/activity/' + datum['id']"
@@ -194,6 +200,7 @@ const [selectAllValue, selectAllToggle] = useToggle();
 defineProps({
   data: { type: Object, required: true },
   loader: { type: Boolean, required: false },
+  currentPage: { type: Number, required: true, default: 1 },
 });
 
 const store = useStore();
@@ -219,34 +226,36 @@ function toggleSelectAll(
 }
 
 //Sorting by update_at
-const currentURL = window.location.href;
-let query = '',
-  direction = 'asc';
+let direction = 'asc';
 
 const sortingDirection = () => {
   return direction === 'asc' ? 'descending' : 'ascending';
 };
 
 const sortByPublishingProgress = () => {
-  if (currentURL.includes('?')) {
-    const queryString = window.location.search,
-      urlParams = new URLSearchParams(queryString);
-    query = urlParams.get('q') ?? '';
-    direction = urlParams.get('direction') === 'desc' ? 'asc' : 'desc';
-  }
+  let queryString = window.location.search;
+  let params = new URLSearchParams(queryString);
+  let query = params.get('q') ?? '';
+  let direction = params.get('direction') === 'desc' ? 'asc' : 'desc';
 
-  return `?q=${query}&orderBy=complete_percentage&direction=${direction}`;
+  params.set('q', query);
+  params.set('orderBy', 'complete_percentage');
+  params.set('direction', direction);
+
+  return `?${params.toString()}`;
 };
 
 const sortByDateUrl = () => {
-  if (currentURL.includes('?')) {
-    const queryString = window.location.search,
-      urlParams = new URLSearchParams(queryString);
-    query = urlParams.get('q') ?? '';
-    direction = urlParams.get('direction') === 'desc' ? 'asc' : 'desc';
-  }
+  let queryString = window.location.search;
+  let params = new URLSearchParams(queryString);
+  let query = params.get('q') ?? '';
+  let direction = params.get('direction') === 'desc' ? 'asc' : 'desc';
 
-  return `?q=${query}&orderBy=updated_at&direction=${direction}`;
+  params.set('q', query);
+  params.set('orderBy', 'updated_at');
+  params.set('direction', direction);
+
+  return `?${params.toString()}`;
 };
 </script>
 <style scoped>

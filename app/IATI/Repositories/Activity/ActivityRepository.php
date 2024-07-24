@@ -101,7 +101,24 @@ class ActivityRepository extends Repository
         return $this->model->whereRaw($whereSql, $bindParams)
             ->orderBy($orderBy, $direction)
             ->orderBy('id', $direction)
+            ->when(isset($queryParams['filterBy']), fn ($query) => $this->filterByPublishStatus($query, $queryParams['filterBy']))
             ->paginate($limit, ['*'], 'activity', $page);
+    }
+
+    /**
+     * @param Builder $query
+     * @param $filterByStatus
+     *
+     * @return Builder
+     */
+    public function filterByPublishStatus(Builder $query, $filterByStatus): Builder
+    {
+        return match ($filterByStatus) {
+            'published'              => $query->where('linked_to_iati', true)->where('status', 'published'),
+            'ready_for_republishing' => $query->where('linked_to_iati', true)->where('status', 'draft'),
+            'draft'                  => $query->where('linked_to_iati', false)->where('status', 'draft'),
+            default                  => $query,
+        };
     }
 
     /**
@@ -732,15 +749,20 @@ class ActivityRepository extends Repository
      * Return activity status based on publish.
      *
      * @param $queryParams
+     * @param false|int $orgId
      *
      * @return array
      */
-    public function getActivityStatus($queryParams): array
+    public function getActivityStatus($queryParams, false|int $orgId = false): array
     {
         $query = $this->model->select(DB::raw('count(*) as count,status,linked_to_iati'));
 
         if ($queryParams) {
             $query = $this->filterActivity($query, $queryParams);
+        }
+
+        if ($orgId) {
+            $query->where('org_id', $orgId);
         }
 
         return $query->groupBy('status', 'linked_to_iati')->get()->toArray();
