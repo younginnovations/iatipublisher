@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 <iati-activities version="2.03" generated-datetime="2024-07-30T07:27:45+00:00">
   <iati-activity last-updated-datetime="2024-07-30T07:27:45+00:00" xml:lang="aa" humanitarian="1" hierarchy="1">
     <iati-identifier>AX-COA-12344-Ac2</iati-identifier>
@@ -18,10 +19,16 @@
   <iati-activity last-updated-datetime="2024-07-18T05:08:30+00:00" xml:lang="aa">
     <iati-identifier>AF-CBR-8888-test1</iati-identifier>
 >>>>>>> aab1c9ca (fixes:local storage issue publishing issue)
+=======
+<iati-activities version="2.03" generated-datetime="2024-07-26T07:56:49+00:00">
+  <iati-activity last-updated-datetime="2024-07-26T07:56:49+00:00" xml:lang="aa">
+    <iati-identifier>AF-CBR-8888-23123</iati-identifier>
+>>>>>>> 63b6eb74 (add maximize and minimize options in publish)
     <reporting-org type="11" ref="AF-CBR-8888" secondary-reporter="0">
       <narrative xml:lang="aa">My org's name - editted</narrative>
     </reporting-org>
     <title>
+<<<<<<< HEAD
 <<<<<<< HEAD
       <narrative xml:lang="aa">yipl testing</narrative>
 >>>>>>> 3ed2b83f (publish bug fixes)
@@ -37,25 +44,9 @@
     </participating-org>
     <activity-status code="2"/>
     <activity-date type="2" iso-date="2024-06-22">
+=======
+>>>>>>> 63b6eb74 (add maximize and minimize options in publish)
       <narrative xml:lang="aa">123</narrative>
-    </activity-date>
-    <recipient-country code="AX" percentage="100">
-      <narrative xml:lang="ab">123</narrative>
-    </recipient-country>
-    <sector code="1"/>
-    <default-flow-type code="22"/>
-    <default-finance-type code="1100"/>
-    <default-aid-type code="1" vocabulary="2"/>
-    <default-tied-status code="5"/>
-    <budget type="1" status="1">
-      <period-start iso-date="2024-06-28"/>
-      <period-end iso-date="2024-07-06"/>
-      <value value-date="2024-06-22">1</value>
-    </budget>
-    <transaction>
-      <transaction-type code="3"/>
-      <transaction-date iso-date="2024-06-22"/>
-      <value currency="ANG" value-date="2024-06-06">1</value>
-    </transaction>
+    </title>
   </iati-activity>
 </iati-activities>

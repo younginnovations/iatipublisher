@@ -78,11 +78,13 @@
         text="Cancel"
         @click="cancelValidation()"
       />
-
       <button
         v-if="
           coreElementLoader ||
-          store.state.bulkActivityPublishStatus.iatiValidatorLoader
+          store.state.bulkActivityPublishStatus.iatiValidatorLoader ||
+          (store.state.startBulkPublish &&
+            store.state.bulkActivityPublishStatus.publishing.response
+              ?.status !== 'completed')
         "
         className="flex items-center gap-1.5 font-bold text-bluecoral border border-bluecoral rounded px-2.5 py-3 text-xs uppercase"
         @click="handleMinimize()"
@@ -135,6 +137,7 @@ import RollingLoader from './RollingLoaderComponent.vue';
 import IatiValidate from './iatiValidate/IatiValidate.vue';
 import { useStore } from 'Store/activities/index';
 import PublishingActivity from './publishingActivity/PublishingActivity.vue';
+import { useSharedMinimize } from 'Composable/useSharedLocalStorage';
 
 const store = useStore();
 const props = defineProps({
@@ -158,10 +161,7 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-  validationActivityLoader: {
-    type: Boolean,
-    required: true,
-  },
+
   selectedActivities: {
     type: Array,
     required: true,
@@ -175,6 +175,9 @@ const props = defineProps({
     default: () => ({}),
   },
 });
+
+const sharedMinimize = useSharedMinimize();
+
 const newSelectedActivities = ref([] as number[]);
 provide('newSelectedActivities', newSelectedActivities);
 
@@ -214,7 +217,7 @@ const startBulkPublish = () => {
 };
 
 const handleMinimize = () => {
-  store.dispatch('updateMinimizeScreen', true);
+  sharedMinimize.value = true;
 };
 
 const showPublishingActivityModal = computed(() => {
@@ -233,6 +236,16 @@ const cancelValidation = () => {
   store.dispatch('updateStartCoreValidation', false);
   emit('cancelValidation');
 };
+
+watch(
+  () => sharedMinimize.value,
+  (value) => {
+    if (value) {
+      store.state.isPublishedModalMinimized = value;
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <style scoped></style>

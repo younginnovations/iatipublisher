@@ -16,17 +16,13 @@
           completed
         </span>
       </h3>
-      <div
-        v-if="
-          store.state.bulkActivityPublishStatus.publishing.hasFailedActivities
-            ?.ids?.length > 0
-        "
-        class="retry flex cursor-pointer items-center font-bold text-bluecoral"
-        @click="retryPublishing"
+      <button
+        class="flex items-center gap-1.5 text-xs font-bold text-bluecoral"
+        @click="handleMinimize"
       >
-        <svg-vue class="mr-1" icon="redo" />
-        <span class="text-xs uppercase">Retry</span>
-      </div>
+        <span>EXPAND</span>
+        <svg-vue class="text-[9px]" icon="open-link" />
+      </button>
     </div>
     <div class="relative w-full rounded-lg bg-white duration-200">
       <div class="rounded-lg border border-n-20 bg-white p-4">
@@ -47,26 +43,39 @@
               }}
             </span>
           </h3>
-          <button
-            v-if="percentageWidth === 100"
-            class="text-xs font-bold uppercase text-bluecoral"
-          >
-            View detail
-          </button>
-          <button
-            v-else
-            class="text-xs font-bold uppercase text-bluecoral"
-            @click="
-              () => {
-                $emit('close');
-              }
-            "
-          >
-            <svg-vue icon="cross" class="mt-2 text-lg text-bluecoral" />
-            <span>Cancel</span>
-          </button>
+          <div class="flex items-center gap-3">
+            <div
+              v-if="
+                store.state.bulkActivityPublishStatus.publishing
+                  .hasFailedActivities?.ids?.length > 0
+              "
+              class="retry flex cursor-pointer items-center font-bold text-bluecoral"
+              @click="retryPublishing"
+            >
+              <svg-vue class="mr-1" icon="redo" />
+              <span class="text-xs uppercase">Retry</span>
+            </div>
+            <button
+              v-if="percentageWidth === 100"
+              class="text-xs font-bold uppercase text-bluecoral"
+              @click="handleMinimize"
+            >
+              View detail
+            </button>
+            <button
+              v-else
+              class="text-xs font-bold uppercase text-bluecoral"
+              @click="
+                () => {
+                  $emit('close');
+                }
+              "
+            >
+              <svg-vue icon="cross" class="mt-2 text-lg text-bluecoral" />
+              <span>Cancel</span>
+            </button>
+          </div>
         </div>
-
         <template v-if="percentageWidth !== 100">
           <div
             v-if="
@@ -408,6 +417,11 @@ const emptybulkPublishStatus = () => {
   for (const status in publishingActivities) {
     delete publishingActivities[status];
   }
+};
+
+const handleMinimize = () => {
+  store.state.isPublishedModalMinimized = false;
+  localStorage.setItem('isPublishedModalMinimized', 'false');
 };
 
 watch(

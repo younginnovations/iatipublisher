@@ -13,10 +13,10 @@
     <div class="relative rounded-lg border border-n-20 bg-white p-4">
       <div class="flex justify-between">
         <div class="flex space-x-2">
-          <div class="pb-3 text-sm text-n-50" v-if="percentageWidth == 100">
+          <div v-if="percentageWidth == 100" class="pb-3 text-sm text-n-50">
             Data checking complete. Click continue to publish
           </div>
-          <div class="text-sm text-n-50" v-else>
+          <div v-else class="text-sm text-n-50">
             Checking your data before publication
           </div>
           <div
@@ -32,8 +32,8 @@
 
         <button
           v-if="percentageWidth !== 100"
-          @click="validationCancelHandler()"
           class="flex items-center text-xs font-bold uppercase text-bluecoral"
+          @click="validationCancelHandler()"
         >
           <svg-vue
             v-if="!hasError"
@@ -45,9 +45,9 @@
       </div>
       <div class="flex items-center justify-between space-x-2">
         <div
+          v-if="percentageWidth !== 100"
           class="my-2 mr-2 h-1.5 w-[283px] flex-1 justify-start rounded-full bg-[#C4C4C4]"
           :class="!hasError ? ' ' : '!mb-2 bg-[#E34D5B]'"
-          v-if="percentageWidth !== 100"
         >
           <div
             v-if="!hasError"
@@ -84,8 +84,8 @@
           <div class="flex flex-1 items-center justify-center">
             <button
               v-if="percentageWidth === 100 || hasError"
-              @click="validationCancelHandler()"
               class="flex items-center text-xs font-bold uppercase text-bluecoral"
+              @click="validationCancelHandler()"
             >
               <svg-vue icon="cross" class="mt-2 text-lg"></svg-vue>
               <span>Cancel</span>
@@ -183,6 +183,19 @@ const validationCancelHandler = async () => {
     // Dispatching actions to update the store
     store.dispatch('updateStartValidation', false);
     store.dispatch('updateValidatingActivities', '');
+    store.dispatch('updateStartCoreValidation', false);
+    store.state.publishAlertValue = false;
+    store.state.bulkActivityPublishStatus.publishing = {
+      ...store.state.bulkActivityPublishStatus.publishing,
+      response: null,
+      hasFailedActivities: {
+        data: {} as any,
+        ids: [],
+        status: false,
+      },
+    };
+    store.state.bulkActivityPublishStatus.completedSteps = [];
+    store.state.bulkPublishStep = 1;
 
     // Updating the hasFailedActivities status in the store
     store.state.bulkActivityPublishStatus.publishing.hasFailedActivities = {
@@ -217,7 +230,8 @@ const percentageWidth = computed(() => {
 });
 
 const handleMinimize = () => {
-  store.dispatch('updateMinimizeScreen', false);
+  store.state.isPublishedModalMinimized = false;
+  localStorage.setItem('isPublishedModalMinimized', 'false');
 };
 
 watch(

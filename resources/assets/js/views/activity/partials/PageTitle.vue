@@ -106,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref, Ref } from 'vue';
+import { inject, ref, Ref, watch } from 'vue';
 import DownloadActivityButton from './DownloadActivityButton.vue';
 import AddActivityButton from './AddActivityButton.vue';
 import Toast from 'Components/ToastMessage.vue';
@@ -117,7 +117,7 @@ import BtnComponent from 'Components/ButtonComponent.vue';
 // Vuex Store
 import { useStore } from 'Store/activities/index';
 import ErrorPopUp from 'Components/ErrorPopUp.vue';
-
+import { useStorage } from '@vueuse/core';
 interface RefreshToastMsgTypeface {
   visibility: boolean;
   refreshMessageType: boolean;
@@ -137,6 +137,10 @@ const store = useStore();
 const publishRef: Ref<typeof PublishSelected | null> = ref(null);
 
 const checkPublish = () => {
-  if (publishRef.value) publishRef.value.checkPublish();
+  if (publishRef.value) {
+    publishRef.value.checkPublish();
+    localStorage.setItem('isPublishedModalMinimized', 'false');
+    store.state.isPublishedModalMinimized = false;
+  }
 };
 </script>

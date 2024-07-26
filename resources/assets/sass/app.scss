@@ -46,3 +46,21 @@ html {
 .border-orangeish {
   border: 1px solid #ee711e;
 }
+
+.background_blink {
+  -webkit-animation: blinkBackground 0.4s infinite; /* Safari 4+ */
+  -moz-animation: blinkBackground 0.4s infinite; /* Fx 5+ */
+  -o-animation: blinkBackground 0.4s infinite; /* Opera 12+ */
+  animation: blinkBackground 0.4s infinite; /* IE 10+, Fx 29+ */
+}
+
+@keyframes blinkBackground {
+  0%,
+  49% {
+    background-color: #fffde7;
+  }
+  50%,
+  100% {
+    background-color: #f6f1bf;
+  }
+}

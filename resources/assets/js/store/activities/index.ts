@@ -18,7 +18,6 @@ interface StateInterface {
   validatingActivitiesNames: string[];
   validationRunning: boolean;
   bulkActivityPublishStatus: {
-    isMinimized: boolean;
     iatiValidatorLoader: boolean;
     validationNames: string[];
     validationStats: {
@@ -66,7 +65,6 @@ const state = {
     },
   },
   bulkActivityPublishStatus: {
-    isMinimized: false,
     iatiValidatorLoader: false,
     validationNames: [] as string[],
     validationStats: {
@@ -94,6 +92,8 @@ const state = {
   },
   stopPublishing: false,
   publishAlertValue: false,
+  isPublishedModalMinimized: false,
+  bulkPublishStep: 1,
 };
 
 const mutations = {
@@ -153,9 +153,7 @@ const mutations = {
   ) {
     state.validatingActivities = payload;
   },
-  mutateMinimizeScreen: function (state: StateInterface, payload: boolean) {
-    state.bulkActivityPublishStatus.isMinimized = payload;
-  },
+
   mutateCancelValidationAndPublishing: function (
     state: StateInterface,
     payload: boolean
@@ -248,13 +246,6 @@ const actions = {
     payload: string
   ) {
     commit('mutateValidatingActivities', payload);
-  },
-
-  updateMinimizeScreen: function (
-    { commit }: CommitFunction,
-    payload: boolean
-  ) {
-    commit('mutateMinimizeScreen', payload);
   },
 
   // stop validation and publishing

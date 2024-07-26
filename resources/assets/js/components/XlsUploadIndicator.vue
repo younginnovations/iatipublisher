@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div
+    v-show="
+      (downloading && !downloadCompleted && !cancelDownload) ||
+      store.state.isPublishedModalMinimized
+    "
+  >
     <div
       v-if="
         showBulkpublishLoader ||
@@ -10,10 +15,11 @@
       "
       ref="parentElementRef"
       :style="minimize ? { bottom: `${-(height - 57)}px` } : {}"
-      class="fixed bottom-0 right-5 z-[100] w-[412px] rounded-t-lg bg-n-10 shadow-[0px_2px_12px_0px_rgba(0,0,0,0.12)] transition-all duration-200 ease-linear xl:right-10"
+      class="fixed bottom-0 right-5 z-[100] w-[412px] rounded-t-lg bg-n-10 shadow-[0px_2px_12px_0px_rgba(0,0,0,0.12)] xl:right-10"
     >
       <div
         class="flex items-center justify-between rounded-t-lg border-b border-n-20 bg-eggshell px-6 py-4"
+        :class="addBlinkAnimation ? 'background_blink' : ''"
       >
         <div class="flex space-x-2">
           <div class="text-base font-bold text-blue-50">Ongoing Tasks</div>
@@ -30,7 +36,7 @@
             </span>
           </div>
         </div>
-        <button @click="() => (minimize = !minimize)">
+        <button @click="() => handleBackgroundProcessToggler()">
           <svg-vue
             class="h-3 w-3 text-blue-40 duration-300"
             icon="dropdown-arrow"
@@ -39,7 +45,22 @@
         </button>
       </div>
       <div class="max-h-[600px] space-y-6 overflow-y-scroll p-6">
-        <div>
+        <ActivityDownload
+          v-if="downloading && !downloadCompleted && !cancelDownload"
+          key="download"
+        />
+
+        <XlsLoader
+          v-if="xlsData && showXlsStatus"
+          key="xls"
+          :total-count="totalCount"
+          :processed-count="processedCount"
+          :xls-failed="xlsFailed"
+          :activity-name="activityName"
+          :completed="completed"
+          @close="closeXls"
+        />
+        <div v-show="store.state.isPublishedModalMinimized">
           <ActivityValidation
             v-if="showValidationPopup"
             :validation-stats="
@@ -67,22 +88,6 @@
           />
           <BulkpublishLoaderCard v-if="showBulkpublishLoader" />
         </div>
-
-        <ActivityDownload
-          v-if="downloading && !downloadCompleted && !cancelDownload"
-          key="download"
-        />
-
-        <XlsLoader
-          v-if="xlsData && showXlsStatus"
-          key="xls"
-          :total-count="totalCount"
-          :processed-count="processedCount"
-          :xls-failed="xlsFailed"
-          :activity-name="activityName"
-          :completed="completed"
-          @close="closeXls"
-        />
       </div>
     </div>
   </div>
@@ -109,7 +114,6 @@ import {
 } from 'vue';
 import axios from 'axios';
 import { useStore } from 'Store/activities/index';
-
 const store = useStore();
 const showXlsStatus = ref(true);
 
@@ -124,7 +128,7 @@ const showBulkpublishLoader = ref(false);
 
 const parentElementRef = ref(null);
 const { height } = useElementSize(parentElementRef);
-const minimize = ref(false);
+const minimize = useStorage('minimizeBackgroundModal', true);
 const publishingActivities = ref<string[]>([]);
 const bulkPublishLength = ref(0);
 const activityPublishedData = ref() as Ref<activityPublished>;
@@ -369,6 +373,19 @@ const closeBulkpublish = () => {
   showBulkpublish.value = false;
   localStorage.setItem('vue-use-local-storage', 'publishingActivities:{}');
   store.dispatch('updateBulkpublishActivities', {});
+  store.dispatch('updateStartCoreValidation', false);
+  store.dispatch('updateStopPublishing', !store.state.stopPublishing);
+  pa.value.publishingActivities = {};
+  store.state.bulkActivityPublishStatus.publishing = {
+    ...store.state.bulkActivityPublishStatus.publishing,
+    response: null,
+    hasFailedActivities: {
+      data: {} as any,
+      ids: [],
+      status: false,
+    },
+  };
+  store.state.bulkActivityPublishStatus.completedSteps = [];
   axios.delete(`/activities/delete-bulk-publish-status`);
 };
 
@@ -526,6 +543,18 @@ const validationFailedActivities = computed(() => {
   return Object.values(
     store.state.bulkActivityPublishStatus.importedActivitiesList
   ).some((item) => item.is_valid === false);
+});
+
+const handleBackgroundProcessToggler = () => {
+  minimize.value = !minimize.value;
+};
+
+const addBlinkAnimation = computed(() => {
+  return (
+    minimize.value &&
+    (store.state.bulkActivityPublishStatus.validationStats.failed > 0 ||
+      validationFailedActivities.value)
+  );
 });
 
 watch(

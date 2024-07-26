@@ -69,16 +69,23 @@
         <span class="text-sm text-[#E34D5B]">Validation failed</span>
       </div>
     </div>
-    <!-- <div class="pt-3">
+    <div class="pt-3">
       <label for="selectAll" class="checkbox_container !flex">
         <span
           class="inline-block pl-3 pt-1 text-xs font-bold uppercase leading-[18px]"
           >Select all</span
         >
-        <input type="checkbox" id="selectAll"  />
+        <input
+          id="selectAll"
+          type="checkbox"
+          :checked="
+            newSelectedActivities.length === Object.keys(activitiesList).length
+          "
+          @change="(e) => selectAllActivities(e)"
+        />
         <span class="checkmark"></span>
       </label>
-    </div> -->
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -94,7 +101,6 @@ import {
 } from 'vue';
 
 import { useStore } from 'Store/activities/index';
-import axios from 'axios';
 import RollingLoader from '../RollingLoaderComponent.vue';
 
 const store = useStore();
@@ -149,23 +155,16 @@ watch(
   }
 );
 
-const stopValidating = () => {
-  emit('stopValidation');
-  axios.get(`/activities/delete-validation-status`).then(() => {
-    store.dispatch('updateStartValidation', false);
-    store.dispatch('updateValidatingActivities', '');
-    localStorage.removeItem('validatingActivities');
-    localStorage.removeItem('activityValidating');
-  });
+const selectAllActivities = (event) => {
+  if (event.target.checked) {
+    console.log('event.target.checked', event.target.checked);
+    newSelectedActivities.value = Object.keys(props.activitiesList).map((key) =>
+      parseInt(key)
+    );
+  } else {
+    newSelectedActivities.value = [];
+  }
 };
-
-// const selectAllActivities = (event) => {
-//   if (event.target.checked) {
-//     store.dispatch('updateSelectedActivities', props.validationNames);
-//   } else {
-//     store.dispatch('updateSelectedActivities', []);
-//   }
-// };
 
 watch(
   () => props.activitiesList,
@@ -175,6 +174,7 @@ watch(
   },
   {
     deep: true,
+    immediate: true,
   }
 );
 
