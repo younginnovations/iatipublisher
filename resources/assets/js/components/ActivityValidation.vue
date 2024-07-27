@@ -174,43 +174,29 @@ watch(
 // };
 
 const validationCancelHandler = async () => {
-  try {
-    const res = await axios.get(`/activities/delete-validation-status`);
-
-    // Emitting stop validation event
-    emit('stopValidation');
-
-    // Dispatching actions to update the store
+  emit('stopValidation');
+  axios.get(`/activities/delete-validation-status`).then(() => {
     store.dispatch('updateStartValidation', false);
     store.dispatch('updateValidatingActivities', '');
-    store.dispatch('updateStartCoreValidation', false);
-    store.state.publishAlertValue = false;
-    store.state.bulkActivityPublishStatus.publishing = {
-      ...store.state.bulkActivityPublishStatus.publishing,
-      response: null,
-      hasFailedActivities: {
-        data: {} as any,
-        ids: [],
-        status: false,
-      },
-    };
-    store.state.bulkActivityPublishStatus.completedSteps = [];
-    store.state.bulkPublishStep = 1;
-
-    // Updating the hasFailedActivities status in the store
-    store.state.bulkActivityPublishStatus.publishing.hasFailedActivities = {
-      ...store.state.bulkActivityPublishStatus.publishing.hasFailedActivities,
-      status: false,
-      data: {} as any,
-      ids: [],
-    };
-
-    // Removing items from localStorage
     localStorage.removeItem('validatingActivities');
     localStorage.removeItem('activityValidating');
-  } catch (error) {
-    console.error(error);
-  }
+    store.state.publishAlertValue = false;
+    setTimeout(() => {
+      store.state.bulkActivityPublishStatus = {
+        ...store.state.bulkActivityPublishStatus,
+        iatiValidatorLoader: false,
+        validationStats: {
+          ...store.state.bulkActivityPublishStatus.validationStats,
+          complete: 0,
+          total: 0,
+          failed: 0,
+        },
+      };
+
+      store.state.bulkPublishStep = 1;
+      store.state.bulkActivityPublishStatus.completedSteps = [];
+    }, 1000);
+  });
 };
 
 const startBulkPublish = () => {
@@ -233,15 +219,6 @@ const handleMinimize = () => {
   store.state.isPublishedModalMinimized = false;
   localStorage.setItem('isPublishedModalMinimized', 'false');
 };
-
-watch(
-  () => store.state.bulkActivityPublishStatus.cancelValidationAndPublishing,
-  (value) => {
-    if (value) {
-      validationCancelHandler();
-    }
-  }
-);
 
 const totalValidationFailedActivities = computed(() => {
   return Object.values(

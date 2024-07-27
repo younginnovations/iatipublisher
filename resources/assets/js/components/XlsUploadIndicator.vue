@@ -1,14 +1,15 @@
 <template>
-  <div
-    v-show="
+  <div>
+    <!--     v-show="
       (downloading && !downloadCompleted && !cancelDownload) ||
       store.state.isPublishedModalMinimized
-    "
-  >
+    " -->
     <div
       v-if="
         showBulkpublishLoader ||
-        (showBulkpublish && activities && Object.keys(activities).length > 0) ||
+        (store.state.showBulkpublish &&
+          activities &&
+          Object.keys(activities).length > 0) ||
         (downloading && !downloadCompleted && !cancelDownload) ||
         (xlsData && showXlsStatus) ||
         showValidationPopup
@@ -60,7 +61,8 @@
           :completed="completed"
           @close="closeXls"
         />
-        <div v-show="store.state.isPublishedModalMinimized">
+        <!-- v-show="store.state.isPublishedModalMinimized" -->
+        <div>
           <ActivityValidation
             v-if="showValidationPopup"
             :validation-stats="
@@ -75,9 +77,10 @@
             @stop-validation="cancelValidationPolling"
             @proceed="proceedValidation"
           />
+
           <BulkpublishWithXls
             v-if="
-              showBulkpublish &&
+              store.state.showBulkpublish &&
               activities &&
               Object.keys(activities).length > 0
             "
@@ -123,7 +126,6 @@ import ShimmerLoading from './ShimmerLoading.vue';
 const downloadCompleted = ref(false);
 
 const cancelDownload = ref(false);
-const showBulkpublish = ref(true);
 const showBulkpublishLoader = ref(false);
 
 const parentElementRef = ref(null);
@@ -262,7 +264,7 @@ watch(
 watch(
   () => store?.state?.startBulkPublish,
   (value) => {
-    showBulkpublish.value = value;
+    store.state.showBulkpublish = value;
   },
   { deep: true }
 );
@@ -320,7 +322,7 @@ const checkValidationStatus = () => {
           !res.data.success;
       })
       .catch(() => {
-        setTimeout(poll, 3000); // Retry after 3 seconds in case of an error
+        // setTimeout(poll, 3000); // Retry after 3 seconds in case of an error
       });
   };
 
@@ -351,7 +353,7 @@ watch(
   () => [store.state.startValidation, store.state.validationRunning],
   () => {
     if (store.state.startValidation || store.state.validationRunning) {
-      showBulkpublish.value = false;
+      store.state.showBulkpublish = false;
     }
   }
 );
@@ -370,12 +372,28 @@ onUnmounted(() => {
 });
 
 const closeBulkpublish = () => {
-  showBulkpublish.value = false;
+  store.state.publishAlertValue = false;
+  setTimeout(() => {
+    store.state.bulkActivityPublishStatus = {
+      ...store.state.bulkActivityPublishStatus,
+      iatiValidatorLoader: false,
+      validationStats: {
+        ...store.state.bulkActivityPublishStatus.validationStats,
+        complete: 0,
+        total: 0,
+        failed: 0,
+      },
+    };
+
+    store.state.bulkPublishStep = 1;
+    store.state.bulkActivityPublishStatus.completedSteps = [];
+  }, 1000);
+
+  store.state.showBulkpublish = false;
   localStorage.setItem('vue-use-local-storage', 'publishingActivities:{}');
+  pa.value.publishingActivities = {};
   store.dispatch('updateBulkpublishActivities', {});
   store.dispatch('updateStartCoreValidation', false);
-  store.dispatch('updateStopPublishing', !store.state.stopPublishing);
-  pa.value.publishingActivities = {};
   store.state.bulkActivityPublishStatus.publishing = {
     ...store.state.bulkActivityPublishStatus.publishing,
     response: null,
@@ -385,7 +403,7 @@ const closeBulkpublish = () => {
       status: false,
     },
   };
-  store.state.bulkActivityPublishStatus.completedSteps = [];
+
   axios.delete(`/activities/delete-bulk-publish-status`);
 };
 
@@ -470,7 +488,7 @@ const activities = inject('activities') as Ref;
 const processingActivityCount = computed(() => {
   let count = 0;
   if (
-    showBulkpublish?.value &&
+    store.state.showBulkpublish &&
     activities?.value &&
     Object.keys(activities?.value).length > 0
   ) {
@@ -507,7 +525,7 @@ const completeActivityCount = computed(() => {
   let count = 0;
   if (
     activityPublishedData?.value?.status === 'completed' &&
-    showBulkpublish.value
+    store.state.showBulkpublish
   ) {
     count++;
   }
@@ -556,11 +574,4 @@ const addBlinkAnimation = computed(() => {
       validationFailedActivities.value)
   );
 });
-
-watch(
-  () => store.state.stopPublishing,
-  () => {
-    closeBulkpublish();
-  }
-);
 </script>

@@ -19,7 +19,7 @@
           class="bg-white px-6 uppercase"
           text="Cancel Previous Bulk publish"
           type=""
-          @click="startValidation"
+          @click="startNewPublishing"
         />
         <BtnComponent
           class="bg-white px-6 uppercase"
@@ -29,62 +29,68 @@
         />
       </div>
     </Modal>
+
     <template v-if="!store.state.isPublishedModalMinimized">
-      <Modal
-        :modal-active="
-          (store.state.publishAlertValue && !showExistingProcessModal) ||
-          showValidationPopup ||
-          (pa?.publishingActivities &&
-            Object.keys(pa?.publishingActivities).length > 0)
-        "
-        :width="popUpWidthChange"
-      >
-        <template v-if="store.state.bulkPublishStep === 1">
-          <div class="popup mb-4">
-            <div class="title mb-6 flex items-center text-sm">
-              <svg-vue class="mr-1 text-lg text-crimson-40" icon="shield" />
-              <b>Publishing alert</b>
-            </div>
-            <div class="rounded-lg bg-eggshell p-4">
-              <div class="text-sm leading-normal">
-                Activities that are already published will not be published.
-                Changes made to published activities (Draft) will be
-                republished.
+      <template v-if="!showExistingProcessModal">
+        <template v-if="!showCancelConfirmationPopup">
+          <Modal
+            :modal-active="
+              (store.state.publishAlertValue && !showExistingProcessModal) ||
+              showValidationPopup ||
+              (pa?.publishingActivities &&
+                Object.keys(pa?.publishingActivities).length > 0)
+            "
+            :is-minimized="store.state.isPublishedModalMinimized"
+            :width="popUpWidthChange"
+          >
+            <template v-if="store.state.bulkPublishStep === 1">
+              <div class="popup mb-4">
+                <div class="title mb-6 flex items-center text-sm">
+                  <svg-vue class="mr-1 text-lg text-crimson-40" icon="shield" />
+                  <b>Publishing alert</b>
+                </div>
+                <div class="rounded-lg bg-eggshell p-4">
+                  <div class="text-sm leading-normal">
+                    Activities that are already published will not be published.
+                    Changes made to published activities (Draft) will be
+                    republished.
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="flex justify-end">
-            <div class="inline-flex">
-              <BtnComponent
-                class="space"
-                text="Continue"
-                type="primary"
-                @click="
-                  () => {
-                    store.state.bulkPublishStep = 2;
-                    verifyCoreElements();
-                  }
-                "
+              <div class="flex justify-end">
+                <div class="inline-flex">
+                  <BtnComponent
+                    class="space"
+                    text="Continue"
+                    type="primary"
+                    @click="
+                      () => {
+                        store.state.bulkPublishStep = 2;
+                        verifyCoreElements();
+                      }
+                    "
+                  />
+                </div>
+              </div>
+            </template>
+            <template v-else-if="store.state.bulkPublishStep === 2">
+              <BulkPublishingModal
+                :deprecation-status-map="deprecationStatusMap"
+                :core-in-completed-activities="coreInCompletedActivities"
+                :core-completed-activities="coreCompletedActivities"
+                :core-element-loader="coreElementLoader"
+                :selected-activities="store.state.selectedActivities"
+                :show-validation-popup="showValidationPopup"
+                :publishing-activities="pa?.publishingActivities"
+                :permalink="permalink"
+                @cancelValidation="() => cancelValidation()"
+                @cancelBulkPublishing="() => cancelBulkPublishing()"
+                @validate-activities="() => validateActivities()"
               />
-            </div>
-          </div>
+            </template>
+          </Modal>
         </template>
-        <template v-else-if="store.state.bulkPublishStep === 2">
-          <BulkPublishingModal
-            :deprecation-status-map="deprecationStatusMap"
-            :core-in-completed-activities="coreInCompletedActivities"
-            :core-completed-activities="coreCompletedActivities"
-            :core-element-loader="coreElementLoader"
-            :selected-activities="store.state.selectedActivities"
-            :show-validation-popup="showValidationPopup"
-            :publishing-activities="pa?.publishingActivities"
-            :permalink="permalink"
-            @cancelValidation="() => cancelValidation()"
-            @cancelBulkPublishing="() => cancelBulkPublishing()"
-            @validate-activities="() => validateActivities()"
-          />
-        </template>
-      </Modal>
+      </template>
     </template>
 
     <Modal :modal-active="showCancelConfirmationPopup" width="583">
@@ -162,6 +168,7 @@ import {
   provide,
   inject,
   defineExpose,
+  onUnmounted,
 } from 'vue';
 
 import { useStorage } from '@vueuse/core';
@@ -169,7 +176,7 @@ import axios from 'axios';
 
 //component
 import BtnComponent from 'Components/ButtonComponent.vue';
-import Modal from 'Components/PopupModal.vue';
+import Modal from './components/Modal.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import PageLoader from 'Components/Loader.vue';
 import BulkPublishingModal from './bulkPublishModal/BulkPublish.vue';
@@ -186,9 +193,6 @@ defineProps({
  *  Global State
  */
 const store = useStore();
-
-// state for step of the flow
-const showModalButtonLoader = ref(false);
 
 const bulkPublishStatus = reactive({});
 const isLoading = ref(false);
@@ -207,32 +211,41 @@ const showCancelConfirmationPopup = ref(false);
 const showCancelledPopup = ref(false);
 const messageOnCancellation = ref('No bulk publish were cancelled');
 
-// minimize state
-const sharedMinimize = useSharedMinimize();
-
 // reset step to zero after closing modal
 const cancelValidation = () => {
-  store.state.publishAlertValue = false;
-  store.state.bulkActivityPublishStatus.cancelValidationAndPublishing = true;
-  setTimeout(() => {
-    store.state.bulkActivityPublishStatus = {
-      ...store.state.bulkActivityPublishStatus,
-      iatiValidatorLoader: false,
-      validationStats: {
-        ...store.state.bulkActivityPublishStatus.validationStats,
-        complete: 0,
-        total: 0,
-        failed: 0,
-      },
-    };
-    store.state.bulkPublishStep = 1;
-    store.state.bulkActivityPublishStatus.completedSteps = [];
-  }, 1000);
+  store.state.validationRunning = false;
+  axios.get(`/activities/delete-validation-status`).then(() => {
+    store.dispatch('updateStartValidation', false);
+    store.dispatch('updateValidatingActivities', '');
+    localStorage.removeItem('validatingActivities');
+    localStorage.removeItem('activityValidating');
+    store.state.publishAlertValue = false;
+
+    setTimeout(() => {
+      store.state.bulkActivityPublishStatus = {
+        ...store.state.bulkActivityPublishStatus,
+        iatiValidatorLoader: false,
+        validationStats: {
+          ...store.state.bulkActivityPublishStatus.validationStats,
+          complete: 0,
+          total: 0,
+          failed: 0,
+        },
+      };
+
+      store.state.bulkPublishStep = 1;
+      store.state.bulkActivityPublishStatus.completedSteps = [];
+    }, 1000);
+  });
 };
 
 const cancelBulkPublishing = () => {
-  store.dispatch('updateStopPublishing', !store.state.stopPublishing);
+  store.state.showBulkpublish = false;
+
+  localStorage.setItem('vue-use-local-storage', 'publishingActivities:{}');
   pa.value.publishingActivities = {};
+  store.dispatch('updateBulkpublishActivities', {});
+  store.dispatch('updateStartCoreValidation', false);
   store.state.bulkActivityPublishStatus.publishing = {
     ...store.state.bulkActivityPublishStatus.publishing,
     response: null,
@@ -244,6 +257,8 @@ const cancelBulkPublishing = () => {
   };
   store.state.bulkActivityPublishStatus.completedSteps = [];
   cancelValidation();
+  store.state.bulkPublishStep = 1;
+  axios.delete(`/activities/delete-bulk-publish-status`);
 };
 
 const popUpWidthChange = computed(() => {
@@ -284,16 +299,33 @@ const emptybulkPublishStatus = () => {
 /**
  * check publish status
  */
-const checkPublish = () => {
+const checkPublish = async () => {
   isLoading.value = true;
-  store.state.bulkActivityPublishStatus.iatiValidatorLoader = false;
-  axios
+  let validatorSuccess = false;
+  // store.state.bulkActivityPublishStatus.iatiValidatorLoader = false;
+
+  await axios
+    .get(`/activities/checks-for-activity-bulk-validation`)
+    .then((res) => {
+      const response = res.data;
+      validatorSuccess = response.success;
+    });
+
+  if (!validatorSuccess) {
+    showExistingProcessModal.value = true;
+    isLoading.value = false;
+    return;
+  }
+
+  await axios
     .get(`/activities/checks-for-activity-bulk-publish`)
     .then((res) => {
       const response = res.data;
 
       if (response.success === true) {
         store.state.publishAlertValue = true;
+        localStorage.setItem('isPublishedModalMinimized', 'false');
+        store.state.isPublishedModalMinimized = false;
       } else {
         if (response?.in_progress) {
           emptybulkPublishStatus();
@@ -432,7 +464,6 @@ const validateActivities = async () => {
   store.state.bulkActivityPublishStatus.iatiValidatorLoader = true;
   let validatorSuccess = false;
   let publishingSuccess = false;
-  showModalButtonLoader.value = true;
 
   await axios
     .get(`/activities/checks-for-activity-bulk-publish`)
@@ -450,9 +481,7 @@ const validateActivities = async () => {
 
   if (!validatorSuccess || !publishingSuccess) {
     showExistingProcessModal.value = true;
-    showModalButtonLoader.value = false;
   } else {
-    showModalButtonLoader.value = false;
     startValidation();
   }
 };
@@ -474,6 +503,7 @@ interface paType {
     message?: string;
   };
 }
+
 const pa: Ref<paType> = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
 });
@@ -481,8 +511,11 @@ const pa: Ref<paType> = useStorage('vue-use-local-storage', {
 const startBulkPublish = () => {
   store.dispatch('updateStartBulkPublish', true);
   loaderText.value = 'Starting to publish';
-  pa.value.publishingActivities = {};
-
+  if (pa.value) {
+    pa.value.publishingActivities = {};
+  } else {
+    console.error('pa.value is undefined');
+  }
   axios
     .get(
       `/activities/start-bulk-publish?activities=[${store.state.validatingActivities}]`
@@ -490,16 +523,13 @@ const startBulkPublish = () => {
     .then((res) => {
       store.dispatch('updateStartBulkPublish', true);
       store.dispatch('updateValidatingActivities', '');
-
       startPublish.value = true;
-
       const response = res.data;
       if (response.success) {
         pa.value.publishingActivities = response.data;
       } else {
         loader.value = false;
         cancelValidation();
-
         if (response?.in_progress) {
           emptybulkPublishStatus();
           Object.assign(bulkPublishStatus, response.data.activities);
@@ -511,13 +541,11 @@ const startBulkPublish = () => {
             'updateBulkpublishActivities',
             response.data.activities
           );
-
           showCancelConfirmationModal();
         } else {
           displayToast(response.message, response.success);
         }
       }
-
       setTimeout(() => {
         loader.value = false;
         published.value = true;
@@ -643,6 +671,15 @@ const showValidationPopup = computed(() => {
   return store.state.startValidation || store.state.validationRunning;
 });
 
+const startNewPublishing = async () => {
+  await cancelBulkPublish();
+  cancelValidation();
+  showExistingProcessModal.value = false;
+  showCancelConfirmationPopup.value = false;
+  store.state.bulkPublishStep = 1;
+  checkPublish();
+};
+
 watch(
   () => showValidationPopup.value,
   (value) => {
@@ -667,6 +704,5 @@ watch(
 provide('paStorage', pa);
 provide('bulkPublishStatus', bulkPublishStatus);
 provide('startPublish', startPublish);
-
 defineExpose({ checkPublish });
 </script>

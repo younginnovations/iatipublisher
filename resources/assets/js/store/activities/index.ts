@@ -25,9 +25,7 @@ interface StateInterface {
       total: number;
       failed: number;
     };
-    cancelValidationAndPublishing: boolean;
   };
-  stopPublishing: boolean;
 }
 interface actElements {
   activity_id: number;
@@ -88,12 +86,11 @@ const state = {
         status: false,
       },
     },
-    cancelValidationAndPublishing: false,
   },
-  stopPublishing: false,
   publishAlertValue: false,
   isPublishedModalMinimized: false,
   bulkPublishStep: 1,
+  showBulkpublish: true,
 };
 
 const mutations = {
@@ -154,15 +151,6 @@ const mutations = {
     state.validatingActivities = payload;
   },
 
-  mutateCancelValidationAndPublishing: function (
-    state: StateInterface,
-    payload: boolean
-  ) {
-    state.bulkActivityPublishStatus.cancelValidationAndPublishing = payload;
-  },
-  mutateStopPublishing(state: StateInterface, payload: boolean) {
-    state.stopPublishing = payload;
-  },
   mutateStartCoreValidation(state: StateInterface, payload: boolean) {
     state.startCoreValidation = payload;
   },
@@ -246,22 +234,6 @@ const actions = {
     payload: string
   ) {
     commit('mutateValidatingActivities', payload);
-  },
-
-  // stop validation and publishing
-  updateCancelValidationAndPublishing: function (
-    { commit }: CommitFunction,
-    payload: boolean
-  ) {
-    commit('mutateCancelValidationAndPublishing', payload);
-  },
-
-  // stop publishing
-  updateStopPublishing: function (
-    { commit }: CommitFunction,
-    payload: boolean
-  ) {
-    commit('mutateStopPublishing', payload);
   },
 
   updateStartCoreValidation: function (

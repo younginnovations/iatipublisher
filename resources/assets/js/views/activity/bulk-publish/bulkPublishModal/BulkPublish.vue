@@ -67,7 +67,7 @@
         v-if="store?.state?.startBulkPublish || showPublishingActivityModal"
         class="space"
         type=""
-        text="Cancel"
+        text="Cancel publishing"
         @click="cancelActivityPublishing()"
       />
 
@@ -75,12 +75,11 @@
         v-else
         class="space"
         type=""
-        text="Cancel"
+        text="Cancel validation"
         @click="cancelValidation()"
       />
       <button
         v-if="
-          coreElementLoader ||
           store.state.bulkActivityPublishStatus.iatiValidatorLoader ||
           (store.state.startBulkPublish &&
             store.state.bulkActivityPublishStatus.publishing.response
@@ -228,7 +227,6 @@ const showPublishingActivityModal = computed(() => {
 });
 
 const cancelActivityPublishing = () => {
-  store.dispatch('updateStartCoreValidation', false);
   emit('cancelBulkPublishing');
 };
 
