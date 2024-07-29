@@ -139,8 +139,6 @@ const publishRef: Ref<typeof PublishSelected | null> = ref(null);
 const checkPublish = () => {
   if (publishRef.value) {
     publishRef.value.checkPublish();
-    localStorage.setItem('isPublishedModalMinimized', 'false');
-    store.state.isPublishedModalMinimized = false;
   }
 };
 </script>
