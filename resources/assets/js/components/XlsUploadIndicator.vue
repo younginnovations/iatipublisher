@@ -1,9 +1,10 @@
 <template>
-  <div>
-    <!--     v-show="
+  <div
+    v-show="
       (downloading && !downloadCompleted && !cancelDownload) ||
       store.state.isPublishedModalMinimized
-    " -->
+    "
+  >
     <div
       v-if="
         showBulkpublishLoader ||
@@ -20,7 +21,10 @@
     >
       <div
         class="flex items-center justify-between rounded-t-lg border-b border-n-20 bg-eggshell px-6 py-4"
-        :class="addBlinkAnimation ? 'background_blink' : ''"
+        :class="{
+          background_blink:
+            isBlinking && minimize && store.state.isPublishedModalMinimized,
+        }"
       >
         <div class="flex space-x-2">
           <div class="text-base font-bold text-blue-50">Ongoing Tasks</div>
@@ -61,8 +65,8 @@
           :completed="completed"
           @close="closeXls"
         />
-        <!-- v-show="store.state.isPublishedModalMinimized" -->
-        <div>
+
+        <div v-show="store.state.isPublishedModalMinimized">
           <ActivityValidation
             v-if="showValidationPopup"
             :validation-stats="
@@ -114,6 +118,7 @@ import {
   onMounted,
   computed,
   Ref,
+  watchEffect,
 } from 'vue';
 import axios from 'axios';
 import { useStore } from 'Store/activities/index';
@@ -135,6 +140,7 @@ const publishingActivities = ref<string[]>([]);
 const bulkPublishLength = ref(0);
 const activityPublishedData = ref() as Ref<activityPublished>;
 const downloadStatus = inject('xlsDownloadStatus') as Ref;
+const isBlinking = ref(false);
 
 const pa = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
@@ -567,11 +573,31 @@ const handleBackgroundProcessToggler = () => {
   minimize.value = !minimize.value;
 };
 
-const addBlinkAnimation = computed(() => {
-  return (
-    minimize.value &&
-    (store.state.bulkActivityPublishStatus.validationStats.failed > 0 ||
-      validationFailedActivities.value)
-  );
+watchEffect(() => {
+  const failed = store.state.bulkActivityPublishStatus.validationStats.failed;
+  const total = store.state.bulkActivityPublishStatus.validationStats.total;
+  const completed =
+    store.state.bulkActivityPublishStatus.validationStats.complete;
+  if (total > 0) {
+    if (failed === total || total === completed) {
+      blinkBackground();
+    }
+  }
 });
+
+watchEffect(() => {
+  if (
+    store.state.bulkActivityPublishStatus.publishing?.response?.status ===
+    'completed'
+  ) {
+    blinkBackground();
+  }
+});
+
+function blinkBackground() {
+  isBlinking.value = true;
+  setTimeout(() => {
+    isBlinking.value = false;
+  }, 5000);
+}
 </script>

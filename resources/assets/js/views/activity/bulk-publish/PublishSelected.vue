@@ -29,7 +29,6 @@
         />
       </div>
     </Modal>
-
     <template v-if="!store.state.isPublishedModalMinimized">
       <template v-if="!showExistingProcessModal">
         <template v-if="!showCancelConfirmationPopup">
@@ -37,7 +36,8 @@
             :modal-active="
               (store.state.publishAlertValue && !showExistingProcessModal) ||
               showValidationPopup ||
-              (pa?.publishingActivities &&
+              (store.state.showBulkpublish &&
+                pa?.publishingActivities &&
                 Object.keys(pa?.publishingActivities).length > 0)
             "
             :is-minimized="store.state.isPublishedModalMinimized"
@@ -100,7 +100,7 @@
         <div class="mt-4 flex justify-between space-x-4">
           <button
             class="rounded px-5 py-3 font-semibold uppercase text-n-40 hover:bg-bluecoral hover:text-white"
-            @click="cancelOtherBulkPublish"
+            @click="startNewPublishing"
           >
             Cancel previous bulk publish
           </button>
@@ -112,30 +112,6 @@
             Wait for completion
           </button>
         </div>
-      </div>
-    </Modal>
-
-    <Modal width="583" :modal-active="showCancelledPopup">
-      <h3 class="mb-4 text-lg font-medium">
-        <svg-vue icon="tick" class="mr-2 inline text-spring-50"></svg-vue>
-        <span class="font-bold">Cancellation Successful</span>
-      </h3>
-      <div class="fw-bold rounded-lg bg-spring-30 px-3 py-2 text-white">
-        {{ messageOnCancellation }}
-      </div>
-      <div class="my-3 flex justify-between">
-        <button
-          class="rounded px-5 py-3 font-semibold uppercase text-n-40 hover:bg-bluecoral hover:text-white"
-          @click="closeCancelledDetailsPopup"
-        >
-          Continue Selecting
-        </button>
-        <button
-          class="rounded bg-bluecoral px-5 py-3 font-semibold uppercase text-white"
-          @click="publishAfterCancel"
-        >
-          Publish
-        </button>
       </div>
     </Modal>
 
@@ -168,7 +144,6 @@ import {
   provide,
   inject,
   defineExpose,
-  onUnmounted,
 } from 'vue';
 
 import { useStorage } from '@vueuse/core';
@@ -183,7 +158,6 @@ import BulkPublishingModal from './bulkPublishModal/BulkPublish.vue';
 // Vuex Store
 import { useStore } from 'Store/activities/index';
 import BulkPublishingErrorPopup from 'Components/BulkPublishingErrorPopup.vue';
-import { useSharedMinimize } from 'Composable/useSharedLocalStorage';
 
 defineProps({
   type: { type: String, default: 'primary' },
@@ -208,13 +182,11 @@ const coreElementLoader = ref(false);
 
 /*States for Bulk publish cancellation flow*/
 const showCancelConfirmationPopup = ref(false);
-const showCancelledPopup = ref(false);
-const messageOnCancellation = ref('No bulk publish were cancelled');
 
 // reset step to zero after closing modal
-const cancelValidation = () => {
+const cancelValidation = async () => {
   store.state.validationRunning = false;
-  axios.get(`/activities/delete-validation-status`).then(() => {
+  await axios.get(`/activities/delete-validation-status`).then(() => {
     store.dispatch('updateStartValidation', false);
     store.dispatch('updateValidatingActivities', '');
     localStorage.removeItem('validatingActivities');
@@ -239,13 +211,7 @@ const cancelValidation = () => {
   });
 };
 
-const cancelBulkPublishing = () => {
-  store.state.showBulkpublish = false;
-
-  localStorage.setItem('vue-use-local-storage', 'publishingActivities:{}');
-  pa.value.publishingActivities = {};
-  store.dispatch('updateBulkpublishActivities', {});
-  store.dispatch('updateStartCoreValidation', false);
+const cancelBulkPublishing = async () => {
   store.state.bulkActivityPublishStatus.publishing = {
     ...store.state.bulkActivityPublishStatus.publishing,
     response: null,
@@ -255,10 +221,17 @@ const cancelBulkPublishing = () => {
       status: false,
     },
   };
-  store.state.bulkActivityPublishStatus.completedSteps = [];
+  store.state.showBulkpublish = false;
+  store.dispatch('updateBulkpublishActivities', {});
+  store.dispatch('updateStartCoreValidation', false);
   cancelValidation();
-  store.state.bulkPublishStep = 1;
-  axios.delete(`/activities/delete-bulk-publish-status`);
+  setTimeout(() => {
+    store.state.bulkActivityPublishStatus.completedSteps = [];
+    store.state.bulkPublishStep = 1;
+    localStorage.setItem('vue-use-local-storage', 'publishingActivities:{}');
+    pa.value.publishingActivities = {};
+  }, 1000);
+  await axios.delete(`/activities/delete-bulk-publish-status`);
 };
 
 const popUpWidthChange = computed(() => {
@@ -323,9 +296,16 @@ const checkPublish = async () => {
       const response = res.data;
 
       if (response.success === true) {
+        cancelBulkPublish();
+        resetStatus();
         store.state.publishAlertValue = true;
         localStorage.setItem('isPublishedModalMinimized', 'false');
         store.state.isPublishedModalMinimized = false;
+        localStorage.setItem(
+          'vue-use-local-storage',
+          '{"publishingActivities":{}}'
+        );
+        pa.value.publishingActivities = {};
       } else {
         if (response?.in_progress) {
           emptybulkPublishStatus();
@@ -614,43 +594,6 @@ const cancelBulkPublish = async () => {
   await axios.get('/activities/cancel-bulk-publish');
 };
 
-/*Cancels on-going bulk publish*/
-const cancelOtherBulkPublish = () => {
-  loaderText.value = 'Cancelling Bulk Publish';
-  loader.value = true;
-  closeCancelConfirmationModal();
-  store.dispatch('updateStartBulkPublish', false);
-
-  axios.get('/activities/cancel-bulk-publish').then((res) => {
-    if (res.data.success) {
-      setCancellationMessage(res.data.message);
-      showCancelledDetailPopup();
-    }
-
-    setTimeout(() => {
-      loader.value = false;
-    }, 500);
-  });
-};
-
-/*Show modal that shows number of bulk publish cancelled */
-const showCancelledDetailPopup = () => {
-  errorData.visibility = false;
-  showCancelledPopup.value = true;
-};
-
-/*Sets message in modal triggered by showCancelledDetailPopup() */
-const setCancellationMessage = (msg) => {
-  errorData.visibility = false;
-  messageOnCancellation.value = msg;
-};
-
-/*Closes Cancel Confirmation Popup*/
-const closeCancelledDetailsPopup = () => {
-  errorData.visibility = false;
-  showCancelledPopup.value = false;
-};
-
 /*Opens modal that allows to cancel existing bulk publish*/
 const showCancelConfirmationModal = () => {
   showCancelConfirmationPopup.value = true;
@@ -659,12 +602,6 @@ const showCancelConfirmationModal = () => {
 /*Closes modal that allows to cancel existing bulk publish*/
 const closeCancelConfirmationModal = () => {
   showCancelConfirmationPopup.value = false;
-};
-
-/* Trigger the normal flow of bulk publishing activities*/
-const publishAfterCancel = () => {
-  showCancelledPopup.value = false;
-  checkPublish();
 };
 
 const showValidationPopup = computed(() => {
@@ -678,6 +615,31 @@ const startNewPublishing = async () => {
   showCancelConfirmationPopup.value = false;
   store.state.bulkPublishStep = 1;
   checkPublish();
+};
+
+const resetStatus = () => {
+  store.state.bulkPublishStep = 1;
+  store.state.bulkActivityPublishStatus.completedSteps = [];
+  store.state.bulkActivityPublishStatus = {
+    ...store.state.bulkActivityPublishStatus,
+    iatiValidatorLoader: false,
+    validationStats: {
+      ...store.state.bulkActivityPublishStatus.validationStats,
+      complete: 0,
+      total: 0,
+      failed: 0,
+    },
+  };
+
+  store.state.bulkActivityPublishStatus.publishing = {
+    ...store.state.bulkActivityPublishStatus.publishing,
+    response: null,
+    hasFailedActivities: {
+      data: {} as any,
+      ids: [],
+      status: false,
+    },
+  };
 };
 
 watch(
