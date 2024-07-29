@@ -278,7 +278,7 @@ class PeriodRequest extends ActivityBaseRequest
     protected function getWarningForTargetOrActual($formFields, $valueType, $fileUpload, $indicator, $indicatorId): array
     {
         $targetOrActualFields = $formFields[$valueType];
-        $fieldToValidateAgainst = $valueType == 'target' ? 'actual' : 'target';
+        $fieldToValidateAgainst = $valueType === 'target' ? 'actual' : 'target';
 
         /** @var IndicatorService $indicatorService */
         $rules = [];
@@ -318,7 +318,7 @@ class PeriodRequest extends ActivityBaseRequest
             }
 
             if ($indicatorMeasureType['non_qualitative']) {
-                $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = [new RequiredEitherNumericTargetValueOrActualValue($fieldToValidateAgainst, $formFields)];
+                $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = [new RequiredEitherNumericTargetValueOrActualValue($valueType, $fieldToValidateAgainst, $formFields)];
             } elseif ($indicatorMeasureType['qualitative'] && !empty($target['value'])) {
                 $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'qualitative_empty';
             }

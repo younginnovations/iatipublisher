@@ -22,10 +22,11 @@ class RequiredEitherNumericTargetValueOrActualValue implements Rule
     /**
      * Create a new rule instance.
      *
+     * @param string $field
      * @param string $otherField
      * @param array $formFields
      */
-    public function __construct(protected string $otherField, protected array $formFields)
+    public function __construct(protected string $field, protected string $otherField, protected array $formFields)
     {
     }
 
@@ -70,7 +71,7 @@ class RequiredEitherNumericTargetValueOrActualValue implements Rule
             return 'The @value field must be numeric.';
         }
 
-        return "The @value field is required when $this->otherField @value is not provided.";
+        return sprintf('%s value is required if %s value is not provided.', ucfirst($this->field), $this->otherField);
     }
 
     /**
