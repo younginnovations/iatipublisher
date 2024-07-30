@@ -105,7 +105,7 @@ class BulkPublishingController extends Controller
 
             if (!empty($activityIds)) {
                 $coreElementsCompletion = $this->bulkPublishingService->getCoreElementsCompletedArray($activityIds);
-                $deprecationStatusMap = $this->bulkPublishingService->refreshDeprecationStatus($activityIds);
+                $deprecationStatusMap = $this->bulkPublishingService->getActivitiesWithDeprecatedValueArray($activityIds, $this->activityService);
 
                 DB::commit();
 
