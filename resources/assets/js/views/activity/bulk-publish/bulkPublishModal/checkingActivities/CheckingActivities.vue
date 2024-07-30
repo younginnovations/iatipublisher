@@ -1,12 +1,15 @@
 <template>
-  <div class="flex items-start gap-1 pt-8 text-sm font-bold text-blue-50">
+  <div class="flex items-start gap-1 pt-2.5 text-sm font-bold text-blue-50">
     <svg-vue class="text-xl" icon="warning-activity" />
     <p class="tracking-normal">
       The following activities have incomplete core elements or deprecated
       codes. We recommend checking these to ensure good data quality.
     </p>
   </div>
-  <TabIndex>
+  <TabIndex
+    :coreCount="props.coreInCompletedActivities.length"
+    :deprecatedCount="Object.keys(deprecationStatusMap).length"
+  >
     <template #core>
       <div
         v-if="props.coreInCompletedActivities.length > 0"

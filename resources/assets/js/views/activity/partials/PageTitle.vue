@@ -89,6 +89,7 @@
                   icon="approved-cloud"
                   @click="checkPublish"
                 />
+                {{ store.state.selectedActivities }}
                 <PublishSelected ref="publishRef" />
               </div>
               <div class="flex gap-2">
@@ -106,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref, Ref, watch } from 'vue';
+import { inject, ref, Ref, watch, watchEffect } from 'vue';
 import DownloadActivityButton from './DownloadActivityButton.vue';
 import AddActivityButton from './AddActivityButton.vue';
 import Toast from 'Components/ToastMessage.vue';
@@ -136,9 +137,34 @@ const errorData = inject('errorData') as ToastInterface;
 const store = useStore();
 const publishRef: Ref<typeof PublishSelected | null> = ref(null);
 
+const filterPublished = (selectedIds, activities) => {
+  if (!selectedIds.length) {
+    return [];
+  }
+  return (
+    activities &&
+    activities
+      .filter(
+        (activity) =>
+          selectedIds.includes(activity.id) && activity.status !== 'published'
+      )
+      .map((activity) => activity.id)
+  );
+};
+
 const checkPublish = () => {
   if (publishRef.value) {
     publishRef.value.checkPublish();
   }
 };
+
+watch(
+  () => store.state.selectedActivities,
+  () => {
+    console.log(store.state.activitiesList);
+    // alert(JSON.stringify(Array.from(
+    //   filterPublished(store.state.selectedActivities, store.state.activitiesList)
+    // )))
+  }
+);
 </script>

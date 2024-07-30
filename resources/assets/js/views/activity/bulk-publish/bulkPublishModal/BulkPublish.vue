@@ -7,7 +7,7 @@
       <span
         class="inline-block rounded-full bg-lagoon-10 px-2 py-1 text-xs font-[500] text-spring-50"
       >
-        {{ selectedActivities && selectedActivities.length }}
+        {{ publishingActivityCount }}
       </span>
     </h4>
     <WizardIndex
@@ -47,27 +47,45 @@
       </div>
     </div>
   </div>
-  <div class="flex justify-end gap-6 pt-2.5">
-    <BtnComponent
+  <div
+    class="flex gap-6 pt-2.5"
+    :class="
+      store.state.bulkActivityPublishStatus.publishing.response?.status ===
+      'completed'
+        ? ' justify-between '
+        : 'justify-end'
+    "
+  >
+    <div
       v-if="
         store.state.bulkActivityPublishStatus.publishing.response?.status ===
         'completed'
       "
-      type="primary"
-      text="Close"
-      class="bg-white px-6 uppercase"
-      @click="
-        () => {
-          cancelActivityPublishing();
-        }
-      "
-    />
+      class="flex flex-1 items-center justify-between"
+    >
+      <div>
+        <p class="flex items-center gap-3 rounded bg-mint p-2 text-xs">
+          Activity has been published successfully, Close and refresh to see
+          changes.
+        </p>
+      </div>
+      <BtnComponent
+        type="primary"
+        text="Close"
+        class="bg-white px-6 uppercase"
+        @click="
+          () => {
+            cancelActivityPublishing();
+          }
+        "
+      />
+    </div>
     <template v-else>
       <BtnComponent
         v-if="store?.state?.startBulkPublish || showPublishingActivityModal"
         class="space"
         type=""
-        text="Cancel publishing"
+        text="Cancel"
         @click="cancelActivityPublishing()"
       />
 
@@ -75,7 +93,7 @@
         v-else
         class="space"
         type=""
-        text="Cancel validation"
+        text="Cancel"
         @click="cancelValidation()"
       />
       <button
@@ -234,6 +252,21 @@ const cancelValidation = () => {
   store.dispatch('updateStartCoreValidation', false);
   emit('cancelValidation');
 };
+
+function convertStringToArray(numberString) {
+  return numberString.split(',').map(Number);
+}
+
+const publishingActivityCount = computed(() => {
+  let count = 0;
+
+  if (store.state.validatingActivities) {
+    count = convertStringToArray(store.state.validatingActivities).length;
+  } else if (props.selectedActivities) {
+    count = props.selectedActivities.length;
+  }
+  return count;
+});
 
 watch(
   () => sharedMinimize.value,

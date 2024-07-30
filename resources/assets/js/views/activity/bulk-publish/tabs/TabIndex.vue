@@ -11,7 +11,9 @@
           ]"
           @click="handleActiveTab(tab.value)"
         >
-          {{ tab.name }}
+          {{ tab.name }}({{
+            tab.value == 1 ? props.coreCount : props.deprecatedCount
+          }})
         </button>
       </div>
     </div>
@@ -23,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, defineProps } from 'vue';
 const tabs = [
   {
     name: 'Core Elements completeness check',
@@ -34,6 +36,16 @@ const tabs = [
     value: 2,
   },
 ];
+const props = defineProps({
+  coreCount: {
+    type: Number,
+    required: true,
+  },
+  deprecatedCount: {
+    type: Number,
+    required: true,
+  },
+});
 const activeTab = ref(1);
 
 const handleActiveTab = (value: number) => {

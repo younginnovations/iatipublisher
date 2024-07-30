@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 <iati-activities version="2.03" generated-datetime="2024-07-30T07:27:45+00:00">
   <iati-activity last-updated-datetime="2024-07-30T07:27:45+00:00" xml:lang="aa" humanitarian="1" hierarchy="1">
     <iati-identifier>AX-COA-12344-Ac2</iati-identifier>
@@ -33,6 +34,10 @@
 =======
 <iati-activities version="2.03" generated-datetime="2024-07-29T18:57:45+00:00">
   <iati-activity last-updated-datetime="2024-07-29T18:57:45+00:00" xml:lang="aa">
+=======
+<iati-activities version="2.03" generated-datetime="2024-07-30T06:41:13+00:00">
+  <iati-activity last-updated-datetime="2024-07-30T06:41:13+00:00" xml:lang="aa">
+>>>>>>> 8a50b0d1 (fixed error if published from activity detail page)
     <iati-identifier>AF-CBR-8888-12313</iati-identifier>
 >>>>>>> ef4923ab (added refresh button when finished publishing)
     <reporting-org type="11" ref="AF-CBR-8888" secondary-reporter="0">

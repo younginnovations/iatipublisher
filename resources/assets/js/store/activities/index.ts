@@ -1,5 +1,8 @@
 import { createStore, Commit } from 'vuex';
-
+interface ActivitiesInterface {
+  data: any[];
+  last_page: number;
+}
 interface StateInterface {
   selectedActivities: number[];
   bulkPublishLength: number;
@@ -91,6 +94,8 @@ const state = {
   isPublishedModalMinimized: false,
   bulkPublishStep: 1,
   showBulkpublish: true,
+  startNewPublishing: false,
+  activitiesList: {} as ActivitiesInterface,
 };
 
 const mutations = {

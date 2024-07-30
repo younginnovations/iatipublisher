@@ -29,7 +29,7 @@
         class="bg-white px-6 uppercase"
         text="Cancel Previous Bulk publish"
         type=""
-        @click="startValidation"
+        @click="startNewPublishing"
       />
       <BtnComponent
         class="bg-white px-6 uppercase"
@@ -493,14 +493,31 @@ const errorData = inject('errorData') as DataTypeface;
 /**
  * check publish status
  */
-const checkPublish = () => {
-  axios.get(`/activities/checks-for-activity-bulk-publish`).then((res) => {
-    const response = res.data;
-    if (response.success === true) {
+const checkPublish = async () => {
+  try {
+    let validatorSuccess = false;
+
+    const validationResponse = await axios.get(
+      `/activities/checks-for-activity-bulk-validation`
+    );
+
+    validatorSuccess = validationResponse.data.success;
+
+    if (!validatorSuccess) {
+      showExistingProcessModal.value = true;
+      return;
+    }
+
+    const publishResponse = await axios.get(
+      `/activities/checks-for-activity-bulk-publish`
+    );
+    const response = publishResponse.data;
+
+    if (response.success) {
       validationStore.state.selectedActivities = [id];
       validationStore.dispatch('updateStartCoreValidation', true);
     } else {
-      if (response?.in_progress) {
+      if (response.in_progress) {
         showExistingProcessModal.value = true;
       } else {
         errorData.message = response.message;
@@ -508,7 +525,10 @@ const checkPublish = () => {
         errorData.visibility = true;
       }
     }
-  });
+  } catch (error) {
+    console.error('An error occurred:', error);
+    // Handle error appropriately here (e.g., show an error message to the user)
+  }
 };
 
 // publish-republish
@@ -530,12 +550,9 @@ const btnText = computed(() => {
   }
 });
 
-// watch(
-//   () => validationStore.state.startBulkPublish,
-//   (value) => {
-//     if (value && props.publish) {
-//       startBulkPublish();
-//     }
-//   }
-// );
+const startNewPublishing = async () => {
+  showExistingProcessModal.value = false;
+  validationStore.state.startNewPublishing =
+    !validationStore.state.startNewPublishing;
+};
 </script>

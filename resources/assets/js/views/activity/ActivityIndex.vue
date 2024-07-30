@@ -53,6 +53,7 @@ import {
   ref,
   watch,
   Ref,
+  watchEffect,
 } from 'vue';
 import { watchIgnorable } from '@vueuse/core';
 import axios from 'axios';
@@ -92,6 +93,7 @@ export default defineComponent({
   },
   setup(props) {
     interface ActivitiesInterface {
+      data: any;
       last_page: number;
     }
     const activities = reactive({}) as ActivitiesInterface;
@@ -366,6 +368,15 @@ export default defineComponent({
       refreshMessage:
         'Activity has been published successfully, refresh to see changes',
     });
+
+    /**
+     * watch
+     */
+    watchEffect(() => {
+      store.state.activitiesList = activities;
+      console.log(store.state.activitiesList);
+    });
+
     /**
      * Provide
      */
