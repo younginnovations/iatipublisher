@@ -229,6 +229,7 @@ class RegisterController extends Controller
 
         $validator->setCustomMessages([
             'username.regex' => 'The username is invalid. Username must be purely lowercase alphabets followed by alphanumeric(ascii) characters and these symbols:-_',
+            'email.unique'   => 'Email is already in use in IATI Publisher.',
         ]);
 
         if ($validator->fails()) {

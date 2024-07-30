@@ -266,10 +266,13 @@ class IatiRegisterController extends Controller
             if (Arr::get($iati_user, 'success', false) && Arr::get($api_token, 'success', false) && Arr::get($publisher, 'success', false)) {
                 $user = $this->userService->registerNewUser($data);
             } else {
+                $iati_user['errors'] = Arr::get($iati_user, 'errors', []);
+                $iati_user['errors'] = $this->changeRegistryEmailValidationMessageIfExists($iati_user['errors']);
+
                 return [
                     'success' => false,
                     'errors' => array_merge(
-                        $this->userService->mapError('user', $iati_user['errors'] ?? []),
+                        $this->userService->mapError('user', $iati_user['errors']),
                         $api_token['errors'] ?? [],
                         $this->userService->mapError('publisher', $publisher['errors'] ?? [])
                     ),
@@ -308,5 +311,21 @@ class IatiRegisterController extends Controller
 
             return view('web.welcome');
         }
+    }
+
+    private function changeRegistryEmailValidationMessageIfExists(mixed $iatiUserErrors)
+    {
+        $unflattenedArray = [];
+        $iatiUserErrors = flattenArrayWithKeys($iatiUserErrors);
+
+        foreach ($iatiUserErrors as $key => $value) {
+            if ($value === 'Email already exists.') {
+                $value = 'Email is already in use in IATI Registry.';
+            }
+
+            Arr::set($unflattenedArray, $key, $value);
+        }
+
+        return $unflattenedArray;
     }
 }

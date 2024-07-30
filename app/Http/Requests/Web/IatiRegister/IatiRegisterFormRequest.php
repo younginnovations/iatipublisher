@@ -88,6 +88,7 @@ class IatiRegisterFormRequest extends FormRequest
                 break;
             case '4':
                 $messages['username.regex'] = 'The username is invalid. Username must be purely lowercase alphabets followed by alphanumeric(ascii) characters and these symbols:-_';
+                $messages['email.unique'] = 'Email is already in use in IATI Publisher.';
                 break;
         }
 
