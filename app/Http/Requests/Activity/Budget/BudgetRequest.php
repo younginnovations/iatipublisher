@@ -6,8 +6,10 @@ namespace App\Http\Requests\Activity\Budget;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 use App\IATI\Services\Activity\ActivityService;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
+use JsonException;
 
 /**
  * Class BudgetRequest.
@@ -20,14 +22,12 @@ class BudgetRequest extends ActivityBaseRequest
     protected array $identicalIds = [];
 
     /**
-     * @var array
-     */
-    protected array $revisedIds = [];
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
+     *
+     * @throws BindingResolutionException
+     * @throws JsonException
      */
     public function rules(): array
     {
@@ -41,6 +41,8 @@ class BudgetRequest extends ActivityBaseRequest
      * Get the error message as required.
      *
      * @return array
+     *
+     * @throws BindingResolutionException
      */
     public function messages(): array
     {
@@ -53,14 +55,16 @@ class BudgetRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
+     * @throws BindingResolutionException
+     * @throws JsonException
      */
     public function getErrorsForBudget(array $formFields): array
     {
         $rules = [];
+        /** @var ActivityService $activityService */
         $activityService = app()->make(ActivityService::class);
         $formFields = $activityService->setBudgets($formFields);
         $this->identicalIds = $activityService->checkSameMultipleBudgets($formFields);
-        $this->revisedIds = $activityService->checkRevisedBudgets($formFields);
 
         foreach ($formFields as $budgetIndex => $budget) {
             $budgetForm = sprintf('budget.%s', $budgetIndex);
@@ -100,14 +104,16 @@ class BudgetRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
+     *
+     * @throws BindingResolutionException
      */
     public function getWarningForBudget(array $formFields): array
     {
         $rules = [];
+        /** @var ActivityService $activityService */
         $activityService = app()->make(ActivityService::class);
         $formFields = $activityService->setBudgets($formFields);
         $this->identicalIds = $activityService->checkSameMultipleBudgets($formFields);
-        $this->revisedIds = $activityService->checkRevisedBudgets($formFields);
 
         if (count($this->identicalIds)) {
             Validator::extend('budgets_identical', function () {
@@ -117,18 +123,6 @@ class BudgetRequest extends ActivityBaseRequest
             foreach ($this->identicalIds as $ids) {
                 foreach ($ids as $id) {
                     $rules['budget.' . $id . '.budget_type'][] = 'budgets_identical';
-                }
-            }
-        }
-
-        if (count($this->revisedIds)) {
-            Validator::extend('budget_revised_invalid', function () {
-                return false;
-            });
-
-            foreach ($this->revisedIds as $ids) {
-                foreach ($ids as $id) {
-                    $rules['budget.' . $id . '.budget_type'][] = 'budget_revised_invalid';
                 }
             }
         }
@@ -179,6 +173,8 @@ class BudgetRequest extends ActivityBaseRequest
      * @param $formBase
      *
      * @return array
+     *
+     * @throws JsonException
      */
     protected function getErrorsForValue($formFields, $formBase): array
     {
@@ -286,29 +282,24 @@ class BudgetRequest extends ActivityBaseRequest
      * Returns messages for related activity validations.
      *
      * @param array $formFields
+     * @param bool $fileUpload
      *
      * @return array
+     *
+     * @throws BindingResolutionException
      */
     public function getMessagesForBudget(array $formFields, bool $fileUpload = false): array
     {
         $messages = [];
+        /** @var ActivityService $activityService */
         $activityService = app()->make(ActivityService::class);
         $formFields = $activityService->setBudgets($formFields);
         $this->identicalIds = $activityService->checkSameMultipleBudgets($formFields);
-        $this->revisedIds = $activityService->checkRevisedBudgets($formFields);
 
         if (count($this->identicalIds)) {
             foreach ($this->identicalIds as $ids) {
                 foreach ($ids as $id) {
                     $messages['budget.' . $id . '.budget_type.budgets_identical'] = 'The periods of multiple budgets with the same type should not be the same';
-                }
-            }
-        }
-
-        if (count($this->revisedIds)) {
-            foreach ($this->revisedIds as $ids) {
-                foreach ($ids as $id) {
-                    $messages['budget.' . $id . '.budget_type.budget_revised_invalid'] = 'Budget with type revised must have period start and end same to that of one of the budgets having same type original for budgets elements at position ' . $this->getIdenticalIds($ids);
                 }
             }
         }
