@@ -189,8 +189,7 @@ class UserRepository extends Repository
         if (array_key_exists('q', $queryParams)) {
             $query = $query->where(function ($query) use ($queryParams) {
                 $query->where('username', 'ilike', '%' . Arr::get($queryParams, 'q') . '%')
-                    ->orWhere('full_name', 'ilike', '%' . Arr::get($queryParams, 'q') . '%')
-                    ->orWhere('email', 'ilike', '%' . Arr::get($queryParams, 'q') . '%');
+                    ->orWhere('full_name', 'ilike', '%' . Arr::get($queryParams, 'q') . '%');
             });
         }
 
