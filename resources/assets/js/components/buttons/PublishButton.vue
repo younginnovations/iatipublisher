@@ -496,11 +496,9 @@ const errorData = inject('errorData') as DataTypeface;
 const checkPublish = async () => {
   try {
     let validatorSuccess = false;
-
     const validationResponse = await axios.get(
       `/activities/checks-for-activity-bulk-validation`
     );
-
     validatorSuccess = validationResponse.data.success;
 
     if (!validatorSuccess) {
@@ -514,8 +512,18 @@ const checkPublish = async () => {
     const response = publishResponse.data;
 
     if (response.success) {
+      stopBulkpublish();
+      resetStatus();
       validationStore.state.selectedActivities = [id];
       validationStore.dispatch('updateStartCoreValidation', true);
+
+      localStorage.setItem('isPublishedModalMinimized', 'false');
+      validationStore.state.isPublishedModalMinimized = false;
+      localStorage.setItem(
+        'vue-use-local-storage',
+        '{"publishingActivities":{}}'
+      );
+      pa.value.publishingActivities = {};
     } else {
       if (response.in_progress) {
         showExistingProcessModal.value = true;
@@ -529,6 +537,75 @@ const checkPublish = async () => {
     console.error('An error occurred:', error);
     // Handle error appropriately here (e.g., show an error message to the user)
   }
+};
+
+// const checkPublish = async () => {
+//   let validatorSuccess = false;
+//   await axios
+//     .get(`/activities/checks-for-activity-bulk-validation`)
+//     .then((res) => {
+//       const response = res.data;
+//       validatorSuccess = response.success;
+//     });
+
+//   if (!validatorSuccess) {
+//     showExistingProcessModal.value = true;
+//     return;
+//   }
+
+//   await axios
+//     .get(`/activities/checks-for-activity-bulk-publish`)
+//     .then((res) => {
+//       const response = res.data;
+
+//       if (response.success === true) {
+//         cancelBulkPublish();
+//         resetStatus();
+//         store.state.publishAlertValue = true;
+//         localStorage.setItem('isPublishedModalMinimized', 'false');
+//         store.state.isPublishedModalMinimized = false;
+//         localStorage.setItem(
+//           'vue-use-local-storage',
+//           '{"publishingActivities":{}}'
+//         );
+//         pa.value.publishingActivities = {};
+//       } else {
+//         if (response?.in_progress) {
+//           emptybulkPublishStatus();
+
+//           Object.assign(bulkPublishStatus, response.data.activities);
+//           showExistingProcessModal.value = true;
+//         } else {
+//           displayToast(response.message, response.success);
+//         }
+//       }
+//     })
+//     .finally(() => (isLoading.value = false));
+// };
+
+const resetStatus = () => {
+  validationStore.state.bulkPublishStep = 1;
+  validationStore.state.bulkActivityPublishStatus.completedSteps = [];
+  validationStore.state.bulkActivityPublishStatus = {
+    ...validationStore.state.bulkActivityPublishStatus,
+    iatiValidatorLoader: false,
+    validationStats: {
+      ...validationStore.state.bulkActivityPublishStatus.validationStats,
+      complete: 0,
+      total: 0,
+      failed: 0,
+    },
+  };
+
+  validationStore.state.bulkActivityPublishStatus.publishing = {
+    ...validationStore.state.bulkActivityPublishStatus.publishing,
+    response: null,
+    hasFailedActivities: {
+      data: {} as any,
+      ids: [],
+      status: false,
+    },
+  };
 };
 
 // publish-republish

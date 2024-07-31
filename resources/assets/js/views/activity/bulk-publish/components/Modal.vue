@@ -55,11 +55,6 @@ export default defineComponent({
       required: false,
       default: '809',
     },
-    isMinimized: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
   },
   emits: ['close', 'reset'],
   setup(props, { emit }) {

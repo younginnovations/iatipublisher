@@ -29,6 +29,7 @@
         />
       </div>
     </Modal>
+    {{ store.state.startCoreValidation }}
     <template v-if="!store.state.isPublishedModalMinimized">
       <template v-if="!showExistingProcessModal">
         <Modal
@@ -39,7 +40,6 @@
               pa?.publishingActivities &&
               Object.keys(pa?.publishingActivities).length > 0)
           "
-          :is-minimized="store.state.isPublishedModalMinimized"
           :width="popUpWidthChange"
         >
           <template v-if="store.state.bulkPublishStep === 1">
@@ -120,6 +120,7 @@ import {
   provide,
   inject,
   defineExpose,
+  watchEffect,
 } from 'vue';
 
 import { useStorage } from '@vueuse/core';
@@ -131,6 +132,7 @@ import Modal from './components/Modal.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import PageLoader from 'Components/Loader.vue';
 import BulkPublishingModal from './bulkPublishModal/BulkPublish.vue';
+import { useSharedMinimize } from 'Composable/useSharedLocalStorage';
 // Vuex Store
 import { useStore } from 'Store/activities/index';
 import BulkPublishingErrorPopup from 'Components/BulkPublishingErrorPopup.vue';
@@ -143,6 +145,7 @@ defineProps({
  *  Global State
  */
 const store = useStore();
+const sharedMinimize = useSharedMinimize();
 
 const bulkPublishStatus = reactive({});
 const isLoading = ref(false);
@@ -166,6 +169,7 @@ const cancelValidation = async () => {
   await axios.get(`/activities/delete-validation-status`).then(() => {
     store.dispatch('updateStartValidation', false);
     store.dispatch('updateValidatingActivities', '');
+    store.dispatch('updateStartCoreValidation', false);
     localStorage.removeItem('validatingActivities');
     localStorage.removeItem('activityValidating');
     store.state.publishAlertValue = false;
@@ -202,14 +206,12 @@ const cancelBulkPublishing = async () => {
   store.state.showBulkpublish = false;
   store.dispatch('updateBulkpublishActivities', {});
   store.dispatch('updateStartCoreValidation', false);
+  await axios.delete(`/activities/delete-bulk-publish-status`);
   cancelValidation();
   setTimeout(() => {
     store.state.bulkActivityPublishStatus.completedSteps = [];
     store.state.bulkPublishStep = 1;
-    localStorage.setItem('vue-use-local-storage', 'publishingActivities:{}');
-    pa.value.publishingActivities = {};
-  }, 1000);
-  await axios.delete(`/activities/delete-bulk-publish-status`);
+  }, 2000);
 };
 
 const popUpWidthChange = computed(() => {
@@ -253,8 +255,6 @@ const emptybulkPublishStatus = () => {
 const checkPublish = async () => {
   isLoading.value = true;
   let validatorSuccess = false;
-  // store.state.bulkActivityPublishStatus.iatiValidatorLoader = false;
-
   await axios
     .get(`/activities/checks-for-activity-bulk-validation`)
     .then((res) => {
@@ -369,6 +369,12 @@ onMounted(() => {
             console.error('Error parsing data', error);
           }
         }
+      } else {
+        pa.value.publishingActivities = {};
+        localStorage.setItem(
+          'vue-use-local-storage',
+          '{"publishingActivities":{}}'
+        );
       }
     })
     .catch((error) => {
@@ -548,12 +554,19 @@ const showValidationPopup = computed(() => {
 });
 
 const startNewPublishing = async () => {
-  await cancelBulkPublish();
-  cancelBulkPublishing();
-  cancelValidation();
+  // Run all three functions in parallel and wait for all of them to complete
+  await Promise.all([
+    cancelBulkPublish(),
+    cancelBulkPublishing(),
+    cancelValidation(),
+  ]);
+  // Perform the other tasks after the previous functions complete
   showExistingProcessModal.value = false;
   store.state.bulkPublishStep = 1;
-  checkPublish();
+  // Wait for 3 seconds before running checkPublish
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+  // Run the final function after the delay
+  await checkPublish();
 };
 
 const resetStatus = () => {
@@ -609,16 +622,11 @@ watch(
   }
 );
 
-watch(
-  () => pa.value.publishingActivities,
-  (value) => {
-    console.log(value);
-  },
-  {
-    deep: true,
-    immediate: true,
+watchEffect(() => {
+  if (sharedMinimize.value) {
+    store.state.isPublishedModalMinimized = sharedMinimize.value;
   }
-);
+});
 
 provide('paStorage', pa);
 provide('bulkPublishStatus', bulkPublishStatus);

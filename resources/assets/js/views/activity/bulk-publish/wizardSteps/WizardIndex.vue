@@ -50,20 +50,48 @@
             ]"
           >
             <template v-if="completedSteps.includes(step.id)">
-              <svg
-                width="11"
-                height="8"
-                viewBox="0 0 11 8"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M10.5 1.27749L4.32875 8L0.5 4.92893L1.70773 3.4531L4.12809 5.39449L9.08023 0L10.5 1.27749Z"
-                  fill="#155366"
-                />
-              </svg>
+              <span v-if="step.name == 'Checking'">
+                <svg
+                  width="11"
+                  height="8"
+                  viewBox="0 0 11 8"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M10.5 1.27749L4.32875 8L0.5 4.92893L1.70773 3.4531L4.12809 5.39449L9.08023 0L10.5 1.27749Z"
+                    fill="#155366"
+                  />
+                </svg>
+              </span>
+              <span v-if="step.name == 'Publish'">
+                <span
+                  v-if="
+                    store.state.bulkActivityPublishStatus.publishing
+                      .hasFailedActivities.ids.length > 0
+                  "
+                >
+                  <svg-vue icon="cross" class="mt-2 ml-1 h-4 w-4" />
+                </span>
+                <span v-else>
+                  <svg
+                    width="11"
+                    height="8"
+                    viewBox="0 0 11 8"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M10.5 1.27749L4.32875 8L0.5 4.92893L1.70773 3.4531L4.12809 5.39449L9.08023 0L10.5 1.27749Z"
+                      fill="#155366"
+                    />
+                  </svg>
+                </span>
+              </span>
             </template>
             <template v-else>
               {{ step.id }}

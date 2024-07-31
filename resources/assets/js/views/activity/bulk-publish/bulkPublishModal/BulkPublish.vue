@@ -87,11 +87,7 @@
         type="primary"
         text="Close"
         class="bg-white px-6 uppercase"
-        @click="
-          () => {
-            cancelActivityPublishing();
-          }
-        "
+        @click="cancelActivityPublishing()"
       />
     </div>
     <template v-else>
@@ -106,13 +102,7 @@
         v-else
         class="space"
         type=""
-        :text="
-          props.coreInCompletedActivities.length === 0 &&
-          props.coreCompletedActivities.length === 0 &&
-          !coreElementLoader
-            ? 'Go Back'
-            : 'Cancel'
-        "
+        text="Cancel"
         @click="cancelValidation()"
       />
       <button
@@ -165,7 +155,15 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, computed, watch, ref, provide } from 'vue';
+import {
+  defineProps,
+  defineEmits,
+  computed,
+  watch,
+  ref,
+  provide,
+  watchEffect,
+} from 'vue';
 import WizardIndex from '../wizardSteps/WizardIndex.vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import CheckingActivities from './checkingActivities/CheckingActivities.vue';
@@ -213,7 +211,6 @@ const props = defineProps({
 });
 
 const sharedMinimize = useSharedMinimize();
-
 const newSelectedActivities = ref([] as number[]);
 provide('newSelectedActivities', newSelectedActivities);
 
@@ -264,6 +261,7 @@ const showPublishingActivityModal = computed(() => {
 });
 
 const cancelActivityPublishing = () => {
+  localStorage.setItem('vue-use-local-storage', 'publishingActivities:{}');
   emit('cancelBulkPublishing');
 };
 
@@ -287,15 +285,11 @@ const publishingActivityCount = computed(() => {
   return count;
 });
 
-watch(
-  () => sharedMinimize.value,
-  (value) => {
-    if (value) {
-      store.state.isPublishedModalMinimized = value;
-    }
-  },
-  { immediate: true }
-);
+watchEffect(() => {
+  if (sharedMinimize.value) {
+    store.state.isPublishedModalMinimized = sharedMinimize.value;
+  }
+});
 </script>
 
 <style scoped></style>

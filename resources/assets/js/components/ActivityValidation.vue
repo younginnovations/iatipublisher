@@ -177,6 +177,7 @@ const validationCancelHandler = async () => {
   emit('stopValidation');
   axios.get(`/activities/delete-validation-status`).then(() => {
     store.dispatch('updateStartValidation', false);
+    store.dispatch('updateStartCoreValidation', false);
     store.dispatch('updateValidatingActivities', '');
     localStorage.removeItem('validatingActivities');
     localStorage.removeItem('activityValidating');

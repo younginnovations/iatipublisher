@@ -6,6 +6,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 <iati-activities version="2.03" generated-datetime="2024-07-30T07:27:45+00:00">
   <iati-activity last-updated-datetime="2024-07-30T07:27:45+00:00" xml:lang="aa" humanitarian="1" hierarchy="1">
     <iati-identifier>AX-COA-12344-Ac2</iati-identifier>
@@ -46,10 +47,16 @@
   <iati-activity last-updated-datetime="2024-07-30T10:07:58+00:00" xml:lang="aa">
     <iati-identifier>AF-CBR-8888-23123</iati-identifier>
 >>>>>>> 531e0431 (added publish success banner message)
+=======
+<iati-activities version="2.03" generated-datetime="2024-07-31T11:39:25+00:00">
+  <iati-activity last-updated-datetime="2024-07-31T11:39:25+00:00" xml:lang="aa">
+    <iati-identifier>AF-CBR-8888-12313</iati-identifier>
+>>>>>>> 5069a889 (fixes:refactoring code)
     <reporting-org type="11" ref="AF-CBR-8888" secondary-reporter="0">
       <narrative xml:lang="aa">My org's name - editted</narrative>
     </reporting-org>
     <title>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -77,6 +84,9 @@
 =======
       <narrative xml:lang="aa">123</narrative>
 >>>>>>> 531e0431 (added publish success banner message)
+=======
+      <narrative xml:lang="aa">yipl testing</narrative>
+>>>>>>> 5069a889 (fixes:refactoring code)
     </title>
   </iati-activity>
 </iati-activities>

@@ -374,7 +374,6 @@ export default defineComponent({
      */
     watchEffect(() => {
       store.state.activitiesList = activities;
-      console.log(store.state.activitiesList);
     });
 
     /**
