@@ -376,7 +376,7 @@ class OrganizationService
         $settings->timestamps = false;
         $settings->updateQuietly();
 
-        $orgPublished = $org->organizationPublished;
+        $orgPublished = $org->organizationPublished ?? [];
 
         if ($org->is_published || count($orgPublished)) {
             $oldOrgFilename = "$oldPublisherId-organisation.xml";
@@ -393,7 +393,7 @@ class OrganizationService
             $this->linkNewOrgFileOnRegistry($org, $settings, $orgPublished);
         }
 
-        $activityPublished = $org->publishedFiles;
+        $activityPublished = $org->publishedFiles ?? [];
 
         if (count($activityPublished)) {
             $activityPublished = $activityPublished[0];
