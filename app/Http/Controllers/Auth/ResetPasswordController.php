@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\IATI\Models\User\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Foundation\Auth\ResetsPasswords;
@@ -135,6 +136,10 @@ class ResetPasswordController extends Controller
         $user->setRememberToken(Str::random(60));
 
         $user->save();
+
+        if (!$user->email_verified_at) {
+            User::resendEmail($user);
+        }
 
         event(new PasswordReset($user));
     }
