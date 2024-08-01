@@ -88,7 +88,7 @@ class SettingService
             ],
             'activity_default_values' => [
                 'hierarchy' => $data['hierarchy'] ?? 1,
-                'humanitarian' => $data['humanitarian'] ?? '1',
+                'humanitarian' => Arr::get($data, 'humanitarian', ''),
                 'budget_not_provided' => $data['budget_not_provided'] ?? '',
                 'linked_data_uri' => $data['linked_data_uri'] ?? '',
                 'default_collaboration_type' => $data['default_collaboration_type'] ?? '',
