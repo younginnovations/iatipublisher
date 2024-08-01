@@ -138,6 +138,10 @@ class BulkPublishingService
         $activityTitle = [];
         $activities = $this->activityService->getActivitiesHavingIds($activityIds);
 
+        /** @var $validationStatusRepository ValidationStatusRepository */
+        $validationStatusRepository = app()->make(ValidationStatusRepository::class);
+        $validationStatusRepository->insertInitialValidatorResponseDataForProperResponse($activityIds, (int) $user->id);
+
         foreach ($activities as $activity) {
             if ($activity && $activity->status === 'draft') {
                 $activityTitle[] = $activity->default_title_narrative;

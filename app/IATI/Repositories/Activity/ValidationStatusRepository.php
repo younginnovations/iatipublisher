@@ -87,7 +87,7 @@ class ValidationStatusRepository extends Repository
      */
     public function storeValidationStatus(int $activityId, int $userId, string $status = 'processing', array $response = []): Model|Builder
     {
-        return $this->model->create([
+        return $this->model->updateOrCreate([
             'user_id'       =>  $userId,
             'activity_id'   =>  $activityId,
             'status'        =>  $status,
@@ -202,5 +202,44 @@ class ValidationStatusRepository extends Repository
     {
         return $this->model->where('user_id', auth()->user()->id)
                            ->delete();
+    }
+
+    /**
+     * Change source: https://github.com/younginnovations/iatipublisher/issues/1423.
+     *
+     * Basically what was happening is:
+     * - Previously RegistryValidatorJob::dispatch($activity, $user); would be dispatched for each activity.
+     * - This would mean that jobs would be lined one after another.
+     * - Since RegistryValidatorJob, creates the row in validation_status table,
+     *      N rows would not be created unless all jobs finished going through the queue.
+     *
+     * Let ,
+     *  T be total number of activities we need to validate
+     *  Q be total number of jobs finished the queue.
+     *  T and Q will never be equal until all jobs have completed.
+     * Meaning method: getActivitiesValidationStatus() would be processing wrong number of validation_status via:
+     * $validatorStatuses = $this->model->with('activity')->whereIn('activity_id', $activityIds)->get();
+     *
+     * This method will make it so that T and Q are equal by padding the rows in 'validation_status' table.
+     *
+     * @param array $activityIds
+     * @param int $userId
+     * @return void
+     */
+    public function insertInitialValidatorResponseDataForProperResponse(array $activityIds, int $userId): void
+    {
+        $now = now();
+        $initialStatus = 'processing';
+        $insertableValidationStatus = array_map(function ($activityId) use ($userId, $now, $initialStatus) {
+            return [
+                'user_id'     => $userId,
+                'activity_id' => $activityId,
+                'created_at'  => $now,
+                'response'    => null,
+                'status'      => $initialStatus,
+            ];
+        }, $activityIds);
+
+        $this->model->insert($insertableValidationStatus);
     }
 }
