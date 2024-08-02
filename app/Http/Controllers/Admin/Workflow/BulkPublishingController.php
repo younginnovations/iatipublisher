@@ -410,19 +410,9 @@ class BulkPublishingController extends Controller
 
             if (!empty($activityIds)) {
                 $activities = $this->activityService->getActivitiesHavingIds($activityIds);
-
-                //Only continue with activityIds of activities that are not published
-                $filteredActivityIds = array_filter($activityIds, function ($activityId) use ($activities) {
-                    foreach ($activities as $activity) {
-                        if ($activity['id'] == $activityId && !$activity['linked_to_iati']) {
-                            return true;
-                        }
-                    }
-
-                    return false;
-                });
-
+                $filteredActivityIds = $this->filterOutPublishedStateActivityIds($activityIds, $activities->toArray());
                 $response = $this->bulkPublishingService->getActivityValidationStatus($filteredActivityIds);
+
                 $hasFailedStatus = $response['failed_count'] > 0;
 
                 return response()->json(['success' => !$hasFailedStatus, 'data' => $response]);
@@ -480,5 +470,24 @@ class BulkPublishingController extends Controller
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while deleting validation status.']);
         }
+    }
+
+    /**
+     * Filter out published state activity id's.
+     *
+     * @param array $activityIds
+     * @param array $activities
+     *
+     * @return array
+     */
+    public function filterOutPublishedStateActivityIds(array $activityIds, array $activities): array
+    {
+        $activityLookup = [];
+
+        foreach ($activities as $activity) {
+            $activityLookup[$activity['id']] = $activity;
+        }
+
+        return array_filter($activityIds, fn ($activityId) => isset($activityLookup[$activityId]) && $activityLookup[$activityId]['status']);
     }
 }

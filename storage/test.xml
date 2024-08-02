@@ -9,6 +9,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 <iati-activities version="2.03" generated-datetime="2024-07-30T07:27:45+00:00">
   <iati-activity last-updated-datetime="2024-07-30T07:27:45+00:00" xml:lang="aa" humanitarian="1" hierarchy="1">
     <iati-identifier>AX-COA-12344-Ac2</iati-identifier>
@@ -96,6 +97,10 @@
 <iati-activities version="2.03" generated-datetime="2024-08-02T05:00:30+00:00">
   <iati-activity last-updated-datetime="2024-08-02T05:00:30+00:00" xml:lang="en" default-currency="DKK" hierarchy="1">
 >>>>>>> 64f56ead (- [x] Fix: Cancel Bulk Publish not working)
+=======
+<iati-activities version="2.03" generated-datetime="2024-08-02T05:22:34+00:00">
+  <iati-activity last-updated-datetime="2024-08-02T05:22:34+00:00" xml:lang="en" default-currency="DKK" hierarchy="1">
+>>>>>>> b67ad096 (- [x] Republish state activity not being published)
     <iati-identifier>NP-COA-1212-P23-018LI</iati-identifier>
     <reporting-org type="11" ref="NP-COA-1212" secondary-reporter="0">
       <narrative>dasdasdasd</narrative>

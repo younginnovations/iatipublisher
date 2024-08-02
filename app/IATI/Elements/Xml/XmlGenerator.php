@@ -906,17 +906,8 @@ class XmlGenerator
      */
     private function bulkPublishHasNotBeenCanceled($activityId, bool|string $uuid = false): bool
     {
-        logger('$activityId');
-        logger($activityId);
-        logger('$uuid');
-        logger($uuid);
-
         $activityPublishingStatus = $this->publishingStatusRepository->getSpecificActivityPublishingStatus($activityId, $uuid);
         $activityPublishingStatus = $activityPublishingStatus ?? [];
-
-        logger('not deleted:');
-        logger(count($activityPublishingStatus) !== 0);
-        logger($activityPublishingStatus);
 
         return count($activityPublishingStatus) !== 0;
     }
