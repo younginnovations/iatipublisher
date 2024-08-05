@@ -1,6 +1,6 @@
 <template>
   <div class="mt-3 rounded-lg border-x border-b border-n-20">
-    <div class="flex">
+    <div class="flex gap-0.5">
       <div v-for="tab in tabs" :key="tab.value" class="flex-1">
         <button
           class="text-x inline-block w-full flex-1 rounded-t-lg border-b-4 px-6 py-[14px] font-bold uppercase tracking-normal text-n-50"
@@ -11,7 +11,7 @@
           ]"
           @click="handleActiveTab(tab.value)"
         >
-          {{ tab.name }}({{
+          {{ tab.name }}&nbsp;({{
             tab.value == 1 ? props.coreCount : props.deprecatedCount
           }})
         </button>

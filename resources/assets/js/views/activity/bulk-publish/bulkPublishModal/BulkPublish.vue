@@ -41,9 +41,10 @@
           v-if="!coreElementLoader"
           :deprecation-status-map="deprecationStatusMap"
           :core-in-completed-activities="coreInCompletedActivities"
+          :core-completed-activities="coreCompletedActivities"
           :permalink="permalink"
         />
-        <RollingLoader v-else header="Checking your data before publication" />
+        <RollingLoader v-else header="Checking your data before publication this" />
       </div>
     </div>
   </div>
@@ -270,17 +271,24 @@ const cancelValidation = () => {
   emit('cancelValidation');
 };
 
-function convertStringToArray(numberString) {
-  return numberString.split(',').map(Number);
-}
-
 const publishingActivityCount = computed(() => {
   let count = 0;
-
-  if (store.state.validatingActivities) {
-    count = convertStringToArray(store.state.validatingActivities).length;
-  } else if (props.selectedActivities) {
-    count = props.selectedActivities.length;
+  if(props.coreCompletedActivities.length === 0 && props.coreInCompletedActivities.length === 0 && props.deprecationStatusMap.length === 0){
+    count = 0
+  }
+  else{
+    if(Object.keys(store.state.bulkActivityPublishStatus.publishing?.activities ?? [] )?.length > 0)
+    {
+      if(store?.state?.bulkActivityPublishStatus?.publishing.response?.status === 'completed' || store?.state?.bulkActivityPublishStatus?.publishing.response?.status === 'processing'){
+        count = Object.keys(store?.state?.bulkActivityPublishStatus?.publishing?.activities).length
+      }else{
+        count = 0
+      }
+    }else if(store.state.bulkActivityPublishStatus.validationStats.total > 0){
+      count = store.state.bulkActivityPublishStatus.validationStats.total
+    }else if (props.selectedActivities) {
+      count = props.selectedActivities.length;
+    } 
   }
   return count;
 });
@@ -293,3 +301,8 @@ watchEffect(() => {
 </script>
 
 <style scoped></style>
+<!-- 
+
+else if (props.selectedActivities) {
+  count = props.selectedActivities.length;
+} -->

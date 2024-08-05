@@ -29,7 +29,6 @@
         />
       </div>
     </Modal>
-    {{ store.state.startCoreValidation }}
     <template v-if="!store.state.isPublishedModalMinimized">
       <template v-if="!showExistingProcessModal">
         <Modal
@@ -193,8 +192,18 @@ const cancelValidation = async () => {
 };
 
 const cancelBulkPublishing = async () => {
+  store.state.publishAlertValue = false;
+  store.state.showBulkpublish = false;
+  store.dispatch('updateBulkpublishActivities', {});
+  store.dispatch('updateStartCoreValidation', false);
+  pa.value = { publishingActivities: {} };
   cancelBulkPublish();
-  store.state.bulkActivityPublishStatus.publishing = {
+  await axios.delete(`/activities/delete-bulk-publish-status`);
+  cancelValidation();
+  setTimeout(() => {
+    store.state.bulkActivityPublishStatus.completedSteps = [];
+    store.state.bulkPublishStep = 1;
+    store.state.bulkActivityPublishStatus.publishing = {
     ...store.state.bulkActivityPublishStatus.publishing,
     response: null,
     hasFailedActivities: {
@@ -203,14 +212,6 @@ const cancelBulkPublishing = async () => {
       status: false,
     },
   };
-  store.state.showBulkpublish = false;
-  store.dispatch('updateBulkpublishActivities', {});
-  store.dispatch('updateStartCoreValidation', false);
-  await axios.delete(`/activities/delete-bulk-publish-status`);
-  cancelValidation();
-  setTimeout(() => {
-    store.state.bulkActivityPublishStatus.completedSteps = [];
-    store.state.bulkPublishStep = 1;
   }, 2000);
 };
 
@@ -283,7 +284,7 @@ const checkPublish = async () => {
           'vue-use-local-storage',
           '{"publishingActivities":{}}'
         );
-        pa.value.publishingActivities = {};
+        pa.value={publishingActivities:{}}
       } else {
         if (response?.in_progress) {
           emptybulkPublishStatus();
@@ -301,7 +302,7 @@ const checkPublish = async () => {
 let coreCompletedActivities: Ref<actTypeface[]> = ref([]),
   coreInCompletedActivities: Ref<actTypeface[]> = ref([]),
   permalink = `/activity/`;
-let deprecationStatusMap = ref();
+let deprecationStatusMap = ref([]);
 
 const verifyCoreElements = () => {
   coreElementLoader.value = true;
@@ -370,7 +371,7 @@ onMounted(() => {
           }
         }
       } else {
-        pa.value.publishingActivities = {};
+        pa.value={publishingActivities:{}}
         localStorage.setItem(
           'vue-use-local-storage',
           '{"publishingActivities":{}}'
@@ -452,8 +453,12 @@ const startBulkPublish = () => {
   store.dispatch('updateStartBulkPublish', true);
   loaderText.value = 'Starting to publish';
   if (pa.value) {
-    pa.value.publishingActivities = {};
-  } else {
+    localStorage.setItem(
+          'vue-use-local-storage',
+          '{"publishingActivities":{}}'
+        );  
+      pa.value={publishingActivities:{}}
+    } else {
     console.error('pa.value is undefined');
   }
   axios

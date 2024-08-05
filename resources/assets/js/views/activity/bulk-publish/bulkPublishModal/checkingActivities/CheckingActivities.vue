@@ -28,7 +28,11 @@
           </a>
         </div>
       </div>
-      <div v-else class="py-6">No activities found</div>
+      <div v-if="props.coreInCompletedActivities.length === 0 && props.coreCompletedActivities.length !== 0"> No activities found </div>
+      <div v-if="props.coreInCompletedActivities.length === 0 && props.coreCompletedActivities.length === 0">
+        Selected {{ store.state.selectedActivities.length > 1 ? 'activities are' : 'activity is' }} already published
+      </div>
+
     </template>
     <template #deprecated>
       <div>
@@ -62,9 +66,14 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 import TabIndex from '../../tabs/TabIndex.vue';
-
+import { useStore } from 'Store/activities';
+const store = useStore();
 const props = defineProps({
   coreInCompletedActivities: {
+    type: Object,
+    default: () => ({}),
+  },
+  coreCompletedActivities: {
     type: Object,
     default: () => ({}),
   },
@@ -76,6 +85,7 @@ const props = defineProps({
     type: String,
     default: () => '',
   },
+
 });
 </script>
 

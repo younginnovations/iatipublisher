@@ -65,7 +65,6 @@
           :completed="completed"
           @close="closeXls"
         />
-
         <div v-show="store.state.isPublishedModalMinimized">
           <ActivityValidation
             v-if="showValidationPopup"
@@ -397,7 +396,6 @@ const closeBulkpublish = () => {
 
   store.state.showBulkpublish = false;
   localStorage.setItem('vue-use-local-storage', 'publishingActivities:{}');
-  pa.value.publishingActivities = {};
   store.dispatch('updateBulkpublishActivities', {});
   store.dispatch('updateStartCoreValidation', false);
   store.state.bulkActivityPublishStatus.publishing = {

@@ -5,7 +5,7 @@
       store.state.bulkActivityPublishStatus.iatiValidatorLoader
     "
   >
-    <RollingLoader header="Checking your data before publication" />
+    <RollingLoader header="Checking your data before publication that" />
     <p
       class="mt-2.5 rounded-lg bg-paper p-4 text-sm leading-[22px] tracking-normal text-n-50"
     >
@@ -13,7 +13,7 @@
       working on other tasks.
     </p>
   </div>
-  <div v-else class="relative">
+  <div v-else class="relative pt-2.5">
     <h6 class="mb-2 font-bold text-bluecoral">
       Data checking complete. Click continue to publish
     </h6>

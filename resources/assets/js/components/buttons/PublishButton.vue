@@ -523,7 +523,6 @@ const checkPublish = async () => {
         'vue-use-local-storage',
         '{"publishingActivities":{}}'
       );
-      pa.value.publishingActivities = {};
     } else {
       if (response.in_progress) {
         showExistingProcessModal.value = true;
@@ -539,49 +538,6 @@ const checkPublish = async () => {
   }
 };
 
-// const checkPublish = async () => {
-//   let validatorSuccess = false;
-//   await axios
-//     .get(`/activities/checks-for-activity-bulk-validation`)
-//     .then((res) => {
-//       const response = res.data;
-//       validatorSuccess = response.success;
-//     });
-
-//   if (!validatorSuccess) {
-//     showExistingProcessModal.value = true;
-//     return;
-//   }
-
-//   await axios
-//     .get(`/activities/checks-for-activity-bulk-publish`)
-//     .then((res) => {
-//       const response = res.data;
-
-//       if (response.success === true) {
-//         cancelBulkPublish();
-//         resetStatus();
-//         store.state.publishAlertValue = true;
-//         localStorage.setItem('isPublishedModalMinimized', 'false');
-//         store.state.isPublishedModalMinimized = false;
-//         localStorage.setItem(
-//           'vue-use-local-storage',
-//           '{"publishingActivities":{}}'
-//         );
-//         pa.value.publishingActivities = {};
-//       } else {
-//         if (response?.in_progress) {
-//           emptybulkPublishStatus();
-
-//           Object.assign(bulkPublishStatus, response.data.activities);
-//           showExistingProcessModal.value = true;
-//         } else {
-//           displayToast(response.message, response.success);
-//         }
-//       }
-//     })
-//     .finally(() => (isLoading.value = false));
-// };
 
 const resetStatus = () => {
   validationStore.state.bulkPublishStep = 1;
