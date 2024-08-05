@@ -185,7 +185,11 @@ const cancelValidation = async () => {
         },
       };
 
-      store.state.bulkPublishStep = 1;
+      if(store.state.startNewPublishing.type ==='individual') {
+        store.state.bulkPublishStep = 2;
+      }else{
+        store.state.bulkPublishStep = 1;
+      }
       store.state.bulkActivityPublishStatus.completedSteps = [];
     }, 1000);
   });
@@ -202,7 +206,11 @@ const cancelBulkPublishing = async () => {
   cancelValidation();
   setTimeout(() => {
     store.state.bulkActivityPublishStatus.completedSteps = [];
-    store.state.bulkPublishStep = 1;
+    if(store.state.startNewPublishing.type ==='individual') {
+      store.state.bulkPublishStep = 2;
+    }else{
+      store.state.bulkPublishStep = 1;
+    }
     store.state.bulkActivityPublishStatus.publishing = {
     ...store.state.bulkActivityPublishStatus.publishing,
     response: null,
@@ -567,15 +575,24 @@ const startNewPublishing = async () => {
   ]);
   // Perform the other tasks after the previous functions complete
   showExistingProcessModal.value = false;
-  store.state.bulkPublishStep = 1;
+  if(store.state.startNewPublishing.type ==='individual'){
+    store.state.bulkPublishStep = 2;
+  }else{
+    store.state.bulkPublishStep = 1;
+  }
   // Wait for 3 seconds before running checkPublish
   await new Promise((resolve) => setTimeout(resolve, 1500));
   // Run the final function after the delay
   await checkPublish();
 };
 
+
 const resetStatus = () => {
-  store.state.bulkPublishStep = 1;
+  if(store.state.startNewPublishing.type ==='individual'){
+    store.state.bulkPublishStep = 2;
+  }else{
+    store.state.bulkPublishStep = 1;
+  } 
   store.state.bulkActivityPublishStatus.completedSteps = [];
   store.state.bulkActivityPublishStatus = {
     ...store.state.bulkActivityPublishStatus,
@@ -624,7 +641,8 @@ watch(
   () => store.state.startNewPublishing,
   () => {
     startNewPublishing();
-  }
+  },
+  { deep: true }
 );
 
 watchEffect(() => {

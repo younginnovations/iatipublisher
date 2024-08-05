@@ -94,7 +94,10 @@ const state = {
   isPublishedModalMinimized: false,
   bulkPublishStep: 1,
   showBulkpublish: true,
-  startNewPublishing: false,
+  startNewPublishing: {
+    state:false,
+    type:'bulk',
+  },
   activitiesList: {} as ActivitiesInterface,
 };
 

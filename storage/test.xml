@@ -11,6 +11,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 <iati-activities version="2.03" generated-datetime="2024-07-30T07:27:45+00:00">
   <iati-activity last-updated-datetime="2024-07-30T07:27:45+00:00" xml:lang="aa" humanitarian="1" hierarchy="1">
     <iati-identifier>AX-COA-12344-Ac2</iati-identifier>
@@ -110,13 +111,21 @@
       <narrative xml:lang="en">South-Lebanon Relief Initiative</narrative>
 >>>>>>> f020cd76 (- [x] Fix counts not matching)
 =======
+=======
+>>>>>>> 711e877e (issue fixes)
 <iati-activities version="2.03" generated-datetime="2024-08-05T05:52:03+00:00">
   <iati-activity last-updated-datetime="2024-08-05T05:52:03+00:00" xml:lang="aa">
     <iati-identifier>AF-CBR-8888-test1</iati-identifier>
+=======
+<iati-activities version="2.03" generated-datetime="2024-08-05T08:11:38+00:00">
+  <iati-activity last-updated-datetime="2024-08-05T08:11:38+00:00" xml:lang="aa">
+    <iati-identifier>AF-CBR-8888-yipl-test-bulk-publish-1</iati-identifier>
+>>>>>>> 1d6b5de2 (issue fixes)
     <reporting-org type="11" ref="AF-CBR-8888" secondary-reporter="0">
       <narrative xml:lang="aa">My org's name - editted</narrative>
     </reporting-org>
     <title>
+<<<<<<< HEAD
       <narrative xml:lang="aa">yipl-test-1</narrative>
 >>>>>>> a8176741 (issue fixes)
     </title>
@@ -148,5 +157,9 @@
       <transaction-date iso-date="2024-06-22"/>
       <value currency="ANG" value-date="2024-06-06">1</value>
     </transaction>
+=======
+      <narrative xml:lang="aa">yipl-test-bulk-publish-1</narrative>
+    </title>
+>>>>>>> 1d6b5de2 (issue fixes)
   </iati-activity>
 </iati-activities>

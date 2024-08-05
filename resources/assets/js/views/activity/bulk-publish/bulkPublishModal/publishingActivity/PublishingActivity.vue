@@ -62,7 +62,7 @@
     </div>
   </template>
   <div v-else>
-    <RollingLoader header="Publishing Activities" />
+    <RollingLoader header="Publishing Activities thiss" />
     <p
       class="mt-2.5 rounded-lg bg-paper p-4 text-sm leading-[22px] tracking-normal text-n-50"
     >

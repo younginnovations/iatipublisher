@@ -29,7 +29,7 @@
         class="bg-white px-6 uppercase"
         text="Cancel Previous Bulk publish"
         type=""
-        @click="startNewPublishing"
+        @click="startNewPublishing('individual')"
       />
       <BtnComponent
         class="bg-white px-6 uppercase"
@@ -211,7 +211,9 @@ const props = defineProps({
   activityId: { type: Number, required: true },
   publish: { type: Boolean, required: false, default: true },
   deprecationStatusMap: { type: Object, required: true },
+  pa: { type: Object, required: true },
 });
+
 const showExistingProcessModal = ref(false);
 const showModalButtonLoader = ref(false);
 
@@ -385,101 +387,16 @@ interface Err {
   warningNumber: number;
 }
 
-interface paType {
-  publishingActivities: {
-    organization_id?: string;
-    job_batch_uuid?: string;
-    activities?: object;
-    status?: string;
-    message?: string;
-  };
-}
-const pa: Ref<paType> = useStorage('vue-use-local-storage', {
-  publishingActivities: localStorage.getItem('publishingActivities') ?? {},
-});
+
 let err: Err = reactive({
   criticalNumber: 0,
   errorNumber: 0,
   warningNumber: 0,
 });
 
-const stopValidating = async () => {
-  await axios.get(`/activities/delete-validation-status`).then(() => {
-    validationStore.dispatch('updateStartValidation', false);
-    validationStore.dispatch('updateValidatingActivities', '');
-    // localStorage.removeItem('validatingActivities');
-    localStorage.removeItem('activityValidating');
-  });
-};
-
 const stopBulkpublish = async () => {
   await axios.get('/activities/cancel-bulk-publish');
 };
-
-// call api for validation
-
-const startValidation = async () => {
-  showExistingProcessModal.value = false;
-  await stopValidating();
-
-  validationStore.dispatch('updateStartValidation', true);
-  validationStore.dispatch('updateValidatingActivities', props.activityId);
-  localStorage.setItem('validatingActivities', props.activityId.toString());
-
-  await stopBulkpublish();
-
-  axios
-    .post(`/activities/validate-activities?activities=[${props.activityId}]`)
-    .then((res) => {
-      const response = res.data;
-
-      validationStore.dispatch(
-        'updateValidatingActivitiesNames',
-        response.activities
-      );
-      localStorage.setItem(
-        'validatingActivitiesNames',
-        response.activities.join('|')
-      );
-
-      if (!response.success) {
-        resetPublishStep();
-      }
-    });
-  // .finally(() => {
-  //   validationStore.dispatch('updateStartValidation', true);
-  //   validationStore.dispatch('updateValidatingActivities', props.activityId);
-  //   localStorage.setItem('validatingActivities', props.activityId.toString());
-  // });
-};
-
-// const validatorFunction = async () => {
-//   showModalButtonLoader.value = true;
-//   let validatorSuccess = false;
-//   let publishingSuccess = false;
-
-//   await axios
-//     .get(`/activities/checks-for-activity-bulk-publish`)
-//     .then((res) => {
-//       const response = res.data;
-//       publishingSuccess = response.success;
-//     });
-
-//   await axios
-//     .get(`/activities/checks-for-activity-bulk-validation`)
-//     .then((res) => {
-//       const response = res.data;
-//       validatorSuccess = response.success;
-//     });
-
-//   if (!validatorSuccess || !publishingSuccess) {
-//     showExistingProcessModal.value = true;
-//   } else {
-//     startValidation();
-//   }
-//   resetPublishStep();
-//   showModalButtonLoader.value = false;
-// };
 
 // call api for publishing
 interface DataTypeface {
@@ -494,6 +411,11 @@ const errorData = inject('errorData') as DataTypeface;
  * check publish status
  */
 const checkPublish = async () => {
+  if( props.pa?.publishingActivities &&Object.keys(props.pa?.publishingActivities).length > 0){
+    showExistingProcessModal.value = true;
+    return;
+  }
+
   try {
     let validatorSuccess = false;
     const validationResponse = await axios.get(
@@ -541,6 +463,7 @@ const checkPublish = async () => {
 
 const resetStatus = () => {
   validationStore.state.bulkPublishStep = 1;
+  validationStore.state.publishAlertValue = false;
   validationStore.state.bulkActivityPublishStatus.completedSteps = [];
   validationStore.state.bulkActivityPublishStatus = {
     ...validationStore.state.bulkActivityPublishStatus,
@@ -583,9 +506,11 @@ const btnText = computed(() => {
   }
 });
 
-const startNewPublishing = async () => {
+const startNewPublishing = async (type) => {
   showExistingProcessModal.value = false;
-  validationStore.state.startNewPublishing =
-    !validationStore.state.startNewPublishing;
-};
+  validationStore.state.startNewPublishing = {
+    state: !validationStore.state.startNewPublishing.state,
+    type: type,
+  };
+}
 </script>

@@ -99,7 +99,6 @@
                   v-if="store.state.unPublished"
                   :activity-id="activityProps.id"
                 />
-
                 <!-- Publish Activity -->
                 <Publish
                   v-if="store.state.showPublished"
@@ -108,6 +107,7 @@
                   :core-completed="coreCompleted"
                   :activity-id="activityProps.id"
                   :deprecation-status-map="deprecationStatusMap"
+                  :pa ="pa"
                 />
               </div>
             </div>
@@ -827,6 +827,7 @@ export default defineComponent({
       publishingActivities,
       width,
       indexStore,
+      pa
     };
   },
   methods: { onlyDeprecatedStatusMap },
