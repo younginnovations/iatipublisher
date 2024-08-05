@@ -387,7 +387,6 @@ interface Err {
   warningNumber: number;
 }
 
-
 let err: Err = reactive({
   criticalNumber: 0,
   errorNumber: 0,
@@ -411,7 +410,10 @@ const errorData = inject('errorData') as DataTypeface;
  * check publish status
  */
 const checkPublish = async () => {
-  if( props.pa?.publishingActivities &&Object.keys(props.pa?.publishingActivities).length > 0){
+  if (
+    props.pa?.publishingActivities &&
+    Object.keys(props.pa?.publishingActivities).length > 0
+  ) {
     showExistingProcessModal.value = true;
     return;
   }
@@ -459,7 +461,6 @@ const checkPublish = async () => {
     // Handle error appropriately here (e.g., show an error message to the user)
   }
 };
-
 
 const resetStatus = () => {
   validationStore.state.bulkPublishStep = 1;
@@ -512,5 +513,5 @@ const startNewPublishing = async (type) => {
     state: !validationStore.state.startNewPublishing.state,
     type: type,
   };
-}
+};
 </script>

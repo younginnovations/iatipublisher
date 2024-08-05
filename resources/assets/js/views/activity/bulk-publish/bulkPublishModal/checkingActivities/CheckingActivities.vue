@@ -28,11 +28,28 @@
           </a>
         </div>
       </div>
-      <div v-if="props.coreInCompletedActivities.length === 0 && props.coreCompletedActivities.length !== 0"> No activities found </div>
-      <div v-if="props.coreInCompletedActivities.length === 0 && props.coreCompletedActivities.length === 0">
-        Selected {{ store.state.selectedActivities.length > 1 ? 'activities are' : 'activity is' }} already published
+      <div
+        v-if="
+          props.coreInCompletedActivities.length === 0 &&
+          props.coreCompletedActivities.length !== 0
+        "
+      >
+        No activities found
       </div>
-
+      <div
+        v-if="
+          props.coreInCompletedActivities.length === 0 &&
+          props.coreCompletedActivities.length === 0
+        "
+      >
+        Selected
+        {{
+          store.state.selectedActivities.length > 1
+            ? 'activities are'
+            : 'activity is'
+        }}
+        already published
+      </div>
     </template>
     <template #deprecated>
       <div>
@@ -85,7 +102,6 @@ const props = defineProps({
     type: String,
     default: () => '',
   },
-
 });
 </script>
 

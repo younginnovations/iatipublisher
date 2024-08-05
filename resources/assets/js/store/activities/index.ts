@@ -95,8 +95,8 @@ const state = {
   bulkPublishStep: 1,
   showBulkpublish: true,
   startNewPublishing: {
-    state:false,
-    type:'bulk',
+    state: false,
+    type: 'bulk',
   },
   activitiesList: {} as ActivitiesInterface,
 };

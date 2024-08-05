@@ -185,9 +185,9 @@ const cancelValidation = async () => {
         },
       };
 
-      if(store.state.startNewPublishing.type ==='individual') {
+      if (store.state.startNewPublishing.type === 'individual') {
         store.state.bulkPublishStep = 2;
-      }else{
+      } else {
         store.state.bulkPublishStep = 1;
       }
       store.state.bulkActivityPublishStatus.completedSteps = [];
@@ -206,20 +206,20 @@ const cancelBulkPublishing = async () => {
   cancelValidation();
   setTimeout(() => {
     store.state.bulkActivityPublishStatus.completedSteps = [];
-    if(store.state.startNewPublishing.type ==='individual') {
+    if (store.state.startNewPublishing.type === 'individual') {
       store.state.bulkPublishStep = 2;
-    }else{
+    } else {
       store.state.bulkPublishStep = 1;
     }
     store.state.bulkActivityPublishStatus.publishing = {
-    ...store.state.bulkActivityPublishStatus.publishing,
-    response: null,
-    hasFailedActivities: {
-      data: {} as any,
-      ids: [],
-      status: false,
-    },
-  };
+      ...store.state.bulkActivityPublishStatus.publishing,
+      response: null,
+      hasFailedActivities: {
+        data: {} as any,
+        ids: [],
+        status: false,
+      },
+    };
   }, 2000);
 };
 
@@ -292,7 +292,7 @@ const checkPublish = async () => {
           'vue-use-local-storage',
           '{"publishingActivities":{}}'
         );
-        pa.value={publishingActivities:{}}
+        pa.value = { publishingActivities: {} };
       } else {
         if (response?.in_progress) {
           emptybulkPublishStatus();
@@ -379,7 +379,7 @@ onMounted(() => {
           }
         }
       } else {
-        pa.value={publishingActivities:{}}
+        pa.value = { publishingActivities: {} };
         localStorage.setItem(
           'vue-use-local-storage',
           '{"publishingActivities":{}}'
@@ -462,11 +462,11 @@ const startBulkPublish = () => {
   loaderText.value = 'Starting to publish';
   if (pa.value) {
     localStorage.setItem(
-          'vue-use-local-storage',
-          '{"publishingActivities":{}}'
-        );  
-      pa.value={publishingActivities:{}}
-    } else {
+      'vue-use-local-storage',
+      '{"publishingActivities":{}}'
+    );
+    pa.value = { publishingActivities: {} };
+  } else {
     console.error('pa.value is undefined');
   }
   axios
@@ -575,9 +575,9 @@ const startNewPublishing = async () => {
   ]);
   // Perform the other tasks after the previous functions complete
   showExistingProcessModal.value = false;
-  if(store.state.startNewPublishing.type ==='individual'){
+  if (store.state.startNewPublishing.type === 'individual') {
     store.state.bulkPublishStep = 2;
-  }else{
+  } else {
     store.state.bulkPublishStep = 1;
   }
   // Wait for 3 seconds before running checkPublish
@@ -586,13 +586,12 @@ const startNewPublishing = async () => {
   await checkPublish();
 };
 
-
 const resetStatus = () => {
-  if(store.state.startNewPublishing.type ==='individual'){
+  if (store.state.startNewPublishing.type === 'individual') {
     store.state.bulkPublishStep = 2;
-  }else{
+  } else {
     store.state.bulkPublishStep = 1;
-  } 
+  }
   store.state.bulkActivityPublishStatus.completedSteps = [];
   store.state.bulkActivityPublishStatus = {
     ...store.state.bulkActivityPublishStatus,

@@ -107,7 +107,7 @@
                   :core-completed="coreCompleted"
                   :activity-id="activityProps.id"
                   :deprecation-status-map="deprecationStatusMap"
-                  :pa ="pa"
+                  :pa="pa"
                 />
               </div>
             </div>
@@ -827,7 +827,7 @@ export default defineComponent({
       publishingActivities,
       width,
       indexStore,
-      pa
+      pa,
     };
   },
   methods: { onlyDeprecatedStatusMap },

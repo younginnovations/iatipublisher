@@ -69,7 +69,7 @@
         <span class="text-sm text-[#E34D5B]">Validation failed</span>
       </div>
     </div>
-    <div class="pt-3 w-[100px]">
+    <div class="w-[100px] pt-3">
       <label for="selectAll" class="checkbox_container !flex">
         <span
           class="inline-block pl-3 pt-1 text-xs font-bold uppercase leading-[18px]"
