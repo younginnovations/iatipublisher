@@ -78,6 +78,7 @@ class RegistryValidatorJob implements ShouldQueue
     {
         try {
             if (!Cache::get('activity-validation-delete')) {
+                /** @var $validationStatusRepository ValidationStatusRepository */
                 $validationStatusRepository = app()->make(ValidationStatusRepository::class);
                 $validationStatusRepository->storeValidationStatus((int) $this->activity->id, (int) $this->user->id, status: 'processing');
 

@@ -61,6 +61,22 @@ class BulkPublishingStatusRepository extends Repository
     }
 
     /**
+     * Returns activity publishing status.
+     *
+     * @param $activityId
+     * @param bool|string $uuid
+     *
+     * @return object|null
+     */
+    public function getSpecificActivityPublishingStatus($activityId, bool|string $uuid = false): ?object
+    {
+        return $this->model->where('activity_id', '=', $activityId)
+            ->when(!empty($uuid), function ($query) use ($uuid) {
+                return $query->where('job_batch_uuid', '=', $uuid);
+            })->get();
+    }
+
+    /**
      * Returns activities that are currently undergoing bulk publishing for an organization.
      *
      * @param $organizationId

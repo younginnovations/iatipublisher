@@ -201,8 +201,6 @@ class PublisherService extends RegistryApiHandler
     protected function generatePayload($organization, $filename): string
     {
         $code = $this->getCode($filename);
-        logger('$code');
-        logger($code);
         $key = $this->getKey($code);
         $fileType = $this->getFileType($code);
         $title = $this->extractTitle($organization, $fileType);
@@ -223,8 +221,6 @@ class PublisherService extends RegistryApiHandler
     protected function generateOrganizationPayload($organization, $filename): string
     {
         $code = $this->getCode($filename);
-        logger('$code for org payload');
-        logger($code);
         $key = $this->getKey($code);
         $fileType = $this->getFileType($code);
         $title = $this->extractTitle($organization, $fileType);
@@ -344,9 +340,6 @@ class PublisherService extends RegistryApiHandler
             'state'        => 'active',
         ];
 
-        logger('$data in formatOrganizationHeaders()');
-        logger($data);
-
         return json_encode($data);
     }
 
@@ -390,9 +383,6 @@ class PublisherService extends RegistryApiHandler
         if ($code != 'organisation') {
             $data['activity_count'] = count($publishedFile->published_activities);
         }
-
-        logger('$data in formatHeaders()');
-        logger($data);
 
         return json_encode($data);
     }

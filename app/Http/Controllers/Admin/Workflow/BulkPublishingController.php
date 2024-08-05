@@ -105,7 +105,7 @@ class BulkPublishingController extends Controller
 
             if (!empty($activityIds)) {
                 $coreElementsCompletion = $this->bulkPublishingService->getCoreElementsCompletedArray($activityIds);
-                $deprecationStatusMap = $this->bulkPublishingService->refreshDeprecationStatus($activityIds);
+                $deprecationStatusMap = $this->bulkPublishingService->getActivitiesWithDeprecatedValueArray($activityIds, $this->activityService);
 
                 DB::commit();
 
@@ -409,10 +409,13 @@ class BulkPublishingController extends Controller
             $activityIds = json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR);
 
             if (!empty($activityIds)) {
-                $response = $this->bulkPublishingService->getActivityValidationStatus($activityIds);
-                $hasFailedStatus = in_array('failed', $response);
+                $activities = $this->activityService->getActivitiesHavingIds($activityIds);
+                $filteredActivityIds = $this->filterOutPublishedStateActivityIds($activityIds, $activities->toArray());
+                $response = $this->bulkPublishingService->getActivityValidationStatus($filteredActivityIds);
 
-                return response()->json(['success' => !$hasFailedStatus, 'data' => $response, 'total' => count($response)]);
+                $hasFailedStatus = $response['failed_count'] > 0;
+
+                return response()->json(['success' => !$hasFailedStatus, 'data' => $response]);
             }
 
             return response()->json(['success' => false, 'message' => 'Activity not selected.']);
@@ -424,7 +427,7 @@ class BulkPublishingController extends Controller
     }
 
     /**
-     * Get Validation responses of activites.
+     * Get Validation responses of activities.
      *
      * @param Request $request
      *
@@ -467,5 +470,24 @@ class BulkPublishingController extends Controller
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while deleting validation status.']);
         }
+    }
+
+    /**
+     * Filter out published state activity id's.
+     *
+     * @param array $activityIds
+     * @param array $activities
+     *
+     * @return array
+     */
+    public function filterOutPublishedStateActivityIds(array $activityIds, array $activities): array
+    {
+        $activityLookup = [];
+
+        foreach ($activities as $activity) {
+            $activityLookup[$activity['id']] = $activity;
+        }
+
+        return array_filter($activityIds, fn ($activityId) => isset($activityLookup[$activityId]) && $activityLookup[$activityId]['status']);
     }
 }
