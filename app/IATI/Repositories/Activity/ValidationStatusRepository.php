@@ -131,6 +131,7 @@ class ValidationStatusRepository extends Repository
 
                 if ($validatorStatus->status === 'failed') {
                     $response['failed_count']++;
+                    $result[$validatorStatus->activity_id]['is_valid'] = false;
                 }
 
                 if ($validatorStatus->status === 'completed') {
