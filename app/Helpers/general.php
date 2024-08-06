@@ -543,7 +543,11 @@ if (!function_exists('getTableConfig')) {
     function getTableConfig($module): array
     {
         $tableConfig = [
-            'activity' => ['orderBy' => ['updated_at', 'complete_percentage'], 'direction' => ['asc', 'desc']],
+            'activity' => [
+                'orderBy'   => ['updated_at', 'complete_percentage'],
+                'direction' => ['asc', 'desc'],
+                'filterBy'  => ['all', 'published', 'ready_for_republishing', 'draft'],
+            ],
             'organisation' => [
                 'orderBy'   => ['updated_at', 'all_activities_count', 'name', 'registered_on', 'publisher_type', 'data_license', 'country', 'last_logged_in'],
                 'direction' => ['asc', 'desc'],

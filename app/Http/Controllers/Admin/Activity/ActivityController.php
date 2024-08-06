@@ -351,6 +351,10 @@ class ActivityController extends Controller
             }
         }
 
+        if (in_array($request->get('filterBy'), $tableConfig['filterBy'], true)) {
+            $queryParams['filterBy'] = $request->get('filterBy');
+        }
+
         return $queryParams;
     }
 
@@ -463,5 +467,32 @@ class ActivityController extends Controller
             'transactionType'             => getCodeList('TransactionType', 'Activity', code: false),
             'crsChannelCode'              => getCodeList('CRSChannelCode', 'Activity', code: false),
         ];
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function getActivitiesCountByPublishedStatus(): JsonResponse
+    {
+        try {
+            return response()->json(
+                [
+                    'success' => true,
+                    'message' => 'Fetched activities count by published status',
+                    'data'    => $this->activityService->getActivitiesCountByPublishedStatus((int) Auth::user()->organization_id),
+                ]
+            );
+        } catch (Exception $e) {
+            logger()->error($e);
+
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Failed to fetch activities count. Error: ' . $e->getMessage(),
+                    'data' => [],
+                ],
+                500
+            );
+        }
     }
 }

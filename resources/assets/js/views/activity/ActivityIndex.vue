@@ -10,10 +10,56 @@
         <ErrorMessage :is-empty="isEmpty"></ErrorMessage>
         <EmptyActivity v-if="isEmpty" />
 
+        <div v-if="!isEmpty" class="mb-4 flex gap-2">
+          <div
+            class="tooltip-btn flex justify-center"
+            :class="currentFilterBy === 'all' ? 'active' : ''"
+          >
+            <button @click="filterByPublishStatus('all')">
+              <svg-vue icon="bill" class="n-10" />
+              <span>All ({{ allPublishStatusCountMap.all }})</span>
+            </button>
+          </div>
+          <div
+            class="tooltip-btn flex justify-center"
+            :class="currentFilterBy === 'published' ? 'active' : ''"
+          >
+            <button @click="filterByPublishStatus('published')">
+              <svg-vue icon="approved-cloud" />
+              <span>Published ({{ allPublishStatusCountMap.published }})</span>
+            </button>
+          </div>
+          <div
+            class="tooltip-btn flex justify-center"
+            :class="
+              currentFilterBy === 'ready_for_republishing' ? 'active' : ''
+            "
+          >
+            <button @click="filterByPublishStatus('ready_for_republishing')">
+              <svg-vue icon="cancel-cloud" />
+              <span
+                >Ready for republishing ({{
+                  allPublishStatusCountMap.ready_for_republishing
+                }})</span
+              >
+            </button>
+          </div>
+          <div
+            class="tooltip-btn flex justify-center"
+            :class="currentFilterBy === 'draft' ? 'active' : ''"
+          >
+            <button @click="filterByPublishStatus('draft')">
+              <svg-vue icon="document-write" />
+              <span>Draft ({{ allPublishStatusCountMap.draft }})</span>
+            </button>
+          </div>
+        </div>
+
         <TableLayout
           v-if="!isEmpty"
           :data="activities"
           :loader="tableLoader"
+          :current-page="currentPage"
           @show-or-hide="showOrHide"
         />
         <div v-if="!isEmpty" class="mt-6">
@@ -115,8 +161,24 @@ export default defineComponent({
     const tableLoader = ref(true);
     const downloadApiUrl = ref('');
     const currentURL = window.location.href;
+    const currentFilterBy = ref('');
     let endpoint = '';
     let showEmptyTemplate = false;
+    let currentPage = ref(1);
+    const validFilterBy = [
+      'all',
+      'published',
+      'ready_for_republishing',
+      'draft',
+    ];
+    const allPublishStatusCountMap = ref({
+      all: 0,
+      published: 0,
+      ready_for_republishing: 0,
+      draft: 0,
+    });
+
+    fetchActivitiesCountByPublishStatus();
 
     // local storage for publishing
     interface paType {
@@ -290,6 +352,8 @@ export default defineComponent({
       checkXlsstatus();
       checkDownloadStatus();
 
+      currentFilterBy.value = getCurrentFilterBy();
+
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
@@ -344,11 +408,10 @@ export default defineComponent({
         const response = res.data;
         Object.assign(activities, response.data);
         isEmpty.value = !response.data;
+        currentPage.value = active_page;
       });
       tableLoader.value = false;
     }
-
-    console.log(activities, 'activities');
 
     const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
       flush: 'sync',
@@ -368,6 +431,49 @@ export default defineComponent({
       refreshMessage:
         'Activity has been published successfully, refresh to see changes',
     });
+
+    function filterByPublishStatus(status) {
+      let queryString = window.location.search;
+      let params = new URLSearchParams(queryString);
+
+      if (!params.has('q')) {
+        params.set('q', '');
+      }
+
+      params.set('filterBy', status);
+
+      let newQueryString = params.toString();
+
+      window.location.href = `${window.location.pathname}?${newQueryString}`;
+    }
+
+    function getCurrentFilterBy() {
+      let queryString = window.location.search;
+
+      if (queryString.length > 0) {
+        let urlParams = new URLSearchParams(queryString);
+        let filterBy = urlParams.get('filterBy');
+
+        if (filterBy && validFilterBy.includes(filterBy)) {
+          return filterBy;
+        }
+      }
+
+      return 'all';
+    }
+
+    function fetchActivitiesCountByPublishStatus() {
+      axios
+        .get('/activities/activities_count_by_published_status')
+        .then((res) => {
+          const response = res.data;
+          allPublishStatusCountMap.value.all = response.data.all;
+          allPublishStatusCountMap.value.published = response.data.published;
+          allPublishStatusCountMap.value.ready_for_republishing =
+            response.data.ready_for_republishing;
+          allPublishStatusCountMap.value.draft = response.data.draft;
+        });
+    }
     /**
      * Provide
      */
@@ -413,6 +519,10 @@ export default defineComponent({
       publishingActivities,
       activityStore,
       pa,
+      filterByPublishStatus,
+      currentFilterBy,
+      allPublishStatusCountMap,
+      currentPage,
     };
   },
 });
