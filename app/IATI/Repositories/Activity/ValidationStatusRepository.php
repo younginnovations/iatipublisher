@@ -9,6 +9,8 @@ use App\ValidationStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Class ValidationStatusRepository.
@@ -124,6 +126,15 @@ class ValidationStatusRepository extends Repository
                     'title'  => Arr::get($act, '0.narrative', ''),
                     'status' => $validatorStatus->status,
                 ];
+
+                $userId = Auth::user()->id;
+                $failCounter = (int) Cache::get("validation_status_$userId");
+
+                if ($failCounter % 2 == 0) {
+                    $validatorStatus->status = 'failed';
+
+                    Cache::set("validation_status_$userId", $failCounter++);
+                }
 
                 if ($validatorStatus->status !== 'completed') {
                     $allCompleted = false;
