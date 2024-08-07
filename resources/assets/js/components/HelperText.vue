@@ -62,10 +62,6 @@ const toggleShowAccordian = () => {
   showAccordianItems.value = !showAccordianItems.value;
 };
 
-console.log('props.helperText');
-console.log(props.helperText);
-console.log(typeof props.helperText);
-
 function findTruePaths(
   obj: any,
   path: string[] = [],

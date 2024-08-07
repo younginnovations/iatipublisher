@@ -157,7 +157,6 @@ watch(
 
 const selectAllActivities = (event) => {
   if (event.target.checked) {
-    console.log('event.target.checked', event.target.checked);
     newSelectedActivities.value = Object.keys(props.activitiesList).map((key) =>
       parseInt(key)
     );

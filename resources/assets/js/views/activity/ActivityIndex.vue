@@ -374,7 +374,31 @@ export default defineComponent({
      */
     watchEffect(() => {
       store.state.activitiesList = activities;
+      store.state.activitiesInitialPublishState =
+        resolveActivitiesInitialState(activities);
     });
+
+    function resolveActivitiesInitialState(activities) {
+      const returnVal: {
+        id: number;
+        status: string;
+        linked_to_iati: boolean;
+      }[] = [];
+
+      if (!activities.data) {
+        return returnVal;
+      }
+
+      activities.data.forEach((activity) => {
+        returnVal.push({
+          id: activity.id as number,
+          status: activity.status as string,
+          linked_to_iati: activity.linked_to_iati as boolean,
+        });
+      });
+
+      return returnVal;
+    }
 
     /**
      * Provide

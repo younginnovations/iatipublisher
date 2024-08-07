@@ -1,165 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<iati-activities version="2.03" generated-datetime="2024-07-30T07:27:45+00:00">
-  <iati-activity last-updated-datetime="2024-07-30T07:27:45+00:00" xml:lang="aa" humanitarian="1" hierarchy="1">
-    <iati-identifier>AX-COA-12344-Ac2</iati-identifier>
-    <reporting-org type="10" ref="AX-COA-12344" secondary-reporter="0">
-      <narrative xml:lang="aa">momik-test-humanitarian</narrative>
-    </reporting-org>
-    <title>
-      <narrative xml:lang="aa">Act2</narrative>
-=======
-<iati-activities version="2.03" generated-datetime="2024-07-17T12:14:37+00:00">
-  <iati-activity last-updated-datetime="2024-07-17T12:14:37+00:00" xml:lang="aa">
-    <iati-identifier>AF-CBR-8888-12313</iati-identifier>
-=======
-<iati-activities version="2.03" generated-datetime="2024-07-18T05:08:30+00:00">
-  <iati-activity last-updated-datetime="2024-07-18T05:08:30+00:00" xml:lang="aa">
-    <iati-identifier>AF-CBR-8888-test1</iati-identifier>
->>>>>>> aab1c9ca (fixes:local storage issue publishing issue)
-=======
-<iati-activities version="2.03" generated-datetime="2024-07-26T07:56:49+00:00">
-  <iati-activity last-updated-datetime="2024-07-26T07:56:49+00:00" xml:lang="aa">
-=======
-<iati-activities version="2.03" generated-datetime="2024-07-27T16:20:59+00:00">
-  <iati-activity last-updated-datetime="2024-07-27T16:20:59+00:00" xml:lang="aa">
->>>>>>> 44120ec5 (fixed republish modal issue)
-    <iati-identifier>AF-CBR-8888-23123</iati-identifier>
->>>>>>> 63b6eb74 (add maximize and minimize options in publish)
-=======
-<iati-activities version="2.03" generated-datetime="2024-07-29T18:57:45+00:00">
-  <iati-activity last-updated-datetime="2024-07-29T18:57:45+00:00" xml:lang="aa">
-=======
-<iati-activities version="2.03" generated-datetime="2024-07-30T06:41:13+00:00">
-  <iati-activity last-updated-datetime="2024-07-30T06:41:13+00:00" xml:lang="aa">
->>>>>>> 8a50b0d1 (fixed error if published from activity detail page)
-    <iati-identifier>AF-CBR-8888-12313</iati-identifier>
->>>>>>> ef4923ab (added refresh button when finished publishing)
-=======
-<iati-activities version="2.03" generated-datetime="2024-07-30T10:07:58+00:00">
-  <iati-activity last-updated-datetime="2024-07-30T10:07:58+00:00" xml:lang="aa">
-    <iati-identifier>AF-CBR-8888-23123</iati-identifier>
->>>>>>> 531e0431 (added publish success banner message)
-=======
-<iati-activities version="2.03" generated-datetime="2024-07-31T11:39:25+00:00">
-  <iati-activity last-updated-datetime="2024-07-31T11:39:25+00:00" xml:lang="aa">
-    <iati-identifier>AF-CBR-8888-12313</iati-identifier>
->>>>>>> 5069a889 (fixes:refactoring code)
-    <reporting-org type="11" ref="AF-CBR-8888" secondary-reporter="0">
-      <narrative xml:lang="aa">My org's name - editted</narrative>
-    </reporting-org>
-    <title>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-      <narrative xml:lang="aa">yipl testing</narrative>
->>>>>>> 3ed2b83f (publish bug fixes)
-=======
-      <narrative xml:lang="aa">yipl-test-1</narrative>
->>>>>>> aab1c9ca (fixes:local storage issue publishing issue)
-    </title>
-    <description type="1">
-      <narrative xml:lang="ab">test</narrative>
-    </description>
-    <participating-org ref="123" type="11" role="1" activity-id="123">
-      <narrative xml:lang="ae">123</narrative>
-    </participating-org>
-    <activity-status code="2"/>
-    <activity-date type="2" iso-date="2024-06-22">
-=======
->>>>>>> 63b6eb74 (add maximize and minimize options in publish)
-      <narrative xml:lang="aa">123</narrative>
-=======
-      <narrative xml:lang="aa">yipl testing</narrative>
->>>>>>> ef4923ab (added refresh button when finished publishing)
-=======
-      <narrative xml:lang="aa">123</narrative>
->>>>>>> 531e0431 (added publish success banner message)
-=======
-      <narrative xml:lang="aa">yipl testing</narrative>
->>>>>>> 5069a889 (fixes:refactoring code)
-=======
-<iati-activities version="2.03" generated-datetime="2024-08-01T07:05:10+00:00">
-  <iati-activity last-updated-datetime="2024-08-01T07:05:10+00:00" xml:lang="en" default-currency="DKK" hierarchy="1">
-=======
-<iati-activities version="2.03" generated-datetime="2024-08-02T05:00:30+00:00">
-  <iati-activity last-updated-datetime="2024-08-02T05:00:30+00:00" xml:lang="en" default-currency="DKK" hierarchy="1">
->>>>>>> 64f56ead (- [x] Fix: Cancel Bulk Publish not working)
-=======
-<iati-activities version="2.03" generated-datetime="2024-08-02T05:22:34+00:00">
-  <iati-activity last-updated-datetime="2024-08-02T05:22:34+00:00" xml:lang="en" default-currency="DKK" hierarchy="1">
->>>>>>> b67ad096 (- [x] Republish state activity not being published)
+<iati-activities version="2.03" generated-datetime="2024-08-07T07:26:00+00:00">
+  <iati-activity last-updated-datetime="2024-08-07T07:26:00+00:00" xml:lang="en" default-currency="DKK" humanitarian="0" hierarchy="1">
     <iati-identifier>NP-COA-1212-P23-018LI</iati-identifier>
     <reporting-org type="11" ref="NP-COA-1212" secondary-reporter="0">
       <narrative>dasdasdasd</narrative>
     </reporting-org>
     <title>
       <narrative xml:lang="en">South-Lebanon Relief Initiative</narrative>
->>>>>>> f020cd76 (- [x] Fix counts not matching)
-=======
-=======
->>>>>>> 711e877e (issue fixes)
-<iati-activities version="2.03" generated-datetime="2024-08-05T05:52:03+00:00">
-  <iati-activity last-updated-datetime="2024-08-05T05:52:03+00:00" xml:lang="aa">
-    <iati-identifier>AF-CBR-8888-test1</iati-identifier>
-=======
-<iati-activities version="2.03" generated-datetime="2024-08-05T08:11:38+00:00">
-  <iati-activity last-updated-datetime="2024-08-05T08:11:38+00:00" xml:lang="aa">
-    <iati-identifier>AF-CBR-8888-yipl-test-bulk-publish-1</iati-identifier>
->>>>>>> 1d6b5de2 (issue fixes)
-    <reporting-org type="11" ref="AF-CBR-8888" secondary-reporter="0">
-      <narrative xml:lang="aa">My org's name - editted</narrative>
-    </reporting-org>
-    <title>
-<<<<<<< HEAD
-      <narrative xml:lang="aa">yipl-test-1</narrative>
->>>>>>> a8176741 (issue fixes)
     </title>
     <description type="1">
-      <narrative xml:lang="ab">test</narrative>
+      <narrative xml:lang="en">The project is a response to the people Internally displaced from South-Lebanon due to the crisis between Hamas and Israel and the involvement of Hezbollah. The project offer basic food and non-food itemsand to 2and000 IDPs and supporting municipalities of the region.</narrative>
     </description>
-    <participating-org ref="123" type="11" role="1" activity-id="123">
-      <narrative xml:lang="ae">123</narrative>
+    <participating-org ref="22" type="Danmission" role="DK-CVR-25191501" crs-channel-code="LB">
+      <narrative xml:lang="en">DK-CVR-25191501</narrative>
     </participating-org>
-    <activity-status code="2"/>
-    <activity-date type="2" iso-date="2024-06-22">
-      <narrative xml:lang="aa">123</narrative>
-    </activity-date>
-    <recipient-country code="AX" percentage="100">
-      <narrative xml:lang="ab">123</narrative>
-    </recipient-country>
-    <sector code="1"/>
-    <default-flow-type code="22"/>
-    <default-finance-type code="1100"/>
-    <default-aid-type code="1" vocabulary="2"/>
-    <default-tied-status code="5"/>
-    <budget type="1" status="1">
-      <period-start iso-date="2024-06-28"/>
-      <period-end iso-date="2024-07-06"/>
-      <value value-date="2024-06-22">1</value>
-    </budget>
-    <transaction>
-      <transaction-type code="3"/>
-      <transaction-date iso-date="2024-06-22"/>
-      <value currency="ANG" value-date="2024-06-06">1</value>
-    </transaction>
-=======
-      <narrative xml:lang="aa">yipl-test-bulk-publish-1</narrative>
-    </title>
->>>>>>> 1d6b5de2 (issue fixes)
+    <activity-date type="2" iso-date="2023-12-01"/>
+    <activity-date type="1" iso-date="2023-12-01"/>
+    <activity-date type="3"/>
+    <recipient-region vocabulary="2">
+      <narrative xml:lang="en">1</narrative>
+    </recipient-region>
+    <sector code="100"/>
+    <default-flow-type code="21"/>
+    <default-finance-type code="2"/>
+    <default-aid-type code="A02" vocabulary="1"/>
+    <default-tied-status code="4"/>
+    <budget type="1" status="1"/>
+    <related-activity ref="1"/>
   </iati-activity>
 </iati-activities>

@@ -160,12 +160,12 @@
 
 <script setup lang="ts">
 import {
-  defineProps,
-  defineEmits,
   computed,
-  watch,
-  ref,
+  defineEmits,
+  defineProps,
   provide,
+  ref,
+  watch,
   watchEffect,
 } from 'vue';
 import WizardIndex from '../wizardSteps/WizardIndex.vue';
@@ -217,6 +217,7 @@ const props = defineProps({
 const sharedMinimize = useSharedMinimize();
 const newSelectedActivities = ref([] as number[]);
 provide('newSelectedActivities', newSelectedActivities);
+const activitiesInitialPublishState = store.state.activitiesInitialPublishState;
 
 const emit = defineEmits([
   'cancelValidation',
@@ -277,30 +278,67 @@ const cancelValidation = () => {
 const publishingActivityCount = computed(() => {
   let count = 0;
 
-  if (
-    Object.keys(
-      store.state.bulkActivityPublishStatus.publishing?.activities ?? []
-    )?.length > 0
-  ) {
-    if (
-      store?.state?.bulkActivityPublishStatus?.publishing.response?.status ===
-        'completed' ||
-      store?.state?.bulkActivityPublishStatus?.publishing.response?.status ===
-        'processing'
-    ) {
+  if (inPublishingStep()) {
+    if (publishingStepHasStarted()) {
       count = Object.keys(
         store?.state?.bulkActivityPublishStatus?.publishing?.activities
       ).length;
     } else {
       count = 0;
     }
-  } else if (store.state.bulkActivityPublishStatus.validationStats.total > 0) {
+  } else if (inValidatorValidationStep()) {
     count = store.state.bulkActivityPublishStatus.validationStats.total;
-  } else if (props.selectedActivities) {
-    count = props.selectedActivities.length;
+  } else if (inSystemValidationStep()) {
+    count = getPublishableActivitiesViaState().length;
   }
+
   return count;
 });
+
+function inPublishingStep() {
+  return (
+    Object.keys(
+      store.state.bulkActivityPublishStatus.publishing?.activities ?? []
+    )?.length > 0
+  );
+}
+
+function inValidatorValidationStep() {
+  return store.state.bulkActivityPublishStatus.validationStats.total > 0;
+}
+
+function inSystemValidationStep() {
+  return props.selectedActivities;
+}
+
+function publishingStepHasStarted() {
+  return (
+    store?.state?.bulkActivityPublishStatus?.publishing.response?.status ===
+      'completed' ||
+    store?.state?.bulkActivityPublishStatus?.publishing.response?.status ===
+      'processing'
+  );
+}
+
+function getPublishableActivitiesViaState() {
+  const selectedActivities = props.selectedActivities;
+  const activitiesInitialPublishState =
+    store.state.activitiesInitialPublishState;
+
+  return selectedActivities.filter((id) => {
+    const activity = Object.values(activitiesInitialPublishState).find(
+      (activity: any) => activity.id === id
+    );
+
+    if (activity) {
+      if (activity.status === 'draft' || !activity.linked_to_iati) {
+        return true;
+      }
+    }
+
+    return false;
+  });
+}
 
 watchEffect(() => {
   if (sharedMinimize.value) {
@@ -310,7 +348,7 @@ watchEffect(() => {
 </script>
 
 <style scoped></style>
-<!-- 
+<!--
 
 else if (props.selectedActivities) {
   count = props.selectedActivities.length;

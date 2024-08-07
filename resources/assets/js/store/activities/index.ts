@@ -99,6 +99,11 @@ const state = {
     type: 'bulk',
   },
   activitiesList: {} as ActivitiesInterface,
+  activitiesInitialPublishState: [] as {
+    id: number;
+    status: string;
+    linked_to_iati: boolean;
+  }[],
 };
 
 const mutations = {
