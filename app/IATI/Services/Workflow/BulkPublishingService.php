@@ -118,7 +118,10 @@ class BulkPublishingService
      */
     public function getCompleteStatus($activity): string
     {
-        if (isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_element_completed], $activity->element_status))) {
+        $activityElementStatus = $activity->element_status;
+        $activityElementStatus['reporting_org'] = $activity->organization->reporting_org_element_completed;
+
+        if (isCoreElementCompleted($activityElementStatus)) {
             return 'complete';
         }
 
