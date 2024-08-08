@@ -117,9 +117,14 @@ class ValidationStatusRepository extends Repository
 
         if ($validatorStatuses->count()) {
             $result = [];
-
+            $i = 0;
             foreach ($validatorStatuses as $validatorStatus) {
                 $act = $validatorStatus->activity->title;
+
+                if ($i === 0) {
+                    $validatorStatus->status = 'failed';
+                }
+
                 $result[$validatorStatus->activity_id] = [
                     'title'  => Arr::get($act, '0.narrative', ''),
                     'status' => $validatorStatus->status,
@@ -138,6 +143,8 @@ class ValidationStatusRepository extends Repository
                     $response['complete_count']++;
                     $result[$validatorStatus->activity_id]['is_valid'] = json_decode($validatorStatus->response, true)['response']['valid'];
                 }
+
+                $i++;
             }
 
             if ($allCompleted) {
