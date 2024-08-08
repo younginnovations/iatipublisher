@@ -14,6 +14,7 @@ use App\Jobs\BulkPublishActivities;
 use Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -115,6 +116,11 @@ class BulkPublishingController extends Controller
                     'data' => [
                         'core_elements_completion'=> $coreElementsCompletion,
                         'deprecation_status_map'  => $deprecationStatusMap,
+                        'counts' => [
+                            'deprecated_list' => count($deprecationStatusMap ?? []),
+                            'complete_list'   => count(Arr::get($coreElementsCompletion, 'complete', [])),
+                            'incomplete_list' => count(Arr::get($coreElementsCompletion, 'incomplete', [])),
+                        ],
                     ],
                 ]);
             }
