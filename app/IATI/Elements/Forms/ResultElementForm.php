@@ -56,23 +56,15 @@ class ResultElementForm extends BaseForm
                         'prototype'      => true,
                         'prototype_name' => '__PARENT_NAME__',
                         'options'        => [
-                            'class'           => 'App\IATI\Elements\Forms\BaseForm',
-                            'data'            => $this->getData(sprintf('sub_elements.%s', $name)),
-                            'label'           => false,
+                            'class'            => 'App\IATI\Elements\Forms\BaseForm',
+                            'data'             => $this->getData(sprintf('sub_elements.%s', $name)),
+                            'label'            => false,
                             'element_criteria' => $this->getData(sprintf('sub_elements.%s.element_criteria', $name)) ?? '',
-                            'hover_text' => $this->getData(sprintf('sub_elements.%s.hover_text', $name)) ?? '',
-                            'help_text' => $this->getData(sprintf('sub_elements.%s.help_text', $name)) ?? '',
-                            'helper_text' => $this->getData(sprintf('sub_elements.%s.helper_text', $name)) ?? '',
-                            'wrapper'         => [
-                                'class' => 'multi-form relative',
-                            ],
-                            'dynamic_wrapper' => [
-                                'class' => (isset($sub_element['add_more']) && $sub_element['add_more']) ?
-                                    ((!Arr::get($sub_element, 'attributes', null) && strtolower(
-                                        $sub_element['name']
-                                    ) === 'narrative') ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
-                                    : ((empty($sub_element['attributes']) && $sub_element['sub_elements'] && isset($sub_element['sub_elements']['narrative'])) ? 'subelement rounded-tl-lg mb-6' : 'subelement rounded-tl-lg border-l border-spring-50 mb-6'),
-                            ],
+                            'hover_text'       => $this->getData(sprintf('sub_elements.%s.hover_text', $name)) ?? '',
+                            'help_text'        => $this->getData(sprintf('sub_elements.%s.help_text', $name)) ?? '',
+                            'helper_text'      => $this->getData(sprintf('sub_elements.%s.helper_text', $name)) ?? '',
+                            'wrapper'          => ['class' => $this->getBaseFormWrapperClasses()],
+                            'dynamic_wrapper'  => ['class' => $this->getBaseFormDynamicWrapperClasses($sub_element)],
                         ],
                     ]
                 );
@@ -89,5 +81,19 @@ class ResultElementForm extends BaseForm
                 }
             }
         }
+    }
+
+    private function getBaseFormWrapperClasses()
+    {
+        return 'multi-form relative';
+    }
+
+    private function getBaseFormDynamicWrapperClasses($sub_element)
+    {
+        return (isset($sub_element['add_more']) && $sub_element['add_more']) ?
+            ((!Arr::get($sub_element, 'attributes', null) && strtolower(
+                $sub_element['name']
+            ) === 'narrative') ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
+            : ((empty($sub_element['attributes']) && $sub_element['sub_elements'] && isset($sub_element['sub_elements']['narrative'])) ? 'subelement rounded-tl-lg mb-6' : 'subelement rounded-tl-lg border-l border-spring-50 mb-6');
     }
 }

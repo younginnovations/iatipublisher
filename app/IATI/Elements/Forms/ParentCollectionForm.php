@@ -19,37 +19,26 @@ class ParentCollectionForm extends BaseForm
     public function buildForm(): void
     {
         $field = $this->getData();
-        $dynamicWrapperClass = (isset($field['add_more']) && $field['add_more']) ?
-            (strtolower($field['name']) === 'narrative' && Arr::get($field, 'attributes', null) ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
-            : 'subelement rounded-tl-lg border-l border-spring-50 mb-6';
-
-        if (Arr::get($field, 'freeze')) {
-            $dynamicWrapperClass .= ' freeze';
-        }
 
         $this->add(
             $this->getData('name'),
             'collection',
             [
-                'type' => 'form',
-                'property' => 'name',
-                'prototype' => true,
+                'type'           => 'form',
+                'property'       => 'name',
+                'prototype'      => true,
                 'prototype_name' => '__PARENT_NAME__',
-                'options' => [
-                    'class' => 'App\IATI\Elements\Forms\BaseForm',
-                    'data' => $this->data,
-                    'label' => false,
+                'options'        => [
+                    'class'            => 'App\IATI\Elements\Forms\BaseForm',
+                    'data'             => $this->data,
+                    'label'            => false,
                     'element_criteria' => $field['element_criteria'] ?? '',
-                    'hover_text' => Arr::get($field, 'hover_text', ''),
-                    'help_text' => Arr::get($field, 'help_text', ''),
-                    'helper_text' => Arr::get($field, 'helper_text', ''),
-                    'info_text' => Arr::get($field, 'info_text', ''),
-                    'wrapper' => [
-                        'class' => 'multi-form relative',
-                    ],
-                    'dynamic_wrapper' => [
-                        'class' => $dynamicWrapperClass,
-                    ],
+                    'hover_text'       => Arr::get($field, 'hover_text', ''),
+                    'help_text'        => Arr::get($field, 'help_text', ''),
+                    'helper_text'      => Arr::get($field, 'helper_text', ''),
+                    'info_text'        => Arr::get($field, 'info_text', ''),
+                    'wrapper'          => ['class' => $this->getBaseFormWrapperClasses()],
+                    'dynamic_wrapper'  => ['class' => $this->getBaseFormDynamicWrapperClasses($field)],
                 ],
             ]
         );
@@ -63,5 +52,35 @@ class ParentCollectionForm extends BaseForm
                 ],
             ]);
         }
+    }
+
+    private function getBaseFormWrapperClasses(): string
+    {
+        return 'multi-form relative';
+    }
+
+    private function getBaseFormDynamicWrapperClasses($field): string
+    {
+        $hasAddMoreButton = isset($field['add_more']) && $field['add_more'];
+        $isSubElementNarrative = isset($field['name']) && strtolower($field['name']) === 'narrative';
+        $elementHasAttributes = Arr::get($field, 'attributes', null);
+
+        if ($hasAddMoreButton) {
+            if ($isSubElementNarrative && $elementHasAttributes) {
+                $dynamicWrapperClass = 'border-l border-spring-50 pb-11';
+            } else {
+                $dynamicWrapperClass = 'subelement rounded-tl-lg border-l border-spring-50 pb-11';
+            }
+        } else {
+            $dynamicWrapperClass = 'subelement rounded-tl-lg border-l border-spring-50 mb-6';
+        }
+
+        if (Arr::get($field, 'freeze')) {
+            $dynamicWrapperClass .= ' freeze';
+        }
+
+        $collapsableClass = getCollapsableClass($field, 'parent-form');
+
+        return $dynamicWrapperClass . ' ' . $collapsableClass;
     }
 }

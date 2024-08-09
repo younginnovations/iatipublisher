@@ -54,16 +54,10 @@ class WrapperCollection extends Form
                             'help_text' => Arr::get($field, 'help_text', ''),
                             'helper_text' => Arr::get($field, 'helper_text', ''),
                             'wrapper'         => [
-                                'class' => 'form-field-group form-child-body xl:flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6',
+                                'class' => $this->getSubElementFormWrapperClasses(),
                             ],
                             'dynamic_wrapper' => [
-                                'class' => (isset($field['add_more']) && $field['add_more']) ?
-                                    (strtolower($field['name']) === 'narrative' && !Arr::get(
-                                        $data,
-                                        'attributes',
-                                        null
-                                    ) ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
-                                    : 'subelement rounded-tl-lg border-l border-spring-50 mb-6',
+                                'class' => $this->getSubElementFormDynamicWrapperClasses($field, $data),
                             ],
                         ],
                     ]
@@ -99,6 +93,7 @@ class WrapperCollection extends Form
             'help_block'  => [
                 'text' => $field['help_text'] ?? '',
                 'title' => $field['label'],
+                'show_full_help_text'=>Arr::get($field, 'show_full_help_text', ''),
             ],
             'hover_block' => [
                 'title' => $field['label'],
@@ -240,5 +235,29 @@ class WrapperCollection extends Form
                 'class' => 'delete-parent delete-item absolute right-0 top-16 -translate-y-1/2 translate-x-1/2',
             ],
         ]);
+    }
+
+    private function getSubElementFormWrapperClasses(): string
+    {
+        return 'form-field-group form-child-body xl:flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6';
+    }
+
+    private function getSubElementFormDynamicWrapperClasses($field, $data)
+    {
+        $hasAddMoreButton = isset($field['add_more']) && $field['add_more'];
+        $isSubElementNarrative = isset($field['name']) && strtolower($field['name']) === 'narrative';
+        $hasAttributes = Arr::get($data, 'attributes', null);
+
+        $collapsableClass = getCollapsableClass($field, 'wrapper-collection');
+
+        if ($hasAddMoreButton) {
+            if ($isSubElementNarrative && !$hasAttributes) {
+                return "border-l border-spring-50 pb-11 $collapsableClass";
+            }
+
+            return "subelement rounded-tl-lg border-l border-spring-50 pb-11 $collapsableClass";
+        }
+
+        return "subelement rounded-tl-lg border-l border-spring-50 mb-6 $collapsableClass";
     }
 }

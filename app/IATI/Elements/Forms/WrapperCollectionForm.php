@@ -54,21 +54,8 @@ class WrapperCollectionForm extends Form
                             'hover_text' => Arr::get($field, 'hover_text', ''),
                             'help_text' => Arr::get($field, 'help_text', ''),
                             'helper_text' => Arr::get($field, 'helper_text', ''),
-                            'wrapper'         => [
-                                'class' => ((Arr::get($data, 'attributes', null) && isset($field['name']) && strtolower(
-                                    $field['name']
-                                ) === 'narrative') ? 'form-field-group form-child-body xl:flex flex-wrap rounded-tl-lg rounded-br-lg border-y border-r border-spring-50 p-6' : 'form-field-group form-child-body xl:flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6'),
-                            ],
-                            'dynamic_wrapper' => [
-                                'class' => (isset($field['add_more']) && $field['add_more']) ?
-                                    (strtolower($field['name']) === 'narrative' && !Arr::get(
-                                        $data,
-                                        'attributes',
-                                        null
-                                    ) && $data['name'] !== 'mailing_address' ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
-
-                                    : 'subelement rounded-tl-lg border-l border-spring-50 mb-6',
-                            ],
+                            'wrapper'         => ['class' => $this->getSubElementFormWrapperClass($field, $data)],
+                            'dynamic_wrapper' => ['class' => $this->getSubElementFormDynamicWrapperClasses($field, $data)],
                         ],
                     ]
                 );
@@ -111,6 +98,7 @@ class WrapperCollectionForm extends Form
             'help_block'  => [
                 'text' => $field['help_text'] ?? '',
                 'title' => $field['label'],
+                'show_full_help_text'=>Arr::get($field, 'show_full_help_text', ''),
             ],
             'hover_block' => [
                 'title' => $field['label'],
@@ -216,22 +204,8 @@ class WrapperCollectionForm extends Form
                     'hover_text' => Arr::get($field, 'hover_text', ''),
                     'help_text' => Arr::get($field, 'help_text', ''),
                     'helper_text' => Arr::get($field, 'helper_text', ''),
-                    'wrapper'         => [
-                        'class' => 'wrapped-child-body',
-                    ],
-                    'dynamic_wrapper' => [
-                        'class' => (isset($field['add_more']) && $field['add_more']) ?
-                            ((!Arr::get(
-                                $element,
-                                'attributes',
-                                null
-                            ) && strtolower($field['name']) === 'narrative') ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
-                            : ((!Arr::get(
-                                $field,
-                                'attributes',
-                                null
-                            ) && $field['sub_elements'] && isset($field['sub_elements']['narrative'])) ? 'subelement rounded-tl-lg mb-6' : 'subelement rounded-tl-lg border-l border-spring-50 mb-6'),
-                    ],
+                    'wrapper'         => ['class' => $this->getWrapperCollectionFormWrapperClasses()],
+                    'dynamic_wrapper' => ['class' => $this->getWrapperCollectionFormDynamicWrapperClasses($field, $element)],
                 ],
             ]
         );
@@ -252,5 +226,63 @@ class WrapperCollectionForm extends Form
                 'class' => 'delete-parent delete-item absolute right-0 top-16 -translate-y-1/2 translate-x-1/2',
             ],
         ]);
+    }
+
+    private function getSubElementFormWrapperClass($field, $data): string
+    {
+        return (Arr::get($data, 'attributes', null) && isset($field['name']) && strtolower(
+            $field['name']
+        ) === 'narrative') ? 'form-field-group form-child-body xl:flex flex-wrap rounded-tl-lg rounded-br-lg border-y border-r border-spring-50 p-6' : 'form-field-group form-child-body xl:flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6';
+    }
+
+    private function getSubElementFormDynamicWrapperClasses($field, $data): string
+    {
+        $hasAddMoreButton = isset($field['add_more']) && $field['add_more'];
+        $isSubElementNarrative = isset($field['name']) && strtolower($field['name']) === 'narrative';
+        $hasAttributes = Arr::get($data, 'attributes', null);
+        $isNotMailingAddress = $data['name'] !== 'mailing_address';
+
+        $collapsableClass = getCollapsableClass($field, 'wrapper-collection');
+
+        if ($hasAddMoreButton) {
+            if ($isSubElementNarrative && !$hasAttributes && $isNotMailingAddress) {
+                return "border-l border-spring-50 pb-11 $collapsableClass";
+            }
+
+            return "subelement rounded-tl-lg border-l border-spring-50 pb-11 $collapsableClass";
+        }
+
+        return "subelement rounded-tl-lg border-l border-spring-50 mb-6 $collapsableClass";
+    }
+
+    private function getWrapperCollectionFormWrapperClasses(): string
+    {
+        return 'wrapped-child-body';
+    }
+
+    private function getWrapperCollectionFormDynamicWrapperClasses($field, $element): string
+    {
+        $hasAddMoreButton = isset($field['add_more']) && $field['add_more'];
+        $hasAttributes = Arr::get($element, 'attributes', null);
+        $isSubElementNarrative = isset($field['name']) && strtolower($field['name']) === 'narrative';
+
+        $collapsableClasses = getCollapsableClass($field, 'wrapper-collection-form');
+
+        if ($hasAddMoreButton) {
+            if (!$hasAttributes && $isSubElementNarrative) {
+                return "border-l border-spring-50 pb-11 $collapsableClasses";
+            }
+
+            return "subelement rounded-tl-lg border-l border-spring-50 pb-11 $collapsableClasses";
+        }
+
+        $hasAttributes = Arr::get($field, 'attributes', null);
+        $hasSubElementNarrative = $field['sub_elements'] && isset($field['sub_elements']['narrative']);
+
+        if (!$hasAttributes && $hasSubElementNarrative) {
+            return "subelement rounded-tl-lg mb-6 $collapsableClasses";
+        }
+
+        return "subelement rounded-tl-lg border-l border-spring-50 mb-6 $collapsableClasses";
     }
 }

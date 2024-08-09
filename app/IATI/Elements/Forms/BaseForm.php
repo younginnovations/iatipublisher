@@ -20,7 +20,6 @@ class BaseForm extends Form
     {
         $this->setClientValidationEnabled(false);
         $element = $this->getData();
-
         $attributes = Arr::get($element, 'attributes', null);
         $sub_elements = Arr::get($element, 'sub_elements', null);
 
@@ -32,9 +31,9 @@ class BaseForm extends Form
             )) {
                 $this->buildCollection($attributes);
             } else {
-                foreach ($attributes as $attribute) {
+                foreach ($attributes as $i => $attribute) {
                     if (is_array($attribute)) {
-                        $this->buildField($attribute);
+                        $this->buildField($attribute, $i);
                     }
                 }
 
@@ -49,7 +48,7 @@ class BaseForm extends Form
         }
 
         if ($sub_elements) {
-            foreach ($sub_elements as $sub_element) {
+            foreach ($sub_elements as $i => $sub_element) {
                 $this->buildCollection($sub_element);
 
                 if (Arr::get($element, 'add_more', false) && Arr::get($sub_element, 'add_more', false)) {
@@ -71,12 +70,11 @@ class BaseForm extends Form
     public function buildCollection($field): void
     {
         $element = $this->getData();
+        $hasFieldType = Arr::get($field, 'type', null);
+        $hasSubElements = array_key_exists('sub_elements', $field);
+        $isWrapperCollection = Arr::get($field, 'wrapper_collection', true);
 
-        if (!Arr::get($field, 'type', null) && array_key_exists('sub_elements', $field) && Arr::get(
-            $field,
-            'wrapper_collection',
-            true
-        )) {
+        if (!$hasFieldType && $hasSubElements && $isWrapperCollection) {
             $field['parent'] = $element['name'];
             $this->add(
                 $field['name'],
@@ -94,20 +92,8 @@ class BaseForm extends Form
                         'hover_text'       => Arr::get($field, 'hover_text', ''),
                         'help_text'        => Arr::get($field, 'help_text', ''),
                         'helper_text'      => Arr::get($field, 'helper_text', ''),
-                        'wrapper'          => [
-                            'class' => 'wrapped-child-body',
-                        ],
-                        'dynamic_wrapper'  => [
-                            'class' => (isset($field['add_more']) && $field['add_more']) ?
-                                ((!Arr::get($element, 'attributes', null) && strtolower(
-                                    $field['name']
-                                ) === 'narrative') && !strtolower($element['name']) == 'mailing_address' ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
-                                : ((!Arr::get(
-                                    $field,
-                                    'attributes',
-                                    null
-                                ) && $field['sub_elements'] && isset($field['sub_elements']['narrative'])) ? 'subelement rounded-tl-lg mb-6' : 'subelement rounded-tl-lg border-l border-spring-50 mb-6'),
-                        ],
+                        'wrapper'          => ['class' => $this->getWrapperCollectionFormWrapperClasses()],
+                        'dynamic_wrapper'  => ['class' => $this->getWrapperCollectionFormDynamicWrapperClasses($field, $element)],
                     ],
                 ]
             );
@@ -139,22 +125,8 @@ class BaseForm extends Form
                         'element_criteria'          => $field['element_criteria'] ?? '',
                         'hover_text'                => isset($field['name']) ? Arr::get($field, 'hover_text', '') : Arr::get($element, 'hover_text', ''),
                         'help_text'                 => isset($field['name']) ? Arr::get($field, 'help_text', '') : Arr::get($element, 'help_text', ''),
-                        'wrapper'                   => [
-                            'class' => ((Arr::get($element, 'attributes', null) && isset($field['name']) && strtolower(
-                                $field['name']
-                            ) === 'narrative') ? 'form-field-group form-child-body xl:flex flex-wrap rounded-tl-lg rounded-br-lg border-y border-r border-spring-50 p-6' : 'form-field-group form-child-body xl:flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6'),
-                        ],
-                        'dynamic_wrapper'           => [
-                            'class' => (((isset($field['add_more']) && $field['add_more']) || Arr::get(
-                                $element,
-                                'add_more_attributes',
-                                false
-                            )) ?
-                            (!Arr::get($element, 'attributes', null) && strtolower(
-                                $field['name']
-                            ) === 'narrative' ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
-                            : 'subelement rounded-tl-lg border-l border-spring-50 mb-6') . (Arr::get($field, 'read_only', false) ? ' freeze' : ''),
-                        ],
+                        'wrapper'                   => ['class' => $this->getSubElementFormWrapperClasses($field, $element)],
+                        'dynamic_wrapper'           => ['class' => $this->getSubElementFormDynamicWrapperClasses($field, $element)],
                         'overRideDefaultFieldValue' => $element['overRideDefaultFieldValue'] ?? [],
                     ],
                 ]
@@ -191,6 +163,7 @@ class BaseForm extends Form
             'help_block'  => [
                 'text'  => $field['help_text'] ?? '',
                 'title' => $field['label'],
+                'show_full_help_text'=>Arr::get($field, 'show_full_help_text', ''),
             ],
             'hover_block' => [
                 'title' => $field['label'],
@@ -307,5 +280,67 @@ class BaseForm extends Form
         }
 
         return $data;
+    }
+
+    private function getWrapperCollectionFormWrapperClasses(): string
+    {
+        return 'wrapped-child-body';
+    }
+
+    private function getWrapperCollectionFormDynamicWrapperClasses($field, $element): string
+    {
+        $fieldHasAddMoreButton = isset($field['add_more']) && $field['add_more'];
+        $isSubElementNarrative = isset($field['name']) && strtolower($field['name']) === 'narrative';
+        $elementHasAttributes = Arr::get($element, 'attributes', null);
+        $isMailingAddressElement = strtolower($element['name']) == 'mailing_address';
+        $collapsableClass = getCollapsableClass($field, 'base-form', $element);
+
+        if ($fieldHasAddMoreButton) {
+            if (!$elementHasAttributes && $isSubElementNarrative && !$isMailingAddressElement) {
+                return "border-l border-spring-50 pb-11 $collapsableClass";
+            }
+
+            return "subelement rounded-tl-lg border-l border-spring-50 pb-11 $collapsableClass";
+        }
+
+        $fieldHasAttributes = Arr::get($field, 'attributes', null);
+        $hasNarrativeSubElement = isset($field['sub_elements']['narrative']);
+
+        if (!$fieldHasAttributes && $field['sub_elements'] && $hasNarrativeSubElement) {
+            return "subelement rounded-tl-lg mb-6 $collapsableClass";
+        }
+
+        return "subelement rounded-tl-lg border-l border-spring-50 mb-6 $collapsableClass";
+    }
+
+    private function getSubElementFormWrapperClasses($field, $element): string
+    {
+        $elementHasAttributes = Arr::get($element, 'attributes', null);
+        $isSubElementNarrative = isset($field['name']) && strtolower($field['name']) === 'narrative';
+
+        return $elementHasAttributes && $isSubElementNarrative
+            ? 'form-field-group form-child-body xl:flex flex-wrap rounded-tl-lg rounded-br-lg border-y border-r border-spring-50 p-6'
+            : 'form-field-group form-child-body xl:flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6';
+    }
+
+    private function getSubElementFormDynamicWrapperClasses($field, $element): string
+    {
+        $hasAddMoreButton = isset($field['add_more']) && $field['add_more'];
+        $canAddMoreAttributes = Arr::get($element, 'add_more_attributes', false);
+        $elementHasAttributes = Arr::get($element, 'attributes', null);
+        $isSubElementNarrative = isset($field['name']) && strtolower($field['name']) === 'narrative';
+        $collapsableClass = getCollapsableClass($field, 'base-form', $element);
+
+        if ($hasAddMoreButton || $canAddMoreAttributes) {
+            if (!$elementHasAttributes && $isSubElementNarrative) {
+                return "border-l border-spring-50 pb-11 $collapsableClass";
+            }
+
+            return "subelement rounded-tl-lg border-l border-spring-50 pb-11 $collapsableClass";
+        }
+
+        $frozenClass = Arr::get($field, 'read_only', false) ? 'freeze' : '';
+
+        return "subelement rounded-tl-lg border-l border-spring-50 mb-6 $frozenClass $collapsableClass";
     }
 }

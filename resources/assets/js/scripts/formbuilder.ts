@@ -524,4 +524,295 @@ $(function () {
       selectElement.style.cursor = 'not-allowed';
     }
   }
+
+  /**
+   * Change Source: https://github.com/younginnovations/iatipublisher/issues/1501
+   *
+   * Basically I'm adding expandable behaviour to form
+   */
+
+  interface AddButtonInfo {
+    dom: HTMLElement | null;
+    relation: string;
+  }
+  function handleInitialFormLoad() {
+    const allCollapsable = document.querySelectorAll('.collapsable');
+    allCollapsable.forEach((element) => {
+      const htmlElement = element as HTMLElement;
+      const buttonInfo = getButtonInfo(htmlElement);
+      const hideButton = renderHideButton(htmlElement, buttonInfo);
+
+      /** Click hide button if all values in this collapsable item is empty*/
+      if (!hasNonEmptyFields(htmlElement)) {
+        hideButton.click();
+      }
+    });
+  }
+
+  function hasNonEmptyFields(element: HTMLElement): boolean {
+    // Check if any input, select, or textarea inside the element has a value
+    const inputs = element.querySelectorAll('input, select, textarea');
+    return Array.from(inputs).some((input) => {
+      if (
+        input instanceof HTMLInputElement ||
+        input instanceof HTMLSelectElement ||
+        input instanceof HTMLTextAreaElement
+      ) {
+        return input.value.trim() !== '';
+      }
+      return false;
+    });
+  }
+
+  function handleNewAdditionsToFormViaMutatorsAndObservers() {
+    const observer = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === 'childList') {
+          const addedNodes = Array.from(mutation.addedNodes);
+
+          addedNodes.forEach((node) => {
+            // Check if the added node is an HTMLElement
+            if (node instanceof HTMLElement) {
+              node.querySelectorAll('.collapsable').forEach((element) => {
+                const htmlElement = element as HTMLElement;
+                const buttonInfo = getButtonInfo(htmlElement);
+                renderHideButton(htmlElement, buttonInfo);
+              });
+
+              const newCollapseButtons = node.querySelectorAll(
+                '.collapsable-hide-button'
+              );
+              newCollapseButtons.forEach((button) => {
+                const buttonElement = button as HTMLElement;
+                buttonElement.click();
+              });
+            }
+          });
+        }
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  function getButtonInfo(collapsableItem: HTMLElement): AddButtonInfo {
+    let addButton = collapsableItem.nextElementSibling as HTMLElement | null;
+
+    if (addButton && addButton.tagName.toLowerCase() === 'button') {
+      return { dom: addButton, relation: 'sibling' };
+    }
+
+    addButton = collapsableItem.querySelector(
+      'button.add_more'
+    ) as HTMLElement | null;
+
+    if (addButton) {
+      return { dom: addButton, relation: 'child' };
+    }
+
+    return { dom: null, relation: 'none' };
+  }
+
+  function renderHideButton(
+    collapsableItem: HTMLElement,
+    buttonInfo: AddButtonInfo
+  ) {
+    const hideButton = document.createElement('button');
+    hideButton.className =
+      'absolute top-0 right-0 bg-spring-50 text-white px-2 collapsable-hide-button';
+    hideButton.textContent = 'Hide';
+    hideButton.setAttribute('type', 'button');
+
+    const handleHideButtonClick = () => {
+      hideElement(hideButtonHolder);
+      hideElement(buttonInfo.dom);
+      renderPlaceholderCard(collapsableItem, buttonInfo);
+    };
+
+    let hideButtonHolder: HTMLElement | null = null;
+
+    if (buttonInfo.dom === null) {
+      hideButtonHolder = Array.from(collapsableItem.children).find(
+        (child) => child.tagName === 'DIV'
+      ) as HTMLElement;
+    } else if (buttonInfo.relation === 'child') {
+      hideButtonHolder = buttonInfo.dom.parentElement;
+    } else {
+      const previousSibling = buttonInfo.dom
+        .previousElementSibling as HTMLElement;
+      hideButtonHolder = Array.from(previousSibling?.children || []).find(
+        (child) => child.tagName === 'DIV'
+      ) as HTMLElement;
+
+      if (hideButtonHolder) {
+        hideButton.addEventListener('click', () => {
+          Array.from(previousSibling.children).forEach((child) => {
+            if (
+              child.tagName !== 'LABEL' &&
+              !child.classList.contains('collapsable-placeholder')
+            ) {
+              hideElement(child as HTMLElement);
+            }
+          });
+          hideElement(buttonInfo.dom);
+        });
+      }
+    }
+
+    if (hideButtonHolder) {
+      hideButtonHolder.classList.add('relative');
+      hideButton.addEventListener('click', handleHideButtonClick);
+      hideButtonHolder.appendChild(hideButton);
+    }
+
+    return hideButton;
+  }
+
+  function renderPlaceholderCard(
+    collapsableItem: HTMLElement,
+    buttonInfo: AddButtonInfo
+  ): void {
+    const placeholderDiv = createPlaceholderDiv();
+
+    const displayName = getDisplayName(collapsableItem, buttonInfo);
+    placeholderDiv.innerHTML = `You can expand the optional <strong>${displayName}</strong> field by clicking here.`;
+
+    if (buttonInfo.dom === null) {
+      handleNoButtonInfo(collapsableItem, placeholderDiv);
+    } else if (buttonInfo.relation === 'child') {
+      handleChildRelation(collapsableItem, placeholderDiv);
+    } else {
+      handleSiblingRelation(collapsableItem, buttonInfo, placeholderDiv);
+    }
+
+    collapsableItem.appendChild(placeholderDiv);
+  }
+
+  function createPlaceholderDiv(): HTMLDivElement {
+    const placeholderDiv = document.createElement('div');
+    placeholderDiv.classList.add(
+      'border-x',
+      'border-y',
+      'border-spring-50',
+      'px-6',
+      'py-6',
+      'text-sm',
+      'text-n-40',
+      'cursor-pointer',
+      'collapsable-placeholder'
+    );
+    return placeholderDiv;
+  }
+
+  function getDisplayName(
+    collapsableItem: HTMLElement,
+    buttonInfo: AddButtonInfo
+  ): string {
+    const displayNameLabel = buttonInfo.dom
+      ? buttonInfo.dom.previousElementSibling?.querySelector('label')
+      : collapsableItem.querySelector('label');
+    const displayName = displayNameLabel?.innerText ?? 'element';
+    return getFirstWordFromText(displayName);
+  }
+
+  function handleNoButtonInfo(
+    collapsableItem: HTMLElement,
+    placeholderDiv: HTMLDivElement
+  ): void {
+    adjustBorders(collapsableItem, 'border-l');
+    adjustPadding(collapsableItem, 'pb-11');
+    addPlaceholderClickListener(collapsableItem, placeholderDiv);
+  }
+
+  function handleChildRelation(
+    collapsableItem: HTMLElement,
+    placeholderDiv: HTMLDivElement
+  ): void {
+    adjustBorders(collapsableItem, 'border-l');
+    adjustPadding(collapsableItem, 'pb-11');
+    addPlaceholderClickListener(collapsableItem, placeholderDiv);
+  }
+
+  function handleSiblingRelation(
+    collapsableItem: HTMLElement,
+    buttonInfo: AddButtonInfo,
+    placeholderDiv: HTMLDivElement
+  ): void {
+    placeholderDiv.classList.add('mb-6');
+    buttonInfo.dom?.classList.add('mb-6');
+    adjustBorders(collapsableItem, 'border-l');
+    adjustPadding(collapsableItem, 'pb-11');
+    addPlaceholderClickListener(collapsableItem, placeholderDiv, buttonInfo);
+  }
+
+  function adjustBorders(
+    collapsableItem: HTMLElement,
+    borderClass: string
+  ): void {
+    if (collapsableItem.classList.contains(borderClass)) {
+      console.log('here', collapsableItem);
+      collapsableItem.classList.add(`${borderClass}-was-here`);
+      collapsableItem.classList.remove(borderClass);
+    } else {
+      console.log('maru', collapsableItem);
+    }
+  }
+
+  function adjustPadding(
+    collapsableItem: HTMLElement,
+    paddingClass: string
+  ): void {
+    if (collapsableItem.classList.contains(paddingClass)) {
+      collapsableItem.classList.add(`${paddingClass}-was-here`);
+      collapsableItem.classList.remove(paddingClass);
+    }
+  }
+
+  function addPlaceholderClickListener(
+    collapsableItem: HTMLElement,
+    placeholderDiv: HTMLDivElement,
+    buttonInfo?: AddButtonInfo
+  ): void {
+    placeholderDiv.addEventListener('click', () => {
+      if (collapsableItem.classList.contains('border-l-was-here')) {
+        collapsableItem.classList.add('border-l');
+        collapsableItem.classList.remove('border-l-was-here');
+      }
+
+      if (collapsableItem.classList.contains('pb-11-was-here')) {
+        collapsableItem.classList.add('pb-11');
+        collapsableItem.classList.remove('pb-11-was-here');
+      }
+
+      revealHiddenElements(collapsableItem);
+      if (buttonInfo?.dom) {
+        buttonInfo.dom.classList.remove('collapsable-hide');
+      }
+      removeElement(placeholderDiv);
+    });
+  }
+
+  function getFirstWordFromText(text): string {
+    const trimmedText = text.trim();
+    const words = trimmedText.split(/\s+/);
+
+    return words[0];
+  }
+
+  function revealHiddenElements(collapsableItem: HTMLElement): void {
+    collapsableItem.querySelectorAll('.collapsable-hide').forEach((element) => {
+      (element as HTMLElement).classList.remove('collapsable-hide');
+    });
+  }
+
+  function hideElement(element: HTMLElement | null) {
+    element?.classList?.add('collapsable-hide');
+  }
+
+  function removeElement(element: HTMLElement) {
+    element.remove();
+  }
+
+  handleInitialFormLoad();
+  handleNewAdditionsToFormViaMutatorsAndObservers();
 });

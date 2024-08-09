@@ -1367,3 +1367,46 @@ if (!function_exists('trimStringValueInArray')) {
         }, $array);
     }
 }
+
+if (!function_exists('getCollapsableClass')) {
+    /**
+     * @param $element
+     * @param string $sourceForm
+     *
+     * @return string
+     */
+    function getCollapsableClass($element, string $sourceForm): string
+    {
+        if (!isCollapsable($element)) {
+            return '';
+        }
+
+//        $elementName = Arr::get($element, 'name', '');
+
+        return "collapsable $sourceForm";
+    }
+}
+
+if (!function_exists('isCollapsable')) {
+    /**
+     * @param $element
+     *
+     * @return bool
+     */
+    function isCollapsable($element): bool
+    {
+        return Arr::get($element, 'is_collapsable', false);
+    }
+}
+
+if (!function_exists('canAddMore')) {
+    /**
+     * @param $element
+     *
+     * @return bool
+     */
+    function canAddMore($element): bool
+    {
+        return Arr::get($element, 'add_more', false) || Arr::get($element, 'add_more_attributes', false);
+    }
+}
