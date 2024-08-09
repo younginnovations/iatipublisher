@@ -321,7 +321,7 @@ class Activity
             $secondary_reporter = '';
 
             if ($this->checkRowNotEmpty($row)) {
-                $elementActivityIdentifier = trim(Arr::get($row, 'activity_identifier'));
+                $elementActivityIdentifier = trim((string) Arr::get($row, 'activity_identifier'));
 
                 if (is_null($elementActivityIdentifier)) {
                     $this->globalErrors[] = 'Error detected on ' . $this->sheetName . ' sheet, cell A' . $this->rowCount . ': Identifier is missing.';
@@ -412,7 +412,7 @@ class Activity
 
         foreach ($data as $index => $row) {
             if ($this->checkRowNotEmpty($row)) {
-                $elementActivityIdentifier = trim(Arr::get($row, 'activity_identifier'));
+                $elementActivityIdentifier = trim((string) Arr::get($row, 'activity_identifier'));
 
                 if (is_null($elementActivityIdentifier)) {
                     $this->globalErrors[] = 'Error detected on ' . $this->sheetName . ' sheet, cell A' . $this->rowCount . ': Identifier is missing.';
@@ -475,7 +475,7 @@ class Activity
                         $elementData = [];
                     }
 
-                    $elementActivityIdentifier = trim(Arr::get($row, 'activity_identifier') ?? $elementActivityIdentifier);
+                    $elementActivityIdentifier = trim((string) Arr::get($row, 'activity_identifier') ?? $elementActivityIdentifier);
                 }
 
                 foreach ($elementMapper as $xlsColumnName => $systemName) {
