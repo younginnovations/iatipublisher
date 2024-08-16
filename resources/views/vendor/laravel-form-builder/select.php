@@ -1,4 +1,4 @@
-<?php if ($showLabel && $showField) : ?>
+<?php use Illuminate\Support\Arr;if ($showLabel && $showField) : ?>
     <?php if ($options['wrapper'] !== false) : ?>
         <div <?= $options['wrapperAttrs'] ?>>
         <?php endif; ?>
@@ -35,7 +35,7 @@
             <?php if ($options['help_block']['text']) : ?>
                 <?php if ($options['help_block']['text']) : ?>
                     <div class="flex">
-                        <?php if ($options['help_block']['title'] === 'language' || $options['help_block']['title'] === "currency" ) : ?>
+                        <?php if ($options['help_block']['title'] === 'language' || $options['help_block']['title'] === "currency" || Arr::get($options, 'help_block.show_full_help_text')) : ?>
                             <p class="text-xs text-n-40 hover:text-spring-50 mb-1 cursor-pointer inline-block">
                                 <?php echo $options['help_block']['text']; ?>
                             </p>

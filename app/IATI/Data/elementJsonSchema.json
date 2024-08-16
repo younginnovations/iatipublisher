@@ -1468,7 +1468,8 @@
         "required": true,
         "criteria": "mandatory",
         "hover_text": "The target URL of the external document, e.g. 'http://www.example.org/doc.odt'.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/'>For more information</a>",
-        "help_text": "The URL must begin with either ‘http://’ or ‘https://’."
+        "help_text": "Enter a public link to your document or upload it below.",
+        "show_full_help_text": true
       },
       "format": {
         "name": "format",
@@ -1531,10 +1532,34 @@
           }
         }
       },
+      "category": {
+        "name": "category",
+        "label": "category",
+        "element_criteria": "mandatory",
+        "add_more": true,
+        "wrapper_collection": false,
+        "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/category/'>For more information</a>",
+        "help_text": "You must select a category of the document or webpage that you have provided.",
+        "attributes": {
+          "code": {
+            "name": "code",
+            "label": "code",
+            "type": "select",
+            "placeholder": "Select code",
+            "choices": "Activity/DocumentCategory.json",
+            "required": true,
+            "criteria": "mandatory",
+            "hover_text": "An IATI code defining the category of the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/category/'>For more information</a>",
+            "help_text": "Select a category of the document or webpage that you have provided from <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/documentcategory/'>this list</a>."
+          }
+        },
+        "sub_elements": {}
+      },
       "description": {
         "name": "description",
         "label": "description",
         "add_more": false,
+        "is_collapsable": true,
         "hover_text": "A description of the document contents, or guidance on where to access the relevant information in the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/description/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
@@ -1568,33 +1593,11 @@
           }
         }
       },
-      "category": {
-        "name": "category",
-        "label": "category",
-        "element_criteria": "mandatory",
-        "add_more": true,
-        "wrapper_collection": false,
-        "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/category/'>For more information</a>",
-        "help_text": "You must select a category of the document or webpage that you have provided.",
-        "attributes": {
-          "code": {
-            "name": "code",
-            "label": "code",
-            "type": "select",
-            "placeholder": "Select code",
-            "choices": "Activity/DocumentCategory.json",
-            "required": true,
-            "criteria": "mandatory",
-            "hover_text": "An IATI code defining the category of the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/category/'>For more information</a>",
-            "help_text": "Select a category of the document or webpage that you have provided from <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/documentcategory/'>this list</a>."
-          }
-        },
-        "sub_elements": {}
-      },
       "language": {
         "name": "language",
         "label": "language",
         "add_more": true,
+        "is_collapsable": true,
         "wrapper_collection": false,
         "attributes": {
           "code": {
@@ -1615,6 +1618,7 @@
         "name": "document_date",
         "label": "document date",
         "add_more": false,
+        "is_collapsable": true,
         "hover_text": "The date of publication of the document that is being linked to. (@iso-date).<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/document-date/'>For more information</a>",
         "attributes": {
           "date": {
@@ -2857,10 +2861,34 @@
               }
             }
           },
+          "category": {
+            "name": "category",
+            "label": "category",
+            "element_criteria": "",
+            "add_more": true,
+            "wrapper_collection": false,
+            "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/category/'>For more information.</a>",
+            "help_text": "If you have provided a document link, then you must select a category that best describes the document.",
+            "attributes": {
+              "code": {
+                "name": "code",
+                "label": "code",
+                "type": "select",
+                "placeholder": "Select code",
+                "choices": "Activity/DocumentCategory.json",
+                "required": true,
+                "criteria": "mandatory",
+                "hover_text": "An IATI code defining the category of the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/category/'>For more information</a>",
+                "help_text": "Select a document category from <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/documentcategory/'>this list</a>."
+              }
+            },
+            "sub_elements": {}
+          },
           "description": {
             "name": "description",
             "label": "description",
             "attributes": {},
+            "is_collapsable": true,
             "hover_text": "A description of the document contents, or guidance on where to access the relevant information in the document.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/description/'>For more information.</a>",
             "sub_elements": {
               "narrative": {
@@ -2893,33 +2921,11 @@
               }
             }
           },
-          "category": {
-            "name": "category",
-            "label": "category",
-            "element_criteria": "",
-            "add_more": true,
-            "wrapper_collection": false,
-            "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/category/'>For more information.</a>",
-            "help_text": "If you have provided a document link, then you must select a category that best describes the document.",
-            "attributes": {
-              "code": {
-                "name": "code",
-                "label": "code",
-                "type": "select",
-                "placeholder": "Select code",
-                "choices": "Activity/DocumentCategory.json",
-                "required": true,
-                "criteria": "mandatory",
-                "hover_text": "An IATI code defining the category of the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/category/'>For more information</a>",
-                "help_text": "Select a document category from <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/documentcategory/'>this list</a>."
-              }
-            },
-            "sub_elements": {}
-          },
           "language": {
             "name": "language",
             "label": "language",
             "add_more": true,
+            "is_collapsable": true,
             "wrapper_collection": false,
             "attributes": {
               "language": {
@@ -2940,6 +2946,7 @@
             "name": "document_date",
             "label": "document-date",
             "add_more": false,
+            "is_collapsable": true,
             "hover_text": "The date of publication of the document that is being linked to. (@iso-date). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/document-date/'>For more information</a>",
             "attributes": {
               "date": {
@@ -3192,10 +3199,34 @@
               }
             }
           },
+          "category": {
+            "name": "category",
+            "label": "category",
+            "element_criteria": "",
+            "add_more": true,
+            "wrapper_collection": false,
+            "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/category/'>For more information</a>",
+            "help_text": "If you have provided a document link, then select a category that best describes the document.",
+            "attributes": {
+              "code": {
+                "name": "code",
+                "label": "code",
+                "type": "select",
+                "placeholder": "Select code",
+                "choices": "Activity/DocumentCategory.json",
+                "required": true,
+                "criteria": "mandatory",
+                "hover_text": "An IATI code defining the category of the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/category/'>For more information</a>",
+                "help_text": "Select a document category."
+              }
+            },
+            "sub_elements": {}
+          },
           "description": {
             "name": "description",
             "label": "description",
             "attributes": {},
+            "is_collapsable": true,
             "hover_text": "A description of the document contents, or guidance on where to access the relevant information in the document.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/description/'>For more information</a>",
             "sub_elements": {
               "narrative": {
@@ -3228,33 +3259,11 @@
               }
             }
           },
-          "category": {
-            "name": "category",
-            "label": "category",
-            "element_criteria": "",
-            "add_more": true,
-            "wrapper_collection": false,
-            "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/category/'>For more information</a>",
-            "help_text": "If you have provided a document link, then select a category that best describes the document.",
-            "attributes": {
-              "code": {
-                "name": "code",
-                "label": "code",
-                "type": "select",
-                "placeholder": "Select code",
-                "choices": "Activity/DocumentCategory.json",
-                "required": true,
-                "criteria": "mandatory",
-                "hover_text": "An IATI code defining the category of the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/category/'>For more information</a>",
-                "help_text": "Select a document category."
-              }
-            },
-            "sub_elements": {}
-          },
           "language": {
             "name": "language",
             "label": "language",
             "add_more": true,
+            "is_collapsable": true,
             "wrapper_collection": false,
             "attributes": {
               "language": {
@@ -3275,6 +3284,7 @@
             "name": "document_date",
             "label": "document date",
             "add_more": false,
+            "is_collapsable": true,
             "hover_text": "The date of publication of the document that is being linked to. (@iso-date). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/document-date/'>For more information</a>",
             "attributes": {
               "date": {
@@ -3509,10 +3519,34 @@
                   }
                 }
               },
+              "category": {
+                "name": "category",
+                "label": "category",
+                "element_criteria": "",
+                "add_more": true,
+                "wrapper_collection": false,
+                "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/category/'>For more information</a>",
+                "help_text": "If you have provided a document link, select a category that best describes the document.",
+                "attributes": {
+                  "code": {
+                    "name": "code",
+                    "label": "code",
+                    "type": "select",
+                    "placeholder": "Select code",
+                    "choices": "Activity/DocumentCategory.json",
+                    "required": true,
+                    "criteria": "mandatory",
+                    "hover_text": "An IATI code defining the category of the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/category/'>For more information</a>",
+                    "help_text": "Select a document category."
+                  }
+                },
+                "sub_elements": {}
+              },
               "description": {
                 "name": "description",
                 "label": "description",
                 "add_more": false,
+                "is_collapsable": true,
                 "attributes": {},
                 "hover_text": "A description of the document contents, or guidance on where to access the relevant information in the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/description/'>For more information</a>",
                 "sub_elements": {
@@ -3546,33 +3580,11 @@
                   }
                 }
               },
-              "category": {
-                "name": "category",
-                "label": "category",
-                "element_criteria": "",
-                "add_more": true,
-                "wrapper_collection": false,
-                "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/category/'>For more information</a>",
-                "help_text": "If you have provided a document link, select a category that best describes the document.",
-                "attributes": {
-                  "code": {
-                    "name": "code",
-                    "label": "code",
-                    "type": "select",
-                    "placeholder": "Select code",
-                    "choices": "Activity/DocumentCategory.json",
-                    "required": true,
-                    "criteria": "mandatory",
-                    "hover_text": "An IATI code defining the category of the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/category/'>For more information</a>",
-                    "help_text": "Select a document category."
-                  }
-                },
-                "sub_elements": {}
-              },
               "language": {
                 "name": "language",
                 "label": "language",
                 "add_more": true,
+                "is_collapsable": true,
                 "wrapper_collection": false,
                 "attributes": {
                   "language": {
@@ -3593,6 +3605,7 @@
                 "name": "document_date",
                 "label": "document date",
                 "add_more": false,
+                "is_collapsable": true,
                 "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/document-date/'>For more information</a>",
                 "attributes": {
                   "date": {
@@ -3834,10 +3847,33 @@
                   }
                 }
               },
+              "category": {
+                "name": "category",
+                "label": "category",
+                "add_more": true,
+                "wrapper_collection": false,
+                "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/category/'>For more information</a>",
+                "help_text": "If you have provided a document link, select a category that best describes the document.",
+                "attributes": {
+                  "code": {
+                    "name": "code",
+                    "label": "code",
+                    "type": "select",
+                    "placeholder": "Select code",
+                    "choices": "Activity/DocumentCategory.json",
+                    "required": true,
+                    "criteria": "mandatory",
+                    "hover_text": "An IATI code defining the category of the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/category/'>For more information</a>",
+                    "help_text": "Select a document category."
+                  }
+                },
+                "sub_elements": {}
+              },
               "description": {
                 "name": "description",
                 "label": "description",
                 "attributes": {},
+                "is_collapsable": true,
                 "hover_text": "A description of the document contents, or guidance on where to access the relevant information in the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/description/'>For more information</a>",
                 "sub_elements": {
                   "narrative": {
@@ -3870,32 +3906,11 @@
                   }
                 }
               },
-              "category": {
-                "name": "category",
-                "label": "category",
-                "add_more": true,
-                "wrapper_collection": false,
-                "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/category/'>For more information</a>",
-                "help_text": "If you have provided a document link, select a category that best describes the document.",
-                "attributes": {
-                  "code": {
-                    "name": "code",
-                    "label": "code",
-                    "type": "select",
-                    "placeholder": "Select code",
-                    "choices": "Activity/DocumentCategory.json",
-                    "required": false,
-                    "criteria": "",
-                    "hover_text": "An IATI code defining the category of the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/category/'>For more information</a>",
-                    "help_text": "Select a document category."
-                  }
-                },
-                "sub_elements": {}
-              },
               "language": {
                 "name": "language",
                 "label": "language",
                 "add_more": true,
+                "is_collapsable": true,
                 "wrapper_collection": false,
                 "hover_text": "The ISO 639-1 language code in which target document is written, e.g. “en”. Can be repeated to describe multi-lingual documents. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/language/'>For more information</a>",
                 "attributes": {
@@ -3917,6 +3932,7 @@
                 "name": "document_date",
                 "label": "document date",
                 "add_more": false,
+                "is_collapsable": true,
                 "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/document-date/'>For more information</a>",
                 "attributes": {
                   "date": {
@@ -4108,9 +4124,33 @@
                   }
                 }
               },
+              "category": {
+                "name": "category",
+                "label": "category",
+                "add_more": true,
+                "element_criteria": "",
+                "wrapper_collection": false,
+                "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/category/'>For more information</a>",
+                "help_text": "If you have provided a document link, select a category that best describes the document.",
+                "attributes": {
+                  "code": {
+                    "name": "code",
+                    "label": "code",
+                    "type": "select",
+                    "placeholder": "Select code",
+                    "choices": "Activity/DocumentCategory.json",
+                    "required": true,
+                    "criteria": "mandatory",
+                    "hover_text": "An IATI code defining the category of the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/category/'>For more information</a>",
+                    "help_text": "Select a document category."
+                  }
+                },
+                "sub_elements": {}
+              },
               "description": {
                 "name": "description",
                 "label": "description",
+                "is_collapsable": true,
                 "attributes": {},
                 "hover_text": "A description of the document contents, or guidance on where to access the relevant information in the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/description/'>For more information</a>",
                 "sub_elements": {
@@ -4144,33 +4184,11 @@
                   }
                 }
               },
-              "category": {
-                "name": "category",
-                "label": "category",
-                "add_more": true,
-                "element_criteria": "",
-                "wrapper_collection": false,
-                "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/category/'>For more information</a>",
-                "help_text": "If you have provided a document link, select a category that best describes the document.",
-                "attributes": {
-                  "code": {
-                    "name": "code",
-                    "label": "code",
-                    "type": "select",
-                    "placeholder": "Select code",
-                    "choices": "Activity/DocumentCategory.json",
-                    "required": true,
-                    "criteria": "mandatory",
-                    "hover_text": "An IATI code defining the category of the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/category/'>For more information</a>",
-                    "help_text": "Select a document category."
-                  }
-                },
-                "sub_elements": {}
-              },
               "language": {
                 "name": "language",
                 "label": "language",
                 "add_more": true,
+                "is_collapsable": true,
                 "wrapper_collection": false,
                 "hover_text": "The ISO 639-1 language code in which target document is written, e.g. “en”. Can be repeated to describe multi-lingual documents. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/language/'>For more information</a>",
                 "attributes": {
@@ -4192,6 +4210,7 @@
                 "name": "document_date",
                 "label": "document-date",
                 "add_more": false,
+                "is_collapsable": true,
                 "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/document-date/'>For more information</a>",
                 "attributes": {
                   "date": {

@@ -68,6 +68,7 @@ class SubElementForm extends Form
             'help_block' => [
                 'text' => $field['help_text'] ?? '',
                 'title' => $field['label'],
+                'show_full_help_text'=>Arr::get($field, 'show_full_help_text', ''),
             ],
             'hover_block' => [
                 'title' => $field['label'],

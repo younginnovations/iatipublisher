@@ -1,4 +1,6 @@
-<?php if ($showLabel && $showField) : ?>
+<?php use Illuminate\Support\Arr;
+
+if ($showLabel && $showField) : ?>
     <?php if ($options['wrapper'] !== false) : ?>
         <div <?= $options['wrapperAttrs'] ?>>
         <?php endif; ?>
@@ -32,17 +34,24 @@
         <div class=<?= ($showError && isset($errors) && $errors->get($nameKey)) ? "has_error" : "" ?>>
             <?= Form::input($type, $name, $options['value'], $options['attr']) ?>
             <?php if ($options['help_block']['text']) : ?>
-                <div class="flex">
-                    <p class="help-button text-xs text-n-40 hover:text-spring-50 mb-1 cursor-pointer inline-block">Help</p>
-                    <div class="help-button-content hidden">
-                        <p class="font-bold text-bluecoral">
-                            <?= $options['help_block']['title'] ?>
-                        </p>
-                        <div class="space-y-1.5">
-                            <?= $options['help_block']['text'] ?>
+                <?php if (Arr::get($options, 'help_block.show_full_help_text')) : ?>
+                    <p class="text-xs text-n-40 hover:text-spring-50 mb-1 cursor-pointer inline-block">
+                        <?php echo $options['help_block']['text']; ?>
+                    </p>
+                <?php else : ?>
+                    <div class="flex">
+                        <p class="help-button text-xs text-n-40 hover:text-spring-50 mb-1 cursor-pointer inline-block">
+                            Help</p>
+                        <div class="help-button-content hidden">
+                            <p class="font-bold text-bluecoral">
+                                <?= $options['help_block']['title'] ?>
+                            </p>
+                            <div class="space-y-1.5">
+                                <?= $options['help_block']['text'] ?>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
     <?php endif; ?>

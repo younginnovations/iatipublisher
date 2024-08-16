@@ -42,27 +42,20 @@ class MultilevelSubElementForm extends BaseForm
                     $this->getData(sprintf('sub_elements.%s.name', $name)),
                     'collection',
                     [
-                        'type'    => 'form',
-                        'property' => 'name',
-                        'prototype' => true,
+                        'type'           => 'form',
+                        'property'       => 'name',
+                        'prototype'      => true,
                         'prototype_name' => '__PARENT_NAME__',
-                        'options' => [
-                            'class' => 'App\IATI\Elements\Forms\BaseForm',
-                            'data'  => $this->getData(sprintf('sub_elements.%s', $name)),
-                            'label' => false,
+                        'options'        => [
+                            'class'            => 'App\IATI\Elements\Forms\BaseForm',
+                            'data'             => $this->getData(sprintf('sub_elements.%s', $name)),
+                            'label'            => false,
                             'element_criteria' => $this->getData(sprintf('sub_elements.%s.element_criteria', $name)),
-                            'hover_text' => $this->getData(sprintf('sub_elements.%s.hover_text', $name)) ?? '',
-                            'help_text' => $this->getData(sprintf('sub_elements.%s.help_text', $name)) ?? '',
-                            'helper_text' => $this->getData(sprintf('sub_elements.%s.helper_text', $name)) ?? '',
-
-                            'wrapper' => [
-                                'class' => 'multi-form relative',
-                            ],
-                            'dynamic_wrapper' => [
-                                'class' => (isset($sub_element['add_more']) && $sub_element['add_more'] || Arr::get($element, 'add_more_attributes', false)) ?
-                                (strtolower($sub_element['name']) === 'narrative' && !isset($sub_element['attributes']) && !count($sub_element['attributes']) > 0 ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
-                                : 'subelement rounded-tl-lg border-l border-spring-50 mb-6',
-                            ],                        ],
+                            'hover_text'       => $this->getData(sprintf('sub_elements.%s.hover_text', $name)) ?? '',
+                            'help_text'        => $this->getData(sprintf('sub_elements.%s.help_text', $name)) ?? '',
+                            'helper_text'      => $this->getData(sprintf('sub_elements.%s.helper_text', $name)) ?? '',
+                            'wrapper'          => ['class' => $this->getBaseFormWrapperClasses()],
+                            'dynamic_wrapper'  => ['class' => $this->getBaseFormDynamicWrapperClasses($sub_element, $element)]],
                     ]
                 )->add('add_to_collection', 'button', [
                     'label' => generateAddAdditionalLabel($element['name'], $this->getData(sprintf('sub_elements.%s.name', $name))),
@@ -72,5 +65,29 @@ class MultilevelSubElementForm extends BaseForm
                 ]);
             }
         }
+    }
+
+    private function getBaseFormWrapperClasses(): string
+    {
+        return 'multi-form relative';
+    }
+
+    private function getBaseFormDynamicWrapperClasses($sub_element, $element): string
+    {
+        $hasAddMoreButton = isset($sub_element['add_more']) && $sub_element['add_more'];
+        $canAddMoreAttributes = Arr::get($element, 'add_more_attributes', false);
+        $elementHasAttributes = isset($sub_element['attributes']) && !count($sub_element['attributes']) > 0;
+        $isSubElementNarrative = isset($sub_element['name']) && strtolower($sub_element['name']) === 'narrative';
+        $collapsableClass = getCollapsableClass($element, 'multi-level-form');
+
+        if ($hasAddMoreButton || $canAddMoreAttributes) {
+            if ($isSubElementNarrative && !$elementHasAttributes) {
+                return "border-l border-spring-50 pb-11 border-reed $collapsableClass";
+            }
+
+            return "subelement rounded-tl-lg border-l border-spring-50 pb-11 $collapsableClass";
+        }
+
+        return "subelement rounded-tl-lg border-l border-spring-50 mb-6 $collapsableClass";
     }
 }
