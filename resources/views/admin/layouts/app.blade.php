@@ -51,13 +51,15 @@
                 :organization-name="{{ json_encode(Auth::user()->organization?->publisher_name, JSON_THROW_ON_ERROR) }}">
             </admin-bar>
         @endif
+
         @if (isSuperAdmin())
-        
+            
             <loggedin-header :user="{{ Auth::user() }}"
                 has-admin-bar = "{{ isSuperAdmin() && Auth::user()->organization }}"
                 :languages="{{ json_encode(getCodeList('Language', 'Activity'), JSON_THROW_ON_ERROR) }}"
                 v-bind:super-admin="{{ isSuperAdminRoute() ? 1 : 0 }}"
                 :default-language="{{ json_encode(getSettingDefaultLanguage()) }}"
+                 :onboarding="{{ json_encode(Auth::user()->organization ? Auth::user()->organization->onboarding : null) }}"
             > </loggedin-header>
         @else
             <loggedin-header
@@ -65,6 +67,7 @@
                 :languages="{{ json_encode(getCodeList('Language', 'Activity'), JSON_THROW_ON_ERROR) }}"
                 v-bind:super-admin="{{ isSuperAdminRoute() ? 1 : 0 }}"
                 :default-language="{{ json_encode(getSettingDefaultLanguage()) }}"
+                 :onboarding="{{ json_encode(Auth::user()->organization ? Auth::user()->organization->onboarding : null) }}"
             ></loggedin-header>
         @endif
         <main>

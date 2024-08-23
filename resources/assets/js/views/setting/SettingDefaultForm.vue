@@ -25,6 +25,7 @@
               />
             </button>
           </div>
+
           <Multiselect
             id="default-currency"
             v-model="defaultForm.default_currency"

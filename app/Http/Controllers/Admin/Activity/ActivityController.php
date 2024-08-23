@@ -11,6 +11,7 @@ use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ResultService;
 use App\IATI\Services\Activity\TransactionService;
 use App\IATI\Services\ImportActivityError\ImportActivityErrorService;
+use App\IATI\Services\Organization\OrganizationOnboardingService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
@@ -22,6 +23,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 /**
@@ -72,14 +74,15 @@ class ActivityController extends Controller
     /**
      * ActivityController Constructor.
      *
-     * @param ActivityService                  $activityService
-     * @param DatabaseManager                  $db
-     * @param ResultService                    $resultService
-     * @param TransactionService               $transactionService
-     * @param ActivityValidatorResponseService $activityValidatorResponseService
-     * @param ImportActivityErrorService       $importActivityErrorService
-     * @param OrganizationService              $organizationService
-     * @param SettingService                   $settingService
+     * @param  ActivityService  $activityService
+     * @param  DatabaseManager  $db
+     * @param  ResultService  $resultService
+     * @param  TransactionService  $transactionService
+     * @param  ActivityValidatorResponseService  $activityValidatorResponseService
+     * @param  ImportActivityErrorService  $importActivityErrorService
+     * @param  OrganizationService  $organizationService
+     * @param  SettingService  $settingService
+     * @param  OrganizationOnboardingService  $organizationOnboardingService
      */
     public function __construct(
         ActivityService $activityService,
@@ -89,7 +92,8 @@ class ActivityController extends Controller
         ActivityValidatorResponseService $activityValidatorResponseService,
         ImportActivityErrorService $importActivityErrorService,
         OrganizationService $organizationService,
-        SettingService $settingService
+        SettingService $settingService,
+        protected OrganizationOnboardingService $organizationOnboardingService,
     ) {
         $this->activityService = $activityService;
         $this->db = $db;
@@ -109,13 +113,54 @@ class ActivityController extends Controller
     public function index(): View|JsonResponse
     {
         try {
+            DB::beginTransaction();
             $languages = getCodeList('Language', 'Activity', filterDeprecated: true);
             $toast = generateToastData();
             $settingsDefaultValue = $this->settingService->getSetting()->default_values ?? [];
             $defaultLanguage = getDefaultValue($settingsDefaultValue, 'language', 'Activity/Language.json' ?? []);
 
-            return view('admin.activity.index', compact('languages', 'toast', 'defaultLanguage'));
+            // User onboarding part
+            $organization = Auth::user()->organization;
+            $organizationOnboarding = $this->organizationOnboardingService->getOrganizationOnboarding($organization->id);
+            $isFirstTime = false;
+
+            if (!$organizationOnboarding) {
+                $organizationOnboarding = $this->organizationOnboardingService->createOrganizationOnboarding($organization);
+                $isFirstTime = true;
+                DB::commit();
+            }
+
+            $organizationOnboarding = $organizationOnboarding->toArray();
+
+            // Data for user onboarding
+            $currencies = getCodeList('Currency', 'Organization', filterDeprecated: true);
+            $humanitarian = trans('setting.humanitarian_types');
+            $defaultFlowType = getCodeList('FlowType', 'Activity', filterDeprecated: true);
+            $defaultFinanceType = getCodeList('FinanceType', 'Activity', filterDeprecated: true);
+            $defaultAidType = getCodeList('AidType', 'Activity', filterDeprecated: true);
+            $defaultTiedStatus = getCodeList('TiedStatus', 'Activity', filterDeprecated: true);
+            $organizationType = getCodeList('OrganizationType', 'Organization', filterDeprecated: true);
+
+            return view(
+                'admin.activity.index',
+                compact(
+                    'languages',
+                    'toast',
+                    'defaultLanguage',
+                    'organizationOnboarding',
+                    'organization',
+                    'currencies',
+                    'humanitarian',
+                    'defaultFlowType',
+                    'defaultFinanceType',
+                    'defaultAidType',
+                    'defaultTiedStatus',
+                    'organizationType',
+                    'isFirstTime',
+                )
+            );
         } catch (Exception $e) {
+            DB::rollBack();
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while fetching activities.']);

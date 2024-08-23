@@ -88,6 +88,20 @@
       :completed="uploadComplete"
     />
   </div>
+
+  <OnBoardingIndex
+    :currencies="$props.currencies"
+    :languages="$props.languages"
+    :humanitarian="$props.humanitarian"
+    :default-flow-type="$props.defaultFlowType"
+    :default-finance-type="$props.defaultFinanceType"
+    :default-aid-type="$props.defaultAidType"
+    :default-tied-status="$props.defaultTiedStatus"
+    :organization-onboarding="$props.organizationOnboarding"
+    :organization="$props.organization"
+    :organization-type="$props.organizationType"
+    :is-first-time="$props.isFirstTime"
+  />
 </template>
 
 <script lang="ts">
@@ -104,6 +118,7 @@ import {
 import { watchIgnorable } from '@vueuse/core';
 import axios from 'axios';
 import XlsUploadIndicator from 'Components/XlsUploadIndicator.vue';
+import OnBoardingIndex from './onboarding/OnBoardingIndex.vue';
 import EmptyActivity from './partials/EmptyActivity.vue';
 import TableLayout from './partials/TableLayout.vue';
 import Pagination from 'Components/TablePagination.vue';
@@ -126,6 +141,7 @@ export default defineComponent({
     Loader,
     ErrorMessage,
     XlsUploadIndicator,
+    OnBoardingIndex,
   },
   props: {
     toast: {
@@ -134,6 +150,50 @@ export default defineComponent({
     },
     defaultLanguage: {
       type: Object,
+      required: true,
+    },
+    currencies: {
+      type: Object,
+      required: true,
+    },
+    languages: {
+      type: Object,
+      required: true,
+    },
+    humanitarian: {
+      type: Object,
+      required: true,
+    },
+    defaultFlowType: {
+      type: Object,
+      required: true,
+    },
+    defaultFinanceType: {
+      type: Object,
+      required: true,
+    },
+    defaultAidType: {
+      type: Object,
+      required: true,
+    },
+    defaultTiedStatus: {
+      type: Object,
+      required: true,
+    },
+    organizationOnboarding: {
+      type: Object,
+      required: true,
+    },
+    organization: {
+      type: Object,
+      required: true,
+    },
+    organizationType: {
+      type: Object,
+      required: true,
+    },
+    isFirstTime: {
+      type: Boolean,
       required: true,
     },
   },

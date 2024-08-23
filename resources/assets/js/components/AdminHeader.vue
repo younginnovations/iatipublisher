@@ -9,6 +9,12 @@
       :message="toastMessage"
       :type="toastType"
     />
+    <Toast
+      v-if="errorToastVisibility"
+      class="toast-error"
+      :message="errorToastMessage"
+      :type="errorToastType"
+    />
     <div class="flex items-center gap-5">
       <div
         class="hamburger-menu"
@@ -269,6 +275,16 @@
                   <span>Your Profile</span></a
                 >
               </li>
+              <li
+                v-if="!superAdmin"
+                class="dropdown__list border-b border-b-n-20"
+                @click="getStarted"
+              >
+                <a class="flex w-full space-x-4">
+                  <svg-vue icon="rocket-icon" class="mx-1 mt-0.5 scale-[1.2]" />
+                  <span>Get Started</span></a
+                >
+              </li>
               <li class="dropdown__list flex" @click="logout">
                 <svg-vue class="ml-1 mr-3" icon="logout"></svg-vue>
                 <button class="text-sm">Logout</button>
@@ -305,6 +321,16 @@
                 <a class="flex w-full space-x-4" href="/profile"
                   ><svg-vue class="mx-1 text-base" icon="user" />
                   <span>Your Profile</span></a
+                >
+              </li>
+              <li
+                v-if="!superAdmin"
+                class="dropdown__list border-b border-b-n-20"
+                @click="getStarted"
+              >
+                <a class="flex w-full space-x-4">
+                  <svg-vue icon="rocket-icon" class="mx-1 mt-0.5 scale-[1.2]" />
+                  <span>Get Started</span></a
                 >
               </li>
               <li class="dropdown__list flex" @click="logout">
@@ -348,6 +374,7 @@ const store = detailStore();
 
 const props = defineProps({
   user: { type: Object, required: true },
+  onboarding: { type: Object, required: true },
   organization: {
     type: Object,
     validator: (v: unknown) =>
@@ -370,6 +397,11 @@ const isLoading = ref(false);
 const showSidebar = ref(false);
 const toastMessage = ref('');
 const toastType = ref(false);
+
+const errorToastVisibility = ref(false);
+const errorToastMessage = ref('');
+const errorToastType = ref(false);
+
 const data = reactive({
   languageNavLiClasses: 'flex',
   languageNavAnchorClasses:
@@ -526,6 +558,7 @@ async function logout() {
   pa.value.publishingActivities = {};
   await axios.post('/logout').then((res) => {
     if (res.status) {
+      sessionStorage.removeItem('isModelCloseClicked');
       window.location.href = '/';
     }
   });
@@ -561,6 +594,28 @@ const searchFunction = (url: string) => {
     ? '/list-organisations'
     : '/activities/';
   window.location.href = href;
+};
+
+const getStarted = async () => {
+  const isModelCloseClicked = useStorage(
+    'isModelCloseClicked',
+    false,
+    sessionStorage
+  );
+
+  try {
+    await axios.post('/organisation-onboarding/toggle-dont-show/', {
+      value: false,
+    });
+    isModelCloseClicked.value = false;
+    sessionStorage.setItem('isForceOpenModal', 'true');
+    window.location.href = '/activities';
+  } catch {
+    errorToastVisibility.value = true;
+    setTimeout(() => (errorToastVisibility.value = false), 5000);
+    errorToastMessage.value = 'Something went wrong. Please try again later.';
+    errorToastType.value = false;
+  }
 };
 
 onMounted(() => {
@@ -613,6 +668,11 @@ provide('defaultLanguage', props.defaultLanguage);
   @apply absolute  left-2/4 z-50;
   transform: translate(-50%, -50%);
 }
+
+.toast-error {
+  @apply absolute right-5 top-5 z-50;
+}
+
 .profile__dropdown {
   @apply invisible absolute right-3 z-20 bg-white text-left text-sm text-bluecoral opacity-0 shadow-dropdown duration-300 sm:right-10;
   top: 50px;

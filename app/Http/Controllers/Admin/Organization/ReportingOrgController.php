@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Organization\ReportingOrg\ReportingOrgRequest;
 use App\IATI\Services\Organization\ReportingOrgService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -60,25 +61,31 @@ class ReportingOrgController extends Controller
      *
      * @param ReportingOrgRequest $request
      *
-     * @return RedirectResponse
+     * @return RedirectResponse|JsonResponse
      */
-    public function update(ReportingOrgRequest $request): RedirectResponse
+    public function update(ReportingOrgRequest $request): JsonResponse|RedirectResponse
     {
         try {
             DB::beginTransaction();
 
             if (!$this->reportingOrgService->update(Auth::user()->organization_id, $request->all())) {
-                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization reporting_org.');
+                return $request->expectsJson() ?
+                    response()->json(['success' => false, 'error' => 'Error has occurred while updating organization reporting_org.'], 500) :
+                    redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization reporting_org.');
             }
 
             DB::commit();
 
-            return redirect()->route('admin.organisation.index')->with('success', 'Organization reporting_org updated successfully.');
+            return $request->expectsJson() ?
+                response()->json(['success' => true, 'message' => 'Organization reporting_org updated successfully.']) :
+                redirect()->route('admin.organisation.index')->with('success', 'Organization reporting_org updated successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization reporting_org.');
+            return $request->expectsJson() ?
+                response()->json(['success' => false, 'error' => 'Error has occurred while updating organization reporting_org.'], 500) :
+                redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization reporting_org.');
         }
     }
 }

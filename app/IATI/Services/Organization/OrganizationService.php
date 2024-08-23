@@ -332,6 +332,7 @@ class OrganizationService
             $publishingInfo = $settings->publishing_info;
             $publishingInfo['publisher_id'] = $settingData['publisher_id'];
             $publishingInfo['api_token'] = $settingData['api_token'];
+            $publishingInfo['publisher_verification'] = $settingData['publisher_verification'];
             $publishingInfo['token_verification'] = $settingData['token_verification'];
 
             $settings->publishing_info = $publishingInfo;
@@ -370,6 +371,7 @@ class OrganizationService
         $publishingInfo = $settings->publishing_info;
         $publishingInfo['publisher_id'] = $publisherId;
         $publishingInfo['api_token'] = $orgApiToken;
+        $publishingInfo['publisher_verification'] = $settingsData['publisher_verification'];
         $publishingInfo['token_verification'] = $settingsData['token_verification'];
 
         $settings->publishing_info = $publishingInfo;
