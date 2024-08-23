@@ -248,4 +248,14 @@ class Organization extends Model implements Auditable
     {
         return $this->hasOne(ActivityPublished::class, 'organization_id', 'id');
     }
+
+    /**
+     * Organization has one onboarding.
+     *
+     * @return HasOne
+     */
+    public function onboarding(): HasOne
+    {
+        return $$this->hasOne(OrganizationOnboarding::class, 'org_id', 'id');
+    }
 }

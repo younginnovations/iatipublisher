@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\Organization\DocumentLinkController;
 use App\Http\Controllers\Admin\Organization\NameController;
 use App\Http\Controllers\Admin\Organization\OrganizationController;
 use App\Http\Controllers\Admin\Organization\OrganizationIdentifierController;
+use App\Http\Controllers\Admin\Organization\OrganizationOnboardingController;
 use App\Http\Controllers\Admin\Organization\RecipientCountryBudgetController;
 use App\Http\Controllers\Admin\Organization\RecipientOrgBudgetController;
 use App\Http\Controllers\Admin\Organization\RecipientRegionBudgetController;
@@ -29,6 +30,7 @@ Route::get('/organisation/agency/{country?}', [OrganizationController::class, 'g
 Route::group(['middleware' => ['can:view_organization']], static function () {
     Route::get('/organisation', [OrganizationController::class, 'show'])->name('organisation.index');
     Route::get('organisation/status', [OrganizationController::class, 'getPublisherStatus'])->name('organisation.status');
+    Route::post('organisation-onboarding/toggle-dont-show/{value}', [OrganizationOnboardingController::class, 'toggleDontShow'])->name('organisation.toggle-dont-show');
 });
 
 Route::group(['middleware' => ['can:crud_organization']], static function () {

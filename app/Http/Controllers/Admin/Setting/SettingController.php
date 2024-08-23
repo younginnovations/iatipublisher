@@ -8,6 +8,8 @@ use App\Exceptions\PublisherIdChangeByIatiAdminException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Setting\DefaultFormRequest;
 use App\Http\Requests\Setting\PublisherFormRequest;
+use App\IATI\Models\Organization\OrganizationOnboarding;
+use App\IATI\Services\Organization\OrganizationOnboardingService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
 use Exception;
@@ -36,11 +38,12 @@ class SettingController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param OrganizationService $organizationService
-     * @param SettingService      $settingService
-     * @param DatabaseManager     $db
+     * @param  OrganizationService  $organizationService
+     * @param  SettingService  $settingService
+     * @param  DatabaseManager  $db
+     * @param  OrganizationOnboardingService  $organizationOnboardingService
      */
-    public function __construct(OrganizationService $organizationService, SettingService $settingService, DatabaseManager $db)
+    public function __construct(OrganizationService $organizationService, SettingService $settingService, DatabaseManager $db, protected OrganizationOnboardingService $organizationOnboardingService)
     {
         $this->organizationService = $organizationService;
         $this->settingService = $settingService;
@@ -196,6 +199,10 @@ class SettingController extends Controller
                     $this->settingService->storePublishingInfo($settingData);
                 }
 
+                if ($this->organizationOnboardingService->checkPublishingSettingsComplete($settingData)) {
+                    $this->organizationOnboardingService->updateOrganizationOnboardingStepToComplete(Auth::user()->organization_id, OrganizationOnboarding::PUBLISHING_SETTINGS, true);
+                }
+
                 $this->db->commit();
 
                 return response()->json([
@@ -245,6 +252,9 @@ class SettingController extends Controller
             $this->db->beginTransaction();
 
             $setting = $this->settingService->storeDefaultValues($request->all());
+
+            $defaultValuesCompleted = $this->organizationOnboardingService->checkDefaultValuesComplete($setting->default_values);
+            $this->organizationOnboardingService->updateOrganizationOnboardingStepToComplete(Auth::user()->organization_id, OrganizationOnboarding::DEFAULT_VALUES, $defaultValuesCompleted);
 
             $this->db->commit();
 
