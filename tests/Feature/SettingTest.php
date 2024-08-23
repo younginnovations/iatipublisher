@@ -6,6 +6,7 @@ use App\IATI\Models\Organization\Organization;
 use App\IATI\Models\Setting\Setting;
 use App\IATI\Models\User\Role;
 use App\IATI\Models\User\User;
+use App\IATI\Services\Organization\OrganizationOnboardingService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -33,6 +34,10 @@ class SettingTest extends TestCase
     {
         $role = Role::factory()->create();
         $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
+        /** @var OrganizationOnboardingService $onboardingService */
+        $onboardingService = app()->make(OrganizationOnboardingService::class);
+        $onboardingService->createOrganizationOnboarding($org);
+        Setting::factory()->create(['organization_id' => $org->id]);
 
         $this->actingAs($org->user)->get('/setting')
              ->assertStatus(200);
@@ -47,6 +52,10 @@ class SettingTest extends TestCase
     {
         $role = Role::factory()->create();
         $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
+
+        /** @var OrganizationOnboardingService $onboardingService */
+        $onboardingService = app()->make(OrganizationOnboardingService::class);
+        $onboardingService->createOrganizationOnboarding($org);
 
         $this->actingAs($org->user)
              ->post('setting/store/default', [
@@ -72,6 +81,10 @@ class SettingTest extends TestCase
     {
         $role = Role::factory()->create();
         $org = Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();
+
+        /** @var OrganizationOnboardingService $onboardingService */
+        $onboardingService = app()->make(OrganizationOnboardingService::class);
+        $onboardingService->createOrganizationOnboarding($org);
 
         $this->actingAs($org->user)
              ->post('setting/store/default', [
@@ -176,6 +189,11 @@ class SettingTest extends TestCase
     {
         $role = Role::factory()->create();
         $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
+
+        /** @var OrganizationOnboardingService $onboardingService */
+        $onboardingService = app()->make(OrganizationOnboardingService::class);
+        $onboardingService->createOrganizationOnboarding($org);
+
         Setting::factory()->create(['organization_id' => $org->id]);
 
         $this->actingAs($org->user)

@@ -6,6 +6,8 @@ namespace App\Http\Controllers\Admin\Workflow;
 
 use App\Exceptions\PublisherNotFound;
 use App\Http\Controllers\Controller;
+use App\IATI\Models\Organization\OrganizationOnboarding;
+use App\IATI\Services\Organization\OrganizationOnboardingService;
 use App\IATI\Services\Workflow\ActivityWorkflowService;
 use App\IATI\Services\Workflow\OrganizationWorkflowService;
 use Illuminate\Http\JsonResponse;
@@ -34,7 +36,7 @@ class OrganizationWorkflowController extends Controller
      * @param OrganizationWorkflowService $organizationWorkflowService
      * @param ActivityWorkflowService $activityWorkflowService
      */
-    public function __construct(OrganizationWorkflowService $organizationWorkflowService, ActivityWorkflowService $activityWorkflowService)
+    public function __construct(OrganizationWorkflowService $organizationWorkflowService, ActivityWorkflowService $activityWorkflowService, protected OrganizationOnboardingService $organizationOnboardingService)
     {
         $this->organizationWorkflowService = $organizationWorkflowService;
         $this->activityWorkflowService = $activityWorkflowService;
@@ -59,6 +61,7 @@ class OrganizationWorkflowController extends Controller
             }
 
             $this->organizationWorkflowService->publishOrganization($organization);
+            $this->organizationOnboardingService->updateOrganizationOnboardingStepToComplete($organization->id, OrganizationOnboarding::ORGANIZATION_DATA, true);
             DB::commit();
 
             return response()->json(['success' => true, 'message' => 'Organization has been published successfully.']);
@@ -91,6 +94,7 @@ class OrganizationWorkflowController extends Controller
             }
 
             $this->organizationWorkflowService->unpublishOrganization($organization);
+            $this->organizationOnboardingService->updateOrganizationOnboardingStepToComplete($organization->id, OrganizationOnboarding::ORGANIZATION_DATA, false);
             DB::commit();
 
             return response()->json(['success' => true, 'message' => 'Organization has been un-published successfully.']);

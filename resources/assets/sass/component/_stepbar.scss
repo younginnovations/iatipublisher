@@ -1,0 +1,97 @@
+.step-bar {
+  @apply mt-3 pt-4;
+
+  .step-bar-item {
+    position: relative;
+    opacity: 80%;
+    transition: all 0.2s ease-in-out;
+
+    .step-outer-circle {
+      width: 38px;
+      height: 38px;
+      position: relative;
+      padding: 4px;
+      border-radius: 50%;
+      @apply bg-spring-10 text-bluecoral;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &.completed {
+      opacity: 100%;
+
+      .step-outer-circle {
+        @apply bg-spring-50 text-white;
+      }
+
+      &:not(:last-child)::after {
+        opacity: 100%;
+      }
+
+      &.active {
+        .step-outer-circle {
+          @apply bg-spring-10 text-white;
+        }
+
+        .step-inner-circle {
+          @apply bg-spring-50;
+        }
+      }
+    }
+
+    &.active {
+      opacity: 100%;
+
+      .step-outer-circle {
+        @apply text-teal-10;
+
+        .step-inner-circle {
+          @apply bg-spring-50;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+
+    &:not(:last-child)::after {
+      @apply bg-spring-30;
+      content: '';
+      position: absolute;
+      width: 4px;
+      height: 26px;
+      top: 100%;
+      left: 17px;
+      border-radius: 6px;
+      opacity: 40%;
+    }
+  }
+
+  :hover {
+    opacity: 100%;
+
+    .step-outer-circle {
+      @apply text-white;
+    }
+
+    .step-inner-circle {
+      @apply bg-spring-50;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &.completed {
+      .step-outer-circle {
+        @apply bg-spring-10 text-white;
+      }
+    }
+  }
+}
