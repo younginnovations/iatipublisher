@@ -813,6 +813,6 @@ $(function () {
     element.remove();
   }
 
-  handleInitialFormLoad();
-  handleNewAdditionsToFormViaMutatorsAndObservers();
+  // handleInitialFormLoad();
+  // handleNewAdditionsToFormViaMutatorsAndObservers();
 });
