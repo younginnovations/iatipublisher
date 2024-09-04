@@ -711,8 +711,18 @@ $(function () {
     const displayNameLabel = buttonInfo.dom
       ? buttonInfo.dom.previousElementSibling?.querySelector('label')
       : collapsableItem.querySelector('label');
-    const displayName = displayNameLabel?.innerText ?? 'element';
-    return getFirstWordFromText(displayName);
+
+    let displayName = displayNameLabel?.innerText || 'element';
+
+    displayName = getFirstWordFromText(displayName);
+
+    if (displayName === 'narrative') {
+      return (
+        collapsableItem.getElementsByTagName('label')[0]?.innerText || 'element'
+      );
+    }
+
+    return displayName;
   }
 
   function handleNoButtonInfo(
@@ -750,11 +760,8 @@ $(function () {
     borderClass: string
   ): void {
     if (collapsableItem.classList.contains(borderClass)) {
-      console.log('here', collapsableItem);
       collapsableItem.classList.add(`${borderClass}-was-here`);
       collapsableItem.classList.remove(borderClass);
-    } else {
-      console.log('maru', collapsableItem);
     }
   }
 
