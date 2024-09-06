@@ -1569,7 +1569,7 @@
             "type": "textarea",
             "placeholder": "Type narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -1584,7 +1584,7 @@
                 "placeholder": "Select language",
                 "choices": "Activity/Language.json",
                 "required": false,
-                "criteria": "recommended",
+                "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -1607,7 +1607,7 @@
             "placeholder": "Select code",
             "choices": "Activity/Language.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/'>For more information</a>",
             "help_text": "Select the language of the document or webpage."
           }
@@ -1627,7 +1627,7 @@
             "type": "date",
             "placeholder": "YYYY-MM-DD",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/document-date/'>For more information</a>",
             "help_text": "Provide the date of publication for the document or webpage, or provide the date that it was last updated."
           }
@@ -2897,7 +2897,7 @@
                 "type": "textarea",
                 "placeholder": "Type narrative",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "add_more": true,
                 "attr": {
                   "row": 4
@@ -2912,7 +2912,7 @@
                     "placeholder": "Select language",
                     "choices": "Activity/Language.json",
                     "required": true,
-                    "criteria": "mandatory",
+                    "criteria": "",
                     "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/description/narrative/'>For more information</a>",
                     "help_text": "If no language is selected, your default language is assumed."
                   }
@@ -2935,7 +2935,7 @@
                 "placeholder": "Select code",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "ISO 639-1 language code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/language/'>For more information</a>",
                 "help_text": "Select the language that the document is written in."
               }
@@ -2955,7 +2955,7 @@
                 "type": "date",
                 "placeholder": "YYYY-MM-DD",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/document-date/'>For more information</a>",
                 "help_text": "Provide the date for when the document was published."
               }
@@ -3235,7 +3235,7 @@
                 "type": "textarea",
                 "placeholder": "Type narrative",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "add_more": true,
                 "attr": {
                   "row": 4
@@ -3250,7 +3250,7 @@
                     "placeholder": "Select language",
                     "choices": "Activity/Language.json",
                     "required": true,
-                    "criteria": "mandatory",
+                    "criteria": "",
                     "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/description/narrative/'>For more information</a>",
                     "help_text": "If no language is selected, your default language is assumed."
                   }
@@ -3273,7 +3273,7 @@
                 "placeholder": "Select code",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "ISO 639-1 language code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/language/'>For more information</a>",
                 "help_text": "Select the language that the document is written in."
               }
@@ -3293,7 +3293,7 @@
                 "type": "date",
                 "placeholder": "YYYY-MM-DD",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "The date of publication of the document that is being linked to.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/document-date/'>For more information</a>",
                 "help_text": "Provide the date of publication for the document."
               }
@@ -3556,7 +3556,7 @@
                     "type": "textarea",
                     "placeholder": "Type narrative",
                     "required": true,
-                    "criteria": "mandatory",
+                    "criteria": "",
                     "add_more": true,
                     "attr": {
                       "row": 4
@@ -3571,7 +3571,7 @@
                         "placeholder": "Select language",
                         "choices": "Activity/Language.json",
                         "required": true,
-                        "criteria": "mandatory",
+                        "criteria": "",
                         "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/description/narrative/'>For more information</a>",
                         "help_text": "If no language is selected, your default language is assumed."
                       }
@@ -3594,7 +3594,7 @@
                     "placeholder": "Select code",
                     "choices": "Activity/Language.json",
                     "required": true,
-                    "criteria": "mandatory",
+                    "criteria": "",
                     "hover_text": "ISO 639-1 language code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/language/'>For more information</a>",
                     "help_text": ""
                   }
@@ -3614,7 +3614,7 @@
                     "type": "date",
                     "placeholder": "YYYY-MM-DD",
                     "required": true,
-                    "criteria": "mandatory",
+                    "criteria": "",
                     "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/document-date/'>For more information</a>",
                     "help_text": "Provide the date for when the document was published."
                   }
@@ -3882,7 +3882,7 @@
                     "type": "textarea",
                     "placeholder": "Type narrative",
                     "required": true,
-                    "criteria": "mandatory",
+                    "criteria": "",
                     "add_more": true,
                     "attr": {
                       "row": 4
@@ -3897,7 +3897,7 @@
                         "placeholder": "Select language",
                         "choices": "Activity/Language.json",
                         "required": true,
-                        "criteria": "mandatory",
+                        "criteria": "",
                         "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/description/narrative/'>For more information</a>",
                         "help_text": "If no language is selected, your default language is assumed."
                       }
@@ -3921,7 +3921,7 @@
                     "placeholder": "Select code",
                     "choices": "Activity/Language.json",
                     "required": true,
-                    "criteria": "mandatory",
+                    "criteria": "",
                     "hover_text": "ISO 639-1 language code.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/language/'>For more information</a>",
                     "help_text": "Select the language that the document is written in."
                   }
@@ -3941,7 +3941,7 @@
                     "type": "date",
                     "placeholder": "YYYY-MM-DD",
                     "required": true,
-                    "criteria": "mandatory",
+                    "criteria": "",
                     "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/document-date/'>For more information</a>",
                     "help_text": "Provide the date for when the document was published."
                   }
@@ -4160,7 +4160,7 @@
                     "type": "textarea",
                     "placeholder": "Type narrative",
                     "required": true,
-                    "criteria": "mandatory",
+                    "criteria": "",
                     "add_more": true,
                     "attr": {
                       "row": 4
@@ -4175,7 +4175,7 @@
                         "placeholder": "Select language",
                         "choices": "Activity/Language.json",
                         "required": true,
-                        "criteria": "mandatory",
+                        "criteria": "",
                         "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/description/narrative/'>For more information</a>",
                         "help_text": "If no language is selected, your default language is assumed."
                       }
@@ -4199,7 +4199,7 @@
                     "placeholder": "Select code",
                     "choices": "Activity/Language.json",
                     "required": false,
-                    "criteria": "recommended",
+                    "criteria": "",
                     "hover_text": "ISO 639-1 language code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/language/'>For more information</a>",
                     "help_text": "Select the language that the document is written in."
                   }
@@ -4219,7 +4219,7 @@
                     "type": "date",
                     "placeholder": "YYYY-MM-DD",
                     "required": true,
-                    "criteria": "mandatory",
+                    "criteria": "",
                     "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/document-date/'>For more information</a>",
                     "help_text": "Provide the date for when the document was published."
                   }
