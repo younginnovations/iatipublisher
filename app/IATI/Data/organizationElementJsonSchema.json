@@ -1435,7 +1435,7 @@
             "type": "textarea",
             "placeholder": "Type narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -1451,7 +1451,7 @@
                 "choices": "Activity/Language.json",
                 "placeholder": "Select language",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/narrative/'>For more information</a>",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -1476,7 +1476,7 @@
             "choices": "Activity/Language.json",
             "placeholder": "Select code",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "ISO 639-1 language code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/language/'>For more information</a>",
             "help_text": "Select the language of the document or webpage"
           }
@@ -1496,7 +1496,7 @@
             "type": "date",
             "placeholder": "YYYY-MM-DD",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "This attribute is required. This value must be of type xsd:date. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/document-date/'>For more information</a>",
             "help_text": "Provide the date of publication for the document or webpage, or provide the date that it was last updated."
           }
