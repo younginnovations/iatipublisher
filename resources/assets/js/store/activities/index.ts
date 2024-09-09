@@ -1,5 +1,8 @@
 import { createStore, Commit } from 'vuex';
-
+interface ActivitiesInterface {
+  data: any[];
+  last_page: number;
+}
 interface StateInterface {
   selectedActivities: number[];
   bulkPublishLength: number;
@@ -12,16 +15,36 @@ interface StateInterface {
   bulkpublishActivities: object;
   startBulkPublish: boolean;
   startValidation: boolean;
+  startCoreValidation: boolean;
+  startPublishingRetry: boolean;
   validatingActivities: string;
   validatingActivitiesNames: string[];
+  validationRunning: boolean;
+  bulkActivityPublishStatus: {
+    iatiValidatorLoader: boolean;
+    validationNames: string[];
+    validationStats: {
+      complete: number;
+      total: number;
+      failed: number;
+    };
+  };
+}
+interface actElements {
+  activity_id: number;
+  activity_title: string;
+  status: string;
 }
 
 const state = {
-  selectedActivities: [],
+  selectedActivities: [] as number[],
   bulkPublishLength: 0,
   cancelUpload: false,
   startBulkPublish: false,
   startValidation: false,
+  startCoreValidation: false,
+  startPublishingRetry: false,
+  validationRunning: false,
   validatingActivities: '',
   maximizeXls: true,
   startXlsDownload: false,
@@ -31,13 +54,49 @@ const state = {
   validatingActivitiesNames: [],
   bulkpublishActivities: {
     publishingActivities: {
-      activities: { activity_id: 0, activity_title: '', status: '' },
+      activities: {
+        activity_id: 0,
+        activity_title: '',
+        status: '',
+      },
       organization_id: 0,
       job_batch_uuid: '',
       status: '',
       message: '',
     },
   },
+  bulkActivityPublishStatus: {
+    iatiValidatorLoader: false,
+    validationNames: [] as string[],
+    validationStats: {
+      complete: 0,
+      total: 0,
+      failed: 0,
+    },
+    importedActivitiesList: [] as {
+      title: any;
+      status: any;
+      is_valid: any;
+    }[],
+    showValidationError: false,
+    completedSteps: [] as number[],
+    publishing: {
+      response: null as any,
+      activities: null as any,
+      hasFailedActivities: {
+        data: {} as actElements,
+        ids: [] as number[],
+        status: false,
+      },
+    },
+  },
+  publishAlertValue: false,
+  isPublishedModalMinimized: false,
+  showBulkpublish: true,
+  startNewPublishing: {
+    state: false,
+  },
+  activitiesList: {} as ActivitiesInterface,
 };
 
 const mutations = {
@@ -96,6 +155,13 @@ const mutations = {
     payload: string
   ) {
     state.validatingActivities = payload;
+  },
+
+  mutateStartCoreValidation(state: StateInterface, payload: boolean) {
+    state.startCoreValidation = payload;
+  },
+  mutatePublishRetry(state: StateInterface, payload: boolean) {
+    state.startPublishingRetry = payload;
   },
 };
 
@@ -174,6 +240,16 @@ const actions = {
     payload: string
   ) {
     commit('mutateValidatingActivities', payload);
+  },
+
+  updateStartCoreValidation: function (
+    { commit }: CommitFunction,
+    payload: boolean
+  ) {
+    commit('mutateStartCoreValidation', payload);
+  },
+  updatePublishRetry: function ({ commit }: CommitFunction, payload: number) {
+    commit('mutatePublishRetry', payload);
   },
 };
 

@@ -173,14 +173,19 @@ class ActivityWorkflowService
      * @param $organization
      * @param $settings
      * @param bool $publishFile
+     * @param bool|string $uuid
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws \JsonException
      */
-    public function publishActivities($activities, $organization, $settings, bool $publishFile = true): void
+    public function publishActivities($activities, $organization, $settings, bool $publishFile = true, bool|string $uuid = false): void
     {
-        $this->xmlGeneratorService->generateActivitiesXml(
+        if ($uuid) {
+            $this->xmlGeneratorService->setUuid($uuid);
+        }
+
+        $successfullyProcessedActivities = $this->xmlGeneratorService->generateActivitiesXml(
             $activities,
             $settings,
             $organization
@@ -190,7 +195,7 @@ class ActivityWorkflowService
         $publishingInfo = $settings->publishing_info;
         $this->publisherService->publishFile($publishingInfo, $activityPublished, $organization);
 
-        foreach ($activities as $activity) {
+        foreach ($successfullyProcessedActivities as $activity) {
             $this->activityService->updatePublishedStatus($activity, 'published', true);
             $this->activitySnapshotService->createOrUpdateActivitySnapshot($activity);
         }
