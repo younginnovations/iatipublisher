@@ -8,7 +8,7 @@ use App\IATI\Repositories\Repository;
 use App\ValidationStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ValidationStatusRepository.
@@ -87,7 +87,7 @@ class ValidationStatusRepository extends Repository
      */
     public function storeValidationStatus(int $activityId, int $userId, string $status = 'processing', array $response = []): Model|Builder
     {
-        return $this->model->updateOrCreate([
+        return $this->model->create([
             'user_id'       =>  $userId,
             'activity_id'   =>  $activityId,
             'status'        =>  $status,
@@ -104,54 +104,11 @@ class ValidationStatusRepository extends Repository
      */
     public function getActivitiesValidationStatus(array $activityIds): array
     {
-        $allCompleted = true;
-
-        $response = [];
-        $response['status'] = 'processing';
-        $response['total'] = count($activityIds);
-        $response['complete_count'] = 0;
-        $response['failed_count'] = 0;
-        $response['activities'] = [];
-
-        $validatorStatuses = $this->model->with('activity')->whereIn('activity_id', $activityIds)->get();
-
-        if ($validatorStatuses->count()) {
-            $result = [];
-            foreach ($validatorStatuses as $validatorStatus) {
-                $act = $validatorStatus->activity->title;
-
-                $result[$validatorStatus->activity_id] = [
-                    'title'  => Arr::get($act, '0.narrative', ''),
-                    'status' => $validatorStatus->status,
-                ];
-
-                if ($validatorStatus->status !== 'completed') {
-                    $allCompleted = false;
-                }
-
-                if ($validatorStatus->status === 'failed') {
-                    $response['failed_count']++;
-                    $result[$validatorStatus->activity_id]['is_valid'] = false;
-                }
-
-                if ($validatorStatus->status === 'completed') {
-                    $response['complete_count']++;
-                    $result[$validatorStatus->activity_id]['is_valid'] = json_decode($validatorStatus->response, true)['response']['valid'];
-                }
-            }
-
-            if ($allCompleted) {
-                $response['status'] = 'completed';
-            } elseif ($response['failed_count'] + $response['complete_count'] === $response['total']) {
-                $response['status'] = 'completed';
-            }
-
-            $response['activities'] = $result;
-
-            return $response;
-        }
-
-        return $response;
+        return $this->model->whereIn('activity_id', $activityIds)
+                            ->select(DB::raw("response->>'title' as title"), 'status')
+                            ->get()
+                            ->pluck('status', 'title')
+                            ->toArray();
     }
 
     /**
@@ -203,45 +160,5 @@ class ValidationStatusRepository extends Repository
     {
         return $this->model->where('user_id', auth()->user()->id)
                            ->delete();
-    }
-
-    /**
-     * Change source: https://github.com/younginnovations/iatipublisher/issues/1423.
-     * Bug: Activity validation status response missing some activities.
-     *
-     * Basically what was happening is:
-     * - Previously RegistryValidatorJob::dispatch($activity, $user); would be dispatched for each activity.
-     * - This would mean that jobs would be lined one after another.
-     * - Since RegistryValidatorJob, creates the row in validation_status table,
-     *      N rows would not be created unless all jobs finished going through the queue.
-     *
-     * Let ,
-     *  T be total number of activities we need to validate
-     *  Q be total number of jobs finished the queue.
-     *  T and Q will never be equal until all jobs have completed.
-     * Meaning method: getActivitiesValidationStatus() would be processing wrong number of validation_status via:
-     * $validatorStatuses = $this->model->with('activity')->whereIn('activity_id', $activityIds)->get();
-     *
-     * This method will make it so that T and Q are equal by padding the rows in 'validation_status' table.
-     *
-     * @param array $activityIds
-     * @param int $userId
-     * @return void
-     */
-    public function insertInitialValidatorResponseDataForProperResponse(array $activityIds, int $userId): void
-    {
-        $now = now();
-        $initialStatus = 'processing';
-        $insertableValidationStatus = array_map(function ($activityId) use ($userId, $now, $initialStatus) {
-            return [
-                'user_id'     => $userId,
-                'activity_id' => $activityId,
-                'created_at'  => $now,
-                'response'    => null,
-                'status'      => $initialStatus,
-            ];
-        }, $activityIds);
-
-        $this->model->insert($insertableValidationStatus);
     }
 }

@@ -23,6 +23,3 @@ secret.yaml
 github-credentials.yaml
 /app_versions/*.json
 /app/DataMigration/*.xlsx
-/public/css
-/public/js
-/storage/test.xml

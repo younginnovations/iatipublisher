@@ -74,7 +74,6 @@
     <XlsUploadIndicator
       v-if="
         (xlsData ||
-          store.state.startValidation ||
           (downloading && !downloadCompleted) ||
           publishingActivities ||
           startBulkPublish) &&
@@ -99,7 +98,6 @@ import {
   ref,
   watch,
   Ref,
-  watchEffect,
 } from 'vue';
 import { watchIgnorable } from '@vueuse/core';
 import axios from 'axios';
@@ -139,7 +137,6 @@ export default defineComponent({
   },
   setup(props) {
     interface ActivitiesInterface {
-      data: any;
       last_page: number;
     }
     const activities = reactive({}) as ActivitiesInterface;
@@ -272,6 +269,7 @@ export default defineComponent({
           startBulkPublish.value = true;
           publishingActivities.value =
             store.state.bulkpublishActivities.publishingActivities;
+
           return;
         }
         startBulkPublish.value = false;
@@ -476,14 +474,6 @@ export default defineComponent({
           allPublishStatusCountMap.value.draft = response.data.draft;
         });
     }
-
-    /**
-     * watch
-     */
-    watchEffect(() => {
-      store.state.activitiesList = activities;
-    });
-
     /**
      * Provide
      */
@@ -503,7 +493,6 @@ export default defineComponent({
     provide('defaultLanguage', props.defaultLanguage);
 
     return {
-      store,
       activities,
       state,
       isEmpty,
