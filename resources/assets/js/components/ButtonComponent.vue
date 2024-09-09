@@ -1,7 +1,7 @@
 <template>
   <button
-    :disabled="activityLength || isLoading || disabled"
-    class="button relative text-n-40 disabled:cursor-not-allowed disabled:bg-n-40"
+    :disabled="activityLength || isLoading"
+    class="button relative text-n-40"
     :class="[
       { '!cursor-not-allowed opacity-80': activityLength || isLoading },
       btnType,
@@ -48,12 +48,6 @@ export default defineComponent({
       default: '',
     },
     activityLength: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-
-    disabled: {
       type: Boolean,
       required: false,
       default: false,

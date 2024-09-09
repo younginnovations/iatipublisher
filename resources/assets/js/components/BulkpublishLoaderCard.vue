@@ -5,14 +5,33 @@
       <div class="rounded-lg border border-n-20 bg-white p-4">
         <div class="flex items-center justify-between pb-4">
           <h3 class="flex items-center space-x-2 text-sm text-n-50">
-            <span>Activities </span
+            <span>Multiple Activities </span
             ><span
               class="flex h-6 w-6 items-center justify-center rounded-full bg-lagoon-10 text-lagoon-50"
               >0
             </span>
           </h3>
         </div>
+
         <ShimmerLoading />
+
+        <div class="flex items-center justify-between">
+          <button
+            class="space-x-1.5 text-sm leading-[22px] text-blue-50"
+            @click="openModel = !openModel"
+          >
+            <span v-text="!openModel ? 'Show details' : 'Hide details'" />
+            <svg-vue
+              :class="{ 'rotate-180': openModel }"
+              class="cursor-pointer text-[7px] text-bluecoral duration-200"
+              icon="dropdown-arrow"
+            />
+          </button>
+        </div>
+
+        <div v-if="openModel">
+          <ShimmerLoading />
+        </div>
       </div>
     </div>
   </div>

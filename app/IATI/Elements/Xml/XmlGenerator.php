@@ -6,7 +6,6 @@ namespace App\IATI\Elements\Xml;
 
 use App\Constants\Enums;
 use App\IATI\Models\Setting\Setting;
-use App\IATI\Repositories\Activity\BulkPublishingStatusRepository;
 use App\IATI\Services\Activity\ActivityPublishedService;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\BudgetService;
@@ -229,46 +228,23 @@ class XmlGenerator
     protected ActivityPublishedService $activityPublishedService;
 
     /**
-     * @var BulkPublishingStatusRepository
-     */
-    private BulkPublishingStatusRepository $publishingStatusRepository;
-
-    /**
-     * @var string|bool
-     */
-    private string|bool $uuid;
-
-    /**
      * XmlGenerator Constructor.
      *
      * @param ActivityService $activityService
      * @param OrganizationService $organizationService
      * @param ArrayToXml $arrayToXml
      * @param ActivityPublishedService $activityPublishedService
-     * @param BulkPublishingStatusRepository $publishingStatusRepository
      */
     public function __construct(
         ActivityService $activityService,
         OrganizationService $organizationService,
         ArrayToXml $arrayToXml,
-        ActivityPublishedService $activityPublishedService,
-        BulkPublishingStatusRepository $publishingStatusRepository
+        ActivityPublishedService $activityPublishedService
     ) {
         $this->activityService = $activityService;
         $this->organizationService = $organizationService;
         $this->arrayToXml = $arrayToXml;
         $this->activityPublishedService = $activityPublishedService;
-        $this->publishingStatusRepository = $publishingStatusRepository;
-    }
-
-    /**
-     * @param bool|string $uuid
-     *
-     * @return void
-     */
-    public function setUuid(bool|string $uuid): void
-    {
-        $this->uuid = $uuid;
     }
 
     /**
@@ -304,29 +280,20 @@ class XmlGenerator
      * @param $organization
      * @param bool $refreshTimestamp
      *
-     * @return array
+     * @return void
      *
      * @throws JsonException
      *
      * @throws Exception
      */
-    public function generateActivitiesXml($activityData, $settings, $organization, bool $refreshTimestamp = true): array
+    public function generateActivitiesXml($activityData, $settings, $organization, bool $refreshTimestamp = true): void
     {
         $publishingInfo = $settings->publishing_info;
         $publisherId = Arr::get($publishingInfo, 'publisher_id', 'Not Available');
         $innerActivityXmlArray = [];
         $activityMappedToActivityIdentifier = [];
-        $successfullyProcessedActivities = [];
 
         foreach ($activityData as $activity) {
-            if ($this->isNormalWorkflow($refreshTimestamp)) {
-                $this->publishingStatusRepository->updateActivityStatus($activity->id, $this->uuid, 'processing');
-
-                if (!$this->bulkPublishHasNotBeenCanceled($activity->id, $this->uuid)) {
-                    continue;
-                }
-            }
-
             $publishedActivity = sprintf('%s-%s.xml', $publisherId, $activity->id);
             $activityCompleteXml = $this->getXml($activity, $activity->transactions ?? [], $activity->results ?? [], $settings, $organization, $refreshTimestamp);
             $innerActivityXml = $activityCompleteXml->getElementsByTagName('iati-activity')->item(0);
@@ -338,8 +305,6 @@ class XmlGenerator
             $publishedFiles[] = $publishedActivity;
 
             awsUploadFile(sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $publishedActivity), $activityCompleteXml->saveXML());
-
-            $successfullyProcessedActivities[] = $activity;
         }
 
         if (count($innerActivityXmlArray)) {
@@ -347,8 +312,6 @@ class XmlGenerator
             $this->savePublishedFiles($filename, $activity->org_id, $publishedFiles);
             $this->appendMultipleInnerActivityXmlToMergedXml($innerActivityXmlArray, $settings, $organization, $activityMappedToActivityIdentifier, $refreshTimestamp);
         }
-
-        return $successfullyProcessedActivities;
     }
 
     /**
@@ -886,29 +849,5 @@ class XmlGenerator
         }
 
         return $iatiIdentifierArray;
-    }
-
-    /**
-     * @param bool $refreshTimestamp
-     *
-     * @return bool
-     */
-    private function isNormalWorkflow(bool $refreshTimestamp): bool
-    {
-        return $refreshTimestamp;
-    }
-
-    /**
-     * @param $activityId
-     * @param bool|string $uuid
-     *
-     * @return bool
-     */
-    private function bulkPublishHasNotBeenCanceled($activityId, bool|string $uuid = false): bool
-    {
-        $activityPublishingStatus = $this->publishingStatusRepository->getSpecificActivityPublishingStatus($activityId, $uuid);
-        $activityPublishingStatus = $activityPublishingStatus ?? [];
-
-        return count($activityPublishingStatus) !== 0;
     }
 }

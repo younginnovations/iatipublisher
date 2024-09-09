@@ -99,6 +99,7 @@
                   v-if="store.state.unPublished"
                   :activity-id="activityProps.id"
                 />
+
                 <!-- Publish Activity -->
                 <Publish
                   v-if="store.state.showPublished"
@@ -107,7 +108,6 @@
                   :core-completed="coreCompleted"
                   :activity-id="activityProps.id"
                   :deprecation-status-map="deprecationStatusMap"
-                  :pa="pa"
                 />
               </div>
             </div>
@@ -362,7 +362,6 @@
       </div>
     </div>
     <XlsUploadIndicator />
-    <PublishSelected />
   </div>
 </template>
 
@@ -397,7 +396,6 @@ import ErrorPopUp from 'Components/ErrorPopUp.vue';
 import getActivityTitle from 'Composable/title';
 import XlsUploadIndicator from 'Components/XlsUploadIndicator.vue';
 import RefreshToastMessage from 'Activity/bulk-publish/RefreshToast.vue';
-import PublishSelected from 'Activity/bulk-publish/PublishSelected.vue';
 
 // Activity Components
 import Elements from 'Activity/partials/ActivitiesElements.vue';
@@ -425,7 +423,6 @@ export default defineComponent({
     XlsUploadIndicator,
     Toast,
     RefreshToastMessage,
-    PublishSelected,
   },
   props: {
     elements: {
@@ -506,6 +503,7 @@ export default defineComponent({
     const { types, coreCompleted } = toRefs(props);
     let removed = sessionStorage.getItem('removed');
 
+    console.log('types', types);
     const store = detailStore();
     const indexStore = useStore();
     const showSidebar = ref(false);
@@ -826,8 +824,6 @@ export default defineComponent({
       refreshToastMsg,
       publishingActivities,
       width,
-      indexStore,
-      pa,
     };
   },
   methods: { onlyDeprecatedStatusMap },

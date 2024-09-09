@@ -81,15 +81,7 @@
             />
             <div class="flex flex-col items-end gap-2 lg:flex-row">
               <div class="flex gap-2">
-                <DownloadActivityButton />
-                <BtnComponent
-                  v-if="store.state.selectedActivities.length > 0"
-                  type="secondary"
-                  :text="`Publish Selected (${store.state.selectedActivities.length})`"
-                  icon="approved-cloud"
-                  @click="checkPublish"
-                />
-                <PublishSelected ref="publishRef" />
+                <DownloadActivityButton /> <PublishSelected />
               </div>
               <div class="flex gap-2">
                 <DeleteButton
@@ -106,14 +98,14 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref, Ref } from 'vue';
+import { inject } from 'vue';
 import DownloadActivityButton from './DownloadActivityButton.vue';
 import AddActivityButton from './AddActivityButton.vue';
 import Toast from 'Components/ToastMessage.vue';
 import RefreshToastMessage from 'Activity/bulk-publish/RefreshToast.vue';
 import PublishSelected from 'Activity/bulk-publish/PublishSelected.vue';
 import DeleteButton from 'Components/buttons/DeleteButton.vue';
-import BtnComponent from 'Components/ButtonComponent.vue';
+
 // Vuex Store
 import { useStore } from 'Store/activities/index';
 import ErrorPopUp from 'Components/ErrorPopUp.vue';
@@ -134,11 +126,4 @@ const refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
 const toastMessage = inject('toastData') as ToastInterface;
 const errorData = inject('errorData') as ToastInterface;
 const store = useStore();
-const publishRef: Ref<typeof PublishSelected | null> = ref(null);
-
-const checkPublish = () => {
-  if (publishRef.value) {
-    publishRef.value.checkPublish();
-  }
-};
 </script>

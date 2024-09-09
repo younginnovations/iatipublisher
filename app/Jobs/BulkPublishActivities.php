@@ -98,13 +98,22 @@ class BulkPublishActivities implements ShouldQueue
     public function handle(BulkPublishingStatusService $publishingStatusService, ActivityWorkflowService $activityWorkflowService, ActivityService $activityService): void
     {
         $this->activities->load(['transactions', 'results.indicators.periods']);
+        $counter = 0;
         $this->setServices($publishingStatusService, $activityWorkflowService, $activityService);
 
         if (count($this->activities)) {
-            /*
-             * See app/IATI/Services/Xml/XmlGeneratorService.php for change documentation.
-             */
-            $this->publishActivities($this->activities, $this->organization, $this->settings, true, $this->uuid);
+            foreach ($this->activities as $activity) {
+                $publishFile = false;
+
+                if ($counter === 0 || $counter === count($this->activities) - 1) {
+                    $publishFile = true;
+                }
+
+                $this->publishingStatusService->updateActivityStatus($activity->id, $this->uuid, 'processing');
+                $counter++;
+            }
+
+            $this->publishActivities($this->activities, $this->organization, $this->settings, $publishFile);
         }
     }
 
@@ -131,14 +140,13 @@ class BulkPublishActivities implements ShouldQueue
      * @param $organization
      * @param $settings
      * @param $publishFile
-     * @param bool $uuid
      *
      * @return void
      */
-    public function publishActivities($activities, $organization, $settings, $publishFile, bool|string $uuid = false): void
+    public function publishActivities($activities, $organization, $settings, $publishFile): void
     {
         try {
-            $this->activityWorkflowService->publishActivities($activities, $organization, $settings, $publishFile, $uuid);
+            $this->activityWorkflowService->publishActivities($activities, $organization, $settings, $publishFile);
 
             foreach ($activities as $activity) {
                 $this->publishingStatusService->updateActivityStatus($activity->id, $this->uuid, 'completed');

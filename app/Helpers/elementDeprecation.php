@@ -32,9 +32,9 @@ function hasDeprecatedValue($element, $compareMap): bool
  */
 function generateDeprecationMap($element, $compareMap, string $path = ''): array
 {
-    if ($element) {
-        $results = [];
+    $results = [];
 
+    if ($results) {
         foreach ($element as $key => $value) {
             if (is_array($value)) {
                 $nestedResults = generateDeprecationMap($value, $compareMap, $path . ($path === '' ? '' : '.') . $key);
@@ -54,11 +54,9 @@ function generateDeprecationMap($element, $compareMap, string $path = ''): array
                 }
             }
         }
-
-        return $results;
     }
 
-    return [];
+    return $results;
 }
 
 function onlyDeprecatedItemsFromCodeList(string $path)

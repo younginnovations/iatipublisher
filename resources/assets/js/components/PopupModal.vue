@@ -49,11 +49,6 @@ export default defineComponent({
       required: false,
       default: '809',
     },
-    disableBodyOverflow: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
   },
   emits: ['close', 'reset'],
   setup(props, { emit }) {
@@ -83,9 +78,7 @@ export default defineComponent({
       () => props.modalActive,
       (modalActive) => {
         if (modalActive) {
-          if (!props.disableBodyOverflow) {
-            document.documentElement.style.overflow = 'hidden';
-          }
+          document.documentElement.style.overflow = 'hidden';
           const checkSupportButton = setInterval(() => {
             const supportButton: HTMLElement = document.querySelector(
               '#launcher'
@@ -98,9 +91,7 @@ export default defineComponent({
             }
           }, 10);
         } else {
-          if (!props.disableBodyOverflow) {
-            document.documentElement.style.overflow = 'auto';
-          }
+          document.documentElement.style.overflow = 'auto';
           const checkSupportButton = setInterval(() => {
             const supportButton: HTMLElement = document.querySelector(
               '#launcher'
@@ -120,10 +111,7 @@ export default defineComponent({
       emit('close');
       emit('reset');
     };
-    return {
-      close,
-      props,
-    };
+    return { close };
   },
 });
 </script>

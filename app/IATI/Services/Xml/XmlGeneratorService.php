@@ -27,31 +27,6 @@ class XmlGeneratorService
     protected XmlSchemaErrorParser $xmlErrorParser;
 
     /**
-     * Change Source: https://github.com/younginnovations/iatipublisher/issues/1423
-     * Bug: Cancel bulk publishing not working.
-     *
-     * We can, should and must only cancel bulk publish for activity where 'bulk_publishing_status' table  is status 'created'.
-     * The publishing process is synchronous in nature.
-     * In the previous code, the status of all activity would change to 'processing' when the first activity is processed.
-     * So basically the status was preemptively changing to 'processing' for all activity, that didn't accurately represent the actual status.
-     *
-     * The change I'm making, will provide UUID to XmlGenerator so that I can call BulkPublishingStatusRepository::updateActivityStatus() method.
-     *
-     * @var string|bool
-     */
-    private string|bool  $uuid;
-
-    /**
-     * @param bool|string $uuid
-     *
-     * @return void
-     */
-    public function setUuid(bool|string $uuid): void
-    {
-        $this->uuid = $uuid;
-    }
-
-    /**
      * XmlGeneratorService Constructor.
      *
      * @param XmlGenerator $xmlGenerator
@@ -86,17 +61,13 @@ class XmlGeneratorService
      * @param $settings
      * @param $organization
      *
-     * @return array
+     * @return void
      *
      * @throws \JsonException
      */
-    public function generateActivitiesXml($activities, $settings, $organization): array
+    public function generateActivitiesXml($activities, $settings, $organization): void
     {
-        if ($this->uuid) {
-            $this->xmlGenerator->setUuid($this->uuid);
-        }
-
-        return $this->xmlGenerator->generateActivitiesXml($activities, $settings, $organization);
+        $this->xmlGenerator->generateActivitiesXml($activities, $settings, $organization);
     }
 
     /**
@@ -136,8 +107,8 @@ class XmlGeneratorService
      *
      * @param DOMDocument $generatedXmlContent
      * @param $settings
-     * @param $activity
-     * @param $organization
+     * @param string $targetIdentifier
+     *
      * @return void
      *
      * @throws Exception

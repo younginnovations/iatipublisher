@@ -1155,19 +1155,6 @@ if (!function_exists('flattenArrayWithKeys')) {
     }
 }
 
-if (!function_exists('arrayOr')) {
-    function arrayOr(array $array): bool
-    {
-        foreach ($array as $item) {
-            if ($item) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-}
-
 if (!function_exists('refreshActivityDeprecationStatusMap')) {
     function refreshActivityDeprecationStatusMap(array $activity): array
     {
