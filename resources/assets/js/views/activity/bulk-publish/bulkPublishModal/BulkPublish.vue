@@ -301,12 +301,4 @@ watchEffect(() => {
     store.state.isPublishedModalMinimized = sharedMinimize.value;
   }
 });
-
 </script>
-
-<style scoped></style>
-<!-- 
-
-else if (props.selectedActivities) {
-  count = props.selectedActivities.length;
-} -->

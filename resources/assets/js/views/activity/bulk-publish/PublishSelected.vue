@@ -39,7 +39,7 @@
               pa?.publishingActivities &&
               Object.keys(pa?.publishingActivities).length > 0)
           "
-          :width="825"
+          width="825"
           :disable-body-overflow="true"
         >
           <BulkPublishingModal

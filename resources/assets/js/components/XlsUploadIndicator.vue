@@ -2,7 +2,8 @@
   <div
     v-show="
       (downloading && !downloadCompleted && !cancelDownload) ||
-      store.state.isPublishedModalMinimized
+      store.state.isPublishedModalMinimized ||
+      (xlsData && showXlsStatus)
     "
   >
     <div

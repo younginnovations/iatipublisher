@@ -56,7 +56,9 @@
         @active-tab="handleActiveTab"
       >
         <template #tabOne>
-          <ul class="space-y-2 max-h-[50vh] overflow-auto divide-y divide-n-20 pb-4 duration-200">
+          <ul
+            class="max-h-[50vh] space-y-2 divide-y divide-n-20 overflow-auto pb-4 duration-200"
+          >
             <template v-if="Object.keys(validActivities).length > 0">
               <li
                 v-for="(value, key) in validActivities"
@@ -99,7 +101,9 @@
         </template>
 
         <template #tabTwo>
-          <ul class="space-y-2 max-h-[50vh] overflow-auto divide-y divide-n-20 pb-4 duration-200">
+          <ul
+            class="max-h-[50vh] space-y-2 divide-y divide-n-20 overflow-auto pb-4 duration-200"
+          >
             <template v-if="Object.keys(inValidedActivities).length > 0">
               <li
                 v-for="(value, key) in inValidedActivities"
@@ -146,7 +150,9 @@
             activities. You can still continue to publish
           </span>
         </div>
-        <ul class="space-y-2 overflow-auto max-h-[50vh] divide-y divide-n-20 px-4 pb-4 duration-200">
+        <ul
+          class="max-h-[50vh] space-y-2 divide-y divide-n-20 overflow-auto px-4 pb-4 duration-200"
+        >
           <template v-if="Object.keys(validActivities).length > 0">
             <li
               v-for="(value, key) in validActivities"
@@ -211,15 +217,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import {
-  watch,
-  defineProps,
-  ref,
-  onMounted,
-  inject,
-  Ref,
-  computed,
-} from 'vue';
+import { watch, defineProps, ref, onMounted, inject, Ref, computed } from 'vue';
 
 import { useStore } from 'Store/activities/index';
 import RollingLoader from '../RollingLoaderComponent.vue';
@@ -259,11 +257,6 @@ onMounted(() => {
   let showPopup = Boolean(localStorage.getItem('activityValidating'));
   if (showPopup) {
     store.dispatch('updateStartValidation', true);
-  }
-
-  let activitiesIds = localStorage.getItem('validatingActivities');
-  if (activitiesIds) {
-    store.dispatch('updateValidatingActivities', activitiesIds);
   }
 });
 

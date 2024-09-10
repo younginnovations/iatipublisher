@@ -15,7 +15,7 @@
         Activity
       </div>
       <ul
-        class="space-y-4 max-h-[50vh] overflow-auto divide-y divide-n-20 px-6 pb-4 text-sm leading-[22px] tracking-normal text-n-50"
+        class="max-h-[50vh] space-y-4 divide-y divide-n-20 overflow-auto px-6 pb-4 text-sm leading-[22px] tracking-normal text-n-50"
       >
         <li
           v-for="(value, name, index) in store.state.bulkActivityPublishStatus
