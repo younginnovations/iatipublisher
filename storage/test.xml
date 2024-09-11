@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<iati-activities version="2.03" generated-datetime="2024-07-30T07:27:45+00:00">
-  <iati-activity last-updated-datetime="2024-07-30T07:27:45+00:00" xml:lang="aa" humanitarian="1" hierarchy="1">
-    <iati-identifier>AX-COA-12344-Ac2</iati-identifier>
-    <reporting-org type="10" ref="AX-COA-12344" secondary-reporter="0">
-      <narrative xml:lang="aa">momik-test-humanitarian</narrative>
+<iati-activities version="2.03" generated-datetime="2024-09-10T11:32:35+00:00">
+  <iati-activity last-updated-datetime="2024-09-10T11:32:35+00:00" xml:lang="aa">
+    <iati-identifier>AF-CBR-8888-12313</iati-identifier>
+    <reporting-org type="11" ref="AF-CBR-8888" secondary-reporter="1">
+      <narrative xml:lang="aa">My org's name - editted</narrative>
     </reporting-org>
     <title>
-      <narrative xml:lang="aa">Act2</narrative>
+      <narrative xml:lang="aa">yipl testing-edit</narrative>
     </title>
   </iati-activity>
 </iati-activities>

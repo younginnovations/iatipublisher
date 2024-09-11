@@ -281,6 +281,7 @@
       :completed="uploadComplete"
       :publishing-activities="publishingActivities"
     />
+    <PublishSelected />
   </div>
   <Loader
     v-if="loader"
@@ -500,6 +501,7 @@ import dateFormat from 'Composable/dateFormat';
 import Pagination from 'Components/TablePagination.vue';
 import { useStore } from 'Store/activities/index';
 import { useStorage } from '@vueuse/core';
+import PublishSelected from 'Activity/bulk-publish/PublishSelected.vue';
 
 interface ActivitiesInterface {
   last_page: number;

@@ -37,7 +37,6 @@
         <span class="checkmark" />
       </label>
     </div>
-
     <div class="accordion-content">
       <div>
         <ul class="mb-2">
