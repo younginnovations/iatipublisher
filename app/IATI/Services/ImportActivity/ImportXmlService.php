@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\ImportActivity;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Activity\IndicatorRepository;
 use App\IATI\Repositories\Activity\PeriodRepository;
 use App\IATI\Repositories\Activity\ResultRepository;
 use App\IATI\Repositories\Activity\TransactionRepository;
 use App\IATI\Repositories\Import\ImportActivityErrorRepository;
+use App\IATI\Services\ElementCompleteService;
 use App\IATI\Traits\FillDefaultValuesTrait;
 use App\XmlImporter\Events\XmlWasUploaded;
 use App\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
@@ -19,7 +21,6 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Storage;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -101,6 +102,11 @@ class ImportXmlService
     protected ImportActivityErrorRepository $importActivityErrorRepo;
 
     /**
+     * @var ElementCompleteService
+     */
+    protected ElementCompleteService $elementCompleteService;
+
+    /**
      * XmlImportManager constructor.
      *
      * @param XmlServiceProvider    $xmlServiceProvider
@@ -114,6 +120,7 @@ class ImportXmlService
      * @param LoggerInterface       $logger
      * @param Filesystem            $filesystem
      * @param XmlService            $xmlService
+     * @param ElementCompleteService $elementCompleteService
      */
     public function __construct(
         XmlServiceProvider $xmlServiceProvider,
@@ -126,7 +133,8 @@ class ImportXmlService
         XmlProcessor $xmlProcessor,
         LoggerInterface $logger,
         Filesystem $filesystem,
-        XmlService $xmlService
+        XmlService $xmlService,
+        ElementCompleteService $elementCompleteService,
     ) {
         $this->xmlServiceProvider = $xmlServiceProvider;
         $this->xmlProcessor = $xmlProcessor;
@@ -142,6 +150,7 @@ class ImportXmlService
         $this->xml_file_storage_path = env('XML_FILE_STORAGE_PATH', 'XmlImporter/file');
         $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH', 'XmlImporter/tmp');
         $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'CsvImporter/tmp');
+        $this->elementCompleteService = $elementCompleteService;
     }
 
     /**
@@ -204,6 +213,7 @@ class ImportXmlService
                 $this->resultRepository->deleteResult($oldActivity->id);
                 $this->saveTransactions(Arr::get($activityData, 'transactions'), $oldActivity->id, $defaultFieldValues);
                 $this->saveResults(Arr::get($activityData, 'result'), $oldActivity->id, $defaultFieldValues);
+                $this->refreshActivityElementStatusForResult($oldActivity);
 
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $activity['errors']);
@@ -219,6 +229,7 @@ class ImportXmlService
 
                 $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id, $defaultFieldValues);
                 $this->saveResults(Arr::get($activityData, 'result'), $storeActivity->id, $defaultFieldValues);
+                $this->refreshActivityElementStatusForResult($storeActivity);
 
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($storeActivity->id, $activity['errors']);
@@ -399,5 +410,19 @@ class ImportXmlService
     protected function dbIatiIdentifiers($org_id): array
     {
         return Arr::flatten($this->activityRepository->getActivityIdentifiers($org_id)->toArray());
+    }
+
+    /**
+     * Since we are doing upsert on results for both creation and update, need to manually check if result is complete.
+     *
+     * @throws \JsonException
+     */
+    private function refreshActivityElementStatusForResult(Activity $activity): void
+    {
+        $elementStatus = $activity->element_status;
+        $resultStatus = $this->elementCompleteService->isResultElementCompleted($activity);
+        $elementStatus['result'] = $resultStatus;
+
+        $this->activityRepository->update($activity->id, ['element_status' => $elementStatus]);
     }
 }

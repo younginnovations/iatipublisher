@@ -119,6 +119,12 @@
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
                 <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
                 {{ r }}
+                <span
+                  v-if="isMandatoryForIndicator(r)"
+                  class="required-icon px-1"
+                >
+                  *
+                </span>
               </a>
             </li>
 
@@ -416,6 +422,11 @@ export default defineComponent({
       return positionY.value === 0;
     });
 
+    const isMandatoryForIndicator = (elementOrAttribute: string) => {
+      const mandatoryElementOrAttribute = ['measure', 'title'];
+
+      return mandatoryElementOrAttribute.includes(elementOrAttribute);
+    };
     onUnmounted(() => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', calcWidth);
@@ -442,6 +453,7 @@ export default defineComponent({
       showSidebar,
       istopVisible,
       countDocumentLink,
+      isMandatoryForIndicator,
     };
   },
 });

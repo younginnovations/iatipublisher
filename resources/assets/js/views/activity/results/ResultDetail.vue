@@ -79,7 +79,7 @@
           <li v-if="hasIndicators">
             <a v-smooth-scroll href="#indicator" :class="linkClasses">
               <!-- <svg-vue icon="moon" class="mr-2 text-base"></svg-vue> -->
-              indicator
+              indicator <span class="required-icon px-1"> * </span>
             </a>
           </li>
           <li v-if="!hasIndicators">
@@ -89,7 +89,7 @@
               class="border border-dashed border-n-40"
             >
               <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
-              add indicator
+              add indicator <span class="required-icon px-1"> * </span>
             </a>
           </li>
         </ul>
@@ -105,12 +105,15 @@
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
                 <!-- <svg-vue icon="moon" class="mr-2 text-base"></svg-vue> -->
                 {{ r }}
+                <span v-if="isMandatoryForResult(r)" class="required-icon px-1"
+                  >*</span
+                >
               </a>
             </li>
             <li v-if="hasIndicators">
               <a v-smooth-scroll href="#indicator" :class="linkClasses">
                 <!-- <svg-vue icon="moon" class="mr-2 text-base"></svg-vue> -->
-                indicator
+                indicator <span class="required-icon px-1">*</span>
               </a>
             </li>
             <li v-if="!hasIndicators">
@@ -120,7 +123,7 @@
                 class="border border-dashed border-n-40"
               >
                 <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
-                add indicator
+                add indicator <span class="required-icon px-1">*</span>
               </a>
             </li>
           </ul>
@@ -167,7 +170,8 @@
           class="add_indicator flex w-full rounded border border-dashed border-n-40 bg-white px-4 py-3 text-xs leading-normal"
         >
           <div class="grow text-left italic">
-            You haven't added any indicator yet.
+            You haven't added any Indicator yet. Indicator(s) are required to
+            complete Result.
           </div>
           <div
             class="flex shrink-0 items-center font-bold uppercase text-bluecoral"
@@ -318,6 +322,12 @@ export default defineComponent({
       }
     };
 
+    const isMandatoryForResult = (elementOrAttribute: string) => {
+      const mandatoryElementOrAttribute = ['type', 'title', 'indicator'];
+
+      return mandatoryElementOrAttribute.includes(elementOrAttribute);
+    };
+
     watch(
       () => showSidebar.value,
       (sidebar) => {
@@ -339,6 +349,7 @@ export default defineComponent({
       toastData,
       showSidebar,
       istopVisible,
+      isMandatoryForResult,
     };
   },
 });

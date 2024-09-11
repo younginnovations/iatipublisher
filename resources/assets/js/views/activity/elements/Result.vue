@@ -17,9 +17,10 @@
               'text-crimson-50': !completed,
             }"
           >
-            <b class="mr-2 text-base leading-3">.</b>
-            <span v-if="completed">completed</span>
-            <span v-else>not completed</span>
+            <span v-if="!completed">
+              <b class="mr-2 text-base leading-3">.</b>
+              not completed
+            </span>
           </div>
         </div>
         <div class="icons flex items-center">
@@ -132,7 +133,7 @@
                           <div>
                             <NotYet
                               :link="`/${title}/${result.id}/indicator/create`"
-                              description="You haven't added any indicator yet."
+                              description="You haven't added any Indicator yet. Indicator(s) are required to complete Result."
                               btn-text="Add new indicator"
                             />
                           </div>

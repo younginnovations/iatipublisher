@@ -82,11 +82,11 @@ class ResultCompleteTest extends ElementCompleteTest
     public function test_indicator_mandatory_sub_elements(): void
     {
         $this->element = 'indicator';
-        $this->test_mandatory_sub_elements($this->element, [
-            'document_link' => ['url', 'format'],
-            'reference'     => ['vocabulary'],
-            'baseline'      => ['year'],
-        ]);
+        /*
+         * Change source: https://github.com/younginnovations/iatipublisher/issues/1542
+         * Only title is a mandatory sub elements.
+         */
+        $this->test_mandatory_sub_elements($this->element, []);
     }
 
     /**
@@ -128,10 +128,11 @@ class ResultCompleteTest extends ElementCompleteTest
     public function test_result_mandatory_sub_elements(): void
     {
         $this->element = 'result';
-        $this->test_mandatory_sub_elements($this->element, [
-            'document_link' => ['url', 'format'],
-            'reference'     => ['vocabulary', 'code'],
-        ]);
+        /*
+         * Change source: https://github.com/younginnovations/iatipublisher/issues/1542
+         * Only title and type are mandatory sub elements.
+         */
+        $this->test_mandatory_sub_elements($this->element, []);
     }
 
     /**
