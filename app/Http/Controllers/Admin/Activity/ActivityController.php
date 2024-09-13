@@ -137,6 +137,7 @@ class ActivityController extends Controller
             $defaultFinanceType = getCodeList('FinanceType', 'Activity', filterDeprecated: true);
             $defaultAidType = getCodeList('AidType', 'Activity', filterDeprecated: true);
             $defaultTiedStatus = getCodeList('TiedStatus', 'Activity', filterDeprecated: true);
+            $organizationType = getCodeList('OrganizationType', 'Organization', filterDeprecated: true);
 
             return view(
                 'admin.activity.index',
@@ -151,7 +152,8 @@ class ActivityController extends Controller
                     'defaultFlowType',
                     'defaultFinanceType',
                     'defaultAidType',
-                    'defaultTiedStatus'
+                    'defaultTiedStatus',
+                    'organizationType',
                 )
             );
         } catch (Exception $e) {

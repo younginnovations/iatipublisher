@@ -13,5 +13,6 @@
             :default-finance-type='{{ json_encode($defaultFinanceType)  }}'
             :default-aid-type='{{ json_encode($defaultAidType)  }}'
             :default-tied-status='{{ json_encode($defaultTiedStatus) }}'
+            :organization-type='{{ json_encode($organizationType) }}'
     ></activity-template>
 @endsection
