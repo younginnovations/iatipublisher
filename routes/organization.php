@@ -31,6 +31,7 @@ Route::group(['middleware' => ['can:view_organization']], static function () {
     Route::get('/organisation', [OrganizationController::class, 'show'])->name('organisation.index');
     Route::get('organisation/status', [OrganizationController::class, 'getPublisherStatus'])->name('organisation.status');
     Route::post('organisation-onboarding/toggle-dont-show/{value}', [OrganizationOnboardingController::class, 'toggleDontShow'])->name('organisation.toggle-dont-show');
+    Route::get('organisation-onboarding/complete-activity', [OrganizationOnboardingController::class, 'completeActivityForOnboarding'])->name('organisation.complete-activity-for-onboarding');
 });
 
 Route::group(['middleware' => ['can:crud_organization']], static function () {

@@ -86,7 +86,7 @@ class OrganizationOnboardingService
         $array[] = [
             'step'     => 4,
             'title'    => OrganizationOnboarding::ACTIVITY,
-            'complete' => true,
+            'complete' => false,
         ];
 
         return $array;
@@ -150,7 +150,7 @@ class OrganizationOnboardingService
      *
      * @return void
      */
-    public function updateOrganizationOnboardingStepToComplete($organizationId, $stepName, $value = true): void
+    public function updateOrganizationOnboardingStepToComplete($organizationId, $stepName, bool $value = true): void
     {
         $update = false;
         $organizationOnboarding = $this->getOrganizationOnboarding($organizationId);
