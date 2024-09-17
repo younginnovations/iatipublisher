@@ -34,6 +34,7 @@
           "
           :permalink="permalink"
           :percentage-width="percentageWidth"
+          :error-type="store.state.bulkActivityPublishStatus.error_type"
         />
       </div>
       <div v-else>

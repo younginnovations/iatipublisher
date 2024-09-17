@@ -79,7 +79,7 @@
                 :type="refreshToastMsg.refreshMessageType"
                 class="mr-3 whitespace-nowrap"
               />
-              <ErrorPopUp
+              <ErrorPopupForPublish
                 v-if="errorData.visibility"
                 :message="errorData.message"
                 title="Activity couldn’t be published because"
@@ -393,7 +393,7 @@ import UnPublish from 'Components/buttons/UnPublishButton.vue';
 import DeleteButton from 'Components/buttons/DeleteButton.vue';
 import Errors from 'Components/sections/StickyErrors.vue';
 import Toast from 'Components/ToastMessage.vue';
-import ErrorPopUp from 'Components/ErrorPopUp.vue';
+import ErrorPopupForPublish from 'Components/ErrorPopupForPublish.vue';
 import getActivityTitle from 'Composable/title';
 import XlsUploadIndicator from 'Components/XlsUploadIndicator.vue';
 import RefreshToastMessage from 'Activity/bulk-publish/RefreshToast.vue';
@@ -411,6 +411,7 @@ import { onlyDeprecatedStatusMap } from 'Composable/utils';
 
 export default defineComponent({
   components: {
+    ErrorPopupForPublish,
     HoverText,
     ProgressBar,
     Elements,
@@ -421,7 +422,6 @@ export default defineComponent({
     UnPublish,
     DeleteButton,
     PreviouslyPublished,
-    ErrorPopUp,
     XlsUploadIndicator,
     Toast,
     RefreshToastMessage,

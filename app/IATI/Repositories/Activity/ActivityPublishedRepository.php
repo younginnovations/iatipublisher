@@ -84,4 +84,26 @@ class ActivityPublishedRepository extends Repository
         $activityPublished->published_to_registry = 1;
         $activityPublished->save();
     }
+
+    /**
+     * @param $activityPublished
+     * @param $filesize
+     *
+     * @return void
+     */
+    public function updateFilesize($activityPublished, $filesize): void
+    {
+        $activityPublished->filesize = $filesize;
+        $activityPublished->save();
+    }
+
+    /**
+     * @param $orgId
+     *
+     * @return int|float
+     */
+    public function getPublisherFileSize($orgId): float|int
+    {
+        return $this->model->where('organization_id', $orgId)?->first()->filesize ?? 0;
+    }
 }

@@ -6,6 +6,7 @@ namespace App\IATI\Services\Workflow;
 
 use App\IATI\Repositories\Activity\ValidationStatusRepository;
 use App\IATI\Repositories\ApiLog\ApiLogRepository;
+use App\IATI\Services\Activity\ActivityPublishedService;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\BulkPublishingStatusService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
@@ -45,6 +46,8 @@ class BulkPublishingService
      */
     protected BulkPublishingStatusService $publishingStatusService;
 
+    protected ActivityPublishedService $activityPublishedService;
+
     /**
      * @var ApiLogRepository
      */
@@ -70,7 +73,8 @@ class BulkPublishingService
         ActivityValidatorResponseService $validatorService,
         BulkPublishingStatusService $publishingStatusService,
         ApiLogRepository $apiLogRepo,
-        ValidationStatusRepository $validationStatusRepository
+        ValidationStatusRepository $validationStatusRepository,
+        ActivityPublishedService $activityPublishedService,
     ) {
         $this->activityService = $activityService;
         $this->activityWorkflowService = $activityWorkflowService;
@@ -78,6 +82,7 @@ class BulkPublishingService
         $this->publishingStatusService = $publishingStatusService;
         $this->apiLogRepo = $apiLogRepo;
         $this->validationStatusRepository = $validationStatusRepository;
+        $this->activityPublishedService = $activityPublishedService;
     }
 
     /**
@@ -134,11 +139,13 @@ class BulkPublishingService
      * @param $activityIds
      *
      * @return array
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function validateActivitiesOnIATI($activityIds): array
     {
         $user = Auth::user();
-        $activityTitle = [];
+        $activityTitles = [];
         $activities = $this->activityService->getActivitiesHavingIds($activityIds);
 
         /** @var $validationStatusRepository ValidationStatusRepository */
@@ -147,12 +154,17 @@ class BulkPublishingService
 
         foreach ($activities as $activity) {
             if ($activity && $activity->status === 'draft') {
-                $activityTitle[] = $activity->default_title_narrative;
+                $activityTitles[] = $activity->default_title_narrative;
+            }
+        }
+
+        foreach ($activities as $activity) {
+            if ($activity && $activity->status === 'draft') {
                 RegistryValidatorJob::dispatch($activity, $user);
             }
         }
 
-        return $activityTitle;
+        return $activityTitles;
     }
 
     /**

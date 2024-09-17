@@ -22,7 +22,7 @@
           Validation incomplete
         </h3>
       </div>
-      <h6 class="my-2 text-sm">
+      <h6 class="my-2 text-sm" v-if="errorType === 'generic'">
         <b class="text-[18px]"
           >{{ Object.keys(validActivities).length }}/{{
             Object.keys(activitiesList).length
@@ -30,6 +30,19 @@
         >
         activities could only be validated due to server error. Would you like
         to publish the validated files?
+      </h6>
+
+      <h6 class="my-2 text-sm" v-if="errorType === 'max_merge_size_exception'">
+        <b class="text-[16px] text-crimson-50">
+          Exceeded max publish size.
+          <a
+            class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
+            href="mailto:support@iatistandard.org"
+            target="_blank"
+          >
+            Contact Support.
+          </a>
+        </b>
       </h6>
     </div>
     <div v-else>
@@ -241,6 +254,10 @@ const props = defineProps({
   },
   percentageWidth: {
     type: Number,
+    required: true,
+  },
+  errorType: {
+    type: String,
     required: true,
   },
 });

@@ -128,6 +128,7 @@ abstract class Enums
         'processing',
         'completed',
         'failed',
+        'max_merge_size_exception',
     ];
 
     /**
@@ -177,4 +178,8 @@ abstract class Enums
     public const TOKEN_INCORRECT = 'Incorrect';
 
     public const EXISTING_ORG = 'existing_org';
+
+    public const MAX_MERGE_SIZE = '20';
+
+    public const MAX_BATCH_SIZE = '4';
 }

@@ -199,6 +199,7 @@ import { defineProps, ref, reactive, onMounted, inject } from 'vue';
 import { TransitionRoot } from '@headlessui/vue';
 import Loader from '../components/Loader.vue';
 import axios from 'axios';
+import { ToastInterface } from 'Interfaces/ToastInterface';
 
 defineProps({
   isEmpty: {
@@ -212,11 +213,6 @@ const show = ref(false);
 const hasErrors = ref(false);
 const errorCount = ref(0);
 
-interface ToastInterface {
-  visibility: boolean;
-  message: string;
-  type: boolean;
-}
 const toastData = inject('toastData') as ToastInterface;
 const errorData = reactive({
   account_verified: false,

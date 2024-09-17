@@ -13,6 +13,7 @@ use App\IATI\Services\Workflow\ActivityWorkflowService;
 use App\IATI\Traits\IatiValidatorResponseTrait;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -30,7 +31,7 @@ use JsonException;
  */
 class RegistryValidatorJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, IatiValidatorResponseTrait;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, IatiValidatorResponseTrait, Batchable;
 
     /**
      * The number of seconds the job can run before timing out.
@@ -78,6 +79,7 @@ class RegistryValidatorJob implements ShouldQueue
     {
         try {
             if (!Cache::get('activity-validation-delete')) {
+                logger($this->activity->id);
                 /** @var $validationStatusRepository ValidationStatusRepository */
                 $validationStatusRepository = app()->make(ValidationStatusRepository::class);
                 $validationStatusRepository->storeValidationStatus((int) $this->activity->id, (int) $this->user->id, status: 'processing');
@@ -112,6 +114,7 @@ class RegistryValidatorJob implements ShouldQueue
         $validatorService = app()->make(ActivityValidatorResponseService::class);
         $validationStatusRepository = app()->make(ValidationStatusRepository::class);
         $response = $this->addElementOnIatiValidatorResponse($response, $this->activity);
+
         $apiLogService->store(generateApiInfo('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($this->activity)], json_encode($response)));
 
         $recordResponse = [

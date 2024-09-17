@@ -60,9 +60,12 @@
           :type="toastMessage.type"
         />
 
-        <ErrorPopUp
+        <ErrorPopupForPublish
           v-if="errorData.visibility"
           :message="errorData.message"
+          :extra-info="
+            errorData.extra_info !== null ? errorData.extra_info : undefined
+          "
           title="Activity couldn’t be published because"
           @close-popup="
             () => {
@@ -87,6 +90,21 @@
                   type="secondary"
                   :text="`Publish Selected (${store.state.selectedActivities.length})`"
                   icon="approved-cloud"
+                  :disabled="
+                    store.state.selectedActivities.length === 0 ||
+                    store.state.selectedActivities.length > 100
+                  "
+                  :tooltip-text="
+                    store.state.selectedActivities.length > 100
+                      ? `You can only publish up to 100 activities at a time. Please remove ${
+                          store.state.selectedActivities.length - 100
+                        } ${
+                          store.state.selectedActivities.length > 1
+                            ? 'activities'
+                            : 'activity'
+                        } from your selection to publish.`
+                      : ''
+                  "
                   @click="checkPublish"
                 />
                 <PublishSelected ref="publishRef" />
@@ -116,7 +134,9 @@ import DeleteButton from 'Components/buttons/DeleteButton.vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 // Vuex Store
 import { useStore } from 'Store/activities/index';
-import ErrorPopUp from 'Components/ErrorPopUp.vue';
+import ErrorPopupForPublish from 'Components/ErrorPopupForPublish.vue';
+import { ToastInterface } from 'Interfaces/ToastInterface';
+import { ErrorInterface } from 'Interfaces/ErrorInterface';
 
 interface RefreshToastMsgTypeface {
   visibility: boolean;
@@ -124,15 +144,9 @@ interface RefreshToastMsgTypeface {
   refreshMessage: string;
 }
 
-interface ToastInterface {
-  visibility: boolean;
-  message: string;
-  type: boolean;
-}
-
 const refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
 const toastMessage = inject('toastData') as ToastInterface;
-const errorData = inject('errorData') as ToastInterface;
+const errorData = inject('errorData') as ErrorInterface;
 const store = useStore();
 const publishRef: Ref<typeof PublishSelected | null> = ref(null);
 

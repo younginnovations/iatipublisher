@@ -66,6 +66,7 @@
           <Pagination
             v-if="activities && activities.last_page > 1"
             :data="activities"
+            :reset="paginationReset"
             @fetch-activities="fetchActivities"
           />
         </div>
@@ -240,6 +241,8 @@ export default defineComponent({
       ready_for_republishing: 0,
       draft: 0,
     });
+
+    const paginationReset = ref(false);
 
     fetchActivitiesCountByPublishStatus();
 
@@ -459,19 +462,22 @@ export default defineComponent({
       }
     };
 
-    function fetchActivities(active_page: number) {
+    async function fetchActivities(active_page: number) {
       tableLoader.value = true;
       let queryString = '';
 
-      if (currentURL.includes('?')) {
+      if (window.location.search) {
         queryString = window.location.search;
       }
-      axios.get('/activities/page/' + active_page + queryString).then((res) => {
-        const response = res.data;
-        Object.assign(activities, response.data);
-        isEmpty.value = !response.data;
-        currentPage.value = active_page;
-      });
+
+      await axios
+        .get(`/activities/page/${active_page}${queryString}`)
+        .then((res) => {
+          const response = res.data;
+          Object.assign(activities, response.data);
+          isEmpty.value = !response.data;
+          currentPage.value = active_page;
+        });
       tableLoader.value = false;
     }
 
@@ -504,9 +510,20 @@ export default defineComponent({
 
       params.set('filterBy', status);
 
-      let newQueryString = params.toString();
+      window.history.pushState(
+        {},
+        '',
+        `${window.location.pathname}?${params.toString()}`
+      );
+      currentFilterBy.value = status;
 
-      window.location.href = `${window.location.pathname}?${newQueryString}`;
+      paginationReset.value = true;
+
+      fetchActivities(1);
+
+      setTimeout(() => {
+        paginationReset.value = false;
+      }, 0);
     }
 
     function getCurrentFilterBy() {
@@ -594,6 +611,7 @@ export default defineComponent({
       currentFilterBy,
       allPublishStatusCountMap,
       currentPage,
+      paginationReset,
     };
   },
 });
