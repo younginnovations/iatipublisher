@@ -7,7 +7,10 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 
@@ -108,20 +111,69 @@ class WebController extends Controller
      *
      * @return JsonResponse
      */
-    public function changeLocale($language): JsonResponse
+    public function setLocale($language): JsonResponse
     {
         try {
             if (!in_array($language, ['en', 'fr', 'es'])) {
                 return response()->json(['success' => false, 'message' => 'Invalid language code.']);
             }
 
-            App::setLocale($language);
+            session()->put('locale', $language);
 
             return response()->json(['success' => true, 'message' => 'Locale changed successfully.']);
         } catch (\Exception $e) {
             logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error has occurred when changing locale.']);
+        }
+    }
+
+    /**
+     * Returns the translated data for the given folder.
+     *
+     * @param $folder
+     *
+     * @return JsonResponse
+     */
+    public function getTranslatedData($folder): JsonResponse
+    {
+        try {
+            $lang = App::getLocale();
+            $path = base_path("lang/{$lang}/{$folder}");
+
+            if (!File::isDirectory($path)) {
+                return response()->json(['success' => false, 'message' => 'Directory not found.']);
+            }
+
+            $cacheData = Cache::get("translated_data_{$lang}");
+
+            if ($cacheData) {
+                return response()->json(['success' => true, 'data' => Arr::get($cacheData, $folder, [])]);
+            }
+
+            $folders = File::directories(base_path("lang/{$lang}"));
+
+            foreach ($folders as $fl) {
+                $folderName = basename($fl);
+                $files = File::allFiles($fl);
+                $translations = [];
+
+                foreach ($files as $file) {
+                    $fileName = pathinfo($file->getRealPath(), PATHINFO_FILENAME);
+                    $fileTranslations = require $file->getRealPath();
+                    $translations[$fileName] = $fileTranslations;
+                }
+
+                $cacheData[$folderName] = $translations;
+            }
+
+            Cache::put("translated_data_{$lang}", $cacheData, now()->addHours(24));
+
+            return response()->json(['success' => true, 'data' => $translations]);
+        } catch (\Exception $e) {
+            logger()->error($e);
+
+            return response()->json(['success' => false, 'message' => 'Error has occurred when returning translated data.']);
         }
     }
 }
