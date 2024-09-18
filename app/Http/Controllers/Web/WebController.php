@@ -6,6 +6,8 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 
@@ -97,5 +99,29 @@ class WebController extends Controller
     public function support(): Renderable
     {
         return view('web.support');
+    }
+
+    /**
+     * Updates the locale of the system.
+     *
+     * @param $language
+     *
+     * @return JsonResponse
+     */
+    public function changeLocale($language): JsonResponse
+    {
+        try {
+            if (!in_array($language, ['en', 'fr', 'es'])) {
+                return response()->json(['success' => false, 'message' => 'Invalid language code.']);
+            }
+
+            App::setLocale($language);
+
+            return response()->json(['success' => true, 'message' => 'Locale changed successfully.']);
+        } catch (\Exception $e) {
+            logger()->error($e);
+
+            return response()->json(['success' => false, 'message' => 'Error has occurred when changing locale.']);
+        }
     }
 }
