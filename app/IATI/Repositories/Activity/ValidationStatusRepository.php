@@ -129,6 +129,12 @@ class ValidationStatusRepository extends Repository
                     $allCompleted = false;
                 }
 
+                if ($validatorStatus->status === 'max_merge_size_exception') {
+                    $response['failed_count']++;
+                    $result[$validatorStatus->activity_id]['is_valid'] = false;
+                    $response['error_type'] = 'max_merge_size_exception';
+                }
+
                 if ($validatorStatus->status === 'failed') {
                     $response['failed_count']++;
                     $result[$validatorStatus->activity_id]['is_valid'] = false;

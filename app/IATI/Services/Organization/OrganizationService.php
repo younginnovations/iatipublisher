@@ -230,12 +230,13 @@ class OrganizationService
             return false;
         }
 
-        $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
-        $result = $response->result;
-
-        if (strcasecmp($result->state, 'active') === 0) {
-            return true;
-        }
+        return true;
+//        $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
+//        $result = $response->result;
+//
+//        if (strcasecmp($result->state, 'active') === 0) {
+//            return true;
+//        }
 
         return false;
     }

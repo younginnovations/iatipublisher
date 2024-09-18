@@ -11,6 +11,7 @@ use App\IATI\Services\Activity\BulkPublishingStatusService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use App\IATI\Traits\IatiValidatorResponseTrait;
 use App\Jobs\RegistryValidatorJob;
+use App\Jobs\RegistryValidatorJobForMultipleActivities;
 use App\XlsImporter\Foundation\Factory\Validation;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
@@ -138,7 +139,7 @@ class BulkPublishingService
     public function validateActivitiesOnIATI($activityIds): array
     {
         $user = Auth::user();
-        $activityTitle = [];
+        $activityTitles = [];
         $activities = $this->activityService->getActivitiesHavingIds($activityIds);
 
         /** @var $validationStatusRepository ValidationStatusRepository */
@@ -147,12 +148,24 @@ class BulkPublishingService
 
         foreach ($activities as $activity) {
             if ($activity && $activity->status === 'draft') {
-                $activityTitle[] = $activity->default_title_narrative;
+                $activityTitles[] = $activity->default_title_narrative;
+            }
+        }
+
+        foreach ($activities as $activity) {
+            if ($activity && $activity->status === 'draft' && count($activityTitles) === 1) {
                 RegistryValidatorJob::dispatch($activity, $user);
             }
         }
 
-        return $activityTitle;
+        if (count($activityTitles) > 1) {
+            $anActivity = $activities[0];
+            $organisation = $anActivity->organization;
+            $settings = $organisation->settings;
+            RegistryValidatorJobForMultipleActivities::dispatch($user, $activities, $organisation, $settings);
+        }
+
+        return $activityTitles;
     }
 
     /**

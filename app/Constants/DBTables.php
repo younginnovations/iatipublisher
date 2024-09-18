@@ -68,4 +68,9 @@ abstract class DBTables
      * For Validating Activity in IATI Registry.
      */
     public const VALIDATION_STATUS = 'validation_status';
+
+    /**
+     * For activity_published table.
+     */
+    public const ACTIVITY_PUBLISHED = 'activity_published';
 }

@@ -128,6 +128,7 @@ abstract class Enums
         'processing',
         'completed',
         'failed',
+        'max_merge_size_exception',
     ];
 
     /**
@@ -169,4 +170,6 @@ abstract class Enums
     public const MERGED_XML_BASE_PATH = 'xml/mergedActivityXml';
 
     public const ORG_XML_BASE_PATH = 'organizationXmlFiles';
+
+    public const MAX_MERGE_SIZE = '60';
 }

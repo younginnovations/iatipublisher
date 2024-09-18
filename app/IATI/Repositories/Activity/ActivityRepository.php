@@ -84,7 +84,7 @@ class ActivityRepository extends Repository
 
         $orderBy = 'updated_at';
         $direction = 'desc';
-        $limit = '10';
+        $limit = '100';
 
         if (array_key_exists('orderBy', $queryParams) && !empty($queryParams['orderBy'])) {
             $orderBy = $queryParams['orderBy'];
