@@ -48,3 +48,5 @@ Route::get('/support', [App\Http\Controllers\Web\WebController::class, 'support'
 Route::get('/activities/activities_count_by_published_status', [ActivityController::class, 'getActivitiesCountByPublishedStatus'])
     ->middleware('auth')
     ->name('activities.getActivitiesCountByPublishedStatus');
+
+Route::get('/language/{language}', [\App\Http\Controllers\Web\WebController::class, 'changeLocale'])->name('change-locale');
