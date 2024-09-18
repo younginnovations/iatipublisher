@@ -55,7 +55,7 @@ class MultilevelSubElementForm extends BaseForm
                             'help_text'        => $this->getData(sprintf('sub_elements.%s.help_text', $name)) ?? '',
                             'helper_text'      => $this->getData(sprintf('sub_elements.%s.helper_text', $name)) ?? '',
                             'wrapper'          => ['class' => $this->getBaseFormWrapperClasses()],
-                            'dynamic_wrapper'  => ['class' => $this->getBaseFormDynamicWrapperClasses($sub_element, $element)]],
+                            'dynamic_wrapper'  => ['class' => $this->getBaseFormDynamicWrapperClasses($sub_element, $element)], ],
                     ]
                 )->add('add_to_collection', 'button', [
                     'label' => generateAddAdditionalLabel($element['name'], $this->getData(sprintf('sub_elements.%s.name', $name))),
