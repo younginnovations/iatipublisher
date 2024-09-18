@@ -24,9 +24,13 @@
             <div class="max-w-sm pb-4 text-caption-c1 text-n-40">
               <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
                 <div class="flex">
-                  <a class="whitespace-nowrap font-bold" href="/activities"
-                    >Your Organisation</a
-                  >
+                  <a class="whitespace-nowrap font-bold" href="/activities">
+                    {{
+                      translatedData[
+                        'organisationDetail.organisation_data.your_organisation'
+                      ]
+                    }}
+                  </a>
                   <span class="separator mx-4"> / </span>
                   <div class="breadcrumb__title">
                     <span
@@ -88,7 +92,11 @@
             <ErrorPopupForPublish
               v-if="errorData.visibility"
               :message="errorData.message"
-              title="Organisation couldn’t be published because"
+              :title="
+                translatedData[
+                  'organisationDetail.organisation_data.organisation_couldnt_be_published_because'
+                ]
+              "
               @close-popup="
                 () => {
                   errorData.visibility = false;
@@ -111,9 +119,17 @@
           <div class="mb-1 flex">
             <div class="activities__card progress mr-1">
               <div class="mb-2 flex items-center justify-between">
-                <span class="mr-2">Core Completeness</span>
+                <span class="mr-2">{{
+                     translatedData[
+                      'common.common.core_completeness'
+                    ]
+                  }}</span>
                 <HoverText
-                  hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                  :hover-text="
+                    translatedData[
+                      'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                    ]
+                  "
                   name=""
                   class="hover-text"
                   position="right"
@@ -128,9 +144,13 @@
             </div>
             <div class="activities__card elements">
               <div class="mb-7 flex items-center justify-between">
-                <span>Elements</span>
+                <span>{{ translatedData['common.common.elements'] }}</span>
                 <HoverText
-                  hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                  :hover-text="
+                    translatedData[
+                      'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                    ]
+                  "
                   name=""
                   class="hover-text"
                 />
@@ -138,10 +158,14 @@
               <div class="mb-3 flex justify-between">
                 <div class="flex items-center space-x-1">
                   <svg-vue icon="core" />
-                  <span>Core</span>
+                  <span>{{ translatedData['common.common.core'] }}</span>
                 </div>
                 <HoverText
-                  hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                  :hover-text="
+                    translatedData[
+                      'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                    ]
+                  "
                   name=""
                   class="hover-text"
                 />
@@ -149,10 +173,14 @@
               <div class="flex justify-between">
                 <div class="flex items-center space-x-1">
                   <svg-vue icon="double-tick" class="text-spring-50"></svg-vue>
-                  <span>Completed</span>
+                  <span>{{ translatedData['common.common.completed'] }}</span>
                 </div>
                 <HoverText
-                  hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                  :hover-text="
+                    translatedData[
+                      'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                    ]
+                  "
                   name=""
                   class="hover-text"
                 />
@@ -186,9 +214,15 @@
             <div class="mb-1 flex">
               <div class="activities__card progress mr-1">
                 <div class="mb-2 flex items-center justify-between">
-                  <span class="mr-2">Core Completeness</span>
+                  <span class="mr-2">{{
+                      translatedData['common.common.core_completeness']
+                    }}</span>
                   <HoverText
-                    hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                    :hover-text="
+                      translatedData[
+                        'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                      ]
+                    "
                     name=""
                     class="hover-text"
                     position="right"
@@ -203,9 +237,13 @@
               </div>
               <div class="activities__card elements">
                 <div class="mb-7 flex items-center justify-between">
-                  <span>Elements</span>
+                  <span>{{ translatedData['common.common.elements'] }}</span>
                   <HoverText
-                    hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                    :hover-text="
+                      translatedData[
+                        'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                      ]
+                    "
                     name=""
                     class="hover-text"
                   />
@@ -213,10 +251,14 @@
                 <div class="mb-3 flex justify-between">
                   <div class="flex items-center space-x-1">
                     <svg-vue icon="core" />
-                    <span>Core</span>
+                    <span>{{ translatedData['common.common.core'] }}</span>
                   </div>
                   <HoverText
-                    hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                    :hover-text="
+                      translatedData[
+                        'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                      ]
+                    "
                     name=""
                     class="hover-text"
                   />
@@ -227,10 +269,14 @@
                       icon="double-tick"
                       class="text-spring-50"
                     ></svg-vue>
-                    <span>Completed</span>
+                    <span>{{ translatedData['common.common.completed'] }}</span>
                   </div>
                   <HoverText
-                    hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                    :hover-text="
+                      translatedData[
+                        'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                      ]
+                    "
                     name=""
                     class="hover-text"
                   />
@@ -306,6 +352,7 @@ import PublishUnpublish from 'Components/sections/OrganizationPublishUnpublishBu
 import { useToggle } from '@vueuse/core';
 import { watchIgnorable } from '@vueuse/core';
 import ErrorPopupForPublish from 'Components/ErrorPopupForPublish.vue';
+import LanguageService from 'Services/language';
 
 export default defineComponent({
   name: 'OrganisationData',
@@ -357,6 +404,8 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translatedData = ref({});
+
     const toastData = reactive({
       visibility: false,
       message: '',
@@ -387,6 +436,13 @@ export default defineComponent({
 
     onMounted(() => {
       window.addEventListener('resize', calcWidth);
+
+      LanguageService.getTranslatedData('common,organisationDetail,elements')
+        .then((response) => {
+          translatedData.value = response.data;
+          console.log(translatedData.value);
+        })
+        .catch((error) => console.log(error));
 
       window.addEventListener('scroll', handleScroll);
 
@@ -519,6 +575,7 @@ export default defineComponent({
     provide('publishStatus', publishStatus);
     provide('errorData', errorData);
     provide('userRole', props.userRole);
+    provide('translatedData', translatedData);
 
     return {
       groupedData,
@@ -539,6 +596,7 @@ export default defineComponent({
       showSidebar,
       istopVisible,
       organizationProps,
+      translatedData,
     };
   },
 });
