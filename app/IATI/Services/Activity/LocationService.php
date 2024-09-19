@@ -121,20 +121,15 @@ class LocationService
             foreach ($locations as $location) {
                 $point = [];
 
-                if ((Arr::get($location, 'point.0.pos.0.latitude', '') !== '') && (Arr::get(
-                    $location,
-                    'point.0.pos.0.longitude',
-                    ''
-                ) !== '')) {
+                $latitude = Arr::get($location, 'point.0.pos.0.latitude');
+                $longitude = Arr::get($location, 'point.0.pos.0.longitude');
+
+                if ($latitude && $longitude) {
                     $point = [
                         '@attributes' => [
                             'srsName' => Arr::get($location, 'point.0.srs_name', null),
                         ],
-                        'pos'         => sprintf(
-                            '%s %s',
-                            Arr::get($location, 'point.0.pos.0.latitude', ''),
-                            Arr::get($location, 'point.0.pos.0.longitude', '')
-                        ),
+                        'pos' => sprintf('%s %s', $latitude, $longitude),
                     ];
                 }
 
