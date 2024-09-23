@@ -804,37 +804,42 @@ class ElementCompleteService
         $indicatorData = [];
         $periodData = [];
 
-        if (!empty($results)) {
-            foreach ($results as $resultKey => $result) {
-                $resultData[] = $result['result'];
-                $indicators = $result['indicators'];
-                $resultReference = Arr::get($result['result'], 'reference');
+        foreach ($results as $result) {
+            $resultId = $result['id'];
+            $resultIndicators = Arr::get($result, 'indicators', []);
 
-                if (!empty($indicators)) {
-                    foreach ($indicators as $indicatorKey => $indicator) {
-                        $indicatorValue = $indicator['indicator'];
+            if (empty($resultIndicators)) {
+                /*
+                 * Indicator is mandatory.
+                 * Setting $resultData[i]  to empty array in-case indicator doesn't exist because:
+                 * This is equivalent to doing an early return, no need to continue preparing indicator data or for this result.
+                 * Checking if $resultData contains an empty [] in it will give us result completion faster than calculating if indicator for said result is complete
+                 */
+                $resultData[$resultId] = [];
+                continue;
+            }
 
-                        if (is_array_value_empty(Arr::get($indicatorValue, 'reference'))) {
-                            $indicatorValue['reference'] = $resultReference;
-                        } else {
-                            $resultLastKey = array_key_last($resultData);
-                            $resultData[$resultLastKey]['reference'] = Arr::get($indicatorValue, 'reference');
-                        }
-                        $indicatorData[] = $indicatorValue;
-                        $periods = $indicator['periods'];
+            $resultData[$resultId] = Arr::get($result, 'result', []);
+            $resultReference = Arr::get($resultData[$resultId], 'reference');
 
-                        if (!empty($periods)) {
-                            $indicatorData[$indicatorKey] = $indicatorValue;
+            foreach ($resultIndicators as $indicator) {
+                $indicatorId = $indicator['id'];
+                $indicatorId = "$resultId.$indicatorId";
+                $indicatorValue = Arr::get($indicator, 'indicator', []);
 
-                            foreach ($periods as $period) {
-                                $periodData[] = $period['period'];
-                            }
-                        } else {
-                            $resultData = [];
-                        }
-                    }
+                if (is_array_value_empty(Arr::get($indicatorValue, 'reference'))) {
+                    $indicatorValue['reference'] = $resultReference;
                 } else {
-                    $resultData = [];
+                    $resultData[$resultId]['reference'] = Arr::get($indicatorValue, 'reference');
+                }
+
+                $indicatorData[$indicatorId] = $indicatorValue;
+                $periods = Arr::get($indicator, 'periods', []);
+
+                if (!empty($periods)) {
+                    foreach ($periods as $period) {
+                        $periodData[] = Arr::get($period, 'period', []);
+                    }
                 }
             }
         }
@@ -855,15 +860,22 @@ class ElementCompleteService
     {
         [$resultData, $indicatorData, $periodData] = $this->getFormattedResults($activity);
 
-        if (
-            (is_variable_null($periodData) || !$this->isPeriodElementCompleted($periodData)) || !$this->isResultElementDataCompleted($resultData)
-            || (is_variable_null($indicatorData) || !$this->isIndicatorElementCompleted($indicatorData))
-            || (is_variable_null($resultData))
-        ) {
+        if (is_variable_null($resultData) || count($resultData) < 1) {
             return false;
         }
 
-        return true;
+        $periodExists = is_array($periodData) && count($periodData) > 0;
+        $indicatorExists = is_array($indicatorData) && count($indicatorData) > 0;
+
+        if ($periodExists) {
+            return $this->isPeriodElementCompleted($periodData) && $this->isIndicatorElementCompleted($indicatorData) && $this->isResultElementDataCompleted($resultData);
+        }
+
+        if ($indicatorExists) {
+            return $this->isIndicatorElementCompleted($indicatorData) && $this->isResultElementDataCompleted($resultData);
+        }
+
+        return false;
     }
 
     /**
