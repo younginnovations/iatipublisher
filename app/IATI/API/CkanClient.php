@@ -470,7 +470,7 @@ class CkanClient
 
         return $this->make_request(
             'POST',
-            'action/dataset_purge',
+            'action/package_delete',
             $data
         );
     }
