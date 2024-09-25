@@ -34,6 +34,7 @@ class SetAllPublisherPublishedFileSizes extends Command
 
             try {
                 foreach ($activityPublishedChunk as $activityPublished) {
+                    $this->info("Started for org_id: $activityPublished->organization_id");
                     $filename = $activityPublished->filename;
                     $xmlString = awsGetFile("xml/mergedActivityXml/$filename");
                     $fileSize = $xmlString ? calculateStringSizeInMb($xmlString) : 0;
@@ -50,6 +51,5 @@ class SetAllPublisherPublishedFileSizes extends Command
                 $this->error('Error updating activity published file sizes: ' . $e->getMessage());
             }
         });
-
     }
 }
