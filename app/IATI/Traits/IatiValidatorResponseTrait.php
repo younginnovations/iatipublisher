@@ -49,7 +49,6 @@ trait IatiValidatorResponseTrait
         $xmlString = $xml->asXML();
 
         if (!empty($errors)) {
-            logger()->info('Getting validation errors');
             foreach ($errors as $error) {
                 $updatedErrors[] = $this->getValidatorErrors($activity, $error, $xml, $xmlString);
             }

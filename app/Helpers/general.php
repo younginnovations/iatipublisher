@@ -1423,3 +1423,92 @@ if (!function_exists('canAddMore')) {
         return Arr::get($element, 'add_more', false) || Arr::get($element, 'add_more_attributes', false);
     }
 }
+
+if (!function_exists('calculateStringSizeInMb')) {
+    /**
+     * @param string $stringVal
+     *
+     * @return float|int
+     */
+    function calculateStringSizeInMb(string $stringVal): float|int
+    {
+        return strlen($stringVal) / 1048576;
+    }
+}
+
+if (!function_exists('mapErrorLinesToChildren')) {
+    function mapErrorLinesToChildren($childXmlLineDetail, $originalErrorLineNumbers, $arrayWithErrorLineNumbersInsideTextMessage): array
+    {
+        $order = Arr::get($childXmlLineDetail, 'order');
+        $offset = Arr::get($childXmlLineDetail, 'beginsOn');
+
+        if ($order !== 0) {
+            $arrayWithErrorLineNumbersInsideTextMessage = json_encode($arrayWithErrorLineNumbersInsideTextMessage);
+
+            foreach ($originalErrorLineNumbers as $key => $lineNumber) {
+                $newLineNumber = $lineNumber - $offset;
+                $newLineNumber = str_contains($key, 'details') ? $newLineNumber + $order : $newLineNumber;
+                $newLineNumber = str_contains($key, 'lineNumber') ? $newLineNumber + 2 : $newLineNumber + 1;
+
+                $arrayWithErrorLineNumbersInsideTextMessage = str_replace("At line: $lineNumber", "At line: $newLineNumber", $arrayWithErrorLineNumbersInsideTextMessage);
+                $arrayWithErrorLineNumbersInsideTextMessage = str_replace("at line: $lineNumber", "at line: $newLineNumber", $arrayWithErrorLineNumbersInsideTextMessage);
+
+                $originalErrorLineNumbers[$key] = $newLineNumber;
+            }
+
+            $arrayWithErrorLineNumbersInsideTextMessage = json_decode($arrayWithErrorLineNumbersInsideTextMessage, true);
+        }
+
+        return [$originalErrorLineNumbers, $arrayWithErrorLineNumbersInsideTextMessage];
+    }
+}
+
+if (!function_exists('getItemsWhereKeyContains')) {
+    function getItemsWhereKeyContains(array $array, string $searchString): array
+    {
+        return Arr::where($array, function ($value, $key) use ($searchString) {
+            return str_contains($key, $searchString);
+        });
+    }
+}
+
+if (!function_exists('getLineNumbersOfEachActivity')) {
+    function getLineNumbersOfEachActivity($xmlDoc, array $uniqueIdentifiers, array $individualActivityXmlLength): array
+    {
+        $sumOfPreviousNodes = 0;
+        $result = [];
+        $xpath = new DOMXPath($xmlDoc);
+        $nodes = $xpath->query('//iati-activities/iati-activity/iati-identifier');
+
+        foreach ($nodes as $index => $node) {
+            $identifier = $node->textContent;
+
+            if (in_array($identifier, $uniqueIdentifiers)) {
+                if ($index == 0) {
+                    $lineNumber = 1;
+                    $sumOfPreviousNodes = $individualActivityXmlLength[$identifier] + 2; // this is correct
+                } else {
+                    $lineNumber = $sumOfPreviousNodes + $index;
+                    $sumOfPreviousNodes = $sumOfPreviousNodes + $individualActivityXmlLength[$identifier]; //55 -> 55+36
+                }
+
+                $result[$identifier] = [
+                    'order' => $index,
+                    'beginsOn' => $lineNumber,
+                    'individualLength' => $individualActivityXmlLength[$identifier],
+                ];
+            }
+        }
+
+        return $result;
+    }
+}
+
+if (!function_exists('filterErrorsByIdentifier')) {
+    function filterErrorsByIdentifier(array $errors, string $identifier): array
+    {
+        return array_values(array_filter($errors, function ($error) use ($identifier) {
+            return $error['identifier'] === $identifier;
+        }));
+    }
+}

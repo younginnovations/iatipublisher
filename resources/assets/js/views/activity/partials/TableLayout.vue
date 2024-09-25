@@ -39,11 +39,11 @@
           </th>
           <th id="cb" scope="col">
             <span>
-              <span
-                class="cursor-pointer"
-                @click="toggleSelectAll(data.data, selectAllValue)"
-              >
-                <svg-vue icon="checkbox" />
+              <span class="cursor-pointer" @click="toggleSelectAll(data.data)">
+                <svg-vue
+                  icon="checkbox"
+                  :class="isAllValueSelected ? '!text-spring-50' : ''"
+                />
               </span>
             </span>
           </th>
@@ -183,9 +183,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import { defineProps, watch, ref } from 'vue';
 import moment from 'moment';
-import { useToggle } from '@vueuse/core';
 
 // Vuex Store
 import { useStore } from 'Store/activities/index';
@@ -193,36 +192,39 @@ import { useStore } from 'Store/activities/index';
 import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
 import Publish from 'Components/buttons/PublishButton.vue';
 import UnPublish from 'Components/buttons/UnPublishButton.vue';
-// import Shimmer from "Components/ShimmerLoading.vue";
 
-const [selectAllValue, selectAllToggle] = useToggle();
-
-defineProps({
+const props = defineProps({
   data: { type: Object, required: true },
   loader: { type: Boolean, required: false },
   currentPage: { type: Number, required: true, default: 1 },
 });
 
+const isAllValueSelected = ref(false);
 const store = useStore();
-
 function formatDate(date: Date) {
   return moment(date).fromNow();
 }
 
-function toggleSelectAll(
-  activities: { [x: string]: { id: number } },
-  selectAllValue: boolean
-) {
-  if (!selectAllValue) {
-    let ids = [] as number[];
-    for (const datum in activities) {
-      ids.push(activities[datum].id);
+function toggleSelectAll(activities: { [key: string]: { id: number } }) {
+  try {
+    const selectedIds = Object.values(activities).map((item) => item.id);
+    const newSet = [...store.state.selectedActivities, ...selectedIds];
+    if (newSet.length > 0) {
+      const filteredSet = [...new Set(newSet)];
+
+      if (isAllValueSelected.value) {
+        const filterAllCurrentPage = store.state.selectedActivities.filter(
+          (item) => !selectedIds.includes(item)
+        );
+        store.dispatch('updateSelectedActivities', filterAllCurrentPage);
+        isAllValueSelected.value = false;
+        return;
+      }
+      store.dispatch('updateSelectedActivities', filteredSet);
     }
-    store.dispatch('updateSelectedActivities', ids);
-  } else {
-    store.dispatch('updateSelectedActivities', []);
+  } catch (error) {
+    console.error('An error occurred while toggling select all:', error);
   }
-  selectAllToggle();
 }
 
 //Sorting by update_at
@@ -257,6 +259,34 @@ const sortByDateUrl = () => {
 
   return `?${params.toString()}`;
 };
+
+function containsAllValues(): boolean {
+  const selectedIds = Object.values(props.data.data).map(
+    (item: any) => item.id
+  );
+
+  const containsAllItems = selectedIds.every((item) =>
+    store.state.selectedActivities.includes(item)
+  );
+  console.log(containsAllItems);
+  return containsAllItems;
+}
+
+watch(
+  () => props.data.data,
+  () => {
+    isAllValueSelected.value = containsAllValues();
+  },
+  { deep: true }
+);
+
+watch(
+  () => store.state.selectedActivities,
+  () => {
+    isAllValueSelected.value = containsAllValues();
+  },
+  { deep: true }
+);
 </script>
 <style scoped>
 @keyframes spinner {

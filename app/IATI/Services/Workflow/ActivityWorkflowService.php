@@ -285,7 +285,6 @@ class ActivityWorkflowService
      */
     public function getResponse($xmlData): string
     {
-        file_put_contents(storage_path('test.xml'), $xmlData);
         $client = new Client();
         $URI = env('IATI_VALIDATOR_ENDPOINT');
         $params['headers'] = ['Content-Type' => 'application/json', 'Ocp-Apim-Subscription-Key' => env('IATI_VALIDATOR_KEY')];
@@ -414,5 +413,13 @@ class ActivityWorkflowService
         }
 
         return $activity->refresh();
+    }
+
+    /**
+     * @throws GuzzleException
+     */
+    public function validateMultipleActivities(string $xmlData): string
+    {
+        return $this->getResponse($xmlData);
     }
 }
