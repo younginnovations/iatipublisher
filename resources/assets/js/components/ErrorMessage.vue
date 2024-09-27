@@ -91,21 +91,20 @@
           <div class="alert__container">
             <div class="alert__content">
               <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
-              <span>Account not verified</span>
+              <span>Email not verified</span>
             </div>
 
             <div class="ml-5 text-left">
               <p>
-                Please check for verification email sent to you and verify your
-                account,
-                <span
+                Please check for the verification email sent to you when you
+                registered (<span
                   ><a
                     class="cursor-pointer border-b-2 border-b-bluecoral font-bold text-bluecoral hover:border-b-spring-50"
                     @click="resendVerificationEmail()"
-                    >resend verification email</a
-                  ></span
+                    >click here to resend the verification email</a
+                  >).</span
                 >
-                if you haven’t received your verification email. Contact
+                Contact
                 <span
                   ><a target="_blank" href="mailto:support@iatistandard.org"
                     >support@iatistandard.org</a
@@ -141,13 +140,14 @@
             </div>
             <div class="ml-5">
               <p>
-                Please
+                We recommend that you
                 <span
                   ><a href="/setting" target="_blank"
-                    >complete your setup</a
+                    >complete default values</a
                   ></span
                 >
-                in order to enable complete features of IATI publisher tool.
+                (language, currency and recommended defaults for activity data)
+                to enable full functionality of IATI Publisher.
               </p>
               <div v-if="!errorData.publisher_setting" class="alert__message">
                 <svg-vue icon="red-cross" class="text-[7px]"></svg-vue>
@@ -156,13 +156,6 @@
                     v-if="!errorData.token_status"
                     >. Please enter correct API token.</span
                   >
-                </p>
-              </div>
-              <div v-if="!errorData.default_setting" class="alert__message">
-                <svg-vue icon="red-cross" class="text-[7px]"></svg-vue>
-                <p>
-                  Complete default values (currency, language and recommended
-                  defaults for activity data).
                 </p>
               </div>
             </div>
@@ -185,11 +178,14 @@
           <div class="alert__container">
             <div class="alert__content">
               <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
-              <span>Publisher is Inactive</span>
+              <span>IATI Registry account is inactive</span>
             </div>
 
             <div class="ml-5 text-left">
-              <p>The publisher is not active at IATI Registry.</p>
+              <p>
+                Your account is pending approval by the IATI team - someone
+                should be in touch within two working days.
+              </p>
             </div>
           </div>
         </div>
