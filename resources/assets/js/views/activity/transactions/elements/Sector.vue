@@ -23,29 +23,53 @@
               <td>
                 <div class="text-sm">
                   <span v-if="sec.text">
-                    {{ sec.text ?? 'Missing' }}
+                    {{ sec.text ?? '' }}
+                    <span
+                      v-if="!sec.text"
+                      class="text-xs italic text-light-gray"
+                      >N/A</span
+                    >
                   </span>
                   <span v-else-if="sec.code">
-                    {{ sec.code ? type.sectorCode[sec.code] : 'Missing' }}
+                    {{ sec.code ? type.sectorCode[sec.code] : '' }}
+                    <span
+                      v-if="!sec.code"
+                      class="text-xs italic text-light-gray"
+                      >N/A</span
+                    >
                   </span>
                   <span v-else-if="sec.category_code">
                     {{
                       sec.category_code
                         ? type.sectorCategory[sec.category_code]
-                        : 'Missing'
+                        : ''
                     }}
+                    <span
+                      v-if="!sec.category_code"
+                      class="text-xs italic text-light-gray"
+                      >N/A</span
+                    >
                   </span>
                   <span v-else-if="sec.sdg_goal">
-                    {{
-                      sec.sdg_goal ? type.unsdgGoals[sec.sdg_goal] : 'Missing'
-                    }}
+                    {{ sec.sdg_goal ? type.unsdgGoals[sec.sdg_goal] : '' }}
+                    <span
+                      v-if="!sec.sdg_goal"
+                      class="text-xs italic text-light-gray"
+                      >N/A</span
+                    >
                   </span>
                   <span v-else-if="sec.sdg_target">
                     {{
-                      sec.sdg_target
-                        ? type.unsdgTargets[sec.sdg_target]
-                        : 'Missing'
+                      sec.sdg_target ? type.unsdgTargets[sec.sdg_target] : ''
                     }}
+                    <span
+                      v-if="!sec.sdg_target"
+                      class="text-xs italic text-light-gray"
+                      >N/A</span
+                    >
+                  </span>
+                  <span v-else>
+                    <span class="text-xs italic text-light-gray">N/A</span>
                   </span>
                 </div>
               </td>
@@ -63,7 +87,9 @@
                       {{ sec.vocabulary_uri }}
                     </a>
                   </span>
-                  <span v-else> Missing</span>
+                  <span v-else>
+                    <span class="text-xs italic text-light-gray">N/A</span>
+                  </span>
                 </div>
               </td>
             </tr>
@@ -78,16 +104,23 @@
                     'mb-4': i !== sec.narrative.length - 1,
                   }"
                 >
-                  <div class="language mb-1.5">
-                    (
-                    {{
+                  <div
+                    v-if="sd.narrative"
+                    class="language subtle-darker mb-1.5"
+                  >
+                    ({{
                       sd.language
                         ? `Language: ${type.languages[sd.language]}`
-                        : 'Language Missing'
+                        : 'Language: N/A'
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? 'Narrative Missing' }}
+                    {{ sd.narrative ?? '' }}
+                    <span
+                      v-if="!sd.narrative"
+                      class="text-xs italic text-light-gray"
+                      >N/A</span
+                    >
                   </div>
                 </div>
               </td>

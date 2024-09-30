@@ -7,15 +7,18 @@
       'mb-4': i !== Object.keys(tdData[0].narrative).length - 1,
     }"
   >
-    <div class="language mb-1.5">
+    <div v-if="post.narrative" class="language subtle-darker mb-1.5">
       ({{
         post.language
           ? `Language: ${type.languages[post.language]}`
-          : 'Language Missing'
+          : 'Language: N/A'
       }})
     </div>
     <div class="description text-sm">
-      {{ post.narrative ?? 'Narrative Missing' }}
+      {{ post.narrative ?? '' }}
+      <span v-if="!post.narrative" class="text-xs italic text-light-gray"
+        >N/A</span
+      >
     </div>
   </div>
 </template>

@@ -1,10 +1,9 @@
 <template>
   <div class="text-sm">
-    {{
-      flowData[0].flow_type
-        ? type.flowType[flowData[0].flow_type]
-        : 'Flow Type Missing'
-    }}
+    {{ flowData[0].flow_type ? type.flowType[flowData[0].flow_type] : '' }}
+    <span v-if="!flowData[0].flow_type" class="text-xs italic text-light-gray"
+      >N/A</span
+    >
   </div>
 </template>
 

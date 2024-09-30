@@ -5,11 +5,10 @@
         'text-[64px]': value[0].amount,
       }"
     >
-      {{
-        value[0].amount
-          ? Number(value[0].amount).toLocaleString()
-          : 'Amount Missing'
-      }}
+      {{ value[0].amount ? Number(value[0].amount).toLocaleString() : '' }}
+      <span v-if="!value[0].amount" class="text-xs italic text-light-gray"
+        >N/A</span
+      >
     </span>
     <span v-if="value[0].amount" class="mb-5">{{ value[0].currency }}</span>
   </div>

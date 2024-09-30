@@ -1,5 +1,10 @@
 <template>
-  <div class="text-sm">{{ type[typeData] ?? 'Missing' }}</div>
+  <div class="text-sm">
+    {{ type[typeData] ?? '' }}
+    <span v-if="!type[typeData]" class="text-xs italic text-light-gray"
+      >N/A</span
+    >
+  </div>
 </template>
 
 <script lang="ts">

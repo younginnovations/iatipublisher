@@ -3,8 +3,13 @@
     {{
       financeData[0].finance_type
         ? type.financeType[financeData[0].finance_type]
-        : 'Finance Type Missing'
+        : ''
     }}
+    <span
+      v-if="!financeData[0].finance_type"
+      class="text-xs italic text-light-gray"
+      >N/A</span
+    >
   </div>
 </template>
 

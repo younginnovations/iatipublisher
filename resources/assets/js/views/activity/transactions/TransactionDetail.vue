@@ -73,12 +73,10 @@
         <ul class="text-sm font-bold leading-relaxed">
           <li v-for="(rData, r, ri) in transactionData" :key="ri">
             <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
-              <svg-vue
-                v-if="isMandatoryIcon(r)"
-                icon="core"
-                class="mr-2 text-base"
-              ></svg-vue>
-              <span :class="isMandatoryIcon(r) ? '' : 'pl-6'">{{ r }}</span>
+              <span>{{ r }}</span>
+              <span v-if="isMandatoryIcon(r)" class="required-icon px-1"
+                >*</span
+              >
             </a>
           </li>
         </ul>
@@ -92,12 +90,10 @@
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in transactionData" :key="ri">
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
-                <svg-vue
-                  v-if="isMandatoryIcon(r)"
-                  icon="core"
-                  class="mr-2 text-base"
-                ></svg-vue>
-                <span :class="isMandatoryIcon(r) ? '' : 'pl-6'">{{ r }}</span>
+                <span>{{ r }}</span>
+                <span v-if="isMandatoryIcon(r)" class="required-icon px-1"
+                  >*</span
+                >
               </a>
             </li>
           </ul>

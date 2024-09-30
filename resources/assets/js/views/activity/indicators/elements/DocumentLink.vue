@@ -11,8 +11,13 @@
                   {{
                     getActivityTitle(post.title[0].narrative, 'en')
                       ? getActivityTitle(post.title[0].narrative, 'en')
-                      : 'Missing'
+                      : ''
                   }}
+                  <span
+                    v-if="!getActivityTitle(post.title[0].narrative, 'en')"
+                    class="text-xs italic text-light-gray"
+                    >N/A</span
+                  >
                 </div>
                 <div class="ml-4">
                   <table>
@@ -28,16 +33,25 @@
                               'mb-1.5': post.title[0].narrative.length - 1 != n,
                             }"
                           >
-                            <div class="language mb-1">
+                            <div
+                              v-if="na.narrative"
+                              class="language subtle-darker mb-1"
+                            >
                               (Language:
-                              {{
-                                na.language
-                                  ? type.language[na.language]
-                                  : 'Missing'
-                              }})
+                              {{ na.language ? type.language[na.language] : ''
+                              }}<span
+                                v-if="!na.language"
+                                class="text-xs italic text-light-gray"
+                                >N/A</span
+                              >)
                             </div>
                             <div class="description text-xs">
-                              {{ na.narrative ?? 'Missing' }}
+                              {{ na.narrative ?? '' }}
+                              <span
+                                v-if="!na.narrative"
+                                class="text-xs italic text-light-gray"
+                                >N/A</span
+                              >
                             </div>
                           </div>
                         </td>
@@ -49,13 +63,22 @@
                           <a v-if="post.url" target="_blank" :href="post.url">{{
                             post.url
                           }}</a>
-                          <span v-else>Missing</span>
+                          <span v-else class="text-xs italic text-light-gray"
+                            >N/A</span
+                          >
                         </td>
                       </tr>
 
                       <tr>
                         <td>Format</td>
-                        <td>{{ post.format ?? 'Missing' }}</td>
+                        <td>
+                          {{ post.format ?? '' }}
+                          <span
+                            v-if="!post.format"
+                            class="text-xs italic text-light-gray"
+                            >N/A</span
+                          >
+                        </td>
                       </tr>
 
                       <tr>
@@ -70,16 +93,25 @@
                                 post.description[0].narrative.length - 1 != n,
                             }"
                           >
-                            <div class="language mb-1">
+                            <div
+                              v-if="na.narrative"
+                              class="language subtle-darker mb-1"
+                            >
                               (Language:
                               {{
-                                na.language
-                                  ? type.language[na.language]
-                                  : 'Missing'
-                              }})
+                                na.language ? type.language[na.language] : ''
+                              }}
+                              <span v-if="!na.language" class="text-xs italic"
+                                >N/A</span
+                              >)
                             </div>
                             <div class="description text-xs">
-                              {{ na.narrative ?? 'Missing' }}
+                              {{ na.narrative ?? '' }}
+                              <span
+                                v-if="!na.narrative"
+                                class="text-xs italic text-light-gray"
+                                >N/A</span
+                              >
                             </div>
                           </div>
                         </td>
@@ -95,10 +127,13 @@
                             :class="{ 'mb-1': post.category.length - 1 != c }"
                           >
                             {{
-                              cat.code
-                                ? type.documentCategory[cat.code]
-                                : 'Missing'
+                              cat.code ? type.documentCategory[cat.code] : ''
                             }}
+                            <span
+                              v-if="!cat.code"
+                              class="text-xs italic text-light-gray"
+                              >N/A</span
+                            >
                           </div>
                         </td>
                       </tr>
@@ -114,8 +149,13 @@
                                       (entry) => type.language[entry.language]
                                     )
                                     .join(', ')
-                                : 'Missing'
+                                : ''
                             }}
+                            <span
+                              v-if="!post.language[0].language"
+                              class="text-xs italic text-light-gray"
+                              >N/A</span
+                            >
                           </div>
                         </td>
                       </tr>
@@ -124,7 +164,12 @@
                         <td>Document Date</td>
                         <td>
                           <div class="text-xs">
-                            {{ post.document_date[0].date ?? 'Missing' }}
+                            {{ post.document_date[0].date ?? '' }}
+                            <span
+                              v-if="!post.document_date[0].date"
+                              class="text-xs italic text-light-gray"
+                              >N/A</span
+                            >
                           </div>
                         </td>
                       </tr>

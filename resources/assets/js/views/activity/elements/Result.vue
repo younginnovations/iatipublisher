@@ -91,9 +91,12 @@
                         <td>Result Type</td>
                         <td>
                           <div>
-                            {{
-                              types.resultType[result.result.type] ?? 'Missing'
-                            }}
+                            {{ types.resultType[result.result.type] ?? '' }}
+                            <span
+                              v-if="!types.resultType[result.result.type]"
+                              class="text-xs italic text-light-gray"
+                              >N/A</span
+                            >
                           </div>
                         </td>
                       </tr>
@@ -101,14 +104,14 @@
                         <td>Description</td>
                         <td>
                           <div class="description-content">
-                            <div class="language mb-1.5">
+                            <div class="language subtle-darker mb-1.5">
                               (Language:
                               {{
                                 getActivityTitle(
                                   result.result.description[0].narrative,
                                   currentLanguage
                                 ) === 'Untitled'
-                                  ? 'Missing'
+                                  ? 'N/A'
                                   : types.languages[
                                       result?.result?.description?.[0]
                                         ?.narrative?.[0]?.language ??
@@ -238,14 +241,24 @@
                                           <template v-if="baseline.value">
                                             {{ baseline.value }},
                                           </template>
-                                          <template v-else> Missing, </template>
+                                          <template v-else>
+                                            <span
+                                              class="text-xs italic text-light-gray"
+                                              >N/A</span
+                                            >,
+                                          </template>
                                         </span>
                                         <span>
                                           Date:
                                           <template v-if="baseline.date">
                                             {{ baseline.date }}
                                           </template>
-                                          <template v-else> Missing </template>
+                                          <template v-else>
+                                            <span
+                                              class="text-xs italic text-light-gray"
+                                              >N/A</span
+                                            >
+                                          </template>
                                         </span>
                                       </div>
                                     </div>
