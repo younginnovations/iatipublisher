@@ -17,6 +17,7 @@
         </div>
       </div>
       <div class="divider mb-4 h-px w-full bg-n-20"></div>
+
       <div>
         <template
           v-if="elementName === 'title' || elementName === 'description'"
@@ -25,9 +26,10 @@
         </template>
 
         <template v-else-if="elementName === 'aggregation_status'">
-          <span class="text-sm capitalize">{{
-            parseInt(data as string) ? 'True' : data ? 'False' : 'Missing'
-          }}</span>
+          <span class="text-sm capitalize"
+            >{{ parseInt(data as string) ? 'True' : data ? 'False' : '' }}
+            <span v-if="!data" class="text-xs italic text-light-gray">N/A</span>
+          </span>
         </template>
 
         <template v-else-if="elementName === 'document_link'">

@@ -35,7 +35,9 @@
                 <span v-else-if="at.earmarking_modality">
                   {{ type.earMarkingModality[at.earmarking_modality] }}
                 </span>
-                <span v-else> Missing </span>
+                <span v-else>
+                  <span class="text-xs italic text-light-gray">N/A</span>
+                </span>
               </div>
             </td>
           </tr>

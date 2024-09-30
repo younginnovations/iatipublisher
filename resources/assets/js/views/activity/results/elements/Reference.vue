@@ -11,7 +11,12 @@
         <tbody>
           <tr>
             <td>Code</td>
-            <td>{{ ref.code ? ref.code : 'Missing' }}</td>
+            <td>
+              {{ ref.code ? ref.code : '' }}
+              <span v-if="!ref.code" class="text-xs italic text-light-gray"
+                >N/A</span
+              >
+            </td>
           </tr>
           <tr>
             <td>Vocabulary URI</td>
@@ -22,7 +27,9 @@
                 :href="ref.vocabulary_uri"
                 >{{ ref.vocabulary_uri }}</a
               >
-              <span v-else>Missing</span>
+              <span v-else>
+                <span class="text-xs italic text-light-gray">N/A</span>
+              </span>
             </td>
           </tr>
         </tbody>
