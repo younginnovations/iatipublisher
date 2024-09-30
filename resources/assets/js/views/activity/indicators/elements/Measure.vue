@@ -2,7 +2,12 @@
   <tr>
     <td>Measure</td>
     <td>
-      {{ measureData ? measureType[measureData] : 'Missing' }}
+      {{ measureData ? measureType[measureData] : '' }}
+      <span
+        v-if="!parseInt(data) && !data"
+        class="text-xs italic text-light-gray"
+        >N/A</span
+      >
     </td>
   </tr>
 </template>

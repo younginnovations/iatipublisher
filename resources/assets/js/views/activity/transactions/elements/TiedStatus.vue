@@ -3,8 +3,13 @@
     {{
       tsData[0].tied_status_code
         ? type.tiedStatusType[tsData[0].tied_status_code]
-        : 'Tied Status Code Missing'
+        : ''
     }}
+    <span
+      v-if="!tsData[0].tied_status_code"
+      class="text-xs italic text-light-gray"
+      >N/A</span
+    >
   </div>
 </template>
 

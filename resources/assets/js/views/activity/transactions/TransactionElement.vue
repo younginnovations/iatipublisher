@@ -48,7 +48,8 @@
 
         <template v-else-if="elementName === 'humanitarian'">
           <div class="text-sm">
-            {{ data === '0' ? 'False' : data === '1' ? 'True' : 'Missing' }}
+            {{ data === '0' ? 'False' : data === '1' ? 'True' : '' }}
+            <span v-if="!data" class="text-xs italic text-light-gray">N/A</span>
           </div>
         </template>
 
@@ -88,7 +89,10 @@
           <TiedStatus :data="elementData" />
         </template>
         <template v-else>
-          <div class="text-sm">{{ data ?? 'Missing' }}</div>
+          <div class="text-sm">
+            {{ data ?? '' }}
+            <span v-if="!data" class="text-xs italic text-light-gray">N/A</span>
+          </div>
         </template>
       </div>
     </div>

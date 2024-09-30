@@ -24,7 +24,10 @@
         class="description text-sm"
         :class="{ 'mb-4': Number(t) !== trans.transaction.value.length - 1 }"
       >
-        {{ val.amount ? Number(val.amount).toLocaleString() : 'Value missing' }}
+        {{ val.amount ? Number(val.amount).toLocaleString() : '' }}
+        <span v-if="!val.amount" class="text-xs italic text-light-gray"
+          >N/A</span
+        >
         {{ val.currency }}
         {{
           dateFormat(val.date, 'MMMM DD, YYYY')

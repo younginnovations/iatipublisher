@@ -1,5 +1,5 @@
 <template>
-  <div class="documents">
+  <div v-if="!isEveryValueNull(dlData)" class="documents">
     <template v-for="(post, i) in dlData" :key="i">
       <div class="item elements-detail">
         <div
@@ -15,13 +15,19 @@
                 <td>
                   <template v-for="(na, n) in post.title[0].narrative" :key="n">
                     <div class="title-content mb-1.5">
-                      <div class="language mb-1">
+                      <div
+                        v-if="na.narrative"
+                        class="language subtle-darker mb-1"
+                      >
                         (Language:
                         {{
                           type.language[na.language]
                             ? type.language[na.language]
-                            : 'Missing'
+                            : 'N/A'
                         }})
+                      </div>
+                      <div v-else>
+                        <span class="text-xs italic text-light-gray">N/A</span>
                       </div>
                       <div
                         class="description !w-[800px] !max-w-[50%] overflow-x-hidden text-ellipsis whitespace-nowrap text-xs"
@@ -47,7 +53,14 @@
 
               <tr>
                 <td>Format</td>
-                <td>{{ post.format ? post.format : 'Missing' }}</td>
+                <td>
+                  {{ post.format ? post.format : '' }}
+                  <span
+                    v-if="!post.format"
+                    class="text-xs italic text-light-gray"
+                    >N/A</span
+                  >
+                </td>
               </tr>
 
               <tr>
@@ -58,13 +71,19 @@
                     :key="n"
                   >
                     <div class="description-content mb-1.5">
-                      <div class="language mb-1">
+                      <div
+                        v-if="na.narrative"
+                        class="language subtle-darker mb-1"
+                      >
                         (Language:
                         {{
                           type.language[na.language]
                             ? type.language[na.language]
-                            : 'Missing'
+                            : ''
                         }})
+                      </div>
+                      <div v-else>
+                        <span class="text-xs italic text-light-gray">N/A</span>
                       </div>
                       <div class="description text-xs">
                         {{ na.narrative }}
@@ -82,8 +101,13 @@
                       {{
                         type.documentCategory[cat.code]
                           ? type.documentCategory[cat.code]
-                          : 'Missing'
+                          : ''
                       }}
+                      <span
+                        v-if="!type.documentCategory[cat.code]"
+                        class="text-xs italic text-light-gray"
+                        >N/A</span
+                      >
                     </div>
                   </template>
                 </td>
@@ -95,11 +119,16 @@
                   <div class="text-xs">
                     {{
                       post.language[0].language === null
-                        ? 'Missing'
+                        ? ''
                         : post.language
                             .map((entry) => type.language[entry.language])
                             .join(', ')
                     }}
+                    <span
+                      v-if="post.language[0].language === null"
+                      class="text-xs italic text-light-gray"
+                      >N/A</span
+                    >
                   </div>
                 </td>
               </tr>
@@ -111,8 +140,13 @@
                     {{
                       post.document_date[0].date
                         ? post.document_date[0].date
-                        : 'Missing'
+                        : ''
                     }}
+                    <span
+                      v-if="!post.document_date[0].date"
+                      class="text-xs italic text-light-gray"
+                      >N/A</span
+                    >
                   </div>
                 </td>
               </tr>
@@ -122,9 +156,13 @@
       </div>
     </template>
   </div>
+  <div v-else>
+    <span class="text-xs italic text-light-gray">N/A</span>
+  </div>
 </template>
 
 <script lang="ts">
+import { isEveryValueNull } from 'Composable/utils';
 import { defineComponent, toRefs } from 'vue';
 
 export default defineComponent({
@@ -144,7 +182,7 @@ export default defineComponent({
     let { data } = toRefs(props);
     const dlData = data.value;
 
-    return { dlData };
+    return { dlData, isEveryValueNull };
   },
 });
 </script>
