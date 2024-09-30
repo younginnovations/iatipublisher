@@ -98,13 +98,21 @@
                                   post.indicator.title[0].narrative.length - 1,
                               }"
                             >
-                              <div class="language mb-1">
+                              <div
+                                v-if="title.narrative"
+                                class="language subtle-darker mb-1"
+                              >
                                 (Language:
                                 {{
                                   type.language[title.language]
                                     ? type.language[title.language]
-                                    : 'Missing'
+                                    : 'N/A'
                                 }})
+                              </div>
+                              <div v-else>
+                                <span class="text-xs italic text-light-gray"
+                                  >N/A</span
+                                >
                               </div>
                               <div class="description text-xs">
                                 {{ title.narrative }}
@@ -144,13 +152,21 @@
                                     1,
                               }"
                             >
-                              <div class="language mb-1">
+                              <div
+                                v-if="description.narrative"
+                                class="language subtle-darker mb-1"
+                              >
                                 (Language:
                                 {{
                                   type.language[description.language]
                                     ? type.language[description.language]
-                                    : 'Missing'
+                                    : 'N/A'
                                 }})
+                              </div>
+                              <div v-else>
+                                <span class="text-xs italic text-light-gray"
+                                  >N/A</span
+                                >
                               </div>
                               <div class="description text-xs">
                                 {{ description.narrative }}
@@ -162,7 +178,8 @@
 
                       <tr>
                         <td>Reference</td>
-                        <td>
+
+                        <td v-if="!isEveryValueNull(post.indicator.reference)">
                           <div
                             v-for="(ref, r) in post.indicator.reference"
                             :key="r"
@@ -172,10 +189,20 @@
                             }"
                           >
                             <span>
-                              Vocabulary: {{ ref.vocabulary ?? 'Missing' }},
+                              Vocabulary: {{ ref.vocabulary ?? '' }}
+                              <span
+                                v-if="!ref.vocabulary"
+                                class="text-xs italic text-light-gray"
+                                >N/A</span
+                              >,
                             </span>
                             <span>
-                              Code: {{ ref.code ? ref.code : 'Missing' }},
+                              Code: {{ ref.code ? ref.code : '' }}
+                              <span
+                                v-if="!ref.code"
+                                class="text-xs italic text-light-gray"
+                                >N/A</span
+                              >,
                             </span>
                             <span>
                               Indicator URI:
@@ -187,9 +214,18 @@
                               >
                                 {{ ref.indicator_uri }}</a
                               >
-                              <span v-else>Mising</span>
+                              <span
+                                v-else
+                                class="text-xs italic text-light-gray"
+                                >N/A</span
+                              >
                             </span>
                           </div>
+                        </td>
+                        <td v-else>
+                          <span class="text-xs italic text-light-gray"
+                            >N/A</span
+                          >
                         </td>
                       </tr>
 
@@ -203,7 +239,8 @@
 
                       <tr>
                         <td>Baseline</td>
-                        <td>
+
+                        <td v-if="!isEveryValueNull(post.indicator.baseline)">
                           <div
                             v-for="(base, b) in post.indicator.baseline"
                             :key="b"
@@ -218,7 +255,11 @@
                                 <template v-if="base.year">
                                   {{ base.year }}
                                 </template>
-                                <template v-else>Missing</template>
+                                <template v-else>
+                                  <span class="text-xs italic text-light-gray"
+                                    >N/A</span
+                                  >
+                                </template>
                                 ,
                               </span>
                               <span>
@@ -226,7 +267,11 @@
                                 <template v-if="base.date">
                                   {{ base.date }}
                                 </template>
-                                <template v-else>Missing</template>
+                                <template v-else>
+                                  <span class="text-xs italic text-light-gray"
+                                    >N/A</span
+                                  ></template
+                                >
                                 ,
                               </span>
                               <span>
@@ -234,7 +279,11 @@
                                 <template v-if="base.value">
                                   {{ base.value }}
                                 </template>
-                                <template v-else>Missing</template>
+                                <template v-else>
+                                  <span class="text-xs italic text-light-gray"
+                                    >N/A</span
+                                  ></template
+                                >
                               </span>
                             </div>
                             <div class="flex">
@@ -251,7 +300,11 @@
                                   <template v-if="loc.reference">
                                     {{ loc.reference }}
                                   </template>
-                                  <template v-else>Missing</template>
+                                  <template v-else>
+                                    <span class="text-xs italic text-light-gray"
+                                      >N/A</span
+                                    ></template
+                                  >
                                 </div>
                               </div>
                             </div>
@@ -271,14 +324,24 @@
                                       <template v-if="dim.name">
                                         {{ dim.name }}
                                       </template>
-                                      <template v-else> Missing </template>
+                                      <template v-else>
+                                        <span
+                                          class="text-xs italic text-light-gray"
+                                          >N/A</span
+                                        >
+                                      </template>
                                       &nbsp;
                                     </span>
-                                    <span>
+                                    <span v-if="dim.name">
                                       <template v-if="dim.value">
                                         ({{ dim.value }})
                                       </template>
-                                      <template v-else> (Missing) </template>
+                                      <template v-else>
+                                        (<span
+                                          class="text-xs italic text-light-gray"
+                                          >N/A</span
+                                        >)
+                                      </template>
                                     </span>
                                   </div>
                                 </div>
@@ -303,15 +366,20 @@
                                       <template v-if="com.narrative">
                                         {{ com.narrative }}
                                       </template>
-                                      <template v-else> Missing </template>
+                                      <template v-else
+                                        ><span
+                                          class="text-xs italic text-light-gray"
+                                          >N/A</span
+                                        >
+                                      </template>
                                       &nbsp;
                                     </span>
-                                    <span>
+                                    <span class="language subtle-darker">
                                       (Language:
                                       <template v-if="com.language">
                                         {{ type.language[com.language] }})
                                       </template>
-                                      <template v-else> Missing) </template>
+                                      <template v-else> N/A) </template>
                                     </span>
                                   </div>
                                 </div>
@@ -326,6 +394,11 @@
                               </div>
                             </div>
                           </div>
+                        </td>
+                        <td v-else>
+                          <span class="text-xs italic text-light-gray"
+                            >N/A</span
+                          >
                         </td>
                       </tr>
 
@@ -426,7 +499,12 @@
                                         <template v-if="loc.reference">
                                           {{ loc.reference }}
                                         </template>
-                                        <template v-else> Missing </template>
+                                        <template v-else>
+                                          <span
+                                            class="text-xs italic text-light-gray"
+                                            >N/A</span
+                                          >
+                                        </template>
                                       </span>
                                     </div>
                                   </div>
@@ -448,9 +526,14 @@
                                       <template v-if="dim.name">
                                         {{ dim.name }}
                                       </template>
-                                      <template v-else> Missing </template>
+                                      <template v-else>
+                                        <span
+                                          class="text-xs italic text-light-gray"
+                                          >N/A</span
+                                        >
+                                      </template>
                                     </span>
-                                    <span>
+                                    <span v-if="dim.name">
                                       <template v-if="dim.value">
                                         ({{ dim.value }})
                                       </template>
@@ -476,15 +559,23 @@
                                         <template v-if="com.narrative">
                                           {{ com.narrative }}
                                         </template>
-                                        <template v-else> Missing </template>
+                                        <template v-else>
+                                          <span
+                                            class="text-xs italic text-light-gray"
+                                            >N/A</span
+                                          >
+                                        </template>
                                         &nbsp;
                                       </span>
-                                      <span>
+                                      <span
+                                        v-if="com.narrative"
+                                        class="language subtle-darker"
+                                      >
                                         (Language:
                                         <template v-if="com.language">
                                           {{ type.language[com.language] }})
                                         </template>
-                                        <template v-else> Missing) </template>
+                                        <template v-else> N/A) </template>
                                       </span>
                                     </div>
                                   </div>
@@ -528,7 +619,12 @@
                                         <template v-if="loc.reference">
                                           {{ loc.reference }}
                                         </template>
-                                        <template v-else> Missing </template>
+                                        <template v-else>
+                                          <span
+                                            class="text-xs italic text-light-gray"
+                                            >N/A</span
+                                          >
+                                        </template>
                                       </span>
                                     </div>
                                   </div>
@@ -550,9 +646,14 @@
                                       <template v-if="dim.name">
                                         {{ dim.name }}
                                       </template>
-                                      <template v-else> Missing </template>
+                                      <template v-else>
+                                        <span
+                                          class="text-xs italic text-light-gray"
+                                          >N/A</span
+                                        >
+                                      </template>
                                     </span>
-                                    <span>
+                                    <span v-if="dim.name">
                                       <template v-if="dim.value">
                                         ({{ dim.value }})
                                       </template>
@@ -578,15 +679,23 @@
                                         <template v-if="com.narrative">
                                           {{ com.narrative }}
                                         </template>
-                                        <template v-else> Missing </template>
+                                        <template v-else>
+                                          <span
+                                            class="text-xs italic text-light-gray"
+                                            >N/A</span
+                                          >
+                                        </template>
                                         &nbsp;
                                       </span>
-                                      <span>
+                                      <span
+                                        v-if="com.narrative"
+                                        class="language subtle-darker"
+                                      >
                                         (Language:
                                         <template v-if="com.language">
                                           {{ type.language[com.language] }})
                                         </template>
-                                        <template v-else> Missing) </template>
+                                        <template v-else> N/A) </template>
                                       </span>
                                     </div>
                                   </div>
@@ -624,7 +733,11 @@ import NotYet from 'Components/sections/HaveNotAddedYet.vue';
 import Btn from 'Components/buttons/Link.vue';
 
 // helper function
-import { countDocumentLink, onlyDeprecatedStatusMap } from 'Composable/utils';
+import {
+  countDocumentLink,
+  isEveryValueNull,
+  onlyDeprecatedStatusMap,
+} from 'Composable/utils';
 import HelperText from 'Components/HelperText.vue';
 
 export default defineComponent({
@@ -654,7 +767,13 @@ export default defineComponent({
 
     const indicatorData = result.value.indicators.reverse();
 
-    return { indicatorData, dateFormat, getActivityTitle, countDocumentLink };
+    return {
+      indicatorData,
+      dateFormat,
+      getActivityTitle,
+      countDocumentLink,
+      isEveryValueNull,
+    };
   },
   methods: { onlyDeprecatedStatusMap },
 });

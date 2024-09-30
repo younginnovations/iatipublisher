@@ -2,8 +2,13 @@
   {{
     code[0].transaction_type_code
       ? type.transactionType[code[0].transaction_type_code]
-      : 'Code Missing'
+      : ''
   }}
+  <span
+    v-if="!code[0].transaction_type_code"
+    class="text-xs italic text-light-gray"
+    >N/A</span
+  >
 </template>
 
 <script lang="ts">

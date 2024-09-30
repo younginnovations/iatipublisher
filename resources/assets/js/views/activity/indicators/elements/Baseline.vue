@@ -1,7 +1,8 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <tr>
     <td>Baseline</td>
-    <td>
+    <td v-if="!isEveryValueNull(baseline)">
       <div
         v-for="(base, b) in baseline"
         :key="b"
@@ -15,38 +16,45 @@
             <template v-if="base.year">
               {{ base.year }}
             </template>
-            <template v-else>Missing</template>
-            ,
+            <template v-else>
+              <span class="text-xs italic text-light-gray">N/A</span></template
+            >,
           </span>
           <span>
             Date:
             <template v-if="base.date">
               {{ base.date }}
             </template>
-            <template v-else>Missing</template>
-            ,
+            <template v-else>
+              <span class="text-xs italic text-light-gray">N/A</span></template
+            >,
           </span>
           <span>
             Value:
             <template v-if="base.value">
               {{ base.value }}
             </template>
-            <template v-else>Missing</template>
+            <template v-else>
+              <span class="text-xs italic text-light-gray">N/A</span></template
+            >
           </span>
         </div>
 
         <div class="flex" :class="elementSpacing">
           <div>Location:&nbsp;</div>
           <div>
-            {{ location(base.location) ? location(base.location) : 'Missing' }}
+            {{ location(base.location) ? location(base.location) : '' }}
+            <span
+              v-if="!location(base.location)"
+              class="text-xs italic text-light-gray"
+              >N/A</span
+            >
           </div>
         </div>
 
         <div class="flex" :class="elementSpacing">
           <div>Dimension:&nbsp;</div>
-          <div class="description">
-            {{ dimensions(base.dimension) }}
-          </div>
+          <div class="description" v-html="dimensions(base.dimension)"></div>
         </div>
 
         <div class="flex" :class="elementSpacing">
@@ -62,14 +70,20 @@
             >
               <div>
                 <div class="description">
-                  {{ com.narrative ? com.narrative : 'Missing' }}
-                  <span class="text-n-30">
+                  {{ com.narrative ? com.narrative : '' }}
+                  <span
+                    v-if="!com.narrative"
+                    class="text-xs italic text-light-gray"
+                    >N/A</span
+                  >
+                  <span v-if="com.narrative" class="language subtle-darker">
                     (Language:
-                    {{
-                      com.language
-                        ? baseType.language[com.language]
-                        : 'Missing'
-                    }})</span
+                    {{ com.language ? baseType.language[com.language] : ''
+                    }}<span
+                      v-if="!com.language"
+                      class="text-xs italic text-light-gray"
+                      >N/A</span
+                    >)</span
                   >
                 </div>
               </div>
@@ -79,17 +93,28 @@
 
         <div>
           <div class="mb-2.5 flex">
-            <div>Document Link:&nbsp;</div>
-            <div></div>
+            <div>
+              Document Link:&nbsp;
+              <span
+                v-if="isEveryValueNull(base.document_link)"
+                class="text-xs italic text-light-gray"
+                >N/A</span
+              >
+            </div>
           </div>
-          <div class="divider mb-4 h-px w-full border-b border-n-20"></div>
-          <DocumentLink
-            :data="base.document_link"
-            :type="baseType"
-            alignment=""
-          />
+          <div v-if="!isEveryValueNull(base.document_link)">
+            <div class="divider mb-4 h-px w-full border-b border-n-20"></div>
+            <DocumentLink
+              :data="base.document_link"
+              :type="baseType"
+              alignment=""
+            />
+          </div>
         </div>
       </div>
+    </td>
+    <td v-else>
+      <span class="text-xs italic text-light-gray">N/A</span>
     </td>
   </tr>
 </template>
@@ -97,7 +122,7 @@
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
 import { DocumentLink } from './Index';
-import { countDocumentLink } from 'Composable/utils';
+import { countDocumentLink, isEveryValueNull } from 'Composable/utils';
 
 export default defineComponent({
   name: 'IndicatorBaseline',
@@ -178,22 +203,26 @@ export default defineComponent({
      * @param data
      */
     const dimensions = (data: Dimension[]) => {
-      let dimensions: string[] = [];
-
-      dimensions = data.map((item) => {
-        const name = item.name ?? 'Missing',
-          value = item.value ?? 'Missing';
-        return `code - ${name}, value - ${value}`;
-      });
-
-      return dimensions.join('; ');
+      return data
+        .map((item) => {
+          const name = item.name
+            ? `<span>${item.name}</span>`
+            : `<span class="text-xs italic text-light-gray">N/A</span>`;
+          const value = item.value
+            ? `<span>${item.value}</span>`
+            : `<span class="text-xs italic text-light-gray">N/A</span>`;
+          return `code - ${name}, value - ${value}`;
+        })
+        .join('; ');
     };
+
     return {
       baseline,
       location,
       dimensions,
       elementSpacing,
       countDocumentLink,
+      isEveryValueNull,
     };
   },
 });

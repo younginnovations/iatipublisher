@@ -3,8 +3,13 @@
     {{
       code[0].disbursement_channel_code
         ? type.disbursementChannel[code[0].disbursement_channel_code]
-        : 'Disbursement Channel Code Missing'
+        : ''
     }}
+    <span
+      v-if="!code[0].disbursement_channel_code"
+      class="text-xs italic text-light-gray"
+      >N/A</span
+    >
   </div>
 </template>
 

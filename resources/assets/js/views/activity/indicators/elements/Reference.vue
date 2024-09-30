@@ -1,7 +1,7 @@
 <template>
   <tr>
     <td>Reference</td>
-    <td>
+    <td v-if="!isEveryValueNull(refData)">
       <div
         v-for="(ref, r) in refData"
         :key="r"
@@ -11,21 +11,33 @@
       >
         <span>
           Vocabulary:
-          {{ refType.indicatorVocabulary[ref.vocabulary] ?? 'Missing' }},
+          {{ refType.indicatorVocabulary[ref.vocabulary] ?? '' }}
+          <span
+            v-if="!refType.indicatorVocabulary[ref.vocabulary]"
+            class="text-xs italic text-light-gray"
+            >N/A</span
+          >,
         </span>
-        <span> Code: {{ ref.code ?? 'Missing' }}, </span>
+        <span>
+          Code: {{ ref.code ?? '' }}
+          <span v-if="!ref.code" class="text-xs italic text-light-gray"
+            >N/A</span
+          >
+        </span>
         <span v-if="ref.indicator_uri">
-          Indicator URI:
+          ,Indicator URI:
           <a target="_blank" :href="ref.indicator_uri">
             {{ ref.indicator_uri }}
           </a>
         </span>
       </div>
     </td>
+    <td v-else><span class="text-xs italic text-light-gray">N/A</span></td>
   </tr>
 </template>
 
 <script lang="ts">
+import { isEveryValueNull } from 'Composable/utils';
 import { defineComponent, toRefs } from 'vue';
 
 export default defineComponent({
@@ -55,7 +67,7 @@ export default defineComponent({
       };
     }
     const refData = data.value as ReferenceArray;
-    return { refData };
+    return { refData, isEveryValueNull };
   },
 });
 </script>
