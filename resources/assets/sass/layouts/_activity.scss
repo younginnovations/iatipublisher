@@ -120,6 +120,14 @@
     @apply text-n-40;
     width: 100px;
   }
+
+  &.spacious {
+    td:nth-child(1) {
+      @apply text-n-40;
+      width: 120px;
+    }
+  }
+
   &.wider:not(.small) {
     td:nth-child(1) {
       @apply text-n-40;
