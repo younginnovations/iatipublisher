@@ -2,21 +2,9 @@
   <div
     v-for="(post, key) in data"
     :key="key"
-    class="elements-detail"
+    class="elements-detail spacious"
     :class="{ 'mb-4': Number(key) !== data.length - 1 }"
   >
-    <div
-      v-for="(item, i) in post.location_reach"
-      :key="i"
-      :class="{ 'mb-0': i !== post.location_reach.length - 1 }"
-    >
-      <div class="category">
-        <span v-if="item.code">
-          {{ types.geographicLocationReach[item.code] }}
-        </span>
-        <span v-else class="italic">Location Reach Missing</span>
-      </div>
-    </div>
     <div
       v-for="(item, i) in post.name"
       :key="i"
@@ -34,7 +22,7 @@
             >(Language: {{ types.languages[narrative.language] }})</span
           >
         </div>
-        <span v-else class="italic">Name Missing</span>
+        <span v-else class="text-xs italic text-light-gray">Name N/A</span>
       </div>
     </div>
     <div class="ml-5">
@@ -43,7 +31,25 @@
           <td>Reference</td>
           <td class="text-sm">
             <span v-if="post.ref">{{ post.ref }}</span>
-            <span v-else class="italic">Missing</span>
+            <span v-else class="text-xs italic text-light-gray">N/A</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div
+      v-for="(item, i) in post.location_reach"
+      :key="i"
+      class="ml-5"
+      :class="{ 'mb-0': i !== post.location_reach.length - 1 }"
+    >
+      <table>
+        <tr>
+          <td>Location Reach</td>
+          <td>
+            <span v-if="item.code">{{
+              types.geographicLocationReach[item.code]
+            }}</span>
+            <span v-else class="text-xs italic text-light-gray">N/A</span>
           </td>
         </tr>
       </table>
@@ -57,19 +63,26 @@
         <table class="w-full">
           <tr>
             <td>Location Id</td>
-            <td>
+            <td v-if="!isEveryValueNull(item)">
               <div class="flex space-x-1">
                 <div class="value">
                   <span v-if="item.vocabulary"
                     >{{ types.geographicVocabulary[item.vocabulary] }},
                   </span>
-                  <span v-else class="italic">(Vocabulary Missing)</span>
+                  <span v-else class="text-xs italic text-light-gray"
+                    >(Vocabulary N/A)</span
+                  >
                 </div>
                 <div>
                   <span v-if="item.code">code {{ item.code }}</span>
-                  <span v-else class="italic">(Code Missing)</span>
+                  <span v-else class="text-xs italic text-light-gray"
+                    >(Code N/A)</span
+                  >
                 </div>
               </div>
+            </td>
+            <td v-else>
+              <span class="text-xs italic text-light-gray">N/A</span>
             </td>
           </tr>
         </table>
@@ -89,12 +102,14 @@
               <td>Description</td>
               <td>
                 <div v-if="narrative.narrative" class="flex flex-col">
-                  <span v-if="narrative.language" class="language top"
+                  <span
+                    v-if="narrative.language"
+                    class="language top subtle-darker"
                     >(Language: {{ types.languages[narrative.language] }})</span
                   >
                   <span class="description">{{ narrative.narrative }}</span>
                 </div>
-                <span v-else class="italic">Missing</span>
+                <span v-else class="text-xs italic text-light-gray">N/A</span>
               </td>
             </tr>
           </table>
@@ -115,17 +130,20 @@
               <td>Activity Description</td>
               <td>
                 <div v-if="narrative.narrative" class="flex flex-col">
-                  <span v-if="narrative.language" class="language top"
+                  <span
+                    v-if="narrative.language"
+                    class="language top subtle-darker"
                     >(Language: {{ types.languages[narrative.language] }})</span
                   >
                   <span class="description">{{ narrative.narrative }}</span>
                 </div>
-                <span v-else class="italic">Missing</span>
+                <span v-else class="text-xs italic text-light-gray">N/A</span>
               </td>
             </tr>
           </table>
         </div>
       </div>
+
       <div
         v-for="(item, i) in post.administrative"
         :key="i"
@@ -134,26 +152,35 @@
         <table class="w-full">
           <tr>
             <td>Administrative</td>
-            <td>
+            <td v-if="!isEveryValueNull(item)">
               <div class="flex">
                 <div>
                   <span v-if="item.vocabulary"
                     >Vocabulary -
                     {{ types.geographicVocabulary[item.vocabulary] }}
                   </span>
-                  <span v-else class="italic">(Vocabulary Missing)</span>
+                  <span v-else class="text-xs italic text-light-gray"
+                    >(Vocabulary N/A)</span
+                  >
                 </div>
                 <div>
                   <span v-if="item.code"
                     >, code {{ types.country[item.code] }}</span
                   >
-                  <span v-else class="ml-1 italic"> (Code Missing)</span>
+                  <span v-else class="ml-1 text-xs italic text-light-gray">
+                    (Code N/A)</span
+                  >
                 </div>
                 <div>
                   <span v-if="item.level">, level {{ item.level }}</span>
-                  <span v-else class="ml-1 italic"> (Level Missing)</span>
+                  <span v-else class="ml-1 text-xs italic text-light-gray">
+                    (Level N/A)</span
+                  >
                 </div>
               </div>
+            </td>
+            <td v-else>
+              <span class="text-xs italic text-light-gray">N/A</span>
             </td>
           </tr>
         </table>
@@ -167,25 +194,34 @@
         <table class="w-full">
           <tr>
             <td>Point</td>
-            <td>
+            <td v-if="!isEveryValueNull(item)">
               <div class="flex space-x-1">
                 <div>
                   <span v-if="item.srs_name">({{ item.srs_name }})</span>
-                  <span v-else class="italic"> (SRS Name Missing)</span>
+                  <span v-else class="text-xs italic text-light-gray">
+                    (SRS Name N/A)</span
+                  >
                 </div>
                 <div>
                   <span v-if="item.pos[0].latitude">
                     latitude {{ item.pos[0].latitude }},
                   </span>
-                  <span v-else class="italic"> (Latitude Missing)</span>
+                  <span v-else class="text-xs italic text-light-gray">
+                    (Latitude N/A)</span
+                  >
                 </div>
                 <div>
                   <span v-if="item.pos[0].longitude"
                     >longitude {{ item.pos[0].longitude }}</span
                   >
-                  <span v-else class="italic"> (Longitude Missing)</span>
+                  <span v-else class="text-xs italic text-light-gray">
+                    (Longitude N/A)</span
+                  >
                 </div>
               </div>
+            </td>
+            <td v-else>
+              <span class="text-xs italic text-light-gray">N/A</span>
             </td>
           </tr>
         </table>
@@ -202,7 +238,7 @@
               <span v-if="item.code">{{
                 types.geographicExactness[item.code]
               }}</span>
-              <span v-else class="italic">Missing</span>
+              <span v-else class="text-xs italic text-light-gray">N/A</span>
             </td>
           </tr>
         </table>
@@ -219,7 +255,7 @@
               <span v-if="item.code">{{
                 types.geographicLocationClass[item.code]
               }}</span>
-              <span v-else class="italic">Missing</span>
+              <span v-else class="text-xs italic text-light-gray">N/A</span>
             </td>
           </tr>
         </table>
@@ -234,7 +270,7 @@
             <td>Feature Designation</td>
             <td>
               <span v-if="item.code">{{ types.locationType[item.code] }}</span>
-              <span v-else class="italic">Missing</span>
+              <span v-else class="text-xs italic text-light-gray">N/A</span>
             </td>
           </tr>
         </table>
@@ -244,6 +280,7 @@
 </template>
 
 <script lang="ts">
+import { isEveryValueNull } from 'Composable/utils';
 import { defineComponent, inject } from 'vue';
 
 export default defineComponent({
@@ -266,7 +303,7 @@ export default defineComponent({
       languages: [];
     }
     const types = inject('types') as Types;
-    return { types };
+    return { types, isEveryValueNull };
   },
 });
 </script>

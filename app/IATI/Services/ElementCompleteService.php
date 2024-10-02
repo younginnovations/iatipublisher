@@ -618,7 +618,7 @@ class ElementCompleteService
     {
         $this->element = 'location';
 
-        return $this->isLevelTwoMultiDimensionElementCompleted($activity->location);
+        return !is_variable_null($activity->location);
     }
 
     /**
