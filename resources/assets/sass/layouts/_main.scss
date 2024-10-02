@@ -133,3 +133,28 @@ html {
 }
 .collapsable-type-new {
 }
+
+.outline-spring-50 {
+  outline: 1px solid rgb(23, 153, 123);
+}
+
+.label-with-border {
+  > label:first-of-type {
+    @apply outline-spring-50;
+  }
+}
+
+.border-green {
+  border: 1px solid green;
+}
+
+.border-yellow {
+  border: 1px solid yellow;
+}
+
+.back-red {
+  background: red !important;
+}
+.back-yellow {
+  background: yellow !important;
+}

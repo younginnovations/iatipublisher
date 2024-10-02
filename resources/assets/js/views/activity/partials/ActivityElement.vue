@@ -115,12 +115,9 @@
 
       <div
         v-if="title === 'reporting_org'"
-        class="my-2 flex space-x-2 rounded-lg bg-eggshell px-4 py-2"
+        class="my-2 flex items-center space-x-2 rounded-lg bg-eggshell p-3"
       >
-        <svg-vue
-          icon="exclamation-warning"
-          class="h-6 -translate-y-1.5"
-        ></svg-vue>
+        <svg-vue icon="exclamation-warning" class="h-5" />
 
         <!-- eslint-disable vue/no-v-html -->
         <div

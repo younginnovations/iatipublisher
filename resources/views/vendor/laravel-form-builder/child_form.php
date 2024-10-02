@@ -9,7 +9,7 @@
 <?php endif; ?> -->
 
 <?php if ($showField): ?>
-    <!-- <div class ="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6" > -->
+    <!-- <div class ="form-field-group flex flex-wrap p-6" > -->
     <?php foreach ((array)$options['children'] as $child): ?>
         <?php if( ! in_array( $child->getRealName(), (array)$options['exclude']) ) { ?>
             <?= $child->render() ?>
