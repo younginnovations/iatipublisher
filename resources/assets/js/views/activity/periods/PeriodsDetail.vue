@@ -267,12 +267,24 @@ export default defineComponent({
         link: activityLink,
       },
       {
+        title: 'Result List',
+        link: `/activity/${activityId}/result`,
+      },
+      {
         title: resultTitle,
         link: resultLink,
       },
       {
+        title: 'Indicator List',
+        link: `/result/${resultId}/indicator`,
+      },
+      {
         title: indicatorTitle,
         link: indicatorLink,
+      },
+      {
+        title: 'Period List',
+        link: `/indicator/${indicatorId}/period`,
       },
       {
         title: 'Period',

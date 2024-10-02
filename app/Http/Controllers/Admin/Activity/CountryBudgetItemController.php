@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\CountryBudgetItem\CountryBudgetItemRequest;
 use App\IATI\Services\Activity\CountryBudgetItemService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -17,6 +19,8 @@ use Illuminate\Support\Arr;
  */
 class CountryBudgetItemController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var CountryBudgetItemService
      */
@@ -45,17 +49,35 @@ class CountryBudgetItemController extends Controller
             $element = getElementSchema('country_budget_items');
             $activity = $this->countryBudgetItemService->getActivityData($id);
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'country_budget_items', []);
-            $form = $this->countryBudgetItemService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
+            $form = $this->countryBudgetItemService->formGenerator(
+                id                        : $id,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap      : $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'country_budget_items', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'country_budget_items',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'country_budget_items');
+
             $data = [
-                'title'  => $element['label'],
-                'name'   => 'country_budget_items',
+                'title'            => $element['label'],
+                'name'             => 'country_budget_items',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
             ];
 
             return view('admin.activity.countryBudgetItem.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering country-budget-item form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while rendering country-budget-item form.'
+            );
         }
     }
 
@@ -77,7 +99,7 @@ class CountryBudgetItemController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Country-budget-item updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating country-budget-item.');

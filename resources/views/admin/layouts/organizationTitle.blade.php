@@ -3,14 +3,25 @@
     <div class="title grow-0">
       <div class="activity__title mb-4 text-caption-c1 text-n-40">
         <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
-          <div class="flex max-w-md">
+          <div class="flex ">
             <a class="whitespace-nowrap font-bold" href="/organisation">Your Organisation</a>
             <span class="separator mx-4"> / </span>
             <div class="breadcrumb__title">
-              <span class="breadcrumb__title overflow-hidden last text-n-30"><a
-                  href="/organisation">{{ $organization['name'][0]['narrative'] ?? 'Untitled' }}</a></span>
-              <span
-                class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{ $organization['name'][0]['narrative'] ?? 'Untitled' }}</span>
+              <span class="breadcrumb__title overflow-hidden last text-n-30">
+                  <a href="/organisation">{{ $organization['name'][0]['narrative'] ?? 'Untitled' }}</a>
+              </span>
+              <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{ $organization['name'][0]['narrative'] ?? 'Untitled' }}</span>
+            </div>
+            <span class="separator mx-4"> / </span>
+            <div class="breadcrumb__title">
+             <span class="breadcrumb__title overflow-hidden last text-n-30">
+                <a href="{{sprintf("/organisation#%s",str_replace("-", "_", $data['name']))}}">
+                    {{ucwords(str_replace("_", " ", str_replace("-", " ", $data['name'])))}}
+                </a>
+             </span>
+             <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
+                 {{ $organization['name'][0]['narrative'] ?? 'Untitled' }}
+             </span>
             </div>
           </div>
         </nav>

@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\RecipientCountry\RecipientCountryRequest;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\RecipientCountryService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -19,6 +21,8 @@ use JsonException;
  */
 class RecipientCountryController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var RecipientCountryService
      */
@@ -56,14 +60,36 @@ class RecipientCountryController extends Controller
             $activity = $this->recipientCountryService->getActivityData($id);
             $element = $this->activityService->getRecipientRegionOrCountryManipulatedElementSchema($activity, 'recipient_country');
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'recipient_country', []);
-            $form = $this->recipientCountryService->formGenerator($id, $element, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
-            $data = ['title' => $element['label'], 'name' => 'recipient_country'];
+            $form = $this->recipientCountryService->formGenerator(
+                id                        : $id,
+                element                   : $element,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap      : $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'recipient_country', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'recipient_country',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'recipient_country');
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'recipient_country',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.recipientCountry.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening recipient-country form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while opening recipient-country form.'
+            );
         }
     }
 
@@ -83,7 +109,7 @@ class RecipientCountryController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Recipient-country updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating recipient-country.');

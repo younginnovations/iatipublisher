@@ -11,9 +11,7 @@
         >Description</label
       >
       <div class="multi-form relative">
-        <div
-          class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6"
-        >
+        <div class="form-field-group flex flex-wrap rounded-br-lg p-6">
           <div class="form-field max-w-half basis-6/12">
             <div class="form-field-label">
               <label for="">Type<span class="text-salmon-40"> *</span></label>
@@ -43,9 +41,7 @@
             >Narrative</label
           >
           <div class="form-child-body relative">
-            <div
-              class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6"
-            >
+            <div class="form-field-group flex flex-wrap rounded-br-lg p-6">
               <div class="form-field max-w-half basis-6/12">
                 <div class="form-field-label">
                   <label for=""
@@ -95,7 +91,7 @@ Education and psychosocial support to children in Aleppo Governorate</textarea
       </div>
     </div>
     <button
-      class="add_to_parent add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-bluecoral"
+      class="add_to_parent add_more button relative pl-3.5 text-xs font-bold uppercase leading-normal text-bluecoral"
       icon=""
       type="button"
     >

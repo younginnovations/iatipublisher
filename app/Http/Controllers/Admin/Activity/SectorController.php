@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Sector\SectorRequest;
 use App\IATI\Services\Activity\SectorService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -18,6 +20,8 @@ use JsonException;
  */
 class SectorController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var SectorService
      */
@@ -46,14 +50,36 @@ class SectorController extends Controller
             $activity = $this->sectorService->getActivityData($id);
             $element = $this->getSectorManipulatedElementSchema($activity);
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'sector', []);
-            $form = $this->sectorService->formGenerator($id, $element, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
-            $data = ['title' => $element['label'], 'name' => 'sector'];
+            $form = $this->sectorService->formGenerator(
+                id                        : $id,
+                element                   : $element,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap      : $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'sector', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'sector',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'sector');
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'sector',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.sector.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening activity sector form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while opening activity sector form.'
+            );
         }
     }
 
@@ -73,7 +99,7 @@ class SectorController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Activity sector updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity sector.');

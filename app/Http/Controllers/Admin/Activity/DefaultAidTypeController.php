@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\DefaultAidType\DefaultAidTypeRequest;
 use App\IATI\Services\Activity\DefaultAidTypeService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -17,6 +19,8 @@ use Illuminate\Support\Arr;
  */
 class DefaultAidTypeController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var DefaultAidTypeService
      */
@@ -45,18 +49,35 @@ class DefaultAidTypeController extends Controller
             $element = getElementSchema('default_aid_type');
             $activity = $this->defaultAidTypeService->getActivityData($id);
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'default_aid_type', []);
-            $form = $this->defaultAidTypeService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
+            $form = $this->defaultAidTypeService->formGenerator(
+                id                        : $id,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap      : $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'default_aid_type', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'default_aid_type',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'default_aid_type');
 
             $data = [
-                'title' => $element['label'],
-                'name' => 'default_aid_type',
+                'title'            => $element['label'],
+                'name'             => 'default_aid_type',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
             ];
 
             return view('admin.activity.defaultAidType.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e);
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering default-aid-type form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while rendering default-aid-type form.'
+            );
         }
     }
 
@@ -77,7 +98,7 @@ class DefaultAidTypeController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Default-aid-type updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default aid type.');

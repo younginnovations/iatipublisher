@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\DefaultTiedStatus\DefaultTiedStatusRequest;
 use App\IATI\Services\Activity\DefaultTiedStatusService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -17,6 +19,8 @@ use Illuminate\Support\Arr;
  */
 class DefaultTiedStatusController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var DefaultTiedStatusService
      */
@@ -45,14 +49,35 @@ class DefaultTiedStatusController extends Controller
             $element = getElementSchema('default_tied_status');
             $activity = $this->defaultTiedStatusService->getActivityData($id);
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'default_tied_status', []);
-            $form = $this->defaultTiedStatusService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
-            $data = ['title' => $element['label'], 'name' => 'default_tied_status'];
+            $form = $this->defaultTiedStatusService->formGenerator(
+                id                        : $id,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap      : $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'default_tied_status', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'default_tied_status',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'default_tied_status');
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'default_tied_status',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.defaultTiedStatus.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering default-tied-status form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while rendering default-tied-status form.'
+            );
         }
     }
 
@@ -74,7 +99,7 @@ class DefaultTiedStatusController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Default-tied-status updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default-tied-status.');

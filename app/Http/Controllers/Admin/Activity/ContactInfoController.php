@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\ContactInfo\ContactInfoRequest;
 use App\IATI\Services\Activity\ContactInfoService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -18,6 +20,8 @@ use Illuminate\Support\Arr;
  */
 class ContactInfoController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var ContactInfoService
      */
@@ -46,17 +50,35 @@ class ContactInfoController extends Controller
             $element = getElementSchema('contact_info');
             $activity = $this->contactInfoService->getActivityData($id);
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'contact_info', []);
-            $form = $this->contactInfoService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
+            $form = $this->contactInfoService->formGenerator(
+                id                        : $id,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap      : $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'contact_info', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'contact_info',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'contact_info');
+
             $data = [
-                'title' => $element['label'],
-                'name' => 'contact_info',
+                'title'            => $element['label'],
+                'name'             => 'contact_info',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
             ];
 
             return view('admin.activity.contactInfo.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering contact-info controller item form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while rendering contact-info controller item form.'
+            );
         }
     }
 
@@ -78,7 +100,7 @@ class ContactInfoController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Contact-info updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating contact-info.');

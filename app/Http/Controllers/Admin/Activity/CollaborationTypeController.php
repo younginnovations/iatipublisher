@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\CollaborationType\CollaborationTypeRequest;
 use App\IATI\Services\Activity\CollaborationTypeService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -17,6 +19,8 @@ use Illuminate\Support\Arr;
  */
 class CollaborationTypeController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var CollaborationTypeService
      */
@@ -45,17 +49,36 @@ class CollaborationTypeController extends Controller
             $element = getElementSchema('collaboration_type');
             $activity = $this->collaborationTypeService->getActivityData($id);
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'collaboration_type', []);
-            $form = $this->collaborationTypeService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
+            $form = $this->collaborationTypeService->formGenerator(
+                id                        : $id,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap      : $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'collaboration_type', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'collaboration_type',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'collaboration_type');
+
             $data = [
-                'title' => $element['label'],
-                'name' => 'collaboration_type',
+                'title'            => $element['label'],
+                'name'             => 'collaboration_type',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+
             ];
 
             return view('admin.activity.collaborationType.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering activity collaboration-type form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while rendering activity collaboration-type form.'
+            );
         }
     }
 
@@ -77,7 +100,7 @@ class CollaborationTypeController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Activity collaboration-type updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity collaboration type.');

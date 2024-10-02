@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Identifier\IdentifierRequest;
 use App\IATI\Services\Activity\ActivityIdentifierService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -18,6 +20,8 @@ use Illuminate\Support\Facades\DB;
  */
 class IdentifierController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var ActivityIdentifierService
      */
@@ -46,14 +50,34 @@ class IdentifierController extends Controller
             $element = getElementSchema('iati_identifier');
             $activity = $this->identifierService->getActivityData($id);
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'iati_identifier', []);
-            $form = $this->identifierService->formGenerator($id, deprecationStatusMap: $deprecationStatusMap);
-            $data = ['title' => $element['label'], 'name' => 'iati_identifier'];
+            $form = $this->identifierService->formGenerator(
+                id                  : $id,
+                deprecationStatusMap: $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'iati_identifier', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'IATI_identifier',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'IATI_identifier');
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'iati_identifier',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.identifier.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening activity title form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while opening activity title form.'
+            );
         }
     }
 
@@ -77,7 +101,7 @@ class IdentifierController extends Controller
             DB::commit();
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Iati-identifier updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 

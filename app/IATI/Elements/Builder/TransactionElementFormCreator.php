@@ -72,6 +72,7 @@ class TransactionElementFormCreator
                 'model'  => $model,
                 'url'    => $this->url,
                 'data'   => $formData,
+                'id'     => 'transaction-form',
             ]
         )->add('buttons', 'buttongroup', [
             'wrapper' => [

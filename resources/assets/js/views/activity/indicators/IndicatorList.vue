@@ -227,6 +227,10 @@ export default defineComponent({
         link: `/activity/${activityId}`,
       },
       {
+        title: 'Result List',
+        link: `/activity/${activityId}/result`,
+      },
+      {
         title: resultTitle,
         link: `/activity/${activityId}/result/${resultId}`,
       },

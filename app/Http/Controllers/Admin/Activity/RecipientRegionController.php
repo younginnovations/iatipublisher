@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\RecipientRegion\RecipientRegionRequest;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\RecipientRegionService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -18,6 +20,8 @@ use Illuminate\Support\Arr;
  */
 class RecipientRegionController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var RecipientRegionService
      */
@@ -55,14 +59,36 @@ class RecipientRegionController extends Controller
             $activity = $this->recipientRegionService->getActivityData($id);
             $element = $this->activityService->getRecipientRegionOrCountryManipulatedElementSchema($activity, 'recipient_region');
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'recipient_region', []);
-            $form = $this->recipientRegionService->formGenerator($id, $element, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
-            $data = ['title' => $element['label'], 'name' => 'recipient_region'];
+            $form = $this->recipientRegionService->formGenerator(
+                id                        : $id,
+                element                   : $element,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap      : $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'recipient_region', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'recipient_region',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'recipient_region');
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'recipient_region',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.recipientRegion.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening recipient-region form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while opening recipient-region form.'
+            );
         }
     }
 
@@ -82,7 +108,7 @@ class RecipientRegionController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Recipient-Region updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating recipient-region.');

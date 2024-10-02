@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\PlannedDisbursement\PlannedDisbursementRequest;
 use App\IATI\Services\Activity\PlannedDisbursementService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -18,6 +20,8 @@ use Illuminate\Support\Arr;
  */
 class PlannedDisbursementController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var PlannedDisbursementService
      */
@@ -46,14 +50,35 @@ class PlannedDisbursementController extends Controller
             $element = getElementSchema('planned_disbursement');
             $activity = $this->plannedDisbursementService->getActivityData($id);
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'planned_disbursement', []);
-            $form = $this->plannedDisbursementService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap:  $deprecationStatusMap);
-            $data = ['title' => $element['label'], 'name' => 'planned_disbursement'];
+            $form = $this->plannedDisbursementService->formGenerator(
+                id                        : $id,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap      : $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'planned_disbursement', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'planned_disbursement',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'planned_disbursement');
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'planned_disbursement',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.plannedDisbursement.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering planned-disbursement form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while rendering planned-disbursement form.'
+            );
         }
     }
 
@@ -73,7 +98,7 @@ class PlannedDisbursementController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Planned-disbursement updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating planned-disbursement.');

@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Scope\ScopeRequest;
 use App\IATI\Services\Activity\ScopeService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -17,6 +19,8 @@ use Illuminate\Support\Arr;
  */
 class ScopeController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var ScopeService
      */
@@ -45,14 +49,34 @@ class ScopeController extends Controller
             $element = getElementSchema('activity_scope');
             $activity = $this->scopeService->getActivityData($id);
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'activity_scope', []);
-            $form = $this->scopeService->formGenerator($id, deprecationStatusMap: $deprecationStatusMap);
-            $data = ['title' => $element['label'], 'name' => 'activity_scope'];
+            $form = $this->scopeService->formGenerator(
+                id                  : $id,
+                deprecationStatusMap: $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'activity_scope', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'activity_scope',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'activity_scope');
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'activity_scope',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.scope.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening activity-scope form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while opening activity-scope form.'
+            );
         }
     }
 
@@ -74,7 +98,7 @@ class ScopeController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Activity-scope updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity-scope.');

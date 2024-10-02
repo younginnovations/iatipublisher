@@ -291,7 +291,14 @@ class ResultService
         $element = getElementSchema('result');
         $this->resultElementFormCreator->url = route('admin.activity.result.store', $activityId);
 
-        return $this->resultElementFormCreator->editForm([], $element, 'POST', '/activity/' . $activityId, overRideDefaultFieldValue : $activityDefaultFieldValues);
+        return $this->resultElementFormCreator->editForm(
+            model:[],
+            formData: $element,
+            method: 'POST',
+            parent_url:'/activity/' . $activityId,
+            overRideDefaultFieldValue : $activityDefaultFieldValues,
+            formId: 'result-form-id'
+        );
     }
 
     /**
@@ -312,12 +319,13 @@ class ResultService
         $this->resultElementFormCreator->url = route('admin.activity.result.update', [$activityId, $resultId]);
 
         return $this->resultElementFormCreator->editForm(
-            $activityResult->result,
-            $element,
+            model: $activityResult->result,
+            formData: $element,
             method: 'PUT',
             parent_url: '/activity/' . $activityId,
             overRideDefaultFieldValue: $activityDefaultFieldValues,
-            deprecationStatusMap: $deprecationStatusMap
+            deprecationStatusMap: $deprecationStatusMap,
+            formId: 'result-form-id'
         );
     }
 

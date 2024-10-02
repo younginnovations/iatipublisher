@@ -10,12 +10,14 @@ use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\IndicatorService;
 use App\IATI\Services\Activity\PeriodService;
 use App\IATI\Services\Activity\ResultService;
+use App\IATI\Traits\EditFormTrait;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
 
 /**
@@ -23,6 +25,8 @@ use Illuminate\Support\Facades\Session;
  */
 class IndicatorController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var ResultService
      */
@@ -135,7 +139,25 @@ class IndicatorController extends Controller
             $result = $this->resultService->getResult($resultId);
             $activity = $result->activity;
             $form = $this->indicatorService->createFormGenerator($resultId);
-            $data = ['status' => false, 'title' => $element['label'], 'name' => 'indicator'];
+
+            $formHeader = $this->getFormHeader(
+                hasData    : true,
+                elementName: 'indicator',
+                parentTitle: Arr::get($result, 'result.title.0.narrative.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->indicatorBreadCrumbInfo(
+                activity : $activity,
+                result   : $result,
+                indicator: null,
+            );
+
+            $data = [
+                'status'           => false,
+                'title'            => $element['label'],
+                'name'             => 'indicator',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.indicator.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {
@@ -223,11 +245,29 @@ class IndicatorController extends Controller
     public function edit($resultId, $indicatorId): Factory|View|RedirectResponse|Application
     {
         try {
+            $indicator = $this->indicatorService->getIndicator($indicatorId);
             $result = $this->resultService->getResult($resultId);
             $element = getElementSchema('indicator');
             $activity = $this->activityService->getActivity($result->activity->id);
             $form = $this->indicatorService->editFormGenerator($resultId, $indicatorId);
-            $data = ['title' => $element['label'], 'name' => 'indicator'];
+
+            $formHeader = $this->getFormHeader(
+                hasData    : true,
+                elementName: 'indicator',
+                parentTitle: Arr::get($result, 'result.title.0.narrative.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->indicatorBreadCrumbInfo(
+                activity : $activity,
+                result   : $result,
+                indicator: $indicator,
+            );
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'indicator',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.indicator.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {

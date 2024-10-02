@@ -20,6 +20,7 @@ class TransactionElementForm extends BaseForm
      */
     public function buildForm(): void
     {
+        $element = $this->getData();
         $attributes = Arr::get($this->getData(), 'attributes', null);
         $sub_elements = Arr::get($this->getData(), 'sub_elements', null);
         $this->setClientValidationEnabled(false);
@@ -52,10 +53,16 @@ class TransactionElementForm extends BaseForm
                 );
 
                 if (Arr::get($sub_element, 'add_more', false) || Arr::get($sub_element, 'add_more_attributes', false)) {
+                    $addMoreButtonClass = 'add_to_parent add_more button three relative pl-6 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ';
+
+                    if ($this->shouldRenderBorderOnAddMoreButton($sub_element)) {
+                        $addMoreButtonClass = $addMoreButtonClass . getAddAdditionalButtonBorders() . 'border-y';
+                    }
+
                     $this->add('add_to_collection_' . $sub_element['name'], 'button', [
                         'label' => generateAddAdditionalLabel($sub_element['name'], $sub_element['name']),
                         'attr' => [
-                            'class' => 'add_to_parent add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
+                            'class' => $addMoreButtonClass,
                             'form_type' => $sub_element['name'],
                             'icon' => true,
                         ],
@@ -90,6 +97,8 @@ class TransactionElementForm extends BaseForm
                 'info_text'         => $this->getData(sprintf('sub_elements.%s.info_text', $name)) ?? '',
                 'warning_info_text' => $this->getData(sprintf('sub_elements.%s.warning_info_text', $name)) ?? '',
                 'label'             => false,
+                'is_collapsable'   => Arr::get($sub_element, 'is_collapsable', ''),
+                'label_indicator'  => Arr::get($sub_element, 'label_indicator', ),
                 'wrapper'           => ['class' => $this->getBaseFormWrapperClasses()],
                 'dynamic_wrapper'   => ['class' => $this->getBaseFormDynamicWrapperClasses($sub_element)],
             ],
@@ -98,19 +107,49 @@ class TransactionElementForm extends BaseForm
 
     private function getBaseFormDynamicWrapperClasses($sub_element): string
     {
-        $dynamicWrapperClass = ((isset($sub_element['add_more']) && $sub_element['add_more']) || Arr::get($sub_element, 'add_more_attributes', false)) ?
-            ((!Arr::get($sub_element, 'attributes', null) && strtolower($sub_element['name']) === 'narrative') ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
-            : ((empty($sub_element['attributes']) && $sub_element['sub_elements'] && isset($sub_element['sub_elements']['narrative'])) ? 'subelement rounded-tl-lg mb-6' : 'subelement rounded-tl-lg border-l border-spring-50 mb-6');
+        $hasAddMore = isset($sub_element['add_more']) && $sub_element['add_more'];
+        $hasAddMoreAttributes = Arr::get($sub_element, 'add_more_attributes', false);
+        $isNarrative = strtolower($sub_element['name']) === 'narrative';
+        $hasAttributes = !Arr::get($sub_element, 'attributes', null);
+        $hasSubElements = !empty($sub_element['sub_elements']);
+        $hasNarrativeSubElement = isset($sub_element['sub_elements']['narrative']);
+
+        if ($hasAddMore || $hasAddMoreAttributes) {
+            $dynamicWrapperClass = ($hasAttributes && $isNarrative)
+                ? 'border-spring-50 one '
+                : 'subelement rounded-t-sm two border-spring-50 mt-6';
+        } else {
+            $dynamicWrapperClass = ($hasAttributes && $hasSubElements && $hasNarrativeSubElement)
+                ? 'subelement rounded-t-sm three mt-6'
+                : 'subelement rounded-t-sm four border-spring-50 mt-6 ';
+        }
+        $formBorderClass = $this->shouldRenderBorderOnForm($sub_element) ? 'border-spring-50 border' : '';
+        $labelBorderClass = $this->shouldRenderBorderOnLabel($sub_element) ? 'label-with-border' : '';
 
         if (Arr::get($sub_element, 'freeze')) {
             $dynamicWrapperClass .= ' freeze';
         }
 
-        return $dynamicWrapperClass;
+        return "$dynamicWrapperClass $formBorderClass $labelBorderClass";
     }
 
     private function getBaseFormWrapperClasses(): string
     {
-        return 'multi-form relative';
+        return 'multi-form relative four ';
+    }
+
+    private function shouldRenderBorderOnAddMoreButton($element): bool
+    {
+        return Arr::get($element, 'add_more_has_borders', false);
+    }
+
+    private function shouldRenderBorderOnForm($element): bool
+    {
+        return Arr::get($element, 'form_has_borders', false);
+    }
+
+    private function shouldRenderBorderOnLabel($element): bool
+    {
+        return Arr::get($element, 'label_has_borders', false);
     }
 }

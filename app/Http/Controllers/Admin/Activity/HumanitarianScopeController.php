@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\HumanitarianScope\HumanitarianScopeRequest;
 use App\IATI\Services\Activity\HumanitarianScopeService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -17,6 +19,8 @@ use Illuminate\Support\Arr;
  */
 class HumanitarianScopeController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var HumanitarianScopeService
      */
@@ -45,14 +49,35 @@ class HumanitarianScopeController extends Controller
             $element = getElementSchema('humanitarian_scope');
             $activity = $this->humanitarianScopeService->getActivityData($id);
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'humanitarian_scope', []);
-            $form = $this->humanitarianScopeService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
-            $data = ['title' => $element['label'], 'name' => 'humanitarian_scope'];
+            $form = $this->humanitarianScopeService->formGenerator(
+                id                        : $id,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap      : $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'humanitarian_scope', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'humanitarian_scope',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'humanitarian_scope');
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'humanitarian_scope',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.humanitarianScope.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering humanitarian-scope form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while rendering humanitarian-scope form.'
+            );
         }
     }
 
@@ -72,7 +97,7 @@ class HumanitarianScopeController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating humanitarian-scope.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating humanitarian-scope.');
