@@ -2,7 +2,7 @@
   <div
     v-for="(post, key) in data"
     :key="key"
-    class="elements-detail"
+    class="elements-detail spacious"
     :class="{ 'mb-4': Number(key) !== data.length - 1 }"
   >
     <div
