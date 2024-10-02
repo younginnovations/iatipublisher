@@ -120,6 +120,14 @@
     @apply text-n-40;
     width: 100px;
   }
+
+  &.spacious {
+    td:nth-child(1) {
+      @apply text-n-40;
+      width: 120px;
+    }
+  }
+
   &.wider:not(.small) {
     td:nth-child(1) {
       @apply text-n-40;
@@ -149,7 +157,11 @@
   @apply mb-2 text-sm font-bold text-n-50;
 }
 .language {
-  @apply w-[300px] text-xs italic text-n-30  sm:w-auto;
+  @apply w-[300px] text-xs italic text-n-30 sm:w-auto;
+
+  &.subtle-darker {
+    @apply text-light-gray;
+  }
 }
 .description-content {
   @apply w-[300px] sm:w-auto;
