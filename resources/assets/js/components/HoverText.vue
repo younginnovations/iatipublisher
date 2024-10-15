@@ -14,6 +14,8 @@
       :class="[
         position === 'right'
           ? 'help__text left-0 ' + width
+          : position === 'top-left'
+          ? 'help__text !top-auto bottom-full right-0 ' + width
           : 'help__text right-0 ' + width,
       ]"
     >
@@ -80,7 +82,8 @@ export default defineComponent({
 
   &__text {
     @apply invisible absolute top-4 z-20 space-y-1.5 rounded bg-eggshell p-4 text-left text-xs text-n-40 opacity-0 duration-200;
-    transition: all 0.3s ease-out;
+    // Changed ease-out to linear
+    transition: all 0.3s linear;
     box-shadow: 0px 4px 40px rgb(0 0 0 / 10%);
 
     p a {
@@ -91,7 +94,8 @@ export default defineComponent({
 
 .help:hover {
   .help__text {
-    transform: translate(50%, 5px);
+    //! Removed Transition of Hover Here
+    // transform: translate(50%, 5px);
     visibility: visible;
     opacity: 1;
     @media (max-width: 1024px) {

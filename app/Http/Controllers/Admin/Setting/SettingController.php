@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Setting;
 
+use App\Constants\Enums;
 use App\Exceptions\PublisherIdChangeByIatiAdminException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Setting\DefaultFormRequest;
 use App\Http\Requests\Setting\PublisherFormRequest;
+use App\IATI\Models\Organization\OrganizationOnboarding;
+use App\IATI\Services\Organization\OrganizationOnboardingService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
 use Exception;
@@ -36,11 +39,12 @@ class SettingController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param OrganizationService $organizationService
-     * @param SettingService      $settingService
-     * @param DatabaseManager     $db
+     * @param  OrganizationService  $organizationService
+     * @param  SettingService  $settingService
+     * @param  DatabaseManager  $db
+     * @param  OrganizationOnboardingService  $organizationOnboardingService
      */
-    public function __construct(OrganizationService $organizationService, SettingService $settingService, DatabaseManager $db)
+    public function __construct(OrganizationService $organizationService, SettingService $settingService, DatabaseManager $db, protected OrganizationOnboardingService $organizationOnboardingService)
     {
         $this->organizationService = $organizationService;
         $this->settingService = $settingService;
@@ -187,13 +191,27 @@ class SettingController extends Controller
 
             if (isset($verifyApiInfo['success'])) {
                 [$tokenStatus] = $this->getTokenStatusAndMessage($verifyPublisherInfo, $verifyApiInfo);
+                $settingData['publisher_verification'] = $verifyPublisherInfo['validation'];
                 $settingData['token_status'] = $tokenStatus;
-                $settingData['token_verification'] = $tokenStatus === 'Correct';
+                $settingData['token_verification'] = $tokenStatus === Enums::TOKEN_CORRECT;
+
+                if ($tokenStatus === Enums::TOKEN_INCORRECT) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Your API token is invalid',
+                        'data'    => $settingData,
+                        'error'   => ['token' => $verifyApiInfo, 'publisher_verification' => $verifyPublisherInfo],
+                    ]);
+                }
 
                 if (isSuperAdmin()) {
                     $this->organizationService->updateBySuperadmin($settingData);
                 } else {
                     $this->settingService->storePublishingInfo($settingData);
+                }
+
+                if ($this->organizationOnboardingService->checkPublishingSettingsComplete($settingData)) {
+                    $this->organizationOnboardingService->updateOrganizationOnboardingStepToComplete(Auth::user()->organization_id, OrganizationOnboarding::PUBLISHING_SETTINGS, true);
                 }
 
                 $this->db->commit();
@@ -245,6 +263,9 @@ class SettingController extends Controller
             $this->db->beginTransaction();
 
             $setting = $this->settingService->storeDefaultValues($request->all());
+
+            $defaultValuesCompleted = $this->organizationOnboardingService->checkDefaultValuesComplete($setting->default_values);
+            $this->organizationOnboardingService->updateOrganizationOnboardingStepToComplete(Auth::user()->organization_id, OrganizationOnboarding::DEFAULT_VALUES, $defaultValuesCompleted);
 
             $this->db->commit();
 
@@ -330,15 +351,15 @@ class SettingController extends Controller
     private function getTokenStatusAndMessage(array $verifyPublisherInfo, array $verifyApiInfo): array
     {
         $message = 'API token incorrect. Please enter valid API token.';
-        $tokenStatus = 'Incorrect';
+        $tokenStatus = Enums::TOKEN_INCORRECT;
 
         if ($verifyPublisherInfo['success'] && $verifyPublisherInfo['validation']) {
             if ($verifyApiInfo['success'] && $verifyApiInfo['validation']) {
                 $message = 'API token verified successfully.';
-                $tokenStatus = 'Correct';
+                $tokenStatus = Enums::TOKEN_CORRECT;
             } elseif ($verifyPublisherInfo['state'] === 'approval_needed') {
                 $message = 'Your account is pending approval by the IATI team - someone should be in touch within two working days.';
-                $tokenStatus = 'Pending';
+                $tokenStatus = Enums::TOKEN_PENDING;
             }
         }
 

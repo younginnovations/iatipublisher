@@ -169,4 +169,12 @@ abstract class Enums
     public const MERGED_XML_BASE_PATH = 'xml/mergedActivityXml';
 
     public const ORG_XML_BASE_PATH = 'organizationXmlFiles';
+
+    public const TOKEN_PENDING = 'Pending';
+
+    public const TOKEN_CORRECT = 'Correct';
+
+    public const TOKEN_INCORRECT = 'Incorrect';
+
+    public const EXISTING_ORG = 'existing_org';
 }

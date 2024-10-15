@@ -1,51 +1,71 @@
 .checkbox {
   @apply relative block cursor-pointer select-none;
+
   .checkmark {
     @apply flex h-4 w-4 items-center justify-center rounded border-2 border-n-20;
     transition: all 0.4s ease;
+
     &:after {
       border-width: 0 3px 3px 0;
       content: '';
       @apply mb-0.5 hidden h-2 w-[5px] rotate-45 border-spring-50;
     }
   }
+
   input {
     @apply absolute h-0 w-0 cursor-pointer opacity-0;
+
     &:checked ~ .checkmark {
       @apply border-spring-50;
+
+      &.white {
+        @apply border-white;
+      }
+
       &:after {
         @apply block;
       }
     }
   }
+
   &:hover input ~ .checkmark {
     @apply border-spring-50;
+
+    &.white {
+      @apply border-white;
+    }
   }
 }
+
 /**
   Laravel form design
  */
 form {
   .form-field-group {
     @apply relative p-3;
+
     &:not(:last-child) {
       @apply mb-6;
     }
 
     .form-field {
       @apply p-3;
+
       .help-text {
         @apply mt-2 text-xs leading-relaxed;
       }
     }
   }
+
   button.delete-item {
     @apply absolute h-8 w-8 cursor-pointer overflow-hidden rounded-full bg-n-40 -indent-40;
+
     &:after {
       background: url('/images/trash_full.svg') no-repeat center;
       content: '';
       @apply absolute left-1/2 top-1/2 h-[18px] w-[18px] -translate-x-1/2 -translate-y-1/2;
     }
+
     &:hover {
       @apply bg-bluecoral;
     }
@@ -57,23 +77,29 @@ form {
 
   .form-field-label {
     @apply mb-2 flex justify-between;
+
     label {
       @apply text-xs leading-relaxed;
     }
+
     .required {
       @apply font-bold text-salmon-50;
     }
   }
+
   input[type='text'],
   input[type='date'],
   textarea {
     @apply mt-0 h-12 w-full rounded border border-n-30 px-4 py-2.5 text-sm leading-normal outline-none duration-300;
+
     &::placeholder {
       @apply text-sm text-n-40;
     }
+
     &:focus {
       @apply border border-n-50 bg-n-10;
     }
+
     &:focus::placeholder {
       @apply text-n-50;
     }
@@ -86,18 +112,22 @@ form {
 
   select {
     @apply w-full rounded border border-n-30 px-4 py-3 text-sm text-n-40 outline-none duration-300;
+
     &:focus {
       @apply border border-n-50 bg-n-10;
     }
   }
+
   .help {
     @apply relative;
+
     &__text {
       @apply invisible absolute top-4 z-20 space-y-1.5 rounded bg-eggshell p-4 text-left text-xs text-n-40 opacity-0 duration-200;
       box-shadow: 0px 4px 40px rgb(0 0 0 / 10%);
       transition: all 0.3s ease-out;
     }
   }
+
   .help:hover {
     .help__text {
       transform: translateY(5px);
@@ -105,12 +135,15 @@ form {
       opacity: 1;
     }
   }
+
   .add_more {
     @apply relative;
+
     &:before {
       content: '';
       @apply absolute left-0 top-0 h-1/2 w-px border-l border-spring-50;
     }
+
     &:after {
       content: '';
       @apply absolute left-0 top-2/4 h-px w-3.5 -translate-y-1/2 border-b border-spring-50;
@@ -122,21 +155,25 @@ form {
       background: url('/images/add-more-green.svg') no-repeat center;
     }
   }
+
   .add_more.freeze {
     i {
       width: 18px;
       height: 18px;
       background: url('/images/add-more-grey.svg') no-repeat center;
     }
+
     &::before,
     &::after {
       border-color: rgba(var(--n-30));
     }
   }
+
   .subelement {
     &.border-l > label {
       border-left: 0;
     }
+
     .subelement,
     .subelement + button {
       @apply ml-6;
@@ -144,10 +181,12 @@ form {
 
     .wrapped-child-body {
       @apply relative;
+
       > .delete-parent {
         @apply block;
       }
     }
+
     > .multi-form:only-of-type > .delete-parent,
     .wrapped-child-body:only-of-type > .delete-parent {
       @apply hidden;
@@ -170,11 +209,13 @@ form {
   .wrapped-child-body + .collection_error {
     display: block;
   }
+
   .control-label + .collection_error,
   .title-container .collection_error {
     display: block;
     padding-right: 24px;
     font-style: italic;
+
     .div {
       line-height: 4px !important;
     }
@@ -188,29 +229,37 @@ span.select2-container--default {
   width: 100% !important;
   max-width: 100%;
   margin-bottom: 0.5rem;
+
   .select2-selection--single {
     @apply h-12 w-full rounded border border-n-30 px-4 py-3 text-sm text-n-40 outline-none duration-300;
+
     .select2-selection__rendered {
       @apply p-0 text-sm leading-normal;
     }
+
     .select2-selection__arrow {
       @apply h-11;
     }
+
     .select2-selection__clear span {
       @apply mr-2.5 text-sm;
     }
+
     .select2-selection__placeholder {
       @apply text-sm text-n-40;
     }
   }
+
   .select2-results__option--highlighted[aria-selected] {
     color: #1f2937;
     background-color: #f3f4f6;
   }
+
   .select2-results__option[aria-selected] {
     @apply text-sm text-n-50;
   }
 }
+
 .max-w-half {
   max-width: 50%;
 }
@@ -255,26 +304,31 @@ span.select2-container--default {
       @apply text-n-20;
     }
   }
+
   .hover-text {
     svg {
       @apply text-n-30;
     }
   }
 }
+
 .elements-card {
   @media screen and (max-width: 1190px) {
     flex-basis: auto;
     width: 100%;
   }
 }
+
 .manual-import {
   .help__text {
     transform: translateX(0) !important;
+
     @media (max-width: 1024px) {
       width: 350px !important;
     }
   }
 }
+
 .register-page .help__text {
   transform: translateX(0%) !important;
 }
@@ -284,17 +338,20 @@ span.select2-container--default {
 aside {
   .help__text {
     transform: translateX(0) !important;
+
     @media (max-width: 1370px) {
       width: 250px !important;
     }
   }
 }
+
 .import-activity,
 .activities__content--element {
   .help__text {
     transform: translateX(0) !important;
   }
 }
+
 aside {
   .progress {
     .help__text {
@@ -306,33 +363,40 @@ aside {
     }
   }
 }
+
 .activities__content {
   width: 100%;
 }
+
 .tab-btn {
   .help__text {
     transform: translateX(0) !important;
+
     @media (max-width: 1024px) {
       left: 0;
     }
   }
 }
+
 .activity-default-value {
   .help__text {
     transform: translateX(0%) !important;
   }
 }
+
 .error-title {
   color: #d1001e;
   padding-top: 8px !important;
   padding-bottom: 8px !important;
 }
+
 .text-danger-info {
   font-style: italic;
   font-size: 12px;
   line-height: 18px;
   font-weight: 400;
 }
+
 .text-danger-error {
   color: #d1001e;
   font-style: italic;
@@ -340,6 +404,7 @@ aside {
   line-height: 18px;
   font-weight: 400;
 }
+
 .freeze {
   .delete.delete-item {
     background-color: rgba(var(--n-20));
