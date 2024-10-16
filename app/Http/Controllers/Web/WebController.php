@@ -141,7 +141,7 @@ class WebController extends Controller
             $lang = App::getLocale();
             $path = base_path("lang/{$lang}/{$folder}");
 
-            if (!File::isDirectory($path)) {
+            if (!File::isDirectory($path) && $folder !== 'general') {
                 return response()->json(['success' => false, 'message' => 'Directory not found.']);
             }
 
@@ -167,9 +167,24 @@ class WebController extends Controller
                 $cacheData[$folderName] = $translations;
             }
 
+            $outerFiles = File::allFiles(base_path("lang/{$lang}"));
+            $outerFiletranslations = [];
+
+            foreach ($outerFiles as $outerFile) {
+                $outerFileName = pathinfo($outerFile->getRealPath(), PATHINFO_FILENAME);
+                $obtainedData = require $outerFile->getRealPath();
+                $outerFiletranslations[$outerFileName] = $obtainedData;
+            }
+
+            $cacheData['general'] = $outerFiletranslations;
+
             Cache::put("translated_data_{$lang}", $cacheData, now()->addHours(24));
 
-            return response()->json(['success' => true, 'data' => $translations]);
+            if ($folder !== 'general') {
+                return response()->json(['success' => true, 'data' => $translations]);
+            }
+
+            return response()->json(['success' => true, 'data' => $outerFiletranslations]);
         } catch (\Exception $e) {
             logger()->error($e);
 

@@ -48,7 +48,6 @@ class GenerateTranslationExcel extends Command
 
             // Check hash
             $currentHash = $this->generateTranslationHash($langPath);
-            Cache::forget('translations_hash');
             $lastHash = Cache::get('translations_hash');
 
             if ($currentHash !== $lastHash) {
@@ -56,10 +55,13 @@ class GenerateTranslationExcel extends Command
 
                 // Get translation strings
                 foreach ($this->languageDirectories as $languageDirectory) {
+                    $this->info("Processing language directory: {$languageDirectory}");
                     $this->extractTranslations($languageDirectory, $translations);
+                    $this->info("Finished processing language directory: {$languageDirectory}");
                 }
 
                 // Generate and store the Excel file in S3
+                $this->info('Generating Excel file');
                 $excelFile = Excel::raw(new TranslationsPerFolderExport($translations), \Maatwebsite\Excel\Excel::XLSX);
                 $timestamp = now()->format('Ymd_His');
                 $fileName = "translations_{$timestamp}.xlsx";
