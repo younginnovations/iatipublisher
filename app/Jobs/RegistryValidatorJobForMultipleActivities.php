@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Constants\Enums;
 use App\Exceptions\MaxMergeSizeExceededException;
 use App\IATI\Elements\Xml\XmlGenerator;
 use App\IATI\Repositories\Activity\ValidationStatusRepository;
@@ -57,17 +56,9 @@ class RegistryValidatorJobForMultipleActivities implements ShouldQueue
         $tmpSize = 0;
 
         try {
-            if ($sizeInMB > Enums::MAX_MERGE_SIZE) {
-                throw new MaxMergeSizeExceededException();
-            }
-
             $xmlData = $this->generateValidatableFileForActivities($this->activities, $this->organization, $this->settings);
 
             $tmpSize = $sizeInMB + calculateStringSizeInMb($xmlData);
-
-            if ($tmpSize > Enums::MAX_MERGE_SIZE) {
-                throw new MaxMergeSizeExceededException();
-            }
 
             /** @var $validationStatusRepository ValidationStatusRepository */
             $validationStatusRepository = app()->make(ValidationStatusRepository::class);

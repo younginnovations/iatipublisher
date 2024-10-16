@@ -63,7 +63,7 @@
               v-if="datum['linked_to_iati'] && datum['status'] === 'draft'"
               class="absolute left-0 top-0 inline-block whitespace-nowrap"
             />
-            {{ (currentPage - 1) * 10 + Number(index) + 1 }}
+            {{ (currentPage - 1) * 25 + Number(index) + 1 }}
           </td>
           <td class="title">
             <div
@@ -166,8 +166,16 @@
                 v-model="store.state.selectedActivities"
                 :value="datum.id"
                 type="checkbox"
+                class="cursor-pointer"
+                :disabled="maxLimitSelected(datum.id)"
               />
-              <span class="checkmark" />
+              <span
+                :class="
+                  maxLimitSelected(datum.id)
+                    ? 'checkmark cursor-not-allowed'
+                    : 'checkmark'
+                "
+              />
             </label>
           </th>
         </tr>
@@ -268,8 +276,19 @@ function containsAllValues(): boolean {
   const containsAllItems = selectedIds.every((item) =>
     store.state.selectedActivities.includes(item)
   );
-  console.log(containsAllItems);
+  console.log('containsAllItems', containsAllItems);
   return containsAllItems;
+}
+
+function maxLimitSelected(checkedActivityId: null | number = null) {
+  if (checkedActivityId) {
+    return (
+      store.state.selectedActivities.length >= 100 &&
+      !store.state.selectedActivities.includes(checkedActivityId)
+    );
+  }
+
+  return store.state.selectedActivities.length >= 100;
 }
 
 watch(
