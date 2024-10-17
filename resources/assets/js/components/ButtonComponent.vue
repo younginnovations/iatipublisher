@@ -1,7 +1,7 @@
 <template>
   <button
     :disabled="activityLength || isLoading || disabled"
-    class="button relative text-n-40 disabled:cursor-not-allowed disabled:bg-n-40"
+    class="button group relative text-n-40 transition-all duration-300 ease-in-out disabled:cursor-not-allowed disabled:bg-n-30 disabled:text-white"
     :class="[
       { '!cursor-not-allowed opacity-80': activityLength || isLoading },
       btnType,
@@ -11,6 +11,12 @@
     <SpinnerLoader v-if="isLoading" />
 
     <span v-if="text">{{ text }} </span>
+
+    <span
+      v-if="tooltipText"
+      class="invisible absolute top-12 left-1/2 z-10 w-[200px] -translate-x-1/2 cursor-default rounded-md bg-eggshell px-2 py-1 text-xs font-normal normal-case text-bluecoral opacity-0 group-hover:visible group-hover:opacity-100"
+      >{{ tooltipText }}</span
+    >
   </button>
 </template>
 
@@ -57,6 +63,11 @@ export default defineComponent({
       type: Boolean,
       required: false,
       default: false,
+    },
+    tooltipText: {
+      type: String,
+      required: false,
+      default: '',
     },
   },
   setup(props) {

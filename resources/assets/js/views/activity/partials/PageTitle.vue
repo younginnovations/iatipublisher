@@ -87,6 +87,21 @@
                   type="secondary"
                   :text="`Publish Selected (${store.state.selectedActivities.length})`"
                   icon="approved-cloud"
+                  :disabled="
+                    store.state.selectedActivities.length === 0 ||
+                    store.state.selectedActivities.length > 100
+                  "
+                  :tooltip-text="
+                    store.state.selectedActivities.length > 100
+                      ? `You can only publish up to 100 activities at a time. Please remove ${
+                          store.state.selectedActivities.length - 100
+                        } ${
+                          store.state.selectedActivities.length > 1
+                            ? 'activities'
+                            : 'activity'
+                        } from your selection to publish.`
+                      : ''
+                  "
                   @click="checkPublish"
                 />
                 <PublishSelected ref="publishRef" />

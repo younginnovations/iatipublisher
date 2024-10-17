@@ -167,15 +167,8 @@
                 :value="datum.id"
                 type="checkbox"
                 class="cursor-pointer"
-                :disabled="maxLimitSelected(datum.id)"
               />
-              <span
-                :class="
-                  maxLimitSelected(datum.id)
-                    ? 'checkmark cursor-not-allowed'
-                    : 'checkmark'
-                "
-              />
+              <span class="checkmark" />
             </label>
           </th>
         </tr>
@@ -278,17 +271,6 @@ function containsAllValues(): boolean {
   );
   console.log('containsAllItems', containsAllItems);
   return containsAllItems;
-}
-
-function maxLimitSelected(checkedActivityId: null | number = null) {
-  if (checkedActivityId) {
-    return (
-      store.state.selectedActivities.length >= 100 &&
-      !store.state.selectedActivities.includes(checkedActivityId)
-    );
-  }
-
-  return store.state.selectedActivities.length >= 100;
 }
 
 watch(
