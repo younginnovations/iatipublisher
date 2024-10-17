@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 /**
  * Class DuplicateActivityData.
  */
-class DuplicateActivityData extends Command
+class DuplicateActivities extends Command
 {
     /**
      * The name and signature of the console command.
