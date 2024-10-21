@@ -1450,8 +1450,8 @@ if (!function_exists('mapErrorLinesToChildren')) {
 
             foreach ($originalErrorLineNumbers as $key => $lineNumber) {
                 $newLineNumber = $lineNumber - $offset;
-                $newLineNumber = str_contains($key, 'details') ? $newLineNumber + $order : $newLineNumber;
-                $newLineNumber = str_contains($key, 'lineNumber') ? $newLineNumber + 2 : $newLineNumber + 1;
+                // $newLineNumber = str_contains($key, 'details') ? $newLineNumber + 4 + $order : $newLineNumber + 4;
+                // $newLineNumber = str_contains($key, 'lineNumber') ? $newLineNumber +1 : $newLineNumber-1;
 
                 $arrayWithErrorLineNumbersInsideTextMessage = str_replace("At line: $lineNumber", "At line: $newLineNumber", $arrayWithErrorLineNumbersInsideTextMessage);
                 $arrayWithErrorLineNumbersInsideTextMessage = str_replace("at line: $lineNumber", "at line: $newLineNumber", $arrayWithErrorLineNumbersInsideTextMessage);
@@ -1488,10 +1488,10 @@ if (!function_exists('getLineNumbersOfEachActivity')) {
 
             if (in_array($identifier, $uniqueIdentifiers)) {
                 if ($index == 0) {
-                    $lineNumber = 1;
-                    $sumOfPreviousNodes = $individualActivityXmlLength[$identifier] + 2; // this is correct
+                    $lineNumber = 0;
+                    $sumOfPreviousNodes = $individualActivityXmlLength[$identifier] + 3; // this is correct
                 } else {
-                    $lineNumber = $sumOfPreviousNodes + $index;
+                    $lineNumber = $sumOfPreviousNodes;
                     $sumOfPreviousNodes = $sumOfPreviousNodes + $individualActivityXmlLength[$identifier]; //55 -> 55+36
                 }
 
@@ -1514,4 +1514,46 @@ if (!function_exists('filterErrorsByIdentifier')) {
             return $error['identifier'] === $identifier;
         }));
     }
+}
+
+function getIndividualActivityXmlLength(string $fileContent): int
+{
+    return substr_count($fileContent, PHP_EOL) + 1 - 3;
+}
+
+function regroupResponseForAllActivity(array $response, array $uniqueIdentifiers, array $xmlLineNumberMap): array
+{
+    $groupedResponses = [];
+
+    foreach ($uniqueIdentifiers as $identifier) {
+        $clonedResponse = $response;
+        $clonedResponse['errors'] = filterErrorsByIdentifier($response['errors'], $identifier);
+        $clonedResponse['summary'] = ['critical' => 0, 'error' => 0, 'warning' => 0, 'advisory' => 0];
+
+        foreach ($clonedResponse['errors'] as $error) {
+            $severity = Arr::get($error, 'severity');
+            $clonedResponse['summary'][$severity]++;
+        }
+
+        $clonedResponse = flattenArrayWithKeys($clonedResponse);
+        $arrayOfErrorLineNumbersInValue = getItemsWhereKeyContains($clonedResponse, 'line');
+        $arrayOfErrorLineNumbersInTextMessage = getItemsWhereKeyContains($clonedResponse, '.text');
+
+        dump($identifier);
+        [$mappedLineNumbersInValue, $mappedLineNumbersInTextMessage] = mapErrorLinesToChildren($xmlLineNumberMap[$identifier], $arrayOfErrorLineNumbersInValue, $arrayOfErrorLineNumbersInTextMessage);
+
+        foreach ($arrayOfErrorLineNumbersInValue as $key => $value) {
+            $clonedResponse[$key] = $mappedLineNumbersInValue[$key];
+        }
+
+        foreach ($arrayOfErrorLineNumbersInTextMessage as $key => $value) {
+            $clonedResponse[$key] = $mappedLineNumbersInTextMessage[$key];
+        }
+
+        $clonedResponse = convertDotKeysToNestedArray($clonedResponse);
+
+        $groupedResponses[$identifier] = $clonedResponse;
+    }
+
+    return $groupedResponses;
 }

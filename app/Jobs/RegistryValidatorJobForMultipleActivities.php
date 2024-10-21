@@ -68,14 +68,14 @@ class RegistryValidatorJobForMultipleActivities implements ShouldQueue
             }
 
             $response = $activityWorkflowService->validateMultipleActivities($xmlData);
-            $groupedResponse = $this->regroupResponseForAllActivity(json_decode($response, true), $uniqueIdentifiers, $this->xmlLineNumberDetails);
+            $groupedResponse = regroupResponseForAllActivity(json_decode($response, true), $uniqueIdentifiers, $this->xmlLineNumberDetails);
             $sizeInMB = $tmpSize;
 
             $this->storeValidation($groupedResponse, $sizeInMB);
         } catch (BadResponseException $ex) {
             if ($ex->getCode() === 422) {
                 $response = $ex->getResponse()->getBody()->getContents();
-                $groupedResponse = $this->regroupResponseForAllActivity(json_decode($response, true), $uniqueIdentifiers, $this->xmlLineNumberDetails);
+                $groupedResponse = regroupResponseForAllActivity(json_decode($response, true), $uniqueIdentifiers, $this->xmlLineNumberDetails);
 
                 $this->storeValidation($groupedResponse, $sizeInMB + $tmpSize);
             }
@@ -167,7 +167,7 @@ class RegistryValidatorJobForMultipleActivities implements ShouldQueue
             $fileContent = trim($fileContent);
 
             $identifiers[] = $iatiIdentifier;
-            $individualActivityXmlLengthMap[$iatiIdentifier] = $this->getIndividualActivityXmlLength($fileContent);
+            $individualActivityXmlLengthMap[$iatiIdentifier] = getIndividualActivityXmlLength($fileContent);
 
             awsUploadFile("xmlValidation/$activity->org_id/activity_$activity->id.xml", $fileContent);
 
@@ -219,10 +219,5 @@ class RegistryValidatorJobForMultipleActivities implements ShouldQueue
         }
 
         return $groupedResponses;
-    }
-
-    private function getIndividualActivityXmlLength(string $fileContent): int
-    {
-        return substr_count($fileContent, PHP_EOL) + 1 - 3;
     }
 }
