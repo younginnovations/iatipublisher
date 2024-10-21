@@ -8,6 +8,7 @@ use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Repositories\Activity\ResultRepository;
 use App\IATI\Traits\DataSanitizeTrait;
 use App\IATI\Traits\XmlBaseElement;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -558,7 +559,11 @@ class ResultService
     public function getDeprecationStatusMap($id = '', $key = '')
     {
         if ($id) {
-            $result = $this->resultRepository->find($id);
+            try {
+                $result = $this->resultRepository->find($id);
+            } catch (Exception) {
+                return [];
+            }
 
             if (!$key) {
                 return $result->deprecation_status_map;
