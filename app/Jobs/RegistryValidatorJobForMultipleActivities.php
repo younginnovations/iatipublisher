@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Exceptions\MaxMergeSizeExceededException;
 use App\IATI\Elements\Xml\XmlGenerator;
 use App\IATI\Repositories\Activity\ValidationStatusRepository;
 use App\IATI\Services\ApiLog\ApiLogService;
@@ -11,19 +10,17 @@ use App\IATI\Services\Workflow\ActivityWorkflowService;
 use App\IATI\Traits\IatiValidatorResponseTrait;
 use DOMDocument;
 use Exception;
-use GuzzleHttp\Exception\BadResponseException;
-use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Promise\Utils;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 use JsonException;
 
-class RegistryValidatorJobForMultipleActivities implements ShouldQueue
+class RegistryValidatorJobForMultipleActivities
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, IatiValidatorResponseTrait;
 
@@ -42,52 +39,28 @@ class RegistryValidatorJobForMultipleActivities implements ShouldQueue
      * Execute the job.
      *
      * @param ActivityWorkflowService $activityWorkflowService
+     * @param XmlGenerator $xmlGenerator
      *
      * @return void
      *
-     * @throws Exception
-     * @throws GuzzleException
+     * @throws JsonException
      */
-    public function handle(ActivityWorkflowService $activityWorkflowService): void
+    public function handle(ActivityWorkflowService $activityWorkflowService, XmlGenerator $xmlGenerator): void
     {
-        $activityPublished = $this->organization->activityPublished;
-        $uniqueIdentifiers = $this->activities->pluck('iati_identifier.iati_identifier_text', 'id')->toArray();
-        $sizeInMB = $activityPublished->filesize;
-        $tmpSize = 0;
+        $organization = Arr::first($this->activities)->organization;
+        $settings = $organization->settings;
+        $promises = [];
 
-        try {
-            $xmlData = $this->generateValidatableFileForActivities($this->activities, $this->organization, $this->settings);
-
-            $tmpSize = $sizeInMB + calculateStringSizeInMb($xmlData);
-
-            /** @var $validationStatusRepository ValidationStatusRepository */
-            $validationStatusRepository = app()->make(ValidationStatusRepository::class);
-
-            foreach ($this->activities as $activity) {
-                $validationStatusRepository->storeValidationStatus((int) $activity->id, (int) $this->user->id);
-            }
-
-            $response = $activityWorkflowService->validateMultipleActivities($xmlData);
-            $groupedResponse = regroupResponseForAllActivity(json_decode($response, true), $uniqueIdentifiers, $this->xmlLineNumberDetails);
-            $sizeInMB = $tmpSize;
-
-            $this->storeValidation($groupedResponse, $sizeInMB);
-        } catch (BadResponseException $ex) {
-            if ($ex->getCode() === 422) {
-                $response = $ex->getResponse()->getBody()->getContents();
-                $groupedResponse = regroupResponseForAllActivity(json_decode($response, true), $uniqueIdentifiers, $this->xmlLineNumberDetails);
-
-                $this->storeValidation($groupedResponse, $sizeInMB + $tmpSize);
-            }
-        } catch (BindingResolutionException | JsonException $e) {
-            logger($e);
-        } catch (MaxMergeSizeExceededException $e) {
-            // TODO: Refactor this
-            $activityIds = $this->activities->pluck('id')->toArray();
-            DB::table('validation_status')
-                ->whereIn('activity_id', $activityIds)
-                ->update(['status' => 'max_merge_size_exception']);
+        foreach ($this->activities as $activity) {
+            $activityId = $activity->id;
+            $transactions = $activity->transactions ?? [];
+            $results = $activity->results ?? [];
+            $xmlDom = $xmlGenerator->getXml($activity, $transactions, $results, $settings, $organization);
+            $promises[$activityId] = $this->createValidateXmlPromise($activityWorkflowService, $xmlDom->saveXML());
         }
+
+        $parallelResponses = Utils::settle($promises)->wait();
+        dd($parallelResponses);
     }
 
     /**
@@ -153,7 +126,6 @@ class RegistryValidatorJobForMultipleActivities implements ShouldQueue
         $individualActivityXmlLengthMap = [];
 
         /** @var XmlGenerator $xmlGeneratorService */
-        $xmlGeneratorService = app()->make(XmlGenerator::class);
         $dom = new DOMDocument();
         $iatiActivities = $dom->appendChild($dom->createElement('iati-activities'));
 
@@ -165,6 +137,7 @@ class RegistryValidatorJobForMultipleActivities implements ShouldQueue
             $iatiIdentifier = Arr::get($activity, 'iati_identifier.iati_identifier_text');
             $fileContent = $xmlGeneratorService->getXml($activity, $activity->transactions ?? [], $activity->results ?? [], $settings, $organization)->saveXML();
             $fileContent = trim($fileContent);
+            $xmlGeneratorService = app()->make(XmlGenerator::class);
 
             $identifiers[] = $iatiIdentifier;
             $individualActivityXmlLengthMap[$iatiIdentifier] = getIndividualActivityXmlLength($fileContent);
@@ -219,5 +192,24 @@ class RegistryValidatorJobForMultipleActivities implements ShouldQueue
         }
 
         return $groupedResponses;
+    }
+
+    private function createValidateXmlPromise(ActivityWorkflowService $activityWorkflowService, string $xmlData): PromiseInterface
+    {
+        return $activityWorkflowService->getResponseAsync($xmlData)
+            ->then(
+                function ($response) {
+                    return $response;
+                },
+                function (Exception $ex) {
+                    $response = '';
+
+                    if ($ex->getCode() === 422) {
+                        $response = $ex->getResponse()->getBody()->getContents();
+                    }
+
+                    return $response;
+                }
+            );
     }
 }

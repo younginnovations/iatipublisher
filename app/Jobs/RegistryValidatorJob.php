@@ -111,6 +111,7 @@ class RegistryValidatorJob implements ShouldQueue
         $apiLogService = app()->make(ApiLogService::class);
         $validatorService = app()->make(ActivityValidatorResponseService::class);
         $validationStatusRepository = app()->make(ValidationStatusRepository::class);
+        file_put_contents('originalResponse.json', $response);
         $response = $this->addElementOnIatiValidatorResponse($response, $this->activity);
 
         $apiLogService->store(generateApiInfo('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($this->activity)], json_encode($response)));

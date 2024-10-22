@@ -1439,19 +1439,34 @@ if (!function_exists('calculateStringSizeInMb')) {
     }
 }
 
-if (!function_exists('mapErrorLinesToChildren')) {
-    function mapErrorLinesToChildren($childXmlLineDetail, $originalErrorLineNumbers, $arrayWithErrorLineNumbersInsideTextMessage): array
-    {
-        $order = Arr::get($childXmlLineDetail, 'order');
-        $offset = Arr::get($childXmlLineDetail, 'beginsOn');
+function getOffset($childXmlLineDetails, $identifier, $order)
+{
+    if ($order === 0) {
+        return 0;
+    }
 
+    $firstXmlOffsetInfo = Arr::first(array_filter($childXmlLineDetails, fn ($detail) => Arr::get($detail, 'order') === 0));
+
+    $baseOffset = Arr::get($firstXmlOffsetInfo, 'offset');
+    $currentXmlOffsetInfo = Arr::get($childXmlLineDetails, $identifier);
+
+    return $currentXmlOffsetInfo['offset'] - $baseOffset;
+}
+
+if (!function_exists('mapErrorLinesToChildren')) {
+    function mapErrorLinesToChildren($identifier, $childXmlLineDetails, $originalErrorLineNumbers, $arrayWithErrorLineNumbersInsideTextMessage): array
+    {
+        $childXmlLineDetail = $childXmlLineDetails[$identifier];
+        $order = Arr::get($childXmlLineDetail, 'order');
+        $offset = getOffset($childXmlLineDetails, $identifier, $order);
+
+        $extraOffset = count(array_filter($childXmlLineDetails, fn ($detail) => Arr::get($detail, 'order') < $order));
         if ($order !== 0) {
             $arrayWithErrorLineNumbersInsideTextMessage = json_encode($arrayWithErrorLineNumbersInsideTextMessage);
 
             foreach ($originalErrorLineNumbers as $key => $lineNumber) {
                 $newLineNumber = $lineNumber - $offset;
-                // $newLineNumber = str_contains($key, 'details') ? $newLineNumber + 4 + $order : $newLineNumber + 4;
-                // $newLineNumber = str_contains($key, 'lineNumber') ? $newLineNumber +1 : $newLineNumber-1;
+                $newLineNumber = str_contains($key, '.lineNumber') ? $newLineNumber + $extraOffset : $newLineNumber + 1;
 
                 $arrayWithErrorLineNumbersInsideTextMessage = str_replace("At line: $lineNumber", "At line: $newLineNumber", $arrayWithErrorLineNumbersInsideTextMessage);
                 $arrayWithErrorLineNumbersInsideTextMessage = str_replace("at line: $lineNumber", "at line: $newLineNumber", $arrayWithErrorLineNumbersInsideTextMessage);
@@ -1539,8 +1554,7 @@ function regroupResponseForAllActivity(array $response, array $uniqueIdentifiers
         $arrayOfErrorLineNumbersInValue = getItemsWhereKeyContains($clonedResponse, 'line');
         $arrayOfErrorLineNumbersInTextMessage = getItemsWhereKeyContains($clonedResponse, '.text');
 
-        dump($identifier);
-        [$mappedLineNumbersInValue, $mappedLineNumbersInTextMessage] = mapErrorLinesToChildren($xmlLineNumberMap[$identifier], $arrayOfErrorLineNumbersInValue, $arrayOfErrorLineNumbersInTextMessage);
+        [$mappedLineNumbersInValue, $mappedLineNumbersInTextMessage] = mapErrorLinesToChildren($identifier, $xmlLineNumberMap, $arrayOfErrorLineNumbersInValue, $arrayOfErrorLineNumbersInTextMessage);
 
         foreach ($arrayOfErrorLineNumbersInValue as $key => $value) {
             $clonedResponse[$key] = $mappedLineNumbersInValue[$key];

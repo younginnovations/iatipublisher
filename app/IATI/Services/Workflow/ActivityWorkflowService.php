@@ -17,6 +17,7 @@ use App\IATI\Services\Xml\XmlGeneratorService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Support\Arr;
 
 /**
@@ -69,6 +70,8 @@ class ActivityWorkflowService
      */
     protected ApiLogRepository $apiLogRepo;
 
+    private Client $client;
+
     /**
      * ActivityWorkflowService Constructor.
      *
@@ -102,6 +105,8 @@ class ActivityWorkflowService
         $this->validatorService = $validatorService;
         $this->apiLogRepo = $apiLogRepo;
         $this->auditService = $auditService;
+
+        $this->client = new Client();
     }
 
     /**
@@ -293,6 +298,24 @@ class ActivityWorkflowService
         $response = $client->post($URI, $params);
 
         return $response->getBody()->getContents();
+    }
+
+    public function getResponseAsync(string $xmlData): PromiseInterface
+    {
+        $URI = env('IATI_VALIDATOR_ENDPOINT');
+        $params = [
+            'headers' => [
+                'Content-Type'              => 'application/json',
+                'Ocp-Apim-Subscription-Key' => env('IATI_VALIDATOR_KEY'),
+            ],
+            'query'   => [
+                'group'   => 'false',
+                'details' => 'true',
+            ],
+            'body'    => $xmlData,
+        ];
+
+        return $this->client->postAsync($URI, $params);
     }
 
     /**
