@@ -8,6 +8,7 @@ use App\IATI\Elements\Builder\TransactionElementFormCreator;
 use App\IATI\Repositories\Activity\TransactionRepository;
 use App\IATI\Traits\DataSanitizeTrait;
 use App\IATI\Traits\XmlBaseElement;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -647,7 +648,11 @@ class TransactionService
     public function getDeprecationStatusMap($id = '', $key = '')
     {
         if ($id) {
-            $transaction = $this->transactionRepository->find($id);
+            try {
+                $transaction = $this->transactionRepository->find($id);
+            } catch (Exception) {
+                return [];
+            }
 
             if ($key === '') {
                 return $transaction->deprecation_status_map;

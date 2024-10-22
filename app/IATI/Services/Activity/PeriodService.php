@@ -7,6 +7,7 @@ namespace App\IATI\Services\Activity;
 use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Repositories\Activity\PeriodRepository;
 use App\IATI\Traits\DataSanitizeTrait;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -241,7 +242,11 @@ class PeriodService
     public function getDeprecationStatusMap($id = '', $key = '')
     {
         if ($id) {
-            $period = $this->periodRepository->find($id);
+            try {
+                $period = $this->periodRepository->find($id);
+            } catch (Exception) {
+                return [];
+            }
 
             if (!$key) {
                 return $period->deprecation_status_map;

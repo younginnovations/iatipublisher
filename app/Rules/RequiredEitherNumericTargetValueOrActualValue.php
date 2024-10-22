@@ -39,17 +39,17 @@ class RequiredEitherNumericTargetValueOrActualValue implements Rule
      */
     public function passes($attribute, $value): bool
     {
-        if ($this->bothTargetAnDActualHaveEmptyValues()) {
+        if ($this->bothTargetAndActualHaveEmptyValues()) {
             return false;
         }
 
-        /**
-         * I'm doing this because $value can be null or N empty spaces.
-         * Null during creation/untouched value field.
-         * Empty spaces when value filed data is edited/cleared.
-         * strlen > 0 because I'm allowing ''.
-         */
         $value = trim($value ?? '');
+
+        if (strlen($value) > 0 && !is_numeric($value)) {
+            $this->errorType = 'numeric';
+
+            return false;
+        }
 
         if ($this->otherFieldHasAtleastOneNonEmptyValue() && strlen($value) > 0 && !is_numeric($value)) {
             $this->errorType = 'numeric';

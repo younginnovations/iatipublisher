@@ -9,6 +9,7 @@ use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -808,7 +809,11 @@ class ActivityService
     public function getDeprecationStatusMap($id = '', $key = '')
     {
         if ($id) {
-            $activity = $this->activityRepository->find($id);
+            try {
+                $activity = $this->activityRepository->find($id);
+            } catch (Exception) {
+                return [];
+            }
 
             if (!$key) {
                 return $activity->deprecation_status_map;

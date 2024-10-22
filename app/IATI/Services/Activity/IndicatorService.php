@@ -8,6 +8,7 @@ use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Repositories\Activity\IndicatorRepository;
 use App\IATI\Traits\DataSanitizeTrait;
 use Auth;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
@@ -232,13 +233,17 @@ class IndicatorService
     public function getDeprecationStatusMap($id = '', $key = '')
     {
         if ($id) {
-            $activity = $this->indicatorRepository->find($id);
-
-            if (!$key) {
-                return $activity->deprecation_status_map;
+            try {
+                $indicator = $this->indicatorRepository->find($id);
+            } catch (Exception) {
+                return [];
             }
 
-            return Arr::get($activity->deprecation_status_map, $key, []);
+            if (!$key) {
+                return $indicator->deprecation_status_map;
+            }
+
+            return Arr::get($indicator->deprecation_status_map, $key, []);
         }
 
         return [];
