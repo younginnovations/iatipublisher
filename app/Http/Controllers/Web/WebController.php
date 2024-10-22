@@ -191,4 +191,20 @@ class WebController extends Controller
             return response()->json(['success' => false, 'message' => 'Error has occurred when returning translated data.']);
         }
     }
+
+    /**
+     * Returns the locale of the system.
+     *
+     * @return JsonResponse
+     */
+    public function getLocale(): JsonResponse
+    {
+        try {
+            return response()->json(['success' => true, 'data' => App::getLocale(), 'message' => 'Locale retrieved successfully.']);
+        } catch (\Exception $e) {
+            logger()->error($e);
+
+            return response()->json(['success' => false, 'message' => 'Error has occurred when changing locale.']);
+        }
+    }
 }
