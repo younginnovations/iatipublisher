@@ -162,6 +162,7 @@ class BulkPublishingService
             $anActivity = $activities[0];
             $organisation = $anActivity->organization;
             $settings = $organisation->settings;
+
             RegistryValidatorJobForMultipleActivities::dispatch($user, $activities, $organisation, $settings);
         }
 
