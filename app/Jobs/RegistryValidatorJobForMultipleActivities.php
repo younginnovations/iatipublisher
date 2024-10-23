@@ -23,7 +23,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 
 class RegistryValidatorJobForMultipleActivities implements ShouldQueue
@@ -38,9 +37,9 @@ class RegistryValidatorJobForMultipleActivities implements ShouldQueue
 
     private ActivityValidatorResponseService $activityValidatorResponseService;
 
-    private const REQUEST_BATCH_SIZE = 5;
+    private const BATCH_SIZE = 20;
 
-    private const REQUEST_DELAY_MICROSECONDS = 100000;
+    private const BATCH_DELAY_MICROSECONDS = 50000;
 
     /**
      * Class constructor.
@@ -56,7 +55,6 @@ class RegistryValidatorJobForMultipleActivities implements ShouldQueue
         public Organization $organization,
         public Setting $settings,
     ) {
-//        $this->activities = Activity::whereIn([1420,1417,1342,1340,1341,1339,1343,1344,1345,1346,1347,1348,1349,1350,1351,1352,1353,1354,1355,1356,1357,1358,1359,1360,1361])->with(['transactions', 'results.indicators.periods'])->get();
     }
 
     /**
@@ -76,55 +74,46 @@ class RegistryValidatorJobForMultipleActivities implements ShouldQueue
         $this->activityValidatorResponseService = app(ActivityValidatorResponseService::class);
 
         $validatorResponses = [];
-        $promises = [];
-
+        $validatorPromises = [];
         $orgId = $this->organization->id;
+
         foreach ($this->activities as $index => $activity) {
-            $activityId = $activity->id;
+            $currentActivityId = $activity->id;
             $transactions = $activity->transactions ?? [];
             $results = $activity->results ?? [];
             $xmlDocument = $this->xmlGenerator->getXml($activity, $transactions, $results, $this->settings, $this->organization);
 
-            $xmlString = $xmlDocument->saveXML();
+            $xmlContent = $xmlDocument->saveXML();
             $path = "xmlValidation/$orgId/activity_$activity->id.xml";
-            awsUploadFile($path, $xmlString);
-            $promises[$activityId] = $this->validatorResponsePromise($this->activityWorkflowService, $xmlString);
 
-            if ($this->isBatchComplete($index)) {
-                $parallelResponses = Utils::settle($promises)->wait();
+            awsUploadFile($path, $xmlContent);
 
-                foreach ($parallelResponses as $actId => $response) {
-                    if ($response['state'] === 'fulfilled') {
-                        $validatorResponses[$actId] = $response['value'];
-                    } else {
-                        Log::error('Error processing activity', ['activity_id' => $activityId, 'error' => $response['reason']]);
-                    }
-                }
+            $validatorPromises[$currentActivityId] = $this->createValidatorPromise($this->activityWorkflowService, $xmlContent);
 
-                $promises = [];
-                usleep(self::REQUEST_DELAY_MICROSECONDS);
+            if ($this->isBatchProcessingCompleted($index)) {
+                $this->processPromises($validatorPromises, $validatorResponses);
             }
         }
 
-        if (!empty($promises)) {
-            $parallelResponses = Utils::settle($promises)->wait();
-
-            foreach ($parallelResponses as $actId =>$response) {
-                if ($response['state'] === 'fulfilled') {
-                    $validatorResponses[$actId] = $response['value'];
-                } else {
-                    Log::error('Error processing remaining activities', ['error' => $response['reason']]);
-                }
-            }
+        if (!empty($validatorPromises)) {
+            $this->processPromises($validatorPromises, $validatorResponses);
         }
 
-        foreach ($validatorResponses as $activityId => $response) {
-            $activity = $this->activities->firstWhere('id', $activityId);
+        foreach ($validatorResponses as $currentActivityId => $response) {
+            $activity = $this->activities->firstWhere('id', $currentActivityId);
             $this->storeValidation($activity, $response);
         }
     }
 
-    private function validatorResponsePromise(ActivityWorkflowService $activityWorkflowService, string $xmlData): PromiseInterface
+    /**
+     * Create a promise for validator request.
+     *
+     * @param ActivityWorkflowService $activityWorkflowService
+     * @param string $xmlData
+     *
+     * @return PromiseInterface
+     */
+    private function createValidatorPromise(ActivityWorkflowService $activityWorkflowService, string $xmlData): PromiseInterface
     {
         return $activityWorkflowService->getResponseAsync($xmlData)
             ->then(
@@ -144,16 +133,49 @@ class RegistryValidatorJobForMultipleActivities implements ShouldQueue
     }
 
     /**
+     * Check if batch processing complete.
+     *
      * @param int $index
      *
      * @return bool
      */
-    private function isBatchComplete(int $index): bool
+    private function isBatchProcessingCompleted(int $index): bool
     {
-        return ($index + 1) % self::REQUEST_BATCH_SIZE === 0;
+        return ($index + 1) % self::BATCH_SIZE === 0;
     }
 
     /**
+     * Handle  responses for resolved promises. Basically get the validator response.
+     *
+     * @param array $promises
+     * @param array $validatorResponses
+     *
+     * @return void
+     */
+    private function processPromises(array $promises, array &$validatorResponses): void
+    {
+        $parallelResponses = Utils::settle($promises)->wait();
+
+        foreach ($parallelResponses as $actId => $response) {
+            if ($response['state'] === 'fulfilled') {
+                $validatorResponses[$actId] = $response['value'];
+            } else {
+                logger()->error(
+                    'Error processing activity for bulk publish.',
+                    [
+                        'activity_id' => $actId,
+                        'error'       => $response['reason'],
+                    ]
+                );
+            }
+        }
+
+        usleep(self::BATCH_DELAY_MICROSECONDS);
+    }
+
+    /**
+     * Store validator responses to DB.
+     *
      * @throws BindingResolutionException
      * @throws JsonException
      */
