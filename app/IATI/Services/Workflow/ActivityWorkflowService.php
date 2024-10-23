@@ -302,6 +302,7 @@ class ActivityWorkflowService
 
     public function getResponseAsync(string $xmlData): PromiseInterface
     {
+        $client = new Client();
         $URI = env('IATI_VALIDATOR_ENDPOINT');
         $params = [
             'headers' => [
@@ -315,7 +316,7 @@ class ActivityWorkflowService
             'body'    => $xmlData,
         ];
 
-        return $this->client->postAsync($URI, $params);
+        return $client->postAsync($URI, $params);
     }
 
     /**

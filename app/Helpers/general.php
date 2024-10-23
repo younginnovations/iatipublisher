@@ -911,19 +911,16 @@ if (!function_exists('checkUrlExists')) {
      */
     function checkUrlExists($path): bool
     {
-        try {
-            $routes = Route::getRoutes();
-            $request = Request::create($path);
+        $routes = Route::getRoutes();
+        $request = Request::create($path);
 
+        try {
             if ($routes->match($request)) {
                 return true;
             }
 
             return false;
-        } catch (NotFoundHttpException $e) {
-            logger([$path, $e], 'path');
-            throw $e;
-
+        } catch (NotFoundHttpException) {
             return false;
         }
     }
