@@ -197,9 +197,7 @@ return [
 
         'dev' => [
             'supervisor-1' => [
-                'maxProcesses' => 10,
-                'balanceMaxShift' => 1,
-                'balanceCooldown' => 3,
+                'maxProcesses' => 3,
             ],
         ],
 
