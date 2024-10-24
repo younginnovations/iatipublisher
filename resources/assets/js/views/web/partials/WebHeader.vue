@@ -74,23 +74,44 @@
             </ul>
           </div>
           <!-- remove width later -->
-          <div class="languages hidden w-[170px] pt-11 xl:block">
+          <div class="languages hidden pt-11 xl:block">
             <!-- commented to temporarily hide language buttons -->
 
-            <!-- <div class="flex">
+            <div class="flex">
               <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0">Language:</span>
               <ul class="flex items-center justify-center">
                 <li class="nav__links">
-                  <a class="nav__active links__active" href="/">EN</a>
+                  <button
+                    :class="{
+                      'nav__active links__active': currentLanguage === 'en',
+                    }"
+                    @click="changeLanguage('en')"
+                  >
+                    EN
+                  </button>
                 </li>
                 <li class="nav__links">
-                  <a href="/">FR</a>
+                  <button
+                    :class="{
+                      'nav__active links__active': currentLanguage === 'fr',
+                    }"
+                    @click="changeLanguage('fr')"
+                  >
+                    FR
+                  </button>
                 </li>
                 <li class="nav__links">
-                  <a href="/">ES</a>
+                  <button
+                    :class="{
+                      'nav__active links__active': currentLanguage === 'es',
+                    }"
+                    @click="changeLanguage('es')"
+                  >
+                    ES
+                  </button>
                 </li>
               </ul>
-            </div> -->
+            </div>
           </div>
           <div id="menu-overlay"></div>
           <div
@@ -127,8 +148,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted } from 'vue';
+import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
 import NavDropdown from '../../../components/NavDropdown.vue';
+import LanguageService from 'Services/language';
 
 export default defineComponent({
   components: {
@@ -140,12 +162,31 @@ export default defineComponent({
     superAdmin: { type: Boolean, required: false, default: false },
   },
   setup() {
-    onMounted(() => {
+    const currentLanguage = ref('en');
+    onMounted(async () => {
       document.body.classList.add('no-nav');
+
+      currentLanguage.value = await LanguageService.getLanguage();
     });
     onUnmounted(() => {
       document.body.classList.remove('no-nav');
     });
+
+    const changeLanguage = (lang: string) => {
+      LanguageService.changeLanguage(lang)
+        .then(() => {
+          currentLanguage.value = lang;
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    return {
+      changeLanguage,
+      currentLanguage,
+    };
   },
 });
 </script>

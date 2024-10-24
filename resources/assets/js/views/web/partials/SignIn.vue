@@ -6,7 +6,7 @@
     <Loader v-if="isLoaderVisible"></Loader>
 
     <div class="right__container flex w-full flex-col" @keyup.enter="login">
-      <h2 class="mb-2 hidden sm:block">Sign In</h2>
+      <h2 class="mb-2 hidden sm:block">{{ translatedData['sign_in'] }}</h2>
       <span class="text-n-40">Welcome back! Please enter your details.</span>
       <div
         v-if="
@@ -93,9 +93,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, onMounted, reactive, ref } from 'vue';
 import axios from 'axios';
 import Loader from 'Components/Loader.vue';
+import LanguageService from 'Services/language';
 
 export default defineComponent({
   components: {
@@ -114,6 +115,8 @@ export default defineComponent({
     },
   },
   setup() {
+    const translatedData = ref({});
+
     const formData = reactive({
       emailOrUsername: '',
       password: '',
@@ -153,11 +156,20 @@ export default defineComponent({
         });
     }
 
+    onMounted(() => {
+      LanguageService.getTranslatedData('public')
+        .then((response) => {
+          translatedData.value = response.data.login;
+        })
+        .catch((error) => console.log(error));
+    });
+
     return {
       formData,
       errorData,
       isLoaderVisible,
       login,
+      translatedData,
     };
   },
 });
