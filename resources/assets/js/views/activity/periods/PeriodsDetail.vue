@@ -116,9 +116,28 @@
         <div></div>
         <div class="bg-white px-4 py-5">
           <div class="elements-detail wider">
-            <div class="category flex">
-              {{ dateFormat(periodData.period_start[0].date) }} -
+            <div
+              v-if="
+                periodData.period_start[0].date || periodData.period_end[0].date
+              "
+              class="category flex"
+            >
+              {{ dateFormat(periodData.period_start[0].date) }}
+              <span
+                v-if="!periodData.period_start[0].date"
+                class="text-xs italic text-light-gray"
+                >N/A</span
+              >
+              <span class="mx-1">-</span>
               {{ dateFormat(periodData.period_end[0].date) }}
+              <span
+                v-if="!periodData.period_end[0].date"
+                class="text-xs italic text-light-gray"
+                >N/A</span
+              >
+            </div>
+            <div v-else>
+              <span class="text-xs italic text-light-gray">N/A</span>
             </div>
             <TargetValue id="target" :data="periodData.target" />
             <div class="divider my-10 h-px w-full border-b border-n-20"></div>

@@ -1,51 +1,65 @@
 <template>
   <div class="elements-detail">
-    <div
-      v-for="(at, i) in atData"
-      :key="i"
-      class="item"
-      :class="{
-        'mb-4': i !== Object.keys(atData).length - 1,
-      }"
-    >
-      <div class="category">
-        <span>{{
-          type.aidTypeVocabulary[at.aid_type_vocabulary] ?? 'Missing'
-        }}</span>
+    <div v-if="!isEveryValueNull(atData)">
+      <div
+        v-for="(at, i) in atData"
+        :key="i"
+        class="item"
+        :class="{
+          'mb-4': i !== Object.keys(atData).length - 1,
+        }"
+      >
+        <div class="category">
+          <span>{{
+            type.aidTypeVocabulary[at.aid_type_vocabulary] ?? ''
+          }}</span>
+          <span
+            v-if="!type.aidTypeVocabulary[at.aid_type_vocabulary]"
+            class="text-xs italic text-light-gray"
+          >
+            N/A
+          </span>
+        </div>
+        <div clas="ml-4">
+          <table class="mb-3">
+            <tr>
+              <td>Code</td>
+              <td>
+                <div class="text-sm">
+                  <span v-if="at.aid_type_code">
+                    {{ type.aidType[at.aid_type_code] }}
+                  </span>
+                  <span v-else-if="at.cash_and_voucher_modalities">
+                    {{
+                      type.cashAndVoucherModalities[
+                        at.cash_and_voucher_modalities
+                      ]
+                    }}
+                  </span>
+                  <span v-else-if="at.earmarking_category">
+                    {{ type.earMarkingCategory[at.earmarking_category] }}
+                  </span>
+                  <span v-else-if="at.earmarking_modality">
+                    {{ type.earMarkingModality[at.earmarking_modality] }}
+                  </span>
+                  <span v-else>
+                    <span class="text-xs italic text-light-gray">N/A</span>
+                  </span>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
       </div>
-      <div clas="ml-4">
-        <table class="mb-3">
-          <tr>
-            <td>Code</td>
-            <td>
-              <div class="text-sm">
-                <span v-if="at.aid_type_code">
-                  {{ type.aidType[at.aid_type_code] }}
-                </span>
-                <span v-else-if="at.cash_and_voucher_modalities">
-                  {{
-                    type.cashAndVoucherModalities[
-                      at.cash_and_voucher_modalities
-                    ]
-                  }}
-                </span>
-                <span v-else-if="at.earmarking_category">
-                  {{ type.earMarkingCategory[at.earmarking_category] }}
-                </span>
-                <span v-else-if="at.earmarking_modality">
-                  {{ type.earMarkingModality[at.earmarking_modality] }}
-                </span>
-                <span v-else> Missing </span>
-              </div>
-            </td>
-          </tr>
-        </table>
-      </div>
+    </div>
+    <div v-else>
+      <span class="text-xs italic text-light-gray">N/A</span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { isEveryValueNull } from 'Composable/utils';
 import { defineComponent, toRefs, inject } from 'vue';
 
 export default defineComponent({
@@ -81,6 +95,7 @@ export default defineComponent({
     return {
       atData,
       type,
+      isEveryValueNull,
     };
   },
 });
