@@ -2,6 +2,7 @@
 
 return [
     'login' => 'Login fr',
+    'sign_in' => 'Sign In fr',
     'test' => [
         'test1' => 'test1 fr new',
         'test2' => [
