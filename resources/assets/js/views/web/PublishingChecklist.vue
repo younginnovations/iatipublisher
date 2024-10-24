@@ -259,7 +259,15 @@
   </div>
 </template>
 <script lang="ts" setup>
+import LanguageService from 'Services/language';
+import { onMounted } from 'vue';
+
 function triggerModel() {
   localStorage.setItem('openAddModel', 'true');
 }
+
+onMounted(async () => {
+  const translatedLanguage = await LanguageService.getTranslatedData('public');
+  console.log('Translated Data', translatedLanguage);
+});
 </script>

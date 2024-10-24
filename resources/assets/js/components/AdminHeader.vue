@@ -46,8 +46,8 @@
     </div>
     <div id="nav-list" class="activity-nav-menu flex w-full justify-between">
       <!-- commented to temporarily hide language buttons , remove width later -->
-      <nav class="w-[85px] justify-end">
-        <!-- <ul class="flex">
+      <nav class="justify-end">
+        <ul class="flex">
           <li
             v-for="(language, index) in data.languages"
             :key="index"
@@ -63,7 +63,7 @@
               <span>{{ language.language }}</span>
             </a>
           </li>
-        </ul> -->
+        </ul>
       </nav>
       <nav>
         <ul class="activity-nav-list -mx-4">
