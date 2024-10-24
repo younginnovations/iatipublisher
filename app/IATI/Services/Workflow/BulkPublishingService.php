@@ -163,7 +163,11 @@ class BulkPublishingService
             $organisation = $anActivity->organization;
             $settings = $organisation->settings;
 
-            RegistryValidatorJobForMultipleActivities::dispatch($user, $activities, $organisation, $settings);
+            foreach ($activities as $activity) {
+                RegistryValidatorJob::dispatch($activity, $user);
+            }
+            // TODO : Discard after review.
+            // RegistryValidatorJobForMultipleActivities::dispatch($user, $activities, $organisation, $settings);
         }
 
         return $activityTitles;
