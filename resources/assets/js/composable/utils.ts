@@ -93,7 +93,6 @@ export function generateUsername(fullname: string) {
 export function onlyDeprecatedStatusMap(elements) {
   const deprecatedStatus = [];
 
-  console.log('elements', elements);
   for (let i = 0; i < Object.keys(elements).length; i++) {
     if (i in elements && 'deprecation_status_map' in elements[i]) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -103,4 +102,14 @@ export function onlyDeprecatedStatusMap(elements) {
   }
 
   return deprecatedStatus;
+}
+
+export function isEveryValueNull(data): boolean {
+  if (Array.isArray(data)) {
+    return data.every((item) => isEveryValueNull(item));
+  } else if (typeof data === 'object' && data !== null) {
+    return Object.values(data).every((value) => isEveryValueNull(value));
+  } else {
+    return data === null;
+  }
 }

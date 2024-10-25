@@ -220,7 +220,6 @@ const checkValidation = async () => {
       `/activities/checks-for-activity-bulk-validation`
     );
     if (response.data) {
-      // console.log(response.data.status);
       if (response.data.status === 'completed') {
         store.state.bulkActivityPublishStatus.iatiValidatorLoader = false;
       }

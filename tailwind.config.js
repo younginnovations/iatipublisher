@@ -98,6 +98,9 @@ module.exports = {
       mint: withOpacity('--mint'),
       rose: withOpacity('--rose'),
       paper: withOpacity('--paper'),
+
+      // Gray
+      'light-gray': withOpacity('--light-gray'),
     },
     extend: {
       fontSize: {
