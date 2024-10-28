@@ -25,16 +25,21 @@
                     'mb-4': i !== cou.narrative.length - 1,
                   }"
                 >
-                  <div class="language mb-1.5">
+                  <div v-if="sd.narrative" class="language mb-1.5">
                     (
                     {{
                       sd.language
                         ? `Language: ${type.languages[sd.language]}`
-                        : 'Language Missing'
+                        : 'Language N/A'
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? 'Narrative Missing' }}
+                    {{ sd.narrative ?? '' }}
+                    <span
+                      v-if="!sd.narrative"
+                      class="text-xs italic text-light-gray"
+                      >N/A</span
+                    >
                   </div>
                 </div>
               </td>

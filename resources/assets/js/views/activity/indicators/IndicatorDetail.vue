@@ -216,7 +216,10 @@
                 </table>
               </div>
             </div>
-            <div id="document_link">
+            <div
+              v-if="!isEveryValueNull(indicatorData.document_link)"
+              id="document_link"
+            >
               <div class="title mb-4">
                 <div class="item elements-detail wider">
                   <table class="mb-2">
@@ -262,7 +265,7 @@ import PageTitle from 'Components/sections/PageTitle.vue';
 import Toast from 'Components/ToastMessage.vue';
 
 //helper
-import { countDocumentLink } from 'Composable/utils';
+import { countDocumentLink, isEveryValueNull } from 'Composable/utils';
 
 import {
   TitleElement,
@@ -454,6 +457,7 @@ export default defineComponent({
       istopVisible,
       countDocumentLink,
       isMandatoryForIndicator,
+      isEveryValueNull,
     };
   },
 });

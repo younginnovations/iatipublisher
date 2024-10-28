@@ -5,9 +5,14 @@
         <tbody>
           <tr>
             <td><span class="category flex">Target Value</span></td>
-            <td>
+            <td v-if="!isEveryValueNull(tValue)">
               <div :class="elementSpacing">
-                {{ tValue.value ?? 'Missing' }}
+                {{ tValue.value ?? '' }}
+                <span
+                  v-if="!tValue.value"
+                  class="text-xs italic text-light-gray"
+                  >N/A</span
+                >
               </div>
 
               <div class="flex" :class="elementSpacing">
@@ -16,8 +21,13 @@
                   {{
                     getLocation(tValue.location)
                       ? getLocation(tValue.location)
-                      : 'Missing'
+                      : ''
                   }}
+                  <span
+                    v-if="!getLocation(tValue.location)"
+                    class="text-xs italic text-light-gray"
+                    >N/A</span
+                  >
                 </div>
               </div>
 
@@ -29,7 +39,18 @@
                     :key="d"
                     class="dimension"
                   >
-                    {{ dim.name ?? 'Missing' }} ({{ dim.value ?? 'Missing' }})
+                    {{ dim.name ?? '' }}
+                    <span
+                      v-if="!dim.name"
+                      class="text-xs italic text-light-gray"
+                      >N/A</span
+                    >
+                    ({{ dim.value ?? ''
+                    }}<span
+                      v-if="!dim.value"
+                      class="text-xs italic text-light-gray"
+                      >N/A</span
+                    >)
                   </div>
                 </div>
               </div>
@@ -45,35 +66,62 @@
                       'mb-1.5': c !== tValue.comment[0].narrative.length - 1,
                     }"
                   >
-                    <div class="language mb-1.5">
+                    <div class="language subtle-darker mb-1.5">
                       (Language:
-                      {{
-                        com.language
-                          ? dlType.language[com.language]
-                          : 'Missing'
-                      }})
+                      {{ com.language ? dlType.language[com.language] : '' }}
+                      <span
+                        v-if="!com.language"
+                        class="text-xs italic text-light-gray"
+                        >N/A</span
+                      >)
                     </div>
                     <div class="w-[500px] max-w-full">
-                      {{ com.narrative ? com.narrative : 'Missing' }}
+                      {{ com.narrative ? com.narrative : '' }}
+                      <span
+                        v-if="!com.narrative"
+                        class="text-xs italic text-light-gray"
+                        >N/A</span
+                      >
                     </div>
                   </div>
                 </div>
               </div>
             </td>
-          </tr>
-        </tbody>
-      </table>
-      <table class="mb-3 w-full">
-        <tbody>
-          <tr>
-            <td colspan="2">
-              <div class="category flex">Document Link</div>
-              <div class="divider my-4 h-px w-full border-b border-n-20"></div>
+            <td v-else>
+              <span class="text-xs italic text-light-gray">N/A</span>
             </td>
           </tr>
         </tbody>
       </table>
-      <DocumentLink :data="tValue.document_link" :type="dlType" />
+      <div v-if="!isEveryValueNull(tValue.document_link)">
+        <table class="mb-3 w-full">
+          <tbody>
+            <tr>
+              <td colspan="2">
+                <div class="category flex">Document Link</div>
+                <div
+                  class="divider my-4 h-px w-full border-b border-n-20"
+                ></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <DocumentLink :data="tValue.document_link" :type="dlType" />
+      </div>
+      <div v-else>
+        <table class="mb-3 w-full">
+          <tbody>
+            <tr>
+              <td>
+                <div class="category flex">Document Link</div>
+              </td>
+              <td>
+                <span class="text-xs italic text-light-gray">N/A</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <div
         v-if="Number(v) != targetValue.length - 1"
         class="divider my-10 h-px w-full border-b border-n-20"
@@ -89,7 +137,7 @@ import { defineComponent, toRefs, inject } from 'vue';
 import { DocumentLink } from 'Activity/indicators/elements/Index';
 
 //composable
-import { getLocation } from 'Composable/utils';
+import { getLocation, isEveryValueNull } from 'Composable/utils';
 
 export default defineComponent({
   name: 'TargetValue',
@@ -118,6 +166,7 @@ export default defineComponent({
       getLocation,
       // languageType,
       dlType,
+      isEveryValueNull,
     };
   },
 });

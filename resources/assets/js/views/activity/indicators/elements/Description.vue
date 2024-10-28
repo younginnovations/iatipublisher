@@ -1,7 +1,7 @@
 <template>
   <tr>
     <td>Description</td>
-    <td>
+    <td v-if="!isEveryValueNull(descriptionData) && !descriptionData.narrative">
       <template v-for="(description, t) in descriptionData.narrative" :key="t">
         <div
           class="description-content"
@@ -9,11 +9,14 @@
             'mb-3': t !== descriptionData.narrative.length - 1,
           }"
         >
-          <div class="text-n-30">
+          <div class="language subtle-darker">
             (Language:
-            {{
-              description.language ? descType[description.language] : 'Missing'
-            }})
+            {{ description.language ? descType[description.language] : ''
+            }}<span
+              v-if="!description.language"
+              class="text-xs italic text-light-gray"
+              >N/A</span
+            >)
           </div>
           <div class="description text-xs">
             {{ description.narrative }}
@@ -21,10 +24,14 @@
         </div>
       </template>
     </td>
+    <td v-else>
+      <span class="text-xs italic text-light-gray">N/A</span>
+    </td>
   </tr>
 </template>
 
 <script lang="ts">
+import { isEveryValueNull } from 'Composable/utils';
 import { defineComponent, toRefs } from 'vue';
 
 export default defineComponent({
@@ -43,7 +50,7 @@ export default defineComponent({
   setup(props) {
     let { data } = toRefs(props);
     const descriptionData = data.value;
-    return { descriptionData };
+    return { descriptionData, isEveryValueNull };
   },
 });
 </script>

@@ -2,7 +2,12 @@
   <tr>
     <td>Aggregation Status</td>
     <td class="capitalize">
-      {{ parseInt(data) ? 'True' : data ? 'False' : 'Missing' }}
+      {{ parseInt(data) ? 'True' : data ? 'False' : '' }}
+      <span
+        v-if="!parseInt(data) && !data"
+        class="text-xs italic text-light-gray"
+        >N/A</span
+      >
     </td>
   </tr>
 </template>

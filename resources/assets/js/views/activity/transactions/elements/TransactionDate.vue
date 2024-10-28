@@ -1,5 +1,6 @@
 <template>
-  {{ date[0].date ? dateFormat(date[0].date) : 'Date Missing' }}
+  {{ date[0].date ? dateFormat(date[0].date) : '' }}
+  <span v-if="!date[0].date" class="text-xs italic text-light-gray">N/A</span>
 </template>
 
 <script lang="ts">

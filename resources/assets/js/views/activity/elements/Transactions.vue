@@ -9,8 +9,17 @@
       {{
         types.transactionType[
           trans.transaction.transaction_type[0].transaction_type_code
-        ] ?? 'Transaction type missing'
+        ] ?? ''
       }}
+      <span
+        v-if="
+          !types.transactionType[
+            trans.transaction.transaction_type[0].transaction_type_code
+          ]
+        "
+        class="text-xs italic text-light-gray"
+        >Transaction type N/A</span
+      >
       <div class="ml-2">
         <Btn
           text="Edit"
@@ -24,7 +33,10 @@
         class="description text-sm"
         :class="{ 'mb-4': Number(t) !== trans.transaction.value.length - 1 }"
       >
-        {{ val.amount ? Number(val.amount).toLocaleString() : 'Value missing' }}
+        {{ val.amount ? Number(val.amount).toLocaleString() : '' }}
+        <span v-if="!val.amount" class="text-xs italic text-light-gray"
+          >N/A</span
+        >
         {{ val.currency }}
         {{
           dateFormat(val.date, 'MMMM DD, YYYY')
