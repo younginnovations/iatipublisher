@@ -102,7 +102,7 @@ class CheckMigratedTransactions extends Command
 //                1578];
 
             $aidstreamOrganizationIdString = $this->askValid(
-                'Please enter the organization ids which you want to migrate separated by comma (Compulsory)',
+                'Please enter the organization ids for which you want to check and migrate transactions separated by comma (Compulsory)',
                 'aidstreamOrganizationIdString',
                 ['required']
             );
@@ -208,48 +208,49 @@ class CheckMigratedTransactions extends Command
 
                         $iatiActivityTransactions = $iatiActivity->transactions->pluck('transaction');
 
-                        $aidstreamActivityTransactionsCount = count($aidstreamActivityTransactions);
-                        $iatiActivityTransactionsCount = count($iatiActivityTransactions);
+//                        $aidstreamActivityTransactionsCount = count($aidstreamActivityTransactions);
+//                        $iatiActivityTransactionsCount = count($iatiActivityTransactions);
                         $defaultValues = json_encode([$iatiActivity->default_field_values]);
 
-                        if ($aidstreamActivityTransactionsCount !== $iatiActivityTransactionsCount) {
-                            $this->logInfo(
-                                "AidStream Organization Id: {$aidstreamOrganizationId} \n
-                                IATI Organization Id: {$iatiOrganization->id} \n
-                                Publisher Id: {$iatiOrganization->publisher_id} \n
-                                AidStream Activity Id: {$aidstreamActivity->id} \n
-                                IATI Activity Id: {$iatiActivity->id} \n
-                                Activity Identifier: {$aidstreamActivityIdentifier} \n
-                                AidStream Activity Transactions Count: {$aidstreamActivityTransactionsCount} \n
-                                IATI Activity Transactions Count: {$iatiActivityTransactionsCount} \n"
-                            );
+//                        if ($aidstreamActivityTransactionsCount !== $iatiActivityTransactionsCount) {
+//                            $this->logInfo(
+//                                "AidStream Organization Id: {$aidstreamOrganizationId} \n
+//                                IATI Organization Id: {$iatiOrganization->id} \n
+//                                Publisher Id: {$iatiOrganization->publisher_id} \n
+//                                AidStream Activity Id: {$aidstreamActivity->id} \n
+//                                IATI Activity Id: {$iatiActivity->id} \n
+//                                Activity Identifier: {$aidstreamActivityIdentifier} \n
+//                                AidStream Activity Transactions Count: {$aidstreamActivityTransactionsCount} \n
+//                                IATI Activity Transactions Count: {$iatiActivityTransactionsCount} \n"
+//                            );
 
-                            $this->info('Updating transaction data.');
-                            $existingIatiTransactions = $iatiActivityTransactions->toArray();
+                        $this->info("Checking and updating transaction data for activity with identifier {$aidstreamActivityIdentifier}.");
+                        $existingIatiTransactions = $iatiActivityTransactions->toArray();
 
-                            foreach ($aidstreamActivityTransactions as $aidstreamTransaction) {
-                                $requiredTransactionData = [
-                                    'activity_id' => $iatiActivity->id,
-                                    'transaction' => $this->getRequiredTransactionData(
-                                        $aidstreamTransaction,
-                                        $defaultValues
-                                    ),
-                                    'migrated_from_aidstream' => true,
-                                    'created_at' => $aidstreamTransaction->created_at,
-                                    'updated_at' => $aidstreamTransaction->updated_at,
-                                ];
+                        foreach ($aidstreamActivityTransactions as $aidstreamTransaction) {
+                            $requiredTransactionData = [
+                                'activity_id' => $iatiActivity->id,
+                                'transaction' => $this->getRequiredTransactionData(
+                                    $aidstreamTransaction,
+                                    $defaultValues
+                                ),
+                                'migrated_from_aidstream' => true,
+                                'created_at' => $aidstreamTransaction->created_at,
+                                'updated_at' => $aidstreamTransaction->updated_at,
+                            ];
 
-                                if (!$this->checkArrayPresent($existingIatiTransactions, $requiredTransactionData['transaction'])) {
-                                    $this->info(
-                                        "Creating transaction data for AidStream Transaction Id: $aidstreamTransaction->id"
-                                    );
-                                    $this->transactionService->create($requiredTransactionData);
-                                    $this->info(
-                                        "Created transaction data for AidStream Transaction Id: $aidstreamTransaction->id"
-                                    );
-                                }
+                            if (!$this->checkArrayPresent($existingIatiTransactions, $requiredTransactionData['transaction'])) {
+                                $this->logInfo(
+                                    "Transaction with aidstream id {$aidstreamTransaction->id} does not exist for aidstream activity id {$aidstreamActivity->id}.
+                                        Creating transaction data for AidStream Transaction."
+                                );
+                                $this->transactionService->create($requiredTransactionData);
+                                $this->logInfo(
+                                    "Created transaction data for AidStream Transaction Id: {$aidstreamTransaction->id}"
+                                );
                             }
                         }
+//                        }
 
                         $this->info(
                             "Checking completed for activity with identifier {$aidstreamActivityIdentifier} for organization {$aidStreamOrganization->name} with id $aidStreamOrganization->id"
