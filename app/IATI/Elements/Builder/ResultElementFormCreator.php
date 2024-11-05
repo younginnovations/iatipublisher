@@ -45,11 +45,13 @@ class ResultElementFormCreator
      * @param array $model
      * @param       $formData
      * @param       $method
-     * @param       $parent_url
-     *
+     * @param string $parent_url
+     * @param array $overRideDefaultFieldValue
+     * @param array $deprecationStatusMap
+     * @param string $formId
      * @return Form
      */
-    public function editForm(array $model, $formData, $method, string $parent_url, $overRideDefaultFieldValue = [], $deprecationStatusMap = []): Form
+    public function editForm(array $model, $formData, $method, string $parent_url, $overRideDefaultFieldValue = [], $deprecationStatusMap = [], string $formId = 'result-form-id'): Form
     {
         $formData['overRideDefaultFieldValue'] = $overRideDefaultFieldValue;
         $formData['deprecationStatusMap'] = $deprecationStatusMap;
@@ -72,6 +74,7 @@ class ResultElementFormCreator
                 'model'  => $model,
                 'url'    => $this->url,
                 'data'   => $formData,
+                'id'     => $formId,
             ]
         )->add('buttons', 'buttongroup', [
             'wrapper' => [

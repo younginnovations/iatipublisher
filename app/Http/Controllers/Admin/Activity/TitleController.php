@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Title\TitleRequest;
 use App\IATI\Services\Activity\TitleService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -19,6 +21,8 @@ use Illuminate\Support\Arr;
  */
 class TitleController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var TitleService
      */
@@ -47,14 +51,35 @@ class TitleController extends Controller
             $element = getElementSchema('title');
             $activity = $this->titleService->getActivityData($id);
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'title', []);
-            $form = $this->titleService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
-            $data = ['title' => $element['label'], 'name' => 'title'];
+            $form = $this->titleService->formGenerator(
+                id                        : $id,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap      : $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'title', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'title',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'title');
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'title',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.title.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening activity title form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while opening activity title form.'
+            );
         }
     }
 
@@ -74,7 +99,7 @@ class TitleController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Activity title updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity title.');

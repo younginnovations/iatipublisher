@@ -43,9 +43,11 @@
     "name": "reporting_org",
     "label": "reporting org",
     "add_more": false,
+    "form_has_borders": true,
+    "label_has_borders": true,
     "help_text": "This is your IATI Organisation Identifier (it is the unique ID that was generated for your organisation when you registered).<a target='_blank' href='https://iatistandard.org/en/guidance/publishing-data/registering-and-managing-your-organisation-account/how-to-create-your-iati-organisation-identifier/'>For more information.</a>",
     "hover_text": "The organisation issuing the report. May be a primary source (reporting on its own activity as donor, implementing agency, etc) or a secondary source (reporting on the activities of another organisation).</br></br>Specifying the @ref attribute is mandatory. May contain the organisation name as content.    <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
-    "helper_text": "Reporting Organisation data is managed via the <a href='/organisation'> Organisation Tab </a> , except for value Secondary Reporter which can be managed at each activity",
+    "helper_text": "Reporting Organisation data is managed via the <strong><a href='/organisation'> Organisation Tab </a></strong> , except for value <strong>Secondary Reporter</strong> which can be managed at each activity.",
     "attributes": {
       "ref": {
         "name": "ref",
@@ -151,6 +153,9 @@
     "name": "other_identifier",
     "label": "other identifier",
     "add_more": true,
+    "form_has_borders": true,
+    "label_has_borders": true,
+    "add_more_has_borders": true,
     "hover_text": "Another identifier for the activity. This may be a publishers own identifier that it wishes to record with the activity. This element is also used to trace changes to activity identifiers, for example when an organisation has changed it’s organisation identifier.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/other-identifier/'>For more information</a>",
     "attributes": {
       "reference": {
@@ -180,6 +185,10 @@
         "name": "owner_org",
         "label": "owner org",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "Where applicable, the organisation that owns the other identifier being reported. When used, then either other-identifier/owner-org/@ref or other-identifier/owner-org/narrative/text() MUST be present.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/other-identifier/owner-org/'>For more information</a>",
         "attributes": {
           "ref": {
@@ -230,6 +239,10 @@
     "name": "description",
     "label": "description",
     "add_more": true,
+    "form_has_borders": true,
+    "label_has_borders": true,
+    "add_more_has_borders": true,
+    "do_not_repeat_button": true,
     "hover_text": "A longer, human-readable description containing a meaningful description of the activity. May be repeated for different languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/'>For more information</a>",
     "attributes": {
       "type": {
@@ -299,6 +312,10 @@
     "name": "activity_date",
     "label": "activity date",
     "add_more": true,
+    "form_has_borders": true,
+    "label_has_borders": true,
+    "add_more_has_borders": true,
+    "do_not_repeat_button": true,
     "hover_text": "The planned and actual start and completion dates of the activity. Start dates may reflect either the commencement of funding, planning or physical activity. End dates should, wherever possible, reflect the ending of physical activity.<a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/activity-dates-status/'>For more information</a>",
     "attributes": {
       "type": {
@@ -377,6 +394,10 @@
     "name": "recipient_country",
     "label": "recipient country",
     "add_more": true,
+    "form_has_borders": true,
+    "label_has_borders": true,
+    "add_more_has_borders": true,
+    "do_not_repeat_button": true,
     "help_text": "Each activity in IATI should specify the country (e.g. China) in which the activity is taking place, or the places that will benefit from the activity. If the country is not known, then a supra-national region or regions (e.g. East Asia) must be added.<br></br>There are several ways you can publish information on which country and/or region will benefit from this activity.<br></br>If just one country or region is benefitting from this activity, you should simply select the country or region below. This means that only one country or region will be benefiting from 100% of the funding that you publish for this activity.<br></br>However if multiple countries and/or regions are benefitting from your activity  you can:<br></br><b>1.</b> Publish the recipient country or region for every individual transaction you publish for this activity. You will be required to publish data on at least one transaction for every activity that you publish (publish data on transactions). Each transaction represents money flowing in or out of the activity. You can select a different country or region for each transaction that you publish.<br></br>If you want to provide the recipient county or region for your individual transactions, then you should not select a country or region for the entire activity below.<br></br><b>2.</b> You can select multiple countries or regions for the entire activity below. If you choose to do this, you must allocate a percentage of funding for the activity to each country and/or region.<br></br><b>3.</b> You can choose to create a separate activity for every country that is benefitting from this activity’s funding.<a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/countries-regions/'>Further guidance.</a>",
     "hover_text": "A country that will benefit from this activity. If a specific country is not known the recipient-region element should be used instead. For geographical location, use the location element.<br></br>Multiple countries and regions can be reported, in which case the percentage attribute MUST be used to specify the share of total commitments across all reported countries and regions.<br></br>The country can also be specified at transaction rather than activity level. If recipient-country OR recipient-region are reported at the transaction level, ALL transactions MUST contain a recipient-country or recipient-region element and iati-activity/recipient-country and iati-activity/recipient-region MUST NOT be used.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/recipient-country/'>For more information</a>",
     "attributes": {
@@ -437,6 +458,10 @@
     "name": "recipient_region",
     "label": "recipient region",
     "add_more": true,
+    "form_has_borders": true,
+    "label_has_borders": true,
+    "add_more_has_borders": true,
+    "do_not_repeat_button": true,
     "help_text": "If you cannot identify the specific country/countries benefiting from this activity, then you should provide the region instead.<br><br>If a region is included, it must be in addition to any countries specified. If the recipient country(ies) is known, then the corresponding recipient region should not also be added. For example, if 100% of the funding is going to Uganda, then you should record Uganda as the recipient country and you should not add that the funding is going to the region of Africa.<br></br>However, if you know that at least 80% of the expected funding is going to Uganda, you can specify that the unknown 20% is going to the region of Africa.<a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/countries-regions/'>More information</a>",
     "hover_text": "A supranational geopolitical region that will benefit from this activity. For sub-national geographical location, use the location element. Multiple countries and regions can be reported, in which case the percentage attribute MUST be used to specify the share of total commitments across all reported countries and regions. Recipient-region must not be used merely to describe the region of a country reported in recipient-country, but ONLY if the region is a recipient IN ADDITION to the country.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/recipient-region/'>For more information</a>",
     "dependent_attributes": {
@@ -468,7 +493,9 @@
         "help_text": "Select the region benefitting from this activity.",
         "parent": {
           "name": "region_vocabulary",
-          "value": ["1"]
+          "value": [
+            "1"
+          ]
         }
       },
       "custom_code": {
@@ -483,7 +510,10 @@
         "help_text": "Select the region benefitting from this activity.",
         "parent": {
           "name": "region_vocabulary",
-          "value": ["2", "99"]
+          "value": [
+            "2",
+            "99"
+          ]
         }
       },
       "vocabulary_uri": {
@@ -497,7 +527,9 @@
         "help_text": "If you have selected the option: ‘Reporting Organisation’ please provide the URI where this internal list is defined.",
         "parent": {
           "name": "region_vocabulary",
-          "value": ["99"]
+          "value": [
+            "99"
+          ]
         }
       },
       "percentage": {
@@ -546,6 +578,10 @@
     "label": "sector",
     "name": "sector",
     "add_more": true,
+    "form_has_borders": true,
+    "label_has_borders": true,
+    "add_more_has_borders": true,
+    "do_not_repeat_button": true,
     "hover_text": "A recognised code, from a recognised vocabulary, classifying the purpose of the activity. Sector MUST EITHER be reported here OR at transaction level for ALL transactions. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/sector/'>For more information</a>",
     "help_text": "Provide information on the sector which the activity targets or supports. For example, primary education or agriculture. You can select more than one sector but you must provide <b>at least one</b>.",
     "dependent_attributes": {
@@ -580,7 +616,10 @@
         "help_text": "If you have chosen to use an internal sector classification codelist, please provide a link to it.",
         "parent": {
           "name": "sector_vocabulary",
-          "value": ["99", "98"]
+          "value": [
+            "99",
+            "98"
+          ]
         }
       },
       "code": {
@@ -595,7 +634,9 @@
         "help_text": "Select the sector which the activity is targeting or supporting. You can choose more than one sector.",
         "parent": {
           "name": "sector_vocabulary",
-          "value": ["1"]
+          "value": [
+            "1"
+          ]
         }
       },
       "text": {
@@ -609,7 +650,18 @@
         "help_text": "Select the sector which the activity is targeting or supporting. You can choose more than one sector.",
         "parent": {
           "name": "sector_vocabulary",
-          "value": ["3", "4", "5", "6", "9", "10", "11", "12", "99", "98"]
+          "value": [
+            "3",
+            "4",
+            "5",
+            "6",
+            "9",
+            "10",
+            "11",
+            "12",
+            "99",
+            "98"
+          ]
         }
       },
       "category_code": {
@@ -624,7 +676,9 @@
         "help_text": "Select the sector which the activity is targeting or supporting. You can choose more than one sector.",
         "parent": {
           "name": "sector_vocabulary",
-          "value": ["2"]
+          "value": [
+            "2"
+          ]
         }
       },
       "sdg_goal": {
@@ -639,7 +693,9 @@
         "help_text": "Select the sector which the activity is targeting or supporting. You can choose more than one sector.",
         "parent": {
           "name": "sector_vocabulary",
-          "value": ["7"]
+          "value": [
+            "7"
+          ]
         }
       },
       "sdg_target": {
@@ -654,7 +710,9 @@
         "help_text": "Select the sector which the activity is targeting or supporting. You can choose more than one sector.",
         "parent": {
           "name": "sector_vocabulary",
-          "value": ["8"]
+          "value": [
+            "8"
+          ]
         }
       },
       "percentage": {
@@ -703,6 +761,10 @@
     "name": "tag",
     "label": "tag",
     "add_more": true,
+    "form_has_borders": true,
+    "label_has_borders": true,
+    "add_more_has_borders": true,
+    "do_not_repeat_button": true,
     "hover_text": "Categorisations from established taxonomies that enrich the classification of the activity but that, unlike those reported in the sector element, cannot be associated with percentage splits on finances. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/tag/'>For more information</a>",
     "help_text": "You can provide other useful information about your activity through ‘tagging’ it to categorisations from established taxonomies.<br></br>For example, IATI recommends that, if possible, you should tag your activity according to which UN Sustainable Development Goal(s) it is contributing to. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/sdg-guidance/'>Please read guidance on reporting data on the UN Sustainable Development Goals.</a>",
     "dependent_attributes": {
@@ -737,7 +799,9 @@
         "help_text": "Choose an option from this list.",
         "parent": {
           "name": "tag_vocabulary",
-          "value": ["2"]
+          "value": [
+            "2"
+          ]
         }
       },
       "targets_tag_code": {
@@ -753,7 +817,9 @@
         "help_text": "Choose an option from this list.",
         "parent": {
           "name": "tag_vocabulary",
-          "value": ["3"]
+          "value": [
+            "3"
+          ]
         }
       },
       "tag_text": {
@@ -768,7 +834,10 @@
         "help_text": "Choose an option from this list.",
         "parent": {
           "name": "tag_vocabulary",
-          "value": ["1", "99"]
+          "value": [
+            "1",
+            "99"
+          ]
         }
       },
       "vocabulary_uri": {
@@ -783,7 +852,9 @@
         "help_text": "Provide a link to your chosen list.",
         "parent": {
           "name": "tag_vocabulary",
-          "value": ["99"]
+          "value": [
+            "99"
+          ]
         }
       }
     },
@@ -822,6 +893,10 @@
     "name": "policy_marker",
     "label": "policy marker",
     "add_more": true,
+    "form_has_borders": true,
+    "label_has_borders": true,
+    "add_more_has_borders": true,
+    "do_not_repeat_button": true,
     "hover_text": "A policy or theme addressed by the activity. This element was designed for the reporting of OECD DAC CRS policy markers (columns 20-23 and 28-31 of the CRS++ reporting format) but the vocabulary attribute allows it use by other (including local) systems. This element can be repeated for each policy marker.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/'>For more information</a>",
     "help_text": "Provide information about the policy or theme addressed by your activity, for example: climate change mitigation or disability. An activity can have multiple policy-markers and percentages <b>do not</b> need to be added to each policy-marker.",
     "dependent_attributes": {
@@ -854,7 +929,9 @@
         "help_text": "If you have selected 99 Reporting Organisation (above), please provide a link to where your chosen policy marker is listed.",
         "parent": {
           "name": "policy_marker_vocabulary",
-          "value": ["99"]
+          "value": [
+            "99"
+          ]
         }
       },
       "significance": {
@@ -880,7 +957,9 @@
         "help_text": "Provide the code for the policy or theme addressed by your activity. If you are using the OECD DAC CRS policy-marker list, please make a selection from <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/policymarker/'>these options</a>.",
         "parent": {
           "name": "policy_marker_vocabulary",
-          "value": ["1"]
+          "value": [
+            "1"
+          ]
         }
       },
       "policy_marker_text": {
@@ -895,7 +974,9 @@
         "help_text": "Provide the code for the policy or theme addressed by your activity. If you are using the OECD DAC CRS policy-marker list, please make a selection from <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/policymarker/'>these options</a>.",
         "parent": {
           "name": "policy_marker_vocabulary",
-          "value": ["99"]
+          "value": [
+            "99"
+          ]
         }
       }
     },
@@ -994,7 +1075,10 @@
     "name": "default_aid_type",
     "label": "default aid type",
     "add_more": true,
+    "form_has_borders": true,
+    "label_has_borders": true,
     "add_more_attributes": true,
+    "add_more_has_borders": true,
     "hover_text": "The type of aid being supplied (project-type intervention, budget support, debt relief, etc.). This element specifies a default for all the activity’s financial transactions; it can be overridden at the individual transaction level. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>",
     "help_text": "You can provide information about the type of aid that is being delivered. This is most commonly referred to as the aid modality and IATI recommends that an aid type from the OECD DAC codelist be selected for all activities.<br></br>Examples from this codelist include: project-type interventions which provide support to a particular project, budget support which is a financial contribution to a recipient government’s budget. Project-type interventions is the most common aid type for NGOs and CSOs but many other options are found <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/aidtype/'>here</a>.<br></br>If your activity is addressing a humanitarian event, you can provide specific information on the type of funds for it. This includes providing information on the level of earmarking of the activity’s funds and if the activity is providing funds through cash or vouchers. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/humanitarian/'>More information on publishing aid-types related to humanitarian activities</a>.",
     "dependent_attributes": {
@@ -1027,7 +1111,9 @@
         "help_text": "Select the aid-type related to your activity.",
         "parent": {
           "name": "default_aid_type_vocabulary",
-          "value": ["1"]
+          "value": [
+            "1"
+          ]
         }
       },
       "earmarking_category": {
@@ -1043,7 +1129,9 @@
         "help_text": "Select the aid-type related to your activity.",
         "parent": {
           "name": "default_aid_type_vocabulary",
-          "value": ["2"]
+          "value": [
+            "2"
+          ]
         }
       },
       "earmarking_modality": {
@@ -1059,7 +1147,9 @@
         "help_text": "Select the aid-type related to your activity.",
         "parent": {
           "name": "default_aid_type_vocabulary",
-          "value": ["3"]
+          "value": [
+            "3"
+          ]
         }
       },
       "cash_and_voucher_modalities": {
@@ -1075,7 +1165,9 @@
         "help_text": "Select the aid-type related to your activity.",
         "parent": {
           "name": "default_aid_type_vocabulary",
-          "value": ["4"]
+          "value": [
+            "4"
+          ]
         }
       }
     },
@@ -1126,6 +1218,9 @@
         "label": "budget item",
         "element_criteria": "mandatory",
         "add_more": true,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "add_more_has_borders": true,
         "hover_text": "Identifier for a single item in the recipient-country budget. If more than one identifier is reported the percentage share must be reported and all percentages should add up to 100 percent.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/country-budget-items/budget-item/'>For more information</a>",
         "attributes": {
           "code": {
@@ -1155,6 +1250,10 @@
             "name": "description",
             "label": "description",
             "add_more": false,
+            "form_has_borders": true,
+            "label_has_borders": true,
+            "is_collapsable": true,
+            "label_indicator": "optional_text",
             "hover_text": "A longer, human-readable description of the budget-item. May be repeated for different languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/country-budget-items/budget-item/description/'>For more information</a>",
             "attributes": {},
             "sub_elements": {
@@ -1196,6 +1295,10 @@
     "name": "humanitarian_scope",
     "label": "Humanitarian scope",
     "add_more": true,
+    "form_has_borders": true,
+    "label_has_borders": true,
+    "add_more_has_borders": true,
+    "do_not_repeat_button": true,
     "hover_text": "Classification of emergencies, appeals and other humanitarian events and actions. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/'>For more information</a>",
     "help_text": "The ‘humanitarian-scope’ element can be used to specify the emergency and/or appeal that your activity is responding to",
     "dependent_attributes": {
@@ -1237,7 +1340,9 @@
         "help_text": "Provide a link to the list of emergencies or appeals that you will use, which includes its codes and descriptions.",
         "parent": {
           "name": "vocabulary",
-          "value": ["99"]
+          "value": [
+            "99"
+          ]
         }
       },
       "code": {
@@ -1251,7 +1356,11 @@
         "help_text": "Provide the code for the specific emergency or appeal that your activity is responding to.<br></br>For example, if you are providing a code for an emergency that has a <a target='_blank' href='https://glidenumber.net/glide/public/search/search.jsp'>Glide Number</a>, the format for this code would be: [Emergency Type] + [Year] + [Number] + [Country].",
         "parent": {
           "name": "vocabulary",
-          "value": ["1-2", "2-1", "99"]
+          "value": [
+            "1-2",
+            "2-1",
+            "99"
+          ]
         }
       }
     },
@@ -1310,6 +1419,9 @@
     "label": "related-activity",
     "add_more": true,
     "add_more_attributes": true,
+    "form_has_borders": true,
+    "label_has_borders": true,
+    "add_more_has_borders": true,
     "hover_text": "Another separately reported IATI activity that is related to this one. The ‘type’ attribute describes the type of relationship: (eg. parent, child, multifunded). It is strongly recommended that linkage between activities in a hierarchical group should always be managed by use of this element with @type of 1 (parent) or 2 (child). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/related-activity/'>For more information</a>",
     "help_text": "If this activity is part of a programme with multiple activities within one organisation, you should include details of all related activities. Please read more about the <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/relatedactivitytype/'>types of related activities</a> that you can report.</br></br>Please only refer to <b>your <u>own</u></b> activities here.",
     "attributes": {
@@ -1341,6 +1453,7 @@
     "name": "conditions",
     "label": "conditions",
     "add_more": true,
+    "do_not_repeat_button": true,
     "hover_text": "Specific terms and conditions attached to the activity that, if not met, may influence the delivery of commitments made by participating organisations. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/conditions/'>For more information</a>",
     "help_text": "Please declare any conditions or specific terms that are attached to this activity. For example, requirements issued by your funder or a six month review to assess whether or not the activity is worth continuing.<br></br>If a condition relates to the whole organisation, such as organisation-wide terms and conditions, it should not be reported within this activity. Instead, you should report this in the document-link element in your organisation file.<a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/conditions/'>Further guidance</a>.",
     "show_info_in_title": true,
@@ -1365,6 +1478,11 @@
         "name": "condition",
         "label": "Condition",
         "add_more": true,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "add_more_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "The text of a specific condition attached to the activity. Organisation-wide terms and conditions that apply to all activities should not be reported here, but in either iati-organisation/document-link or iati-activity-document-link. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/conditions/condition/'> For more information</a>",
         "attributes": {
           "condition_type": {
@@ -1416,7 +1534,10 @@
     "name": "legacy_data",
     "label": "legacy-data",
     "add_more": true,
+    "form_has_borders": true,
+    "label_has_borders": true,
     "add_more_attributes": true,
+    "add_more_has_borders": true,
     "hover_text": "The legacy data element allows for the reporting of values held in a field in the reporting organisation’s system which is similar, but not identical to an IATI element. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/legacy-data/'>For more information</a>",
     "help_text": "You can link this activity to your organisation’s internal data and record which IATI Standard element it most relates to.",
     "attributes": {
@@ -1457,6 +1578,10 @@
     "name": "document_link",
     "label": "document link",
     "add_more": true,
+    "form_has_borders": true,
+    "label_has_borders": true,
+    "add_more_has_borders": true,
+    "do_not_repeat_button": true,
     "hover_text": "A link to an online, publicly accessible web page or document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/'>For more information</a>",
     "help_text": "You can report further information about this activity by providing a publicly accessible link to a document or webpage.<br></br>If documents are available in other languages and stored separately, please provide them by creating additional document elements.<a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/related-documents/'>Further guidance</a>",
     "attributes": {
@@ -1499,6 +1624,11 @@
         "label": "Title",
         "element_criteria": "",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "add_more_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "required_icon",
         "hover_text": "A short, human-readable title.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/title/'>For information</a>",
         "attributes": {},
         "sub_elements": {
@@ -1535,9 +1665,14 @@
       "category": {
         "name": "category",
         "label": "category",
-        "element_criteria": "mandatory",
+        "element_criteria": "",
         "add_more": true,
         "wrapper_collection": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "add_more_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "required_icon",
         "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/category/'>For more information</a>",
         "help_text": "You must select a category of the document or webpage that you have provided.",
         "attributes": {
@@ -1559,7 +1694,11 @@
         "name": "description",
         "label": "description",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "add_more_has_borders": true,
         "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "A description of the document contents, or guidance on where to access the relevant information in the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/description/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
@@ -1597,7 +1736,11 @@
         "name": "language",
         "label": "language",
         "add_more": true,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "add_more_has_borders": true,
         "is_collapsable": true,
+        "label_indicator": "optional_text",
         "wrapper_collection": false,
         "attributes": {
           "code": {
@@ -1618,7 +1761,11 @@
         "name": "document_date",
         "label": "document date",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "add_more_has_borders": true,
         "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "The date of publication of the document that is being linked to. (@iso-date).<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/document-date/'>For more information</a>",
         "attributes": {
           "date": {
@@ -1640,6 +1787,10 @@
     "name": "contact_info",
     "label": "contact info",
     "add_more": true,
+    "form_has_borders": true,
+    "label_has_borders": true,
+    "add_more_has_borders": true,
+    "do_not_repeat_button": true,
     "hover_text": "Contact information for the activity. Specify whatever is available. You may repeat this element for each contact person.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/contact-info/'>For more information</a>",
     "attributes": {
       "type": {
@@ -1659,6 +1810,10 @@
         "name": "organisation",
         "label": "organisation",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "The name of the organisation to contact for more information about the activity. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/contact-info/organisation/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
@@ -1696,6 +1851,10 @@
         "name": "department",
         "label": "department",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "The department within the organisation to contact for more information about the activity. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/contact-info/department/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
@@ -1733,6 +1892,10 @@
         "name": "person_name",
         "label": "person name",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "The name of the contact person for the activity.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/contact-info/person-name/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
@@ -1770,6 +1933,10 @@
         "name": "job_title",
         "label": "job title",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "The job title of the contact person at the organisation.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/contact-info/job-title/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
@@ -1808,6 +1975,10 @@
         "label": "telephone",
         "add_more": true,
         "wrapper_collection": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "attributes": {
           "telephone": {
             "name": "telephone",
@@ -1827,6 +1998,10 @@
         "label": "email",
         "add_more": true,
         "wrapper_collection": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "attributes": {
           "email": {
             "name": "email",
@@ -1846,6 +2021,10 @@
         "label": "website",
         "add_more": true,
         "wrapper_collection": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "attributes": {
           "website": {
             "name": "website",
@@ -1864,6 +2043,11 @@
         "name": "mailing_address",
         "label": "mailing address",
         "add_more": true,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "add_more_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "The contact mailing address.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/contact-info/mailing-address/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
@@ -1903,6 +2087,10 @@
     "name": "location",
     "label": "location",
     "add_more": true,
+    "form_has_borders": true,
+    "label_has_borders": true,
+    "add_more_has_borders": true,
+    "do_not_repeat_button": true,
     "hover_text": "The sub-national geographical identification of the target locations of an activity. These can be described by gazetteer reference, coordinates, administrative areas or a textual description. Any number of locations may be reported.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/'>For more information</a>",
     "help_text": "Provide the sub-national location/s of an activity, if it is known. However <b>location data should only be added when it is safe to do so.</b> It is the publishing organisation’s responsibility to ensure that the data it publishes is safe.<br></br>You can provide geographic coordinates of a location, the name and description of a location, the administrative area or other features of the location e.g. health centre, village etc.<a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/countries-regions/'>Further guidance.</a>",
     "attributes": {
@@ -1922,6 +2110,10 @@
         "name": "location_reach",
         "label": "location reach",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "Does this location describe where the activity takes place or where the intended beneficiaries reside? <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-reach/'>For more information</a>",
         "help_text": "Please specify if the location describes where the activity takes place or where the intended beneficiaries reside.",
         "attributes": {
@@ -1944,6 +2136,10 @@
         "label": "location-id",
         "add_more": true,
         "wrapper_collection": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "A unique code describing the location according to a recognised gazetteer or administrative boundary repository. Administrative areas should only be reported here if the location being defined is the administrative area itself. For describing the administrative area/s within which a more specific location falls the location/administrative element should be used.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-id/'>For more information</a>",
         "help_text": "You can provide a unique code describing the location according to a recognised gazetteer or administrative boundary repository. You can select an option of a gazetteer or administrative boundary repository from the list below.",
         "attributes": {
@@ -1975,6 +2171,10 @@
         "name": "name",
         "label": "name",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "The human readable name for the location.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/name/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
@@ -2011,6 +2211,10 @@
       "description": {
         "name": "description",
         "label": "description",
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "A description that qualifies the location, not the activity.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/description/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
@@ -2048,6 +2252,10 @@
         "name": "activity_description",
         "label": "activity description",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "A description that qualifies the activity taking place at the location. This should not duplicate information provided in the main activity description, and should typically be used to distinguish between activities at multiple locations within a single iati-activity record.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/activity-description/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
@@ -2085,6 +2293,10 @@
         "name": "administrative",
         "label": "administrative",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "Coded identification of national and sub-national divisions according to recognised administrative boundary repositories. Multiple levels may be reported.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
         "help_text": "You can provide a unique code to describe the activity location according to an administrative boundary repository.",
         "attributes": {
@@ -2127,6 +2339,10 @@
         "name": "point",
         "label": "point",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "The point element is based on a subset of the GML 3.3 Point element.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/point/'>For more information</a>",
         "help_text": "You can provide geo-coordinates for the location, in the format of latitude and longitude coordinates<br></br>Coordinates are published using the point and pos elements. The point element is always: <point srsName=”http://www.opengis.net/def/crs/EPSG/0/4326”><br></br>The pos element then contains the latitude coordinate (the first number), followed by the longitude coordinate (the second number) e.g. -46.7733 167.6321.<br></br>Please note that coordinates can refer to an ‘exact’ or an ‘approximate’ location. This should be specified using the location exactness element.<a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/sub-national-locations/'>More information.</a>",
         "attributes": {
@@ -2177,6 +2393,10 @@
         "name": "exactness",
         "label": "exactness",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "Defines whether the location represents the most distinct point reasonably possible for this type of activity or is an approximation due to lack of more detailed information.<a  target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/exactness/'>For more information</a>",
         "attributes": {
           "code": {
@@ -2197,6 +2417,10 @@
         "name": "location_class",
         "label": "location class",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "Whether the location refers to a structure, a populated place (e.g. city or village), an administrative division, or another topological feature (e.g. river, nature reserve).<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-class/'>For more information</a>",
         "attributes": {
           "code": {
@@ -2217,6 +2441,10 @@
         "name": "feature_designation",
         "label": "feature designation",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "A more refined coded classification of the type of feature referred to by this location.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/feature-designation/'>For more information</a>",
         "attributes": {
           "code": {
@@ -2239,6 +2467,9 @@
     "name": "planned_disbursement",
     "label": "planned disbursement",
     "add_more": true,
+    "form_has_borders": true,
+    "label_has_borders": true,
+    "add_more_has_borders": true,
     "hover_text": "The planned disbursement element should only be used to report specific planned cash transfers. These should be reported for a specific date or a meaningfully predictable period.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/'>For more information</a>",
     "help_text": "You can publish data on your planned cash transfers to organisations (or between two other organisations) as part of this activity.<br></br>The purpose of planned disbursements is to publish predefined payment schedules. Planned disbursements should be reported for a specific date or a meaningfully predictable period. Planned disbursements should be reported in addition and should not replace the activity’s budget.",
     "attributes": {
@@ -2259,6 +2490,10 @@
         "name": "period_start",
         "label": "period start",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "required_icon",
         "hover_text": "The exact date of the planned disbursement OR the starting date of the period in which this specific disbursement will be made.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/period-start/'>For more information</a>",
         "attributes": {
           "date": {
@@ -2278,6 +2513,10 @@
         "name": "period_end",
         "label": "period end",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "The ending date for the period in which this specific disbursement will be made.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/period-end/'>For more information</a>",
         "attributes": {
           "date": {
@@ -2298,6 +2537,10 @@
         "label": "value",
         "element_criteria": "mandatory",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "required_icon",
         "hover_text": "The amount that is planned to be disbursed in the specified currency. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/value/'>For more information</a>",
         "attributes": {
           "amount": {
@@ -2338,6 +2581,10 @@
         "name": "provider_org",
         "label": "provider organisation",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "The organisation from which the planned disbursement will originate. If omitted the reporting-org is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/provider-org/'>For more information</a>",
         "help_text": "Will your organisation be disbursing these funds? If so then you are the provider organisation. If not, please provide information on the organisation who will be disbursing these funds.",
         "attributes": {
@@ -2408,6 +2655,10 @@
         "name": "receiver_org",
         "label": "receiver organisation",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "The organisation receiving the money from the planned disbursement.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/'>For more information</a>",
         "help_text": "Provide information on which organisation will be receiving the funds.",
         "attributes": {
@@ -2480,6 +2731,10 @@
     "name": "participating_org",
     "label": "participating organization",
     "add_more": true,
+    "form_has_borders": true,
+    "label_has_borders": true,
+    "add_more_has_borders": true,
+    "do_not_repeat_button": true,
     "help_text": "Specify which organisations are involved with this activity, and what their individual roles are. For example they could be a donor, funder, implementing agency, etc.",
     "hover_text": "An organisation involved with the activity. May be a donor, funder, implementing agency, etc. Specifying the @ref identifier is strongly recommended. May contain the organisation name as narrative.</br><br>If the reporting organisation plays a role in the activity it should be repeated here. One organisation may play more than one role (eg, funding and implementing): in such a case each role should be reported and the name of the organisation repeated.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/participating-org/'>For more information</a>",
     "attributes": {
@@ -2573,6 +2828,9 @@
     "name": "budget",
     "label": "budget",
     "add_more": true,
+    "form_has_borders": true,
+    "label_has_borders": true,
+    "add_more_has_borders": true,
     "hover_text": "The value of the activity’s budget for each financial quarter or year over the lifetime of the activity. The purpose of this element is to provide predictability for recipient planning on an annual basis. The status explains whether the budget being reported is indicative or has been formally committed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/'>For more information</a>",
     "help_text": "Provide the amount of finance expected to be spent as part of this activity. You need to provide budget(s) broken down by time periods of a year or less covering the whole life of the activity. Publishing budgets for each quarter is helpful for data users. A budget must not span more than 12 months.<br></br>\nYou should provide your budget(s) for your activity as soon as possible. You can then update this over time as more or less funding comes in, or the scope of the activity changes. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/activity-budgets/'>More information</a>.",
     "attributes": {
@@ -2605,6 +2863,11 @@
         "label": "period-start",
         "element_criteria": "mandatory",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "add_more_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "required_icon",
         "hover_text": "The start of the budget period.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/period-start/'>For more information</a>",
         "attributes": {
           "date": {
@@ -2625,6 +2888,11 @@
         "label": "period-end",
         "element_criteria": "mandatory",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "add_more_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "required_icon",
         "hover_text": "The end of the period (which must not be greater than one year). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/period-end/'>For more information</a>",
         "attributes": {
           "date": {
@@ -2645,6 +2913,11 @@
         "label": "value",
         "element_criteria": "mandatory",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "add_more_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "required_icon",
         "hover_text": "The budget for this period.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
         "help_text": "Provide the total finance for this budget",
         "attributes": {
@@ -2724,6 +2997,10 @@
         "label": "title",
         "element_criteria": "",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "required_icon",
         "attributes": {},
         "hover_text": "A short, human-readable title.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/title/'>For more information.</a>",
         "sub_elements": {
@@ -2731,7 +3008,7 @@
             "name": "narrative",
             "label": "narrative",
             "type": "textarea",
-            "placeholder": "",
+            "placeholder": "Type narrative",
             "required": true,
             "criteria": "mandatory",
             "add_more": true,
@@ -2761,6 +3038,10 @@
         "name": "description",
         "label": "description",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "attributes": {},
         "hover_text": "A longer, human-readable description. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/description/'>For more information.</a>",
         "sub_elements": {
@@ -2798,6 +3079,12 @@
         "name": "document_link",
         "label": "document-link",
         "add_more": true,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "add_more_has_borders": true,
+        "is_collapsable": true,
+        "do_not_repeat_button": true,
+        "label_indicator": "optional_text",
         "hover_text": "A link to an online, publicly accessible web page or document expanding on the result. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/'>For more information.</a>",
         "help_text": "You may provide more information about the result by providing a link to an online, publicly accessible web page or document.",
         "attributes": {
@@ -2829,6 +3116,10 @@
             "label": "title",
             "element_criteria": "",
             "attributes": {},
+            "form_has_borders": true,
+            "label_has_borders": true,
+            "is_collapsable": true,
+            "label_indicator": "required_icon",
             "hover_text": "A short, human-readable title.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/title/'>For more information.</a>",
             "sub_elements": {
               "narrative": {
@@ -2866,6 +3157,10 @@
             "label": "category",
             "element_criteria": "",
             "add_more": true,
+            "form_has_borders": true,
+            "label_has_borders": true,
+            "is_collapsable": true,
+            "label_indicator": "optional_text",
             "wrapper_collection": false,
             "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/category/'>For more information.</a>",
             "help_text": "If you have provided a document link, then you must select a category that best describes the document.",
@@ -2888,7 +3183,10 @@
             "name": "description",
             "label": "description",
             "attributes": {},
+            "form_has_borders": true,
+            "label_has_borders": true,
             "is_collapsable": true,
+            "label_indicator": "optional_text",
             "hover_text": "A description of the document contents, or guidance on where to access the relevant information in the document.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/description/'>For more information.</a>",
             "sub_elements": {
               "narrative": {
@@ -2925,7 +3223,10 @@
             "name": "language",
             "label": "language",
             "add_more": true,
+            "form_has_borders": true,
+            "label_has_borders": true,
             "is_collapsable": true,
+            "label_indicator": "optional_text",
             "wrapper_collection": false,
             "attributes": {
               "language": {
@@ -2946,7 +3247,10 @@
             "name": "document_date",
             "label": "document-date",
             "add_more": false,
+            "form_has_borders": true,
+            "label_has_borders": true,
             "is_collapsable": true,
+            "label_indicator": "optional_text",
             "hover_text": "The date of publication of the document that is being linked to. (@iso-date). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/document-date/'>For more information</a>",
             "attributes": {
               "date": {
@@ -2968,6 +3272,11 @@
         "name": "reference",
         "label": "reference",
         "add_more": true,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "add_more_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "make_collection": false,
         "hover_text": "A reference element to allow for the coded identification of results framework. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/reference/'>For more information</a>",
         "help_text": "If this result is contained in a results framework, then you may provide information about it. You can choose to provide a reference to a results framework in two ways:<br></br><b>1.</b> You can provide a reference to a results framework for the result here OR<br></br><b>2.</b> You can provide a reference to a results framework for each individual indicator that measures this result. For every result that you publish, you will be required to provide an indicator (which measures the result).<br></br><b>Option 2 is recommended</b>. To implement this option, leave the next three fields blank: code, vocabulary, vocabulary uri.<br></br>Do note: You cannot provide a reference to a results framework for <b>both</b> the result and indicator. See guidance for more information: <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/results/'>Results Information</a> ",
@@ -3012,6 +3321,7 @@
     "name": "indicator",
     "label": "indicator",
     "add_more": false,
+    "do_not_repeat_button": true,
     "hover_text": "The indicator(s) that are measured to meet the results. There can be multiple indicators for each result.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/'>For more information</a>",
     "help_text": "  <br></br><b>Example usage</b>: An activity is working towards the outcome: ‘people to have access to independent media covering a diverse range of outcomes’. One of the ways this is being measured is through ‘the percentage of journalists who feel free to express their opinion’ (which is an indicator). This is measured through a bi-annual survey where they are asked to score how free they feel on a scale of 1 - 4.<br></br>See <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/results/'>Results Information</a> for more details on this example and <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/understanding-results/'>Understanding results data</a> for further examples.",
     "show_info_in_title": true,
@@ -3063,6 +3373,10 @@
         "element_criteria": "",
         "add_more": false,
         "attributes": {},
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "required_icon",
         "hover_text": "A short, human-readable title.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/title/'>For more information</a>",
         "sub_elements": {
           "narrative": {
@@ -3100,6 +3414,10 @@
         "label": "description",
         "add_more": false,
         "attributes": {},
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "A longer, human-readable description. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/description/'>For more information</a>",
         "sub_elements": {
           "narrative": {
@@ -3136,6 +3454,11 @@
         "name": "document_link",
         "label": "document link",
         "add_more": true,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "add_more_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "A link to an online, publicly accessible web page or document expanding on the result. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/'>For more information</a>",
         "help_text": "You may provide more information about the result indicator by providing a link to an online, publicly accessible web page or document.",
         "attributes": {
@@ -3166,6 +3489,10 @@
             "name": "title",
             "label": "title",
             "element_criteria": "",
+            "form_has_borders": true,
+            "label_has_borders": true,
+            "is_collapsable": true,
+            "label_indicator": "optional_text",
             "hover_text": "A short, human-readable title. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/title/'>For more information</a>",
             "attributes": {},
             "sub_elements": {
@@ -3205,6 +3532,10 @@
             "element_criteria": "",
             "add_more": true,
             "wrapper_collection": false,
+            "form_has_borders": true,
+            "label_has_borders": true,
+            "is_collapsable": true,
+            "label_indicator": "optional_text",
             "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/category/'>For more information</a>",
             "help_text": "If you have provided a document link, then select a category that best describes the document.",
             "attributes": {
@@ -3226,7 +3557,10 @@
             "name": "description",
             "label": "description",
             "attributes": {},
+            "form_has_borders": true,
+            "label_has_borders": true,
             "is_collapsable": true,
+            "label_indicator": "optional_text",
             "hover_text": "A description of the document contents, or guidance on where to access the relevant information in the document.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/description/'>For more information</a>",
             "sub_elements": {
               "narrative": {
@@ -3263,8 +3597,11 @@
             "name": "language",
             "label": "language",
             "add_more": true,
-            "is_collapsable": true,
             "wrapper_collection": false,
+            "form_has_borders": true,
+            "label_has_borders": true,
+            "is_collapsable": true,
+            "label_indicator": "optional_text",
             "attributes": {
               "language": {
                 "name": "language",
@@ -3284,7 +3621,10 @@
             "name": "document_date",
             "label": "document date",
             "add_more": false,
+            "form_has_borders": true,
+            "label_has_borders": true,
             "is_collapsable": true,
+            "label_indicator": "optional_text",
             "hover_text": "The date of publication of the document that is being linked to. (@iso-date). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/document-date/'>For more information</a>",
             "attributes": {
               "date": {
@@ -3307,6 +3647,11 @@
         "label": "reference",
         "add_more": true,
         "make_collection": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "add_more_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "A reference element to allow for the coded identification of results framework. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/reference/'>For more information</a>",
         "help_text": "If the indicator that you report is included in an existing results framework, please provide information on it here.",
         "attributes": {
@@ -3348,6 +3693,11 @@
         "name": "baseline",
         "label": "baseline",
         "add_more": true,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "add_more_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "The baseline value for the indicator. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/'>For more information</a>",
         "help_text": "For each indicator please provide a baseline value, a target and the actual result achieved. The baseline is the starting point. The target is a result an organisation wants an activity to achieve in a certain period of time. The actual result is what was achieved at the end of that period.<br><br>For example: The starting value (baseline) was 15% of journalists felt free to express their opinions. At the end of the chosen time period, the target was set at 50%. The activity achieved its target, as by the end of the period (actual) 53% of journalists felt free to express their opinions.<br><br>See <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/results/'>Results Information</a> for more details on this example and <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/understanding-results/'>Understanding results data</a> for further examples.",
         "attributes": {
@@ -3387,6 +3737,10 @@
             "name": "comment",
             "label": "comment",
             "attributes": {},
+            "form_has_borders": true,
+            "label_has_borders": true,
+            "is_collapsable": true,
+            "label_indicator": "optional_text",
             "hover_text": "A human-readable comment associated with a piece of aid information. <a target='_blank' href='https://iatistandard.org/en/iati-standard/202/activity-standard/iati-activities/iati-activity/result/indicator/period/target/comment/'>For more information</a>",
             "sub_elements": {
               "narrative": {
@@ -3424,6 +3778,10 @@
             "label": "dimension",
             "add_more": true,
             "wrapper_collection": false,
+            "form_has_borders": true,
+            "label_has_borders": true,
+            "is_collapsable": true,
+            "label_indicator": "optional_text",
             "hover_text": "A category used for disaggregating the result by gender, age, etc. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/dimension/'>For more information</a>",
             "help_text": "Please note: A baseline can have multiple dimensions.",
             "attributes": {
@@ -3455,6 +3813,11 @@
             "label": "document link",
             "add_more": true,
             "element_criteria": "",
+            "form_has_borders": true,
+            "label_has_borders": true,
+            "add_more_has_borders": true,
+            "is_collapsable": true,
+            "label_indicator": "optional_text",
             "hover_text": "A link to an online, publicly accessible web page or document expanding on the result. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/'>For more information</a>",
             "help_text": "You may provide more information about the indicator baseline by providing a link to an online, publicly accessible web page or document.",
             "attributes": {
@@ -3487,6 +3850,10 @@
                 "element_criteria": "",
                 "add_more": false,
                 "attributes": {},
+                "form_has_borders": true,
+                "label_has_borders": true,
+                "is_collapsable": true,
+                "label_indicator": "optional_text",
                 "hover_text": "A short, human-readable title. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/title/'>For more information</a>",
                 "sub_elements": {
                   "narrative": {
@@ -3525,6 +3892,10 @@
                 "element_criteria": "",
                 "add_more": true,
                 "wrapper_collection": false,
+                "form_has_borders": true,
+                "label_has_borders": true,
+                "is_collapsable": true,
+                "label_indicator": "optional_text",
                 "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/category/'>For more information</a>",
                 "help_text": "If you have provided a document link, select a category that best describes the document.",
                 "attributes": {
@@ -3546,7 +3917,10 @@
                 "name": "description",
                 "label": "description",
                 "add_more": false,
+                "form_has_borders": true,
+                "label_has_borders": true,
                 "is_collapsable": true,
+                "label_indicator": "optional_text",
                 "attributes": {},
                 "hover_text": "A description of the document contents, or guidance on where to access the relevant information in the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/description/'>For more information</a>",
                 "sub_elements": {
@@ -3584,8 +3958,11 @@
                 "name": "language",
                 "label": "language",
                 "add_more": true,
-                "is_collapsable": true,
                 "wrapper_collection": false,
+                "form_has_borders": true,
+                "label_has_borders": true,
+                "is_collapsable": true,
+                "label_indicator": "optional_text",
                 "attributes": {
                   "language": {
                     "name": "language",
@@ -3605,7 +3982,10 @@
                 "name": "document_date",
                 "label": "document date",
                 "add_more": false,
+                "form_has_borders": true,
+                "label_has_borders": true,
                 "is_collapsable": true,
+                "label_indicator": "optional_text",
                 "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/document-date/'>For more information</a>",
                 "attributes": {
                   "date": {
@@ -3627,6 +4007,11 @@
             "name": "location",
             "label": "location",
             "add_more": "true",
+            "form_has_borders": true,
+            "label_has_borders": true,
+            "add_more_has_borders": true,
+            "is_collapsable": true,
+            "label_indicator": "optional_text",
             "hover_text": "A location already defined and described in the iati-activity/location element.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/location/'>For more information</a>",
             "attributes": {
               "reference": {
@@ -3650,6 +4035,7 @@
     "name": "period",
     "label": "period",
     "add_more": false,
+    "do_not_repeat_button": true,
     "hover_text": "The period covered for the results reported. Multiple periods can be reported for a single indicator. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/'>For more information</a>",
     "help_text": "Each indicator can have a given time period with a start and an end date. This is the time period in which the indicator is being measured, e.g. agricultural season or school term.",
     "show_info_in_title": true,
@@ -3660,6 +4046,10 @@
         "label": "period start",
         "element_criteria": "",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "required_icon",
         "hover_text": "The start of the reporting period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/period-start/'>For more information</a>",
         "attributes": {
           "date": {
@@ -3680,6 +4070,10 @@
         "label": "period end",
         "element_criteria": "",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "required_icon",
         "hover_text": "The end of the reporting period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/period-end/'>For more information</a>",
         "attributes": {
           "date": {
@@ -3699,6 +4093,11 @@
         "name": "target",
         "label": "target",
         "add_more": true,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "add_more_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "required_icon",
         "hover_text": "The target milestone for this period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/'>For more information</a>",
         "help_text": "The target is a result an organisation wants an activity to achieve in a certain period of time.",
         "attributes": {
@@ -3720,6 +4119,10 @@
             "hover_text": "A human-readable comment associated with a piece of aid information. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/comment/'>For more information</a>",
             "help_text": "If the indicator is a qualitative measure, provide a descriptive target here.<br></br>You may also add other descriptive information about the target here.",
             "attributes": {},
+            "form_has_borders": true,
+            "label_has_borders": true,
+            "is_collapsable": true,
+            "label_indicator": "optional_text",
             "sub_elements": {
               "narrative": {
                 "name": "narrative",
@@ -3755,6 +4158,10 @@
             "name": "dimension",
             "label": "dimension",
             "add_more": true,
+            "form_has_borders": true,
+            "label_has_borders": true,
+            "is_collapsable": true,
+            "label_indicator": "optional_text",
             "wrapper_collection": false,
             "attributes": {
               "name": {
@@ -3784,6 +4191,11 @@
             "name": "document_link",
             "label": "document link",
             "add_more": true,
+            "form_has_borders": true,
+            "label_has_borders": true,
+            "add_more_has_borders": true,
+            "is_collapsable": true,
+            "label_indicator": "optional_text",
             "hover_text": "A link to an online, publicly accessible web page or document expanding on the result. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/'>For more information</a>",
             "help_text": "You may provide more information about the indicator target by providing a link to an online, publicly accessible web page or document.",
             "attributes": {
@@ -3815,6 +4227,10 @@
                 "label": "title",
                 "element_criteria": "",
                 "attributes": {},
+                "form_has_borders": true,
+                "label_has_borders": true,
+                "is_collapsable": true,
+                "label_indicator": "optional_text",
                 "hover_text": "A short, human-readable title. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/title/'>For more information</a>",
                 "sub_elements": {
                   "narrative": {
@@ -3852,6 +4268,10 @@
                 "label": "category",
                 "add_more": true,
                 "wrapper_collection": false,
+                "form_has_borders": true,
+                "label_has_borders": true,
+                "is_collapsable": true,
+                "label_indicator": "optional_text",
                 "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/category/'>For more information</a>",
                 "help_text": "If you have provided a document link, select a category that best describes the document.",
                 "attributes": {
@@ -3873,7 +4293,10 @@
                 "name": "description",
                 "label": "description",
                 "attributes": {},
+                "form_has_borders": true,
+                "label_has_borders": true,
                 "is_collapsable": true,
+                "label_indicator": "optional_text",
                 "hover_text": "A description of the document contents, or guidance on where to access the relevant information in the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/description/'>For more information</a>",
                 "sub_elements": {
                   "narrative": {
@@ -3910,8 +4333,11 @@
                 "name": "language",
                 "label": "language",
                 "add_more": true,
-                "is_collapsable": true,
+                "form_has_borders": true,
+                "label_has_borders": true,
                 "wrapper_collection": false,
+                "is_collapsable": true,
+                "label_indicator": "optional_text",
                 "hover_text": "The ISO 639-1 language code in which target document is written, e.g. “en”. Can be repeated to describe multi-lingual documents. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/language/'>For more information</a>",
                 "attributes": {
                   "language": {
@@ -3932,7 +4358,10 @@
                 "name": "document_date",
                 "label": "document date",
                 "add_more": false,
+                "form_has_borders": true,
+                "label_has_borders": true,
                 "is_collapsable": true,
+                "label_indicator": "optional_text",
                 "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/document-date/'>For more information</a>",
                 "attributes": {
                   "date": {
@@ -3954,6 +4383,10 @@
             "name": "location",
             "label": "location",
             "add_more": "true",
+            "form_has_borders": true,
+            "label_has_borders": true,
+            "is_collapsable": true,
+            "label_indicator": "optional_text",
             "wrapper_collection": false,
             "attributes": {
               "reference": {
@@ -3975,6 +4408,11 @@
         "name": "actual",
         "label": "actual",
         "add_more": true,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "add_more_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "required_icon",
         "hover_text": "A record of the achieved result for this period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/'>For more information</a>",
         "help_text": "The actual is what was achieved at the end of that period.",
         "attributes": {
@@ -3993,6 +4431,10 @@
           "comment": {
             "name": "comment",
             "label": "comment",
+            "form_has_borders": true,
+            "label_has_borders": true,
+            "is_collapsable": true,
+            "label_indicator": "optional_text",
             "hover_text": "A human-readable comment associated with a piece of aid information. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/comment/'>For more information</a>",
             "help_text": "If the indicator is a qualitative measure, provide a descriptive of the actual result reported here.<br></br>You may also add other descriptive information about the actual result here.",
             "attributes": {},
@@ -4031,6 +4473,10 @@
             "name": "dimension",
             "label": "dimension",
             "add_more": true,
+            "form_has_borders": true,
+            "label_has_borders": true,
+            "is_collapsable": true,
+            "label_indicator": "optional_text",
             "wrapper_collection": false,
             "hover_text": "A category used for disaggregating the result by gender, age, etc. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/dimension/'>For more information</a>",
             "attributes": {
@@ -4061,6 +4507,11 @@
             "name": "document_link",
             "label": "document link",
             "add_more": true,
+            "form_has_borders": true,
+            "label_has_borders": true,
+            "add_more_has_borders": true,
+            "is_collapsable": true,
+            "label_indicator": "optional_text",
             "hover_text": "A link to an online, publicly accessible web page or document expanding on the result. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/'>For more information</a>",
             "help_text": "You may provide more information about the actual value or result by providing a link to an online, publicly accessible web page or document.",
             "attributes": {
@@ -4092,6 +4543,10 @@
                 "label": "title",
                 "element_criteria": "",
                 "attributes": {},
+                "form_has_borders": true,
+                "label_has_borders": true,
+                "is_collapsable": true,
+                "label_indicator": "optional_text",
                 "hover_text": "A short, human-readable title. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/title/'>For more information</a>",
                 "sub_elements": {
                   "narrative": {
@@ -4130,6 +4585,10 @@
                 "add_more": true,
                 "element_criteria": "",
                 "wrapper_collection": false,
+                "form_has_borders": true,
+                "label_has_borders": true,
+                "is_collapsable": true,
+                "label_indicator": "optional_text",
                 "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/category/'>For more information</a>",
                 "help_text": "If you have provided a document link, select a category that best describes the document.",
                 "attributes": {
@@ -4150,8 +4609,11 @@
               "description": {
                 "name": "description",
                 "label": "description",
-                "is_collapsable": true,
                 "attributes": {},
+                "form_has_borders": true,
+                "label_has_borders": true,
+                "is_collapsable": true,
+                "label_indicator": "optional_text",
                 "hover_text": "A description of the document contents, or guidance on where to access the relevant information in the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/description/'>For more information</a>",
                 "sub_elements": {
                   "narrative": {
@@ -4188,7 +4650,10 @@
                 "name": "language",
                 "label": "language",
                 "add_more": true,
+                "form_has_borders": true,
+                "label_has_borders": true,
                 "is_collapsable": true,
+                "label_indicator": "optional_text",
                 "wrapper_collection": false,
                 "hover_text": "The ISO 639-1 language code in which target document is written, e.g. “en”. Can be repeated to describe multi-lingual documents. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/language/'>For more information</a>",
                 "attributes": {
@@ -4210,7 +4675,10 @@
                 "name": "document_date",
                 "label": "document-date",
                 "add_more": false,
+                "form_has_borders": true,
+                "label_has_borders": true,
                 "is_collapsable": true,
+                "label_indicator": "optional_text",
                 "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/document-date/'>For more information</a>",
                 "attributes": {
                   "date": {
@@ -4232,6 +4700,11 @@
             "name": "location",
             "label": "location",
             "add_more": "true",
+            "form_has_borders": true,
+            "label_has_borders": true,
+            "add_more_has_borders": true,
+            "is_collapsable": true,
+            "label_indicator": "optional_text",
             "wrapper_collection": false,
             "attributes": {
               "reference": {
@@ -4255,6 +4728,10 @@
     "name": "transaction",
     "label": "transaction",
     "add_more": false,
+    "form_has_borders": true,
+    "label_has_borders": true,
+    "add_more_has_borders": true,
+    "do_not_repeat_button":true,
     "hover_text": "Transactions recording committed or actual funds flowing in or out of an aid activity.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/'>For more information</a>",
     "help_text": "Please provide a record of how your activity is being financed and how the finance is being used. Each incoming and outgoing flow should be published as a transaction.<br></br>If an organisation makes many small transactions, these can be grouped together. For example, all travel expenses for one month could be published as one expenditure transaction. When deciding whether (or how) to aggregate transactions, it is recommended that publishers consider the needs of data users, as too much aggregation can inhibit the usability of the data<br></br>Please note, you should not group together flows of funds to or from multiple external organisations (e.g. a disbursement to CARE should not be combined with a disbursement to IRC).<a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/financial-transactions/'>Guidance on publishing financial transactions</a>",
     "show_info_in_title": true,
@@ -4313,6 +4790,10 @@
         "label": "transaction type",
         "element_criteria": "mandatory",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "required_icon",
         "hover_text": "The type of the transaction (e.g. commitment, disbursement, expenditure, etc.). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/transaction-type/'>For more information</a>",
         "help_text": "Please choose the type of transaction that best reflects the flow of money in or out of this activity. Types include incoming funds, outgoing commitments, disbursement, expenditure.",
         "attributes": {
@@ -4335,6 +4816,10 @@
         "label": "transaction date",
         "element_criteria": "mandatory",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "required_icon",
         "hover_text": "The date on which the transaction was made or (in the case of commitments) agreed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/transaction-date/'>For more information</a>",
         "attributes": {
           "date": {
@@ -4355,6 +4840,10 @@
         "label": "value",
         "element_criteria": "mandatory",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "required_icon",
         "hover_text": "The amount of the contribution. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/value/'>For more information</a><p>Transactions can be positive or negative. An example of a negative transaction would be money that was disbursed to a partner and is then being returned to the funder. The returned funds should be published as a disbursement transaction with a negative value, i.e. with a minus symbol in front of the figure, e.g. -1000.</p>",
         "attributes": {
           "amount": {
@@ -4395,6 +4884,10 @@
         "name": "description",
         "label": "description",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "attributes": {},
         "hover_text": "A human-readable description of the transaction. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/description/'>For more information</a>",
         "sub_elements": {
@@ -4433,6 +4926,10 @@
         "label": "provider organisation",
         "element_criteria": "",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "For incoming funds this is the organisation from which the transaction originated. If omitted on outgoing funds the reporting-org is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/provider-org'>For more information</a>",
         "help_text": "For each transaction it is strongly recommended that you publish information on both the provider and receiver organisations of the funds. This includes instances where your organisation is either the provider or the receiver.<br></br>If you do not provide information on the provider organisation for incoming transactions, then it is presumed that your organisation is the provider of the funds.",
         "attributes": {
@@ -4504,6 +5001,10 @@
         "label": "receiver-organisation",
         "element_criteria": "",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "The organisation receiving the money from the transaction. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/receiver-org/'>For more information</a>",
         "help_text": "Please provide the organisation that will/has received the funds as part of this transaction. If your organisation is the receiver, please provide your organisation’s details.",
         "attributes": {
@@ -4574,6 +5075,10 @@
         "name": "disbursement_channel",
         "label": "disbursement-channel",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "The channel through which the funds will flow for this transaction, from an IATI codelist. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/disbursement-channel/'>For more information</a>",
         "help_text": "Select the best option for how your disbursements are channeled (e.g. through the recipient government or outside of the recipient government).",
         "attributes": {
@@ -4595,6 +5100,10 @@
         "label": "sector",
         "name": "sector",
         "add_more": true,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "A recognised code, from a recognised vocabulary, classifying the purpose of this transaction.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/sector/'>For more information</a>",
         "help_text": "You can specify <b>one</b> sector that this individual transaction is supporting. For example, primary education or agriculture. If you do this, then you must specify a sector for <b><u>every</u></b> transaction that you publish.</br>You <b><u>should not</u></b> specify a sector for any of your transactions if you want to provide data on the sector(s) of this entire activity (which you can publish here). <b>Sectors must only be provided at either the activity or transaction level and <u>not both</u></b>.</br>Once your organisation decides where to publish information about which sectors it is working in, you should be consistent across all activities that you publish. This means you should publish all sector information at either activity level or for all transactions. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/activity-thematic-focus/'>More information</a>.</br>",
         "dependent_attributes": {
@@ -4628,7 +5137,10 @@
             "help_text": "If you have chosen to use an internal sector classification codelist, please provide a link to it.",
             "parent": {
               "name": "sector_vocabulary",
-              "value": ["99", "98"]
+              "value": [
+                "99",
+                "98"
+              ]
             }
           },
           "code": {
@@ -4643,7 +5155,9 @@
             "help_text": "Select the sector that the transaction’s funds are supporting. You must only choose <b>one sector</b> from each list that you use.",
             "parent": {
               "name": "sector_vocabulary",
-              "value": ["1"]
+              "value": [
+                "1"
+              ]
             }
           },
           "text": {
@@ -4657,7 +5171,16 @@
             "help_text": "Select the sector that the transaction’s funds are supporting. You must only choose <b>one sector</b> from each list that you use.",
             "parent": {
               "name": "sector_vocabulary",
-              "value": ["3", "4", "5", "6", "9", "10", "99", "98"]
+              "value": [
+                "3",
+                "4",
+                "5",
+                "6",
+                "9",
+                "10",
+                "99",
+                "98"
+              ]
             }
           },
           "category_code": {
@@ -4672,7 +5195,9 @@
             "help_text": "Select the sector that the transaction’s funds are supporting. You must only choose <b>one sector</b> from each list that you use.",
             "parent": {
               "name": "sector_vocabulary",
-              "value": ["2"]
+              "value": [
+                "2"
+              ]
             }
           },
           "sdg_goal": {
@@ -4687,7 +5212,9 @@
             "help_text": "Select the sector that the transaction’s funds are supporting. You must only choose <b>one sector</b> from each list that you use.",
             "parent": {
               "name": "sector_vocabulary",
-              "value": ["7"]
+              "value": [
+                "7"
+              ]
             }
           },
           "sdg_target": {
@@ -4702,7 +5229,9 @@
             "help_text": "Select the sector that the transaction’s funds are supporting. You must only choose <b>one sector</b> from each list that you use.",
             "parent": {
               "name": "sector_vocabulary",
-              "value": ["8"]
+              "value": [
+                "8"
+              ]
             }
           }
         },
@@ -4742,6 +5271,10 @@
         "name": "recipient_country",
         "label": "recipient-country",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "A country that will benefit from this transaction. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-country/'>For more information</a>",
         "help_text": "You can specify <b>one</b> country or region that an individual transaction is taking place in, or the place that will benefit from it.<br></br>You <b><u>should not</u></b> specify a country or region for any of your transactions if you want to provide the recipient country or region of this entire activity (which you can publish here). <b>Recipient countries or regions) must only be provided at either the activity or transaction level and not both.</b><br></br>Once your organisation decides where to publish information about its recipient countries (or regions), it should be consistent across all activities that it publishes. This means you should publish all recipient country or region information at either activity level or for all transactions. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/countries-regions/'>More information</a>.",
         "attributes": {
@@ -4792,6 +5325,10 @@
         "name": "recipient_region",
         "label": "recipient region",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "A supranational geopolitical region that will benefit from this transaction. If a specific country is not known, then this element MUST be used. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/recipient-region/'>For more information</a>",
         "help_text": "If you cannot identify the specific country benefiting from this transaction, then you can provide the recipient region instead. <b>Do not provide both a recipient country and a region.</b><br></br>For example, if the funding is going to Uganda, then you should record Uganda as the recipient country and you should not add that the funding is also going to the region of Africa.",
         "attributes": {
@@ -4818,7 +5355,9 @@
             "help_text": "Select the region benefitting from this transaction.",
             "parent": {
               "name": "region_vocabulary",
-              "value": ["1"]
+              "value": [
+                "1"
+              ]
             }
           },
           "custom_code": {
@@ -4833,7 +5372,10 @@
             "hidden": true,
             "parent": {
               "name": "region_vocabulary",
-              "value": ["2", "99"]
+              "value": [
+                "2",
+                "99"
+              ]
             }
           },
           "vocabulary_uri": {
@@ -4847,7 +5389,9 @@
             "help_text": "If you have selected the option: ‘Reporting Organisation’ please provide the URI where this internal list is defined.",
             "parent": {
               "name": "region_vocabulary",
-              "value": ["99"]
+              "value": [
+                "99"
+              ]
             }
           }
         },
@@ -4886,6 +5430,10 @@
         "name": "flow_type",
         "label": "flow type",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "Optional element to override the top-level default-flow-type element. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/flow-type/'>For more information</a>",
         "help_text": "Flow type is another way to categorise financial flows. It distinguishes the flow as official development assistance (ODA), other official flows (OOF), or several types of private flows, including private grants often provided by NGOs and other civil society organisations.",
         "attributes": {
@@ -4907,6 +5455,10 @@
         "name": "finance_type",
         "label": "finance type",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "Optional element to override the top-level default-finance-type element on a transaction-by-transaction basis, if needed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/finance-type/'>For more information</a>",
         "help_text": "Finance type specifies the financial instrument that is being used. For example, financing is most commonly delivered as a grant or a loan. ",
         "attributes": {
@@ -4930,6 +5482,10 @@
         "add_more": false,
         "add_more_attributes": true,
         "wrapper_collection": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "Optional element to override the top-level default-aid-type element (debt relief, etc.) on a transaction-by-transaction basis if needed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/aid-type/'>For more information</a>",
         "help_text": "You can provide information about the type of aid that is being delivered. This is most commonly referred to as the aid modality and IATI recommends that an aid type from the OECD DAC codelist be selected for all activities. Examples from this codelist include: project-type interventions which provide support to a particular project and budget support which is a financial contribution to a recipient government’s budget. Project-type interventions is the most common aid type for NGOs and CSOs but many other options are found <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/aidtype/'>here</a>.<br></br>If your transaction is addressing a humanitarian event, you can provide specific information on the type of funds for it. This includes providing information on the level of earmarking of the transaction’s funds and if the transaction is providing funds through cash or vouchers. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/humanitarian/'>More information on publishing aid-types related to humanitarian transactions</a>.<br></br>Do note: if you select an aid-type for this transaction, this will override the default aid type for the entire activity (which is selected here), enabling you to choose an aid-type on a transaction-by-transaction basis, if needed.",
         "attributes": {
@@ -4956,7 +5512,9 @@
             "help_text": "Select the aid-type related to your transaction.",
             "parent": {
               "name": "aid_type_vocabulary",
-              "value": ["1"]
+              "value": [
+                "1"
+              ]
             }
           },
           "earmarking_category": {
@@ -4972,7 +5530,9 @@
             "help_text": "",
             "parent": {
               "name": "aid_type_vocabulary",
-              "value": ["2"]
+              "value": [
+                "2"
+              ]
             }
           },
           "earmarking_modality": {
@@ -4988,7 +5548,9 @@
             "help_text": "",
             "parent": {
               "name": "aid_type_vocabulary",
-              "value": ["3"]
+              "value": [
+                "3"
+              ]
             }
           },
           "cash_and_voucher_modalities": {
@@ -5004,7 +5566,9 @@
             "help_text": "",
             "parent": {
               "name": "aid_type_vocabulary",
-              "value": ["4"]
+              "value": [
+                "4"
+              ]
             }
           }
         },
@@ -5014,6 +5578,10 @@
         "name": "tied_status",
         "label": "tied status",
         "add_more": false,
+        "form_has_borders": true,
+        "label_has_borders": true,
+        "is_collapsable": true,
+        "label_indicator": "optional_text",
         "hover_text": "Optional element to override the top-level default-tied-status element on a transaction-by-transaction basis if needed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/tied-status/'>For more information</a>",
         "help_text": "You can state the tied status of this transaction. Here you can specify if funds are tied - where they must be spent on goods or services procured from a particular country (e.g. donor country) or group of countries. Or if funds are untied, this is where the recipient organisation is allowed to procure from any country.<br></br>Do note: if you select a tied status for this transaction, this will override the <b>default tied status</b> for the entire activity (which is selected here), enabling you to choose a tied status on a transaction-by-transaction basis, if needed.",
         "attributes": {
@@ -5034,3 +5602,4 @@
     }
   }
 }
+

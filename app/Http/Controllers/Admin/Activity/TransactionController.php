@@ -9,11 +9,14 @@ use App\Http\Requests\Activity\Transaction\TransactionRequest;
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\TransactionService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
 
 /**
@@ -21,6 +24,8 @@ use Illuminate\Support\Facades\Session;
  */
 class TransactionController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var BaseFormCreator
      */
@@ -69,7 +74,7 @@ class TransactionController extends Controller
             $toast = generateToastData();
 
             return view('admin.activity.transaction.transaction', compact('activity', 'transactions', 'types', 'toast'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e);
 
             return redirect()->route('admin.activity.show', $activityId)->with(
@@ -97,7 +102,7 @@ class TransactionController extends Controller
                 'message' => 'Transactions fetched successfully',
                 'data'    => $transaction,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
@@ -116,11 +121,30 @@ class TransactionController extends Controller
         try {
             $activity = $this->activityService->getActivity($activityId);
             $element = $this->transactionService->getManipulatedTransactionElementSchema($activity);
-            $form = $this->transactionService->createFormGenerator($activityId, $element, $activity->default_field_values ?? []);
-            $data = ['title' => $element['label'], 'name' => 'transactions'];
+            $form = $this->transactionService->createFormGenerator(
+                activityId                : $activityId,
+                element                   : $element,
+                activityDefaultFieldValues: $activity->default_field_values ?? []
+            );
+
+            $formHeader = $this->getFormHeader(
+                hasData    : false,
+                elementName: 'transaction',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->transactionBreadCrumbInfo(
+                activity   : $activity,
+                transaction: null
+            );
+
+            $data = ['title'            => $element['label'],
+                     'name'             => 'transactions',
+                     'form_header'      => $formHeader,
+                     'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e);
 
             return redirect()->route('admin.activity.show', $activityId)->with(
@@ -151,7 +175,7 @@ class TransactionController extends Controller
                 'success',
                 'Activity transaction created successfully.'
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.transaction.index', $activityId)->with(
@@ -179,7 +203,7 @@ class TransactionController extends Controller
             $toast = generateToastData();
 
             return view('admin.activity.transaction.detail', compact('transaction', 'activity', 'types', 'toast', 'element'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.transaction.index', $activityId)->with(
@@ -204,10 +228,24 @@ class TransactionController extends Controller
             $element = $this->transactionService->getManipulatedTransactionElementSchema($activity, $transactionId);
             $form = $this->transactionService->editFormGenerator($transactionId, $activityId, $element);
 
-            $data = ['title' => $element['label'], 'name' => 'transactions'];
+            $formHeader = $this->getFormHeader(
+                hasData    : false,
+                elementName: 'transaction',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->transactionBreadCrumbInfo(
+                activity   : $activity,
+                transaction: null
+            );
+
+            $data = ['title'            => $element['label'],
+                     'name'             => 'transactions',
+                     'form_header'      => $formHeader,
+                     'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.transaction.index', $activityId)->with(
@@ -240,7 +278,7 @@ class TransactionController extends Controller
                 'success',
                 'Activity transaction updated successfully.'
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.transaction.index', $activityId)->with(
@@ -270,7 +308,7 @@ class TransactionController extends Controller
                 'msg'         => 'Transaction Deleted Successfully',
                 'activity_id' => $id,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
             Session::flash('error', 'Transaction Delete Error');
 

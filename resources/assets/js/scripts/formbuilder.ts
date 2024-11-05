@@ -70,7 +70,7 @@ class FormBuilder {
         .find('.sub-attribute')
         .wrapAll(
           $(
-            '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper"></div>'
+            '<div class="form-field-group flex flex-wrap sub-attribute-wrapper"></div>'
           )
         );
 
@@ -81,7 +81,7 @@ class FormBuilder {
         .find('.sub-attribute')
         .wrapAll(
           $(
-            '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper mt-6"></div>'
+            '<div class="form-field-group flex flex-wrap sub-attribute-wrapper mt-6"></div>'
           )
         );
     } else {
@@ -116,6 +116,7 @@ class FormBuilder {
           : $(target).prev().find('.wrapped-child-body').length) + 1;
 
     let proto = container.data('prototype').replace(/__PARENT_NAME__/g, count);
+
     proto = proto.replace(/__NAME__/g, 0);
 
     $(target).prev().append($(proto));
@@ -186,7 +187,7 @@ class FormBuilder {
         .find('.attribute')
         .wrapAll(
           $(
-            '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 attribute-wrapper mb-4"></div>'
+            '<div class="form-field-group flex flex-wrap attribute-wrapper mb-4"></div>'
           )
         );
     });
@@ -198,7 +199,7 @@ class FormBuilder {
           .find('.sub-attribute')
           .wrapAll(
             $(
-              '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper mb-4"></div>'
+              '<div class="form-field-group flex flex-wrap sub-attribute-wrapper mb-4"></div>'
             )
           );
       });
@@ -220,7 +221,7 @@ class FormBuilder {
       .find('.attribute')
       .wrapAll(
         $(
-          '<div class="form-field-group grid xl:grid-cols-2 rounded-br-lg border-y border-r border-spring-50 attribute-wrapper mb-4"></div>'
+          '<div class="form-field-group grid xl:grid-cols-2 attribute-wrapper mb-4"></div>'
         )
       );
 
@@ -235,7 +236,7 @@ class FormBuilder {
           .find('.sub-attribute')
           .wrapAll(
             $(
-              '<div class="form-field-group flex flex-wrap rounded-br-lg border-y border-r border-spring-50 sub-attribute-wrapper mb-4"></div>'
+              '<div class="form-field-group flex flex-wrap sub-attribute-wrapper mb-4"></div>'
             )
           );
       });
@@ -256,6 +257,7 @@ class FormBuilder {
           .trigger('click');
       } else {
         this.addForm(event);
+        this.handleDeleteParentButtons();
       }
     });
 
@@ -267,6 +269,7 @@ class FormBuilder {
           .trigger('click');
       } else {
         this.addParentForm(event);
+        this.handleDeleteParentButtons();
       }
     });
   }
@@ -300,6 +303,38 @@ class FormBuilder {
       deleteConfirmation.fadeOut();
       deleteIndex = {};
       childOrParent = '';
+    });
+
+    $('body').on('mouseenter', '.delete-parent', (event: Event) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      const deleteButton = $(event.target);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      const multiForm = deleteButton.closest(
+        '.multi-form, .wrapped-child-body'
+      );
+
+      multiForm.css({
+        background: '#FFF8F7',
+        outline: '2px solid #F19BA0',
+      });
+    });
+
+    $('body').on('mouseleave', '.delete-parent', (event: Event) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      const deleteButton = $(event.target);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      const multiForm = deleteButton.closest(
+        '.multi-form, .wrapped-child-body'
+      );
+
+      multiForm.css({
+        background: '',
+        outline: '',
+      });
     });
 
     $('body').on('click', '.delete-parent', (event: Event) => {
@@ -404,10 +439,28 @@ class FormBuilder {
       }
     });
   }
+
+  public handleDeleteParentButtons() {
+    const deleteButtons = document.querySelectorAll('.delete-parent-selector');
+    const changeDeleteButtonInnerHtml = (button) => {
+      const initialText = escapeHtml(button.textContent);
+      button.innerHTML = `
+         <svg class="text-[1rem] mb-0.5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+           <path d="M6.66667 12C6.84348 12 7.01305 11.9298 7.13807 11.8047C7.2631 11.6797 7.33333 11.5101 7.33333 11.3333V7.33334C7.33333 7.15653 7.2631 6.98696 7.13807 6.86193C7.01305 6.73691 6.84348 6.66667 6.66667 6.66667C6.48986 6.66667 6.32029 6.73691 6.19526 6.86193C6.07024 6.98696 6 7.15653 6 7.33334V11.3333C6 11.5101 6.07024 11.6797 6.19526 11.8047C6.32029 11.9298 6.48986 12 6.66667 12ZM13.3333 4H10.6667V3.33334C10.6667 2.8029 10.456 2.2942 10.0809 1.91912C9.70581 1.54405 9.1971 1.33334 8.66667 1.33334H7.33333C6.8029 1.33334 6.29419 1.54405 5.91912 1.91912C5.54405 2.2942 5.33333 2.8029 5.33333 3.33334V4H2.66667C2.48986 4 2.32029 4.07024 2.19526 4.19526C2.07024 4.32029 2 4.48986 2 4.66667C2 4.84348 2.07024 5.01305 2.19526 5.13807C2.32029 5.2631 2.48986 5.33334 2.66667 5.33334H3.33333V12.6667C3.33333 13.1971 3.54405 13.7058 3.91912 14.0809C4.29419 14.456 4.8029 14.6667 5.33333 14.6667H10.6667C11.1971 14.6667 11.7058 14.456 12.0809 14.0809C12.456 13.7058 12.6667 13.1971 12.6667 12.6667V5.33334H13.3333C13.5101 5.33334 13.6797 5.2631 13.8047 5.13807C13.9298 5.01305 14 4.84348 14 4.66667C14 4.48986 13.9298 4.32029 13.8047 4.19526C13.6797 4.07024 13.5101 4 13.3333 4ZM6.66667 3.33334C6.66667 3.15652 6.7369 2.98696 6.86193 2.86193C6.98695 2.73691 7.15652 2.66667 7.33333 2.66667H8.66667C8.84348 2.66667 9.01305 2.73691 9.13807 2.86193C9.2631 2.98696 9.33333 3.15652 9.33333 3.33334V4H6.66667V3.33334ZM11.3333 12.6667C11.3333 12.8435 11.2631 13.0131 11.1381 13.1381C11.013 13.2631 10.8435 13.3333 10.6667 13.3333H5.33333C5.15652 13.3333 4.98695 13.2631 4.86193 13.1381C4.7369 13.0131 4.66667 12.8435 4.66667 12.6667V5.33334H11.3333V12.6667ZM9.33333 12C9.51014 12 9.67971 11.9298 9.80474 11.8047C9.92976 11.6797 10 11.5101 10 11.3333V7.33334C10 7.15653 9.92976 6.98696 9.80474 6.86193C9.67971 6.73691 9.51014 6.66667 9.33333 6.66667C9.15652 6.66667 8.98695 6.73691 8.86193 6.86193C8.73691 6.98696 8.66667 7.15653 8.66667 7.33334V11.3333C8.66667 11.5101 8.73691 11.6797 8.86193 11.8047C8.98695 11.9298 9.15652 12 9.33333 12Z" fill="#E34D5B"/>
+         </svg>
+         ${initialText}
+      `;
+    };
+
+    deleteButtons.forEach((button) => {
+      changeDeleteButtonInnerHtml(button);
+    });
+  }
 }
 
 $(function () {
   const formBuilder = new FormBuilder();
+
   formBuilder.addWrapper();
   dynamicField.hideShowFormFields();
   dynamicField.updateActivityIdentifier();
@@ -525,301 +578,257 @@ $(function () {
     }
   }
 
-  /**
-   * Change Source: https://github.com/younginnovations/iatipublisher/issues/1501
-   *
-   * Basically I'm adding expandable behaviour to form
-   */
+  const deleteButtons = document.querySelectorAll('.delete-parent-selector');
 
-  interface AddButtonInfo {
-    dom: HTMLElement | null;
-    relation: string;
-  }
-  function handleInitialFormLoad() {
-    const allCollapsable = document.querySelectorAll('.collapsable');
-    allCollapsable.forEach((element) => {
-      const htmlElement = element as HTMLElement;
-      const buttonInfo = getButtonInfo(htmlElement);
-      const hideButton = renderHideButton(htmlElement, buttonInfo);
-
-      /** Click hide button if all values in this collapsable item is empty*/
-      if (!hasNonEmptyFields(htmlElement)) {
-        hideButton.click();
-      }
-    });
+  function changeDeleteButtonInnerHtml(button) {
+    const initialText = escapeHtml(button.textContent);
+    button.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6.66667 12C6.84348 12 7.01305 11.9298 7.13807 11.8047C7.2631 11.6797 7.33333 11.5101 7.33333 11.3333V7.33334C7.33333 7.15653 7.2631 6.98696 7.13807 6.86193C7.01305 6.73691 6.84348 6.66667 6.66667 6.66667C6.48986 6.66667 6.32029 6.73691 6.19526 6.86193C6.07024 6.98696 6 7.15653 6 7.33334V11.3333C6 11.5101 6.07024 11.6797 6.19526 11.8047C6.32029 11.9298 6.48986 12 6.66667 12ZM13.3333 4H10.6667V3.33334C10.6667 2.8029 10.456 2.2942 10.0809 1.91912C9.70581 1.54405 9.1971 1.33334 8.66667 1.33334H7.33333C6.8029 1.33334 6.29419 1.54405 5.91912 1.91912C5.54405 2.2942 5.33333 2.8029 5.33333 3.33334V4H2.66667C2.48986 4 2.32029 4.07024 2.19526 4.19526C2.07024 4.32029 2 4.48986 2 4.66667C2 4.84348 2.07024 5.01305 2.19526 5.13807C2.32029 5.2631 2.48986 5.33334 2.66667 5.33334H3.33333V12.6667C3.33333 13.1971 3.54405 13.7058 3.91912 14.0809C4.29419 14.456 4.8029 14.6667 5.33333 14.6667H10.6667C11.1971 14.6667 11.7058 14.456 12.0809 14.0809C12.456 13.7058 12.6667 13.1971 12.6667 12.6667V5.33334H13.3333C13.5101 5.33334 13.6797 5.2631 13.8047 5.13807C13.9298 5.01305 14 4.84348 14 4.66667C14 4.48986 13.9298 4.32029 13.8047 4.19526C13.6797 4.07024 13.5101 4 13.3333 4ZM6.66667 3.33334C6.66667 3.15652 6.7369 2.98696 6.86193 2.86193C6.98695 2.73691 7.15652 2.66667 7.33333 2.66667H8.66667C8.84348 2.66667 9.01305 2.73691 9.13807 2.86193C9.2631 2.98696 9.33333 3.15652 9.33333 3.33334V4H6.66667V3.33334ZM11.3333 12.6667C11.3333 12.8435 11.2631 13.0131 11.1381 13.1381C11.013 13.2631 10.8435 13.3333 10.6667 13.3333H5.33333C5.15652 13.3333 4.98695 13.2631 4.86193 13.1381C4.7369 13.0131 4.66667 12.8435 4.66667 12.6667V5.33334H11.3333V12.6667ZM9.33333 12C9.51014 12 9.67971 11.9298 9.80474 11.8047C9.92976 11.6797 10 11.5101 10 11.3333V7.33334C10 7.15653 9.92976 6.98696 9.80474 6.86193C9.67971 6.73691 9.51014 6.66667 9.33333 6.66667C9.15652 6.66667 8.98695 6.73691 8.86193 6.86193C8.73691 6.98696 8.66667 7.15653 8.66667 7.33334V11.3333C8.66667 11.5101 8.73691 11.6797 8.86193 11.8047C8.98695 11.9298 9.15652 12 9.33333 12Z" fill="#E34D5B"/>
+      </svg>
+      ${initialText}`;
   }
 
-  function hasNonEmptyFields(element: HTMLElement): boolean {
-    // Check if any input, select, or textarea inside the element has a value
-    const inputs = element.querySelectorAll('input, select, textarea');
-    return Array.from(inputs).some((input) => {
-      if (
-        input instanceof HTMLInputElement ||
-        input instanceof HTMLSelectElement ||
-        input instanceof HTMLTextAreaElement
-      ) {
-        return input.value.trim() !== '';
-      }
-      return false;
-    });
-  }
+  deleteButtons.forEach((button) => changeDeleteButtonInnerHtml(button));
 
-  function handleNewAdditionsToFormViaMutatorsAndObservers() {
-    const observer = new MutationObserver((mutationsList) => {
-      for (const mutation of mutationsList) {
-        if (mutation.type === 'childList') {
-          const addedNodes = Array.from(mutation.addedNodes);
-
-          addedNodes.forEach((node) => {
-            // Check if the added node is an HTMLElement
-            if (node instanceof HTMLElement) {
-              node.querySelectorAll('.collapsable').forEach((element) => {
-                const htmlElement = element as HTMLElement;
-                const buttonInfo = getButtonInfo(htmlElement);
-                renderHideButton(htmlElement, buttonInfo);
-              });
-
-              const newCollapseButtons = node.querySelectorAll(
-                '.collapsable-hide-button'
+  const observer = new MutationObserver((mutationsList) => {
+    mutationsList.forEach((mutation) => {
+      if (mutation.addedNodes.length > 0) {
+        mutation.addedNodes.forEach((node) => {
+          if (node instanceof Element) {
+            if (node.matches('.delete-item-selector')) {
+              changeDeleteButtonInnerHtml(node);
+            } else {
+              const newDeleteButtons = node.querySelectorAll(
+                '.delete-item-selector'
               );
-              newCollapseButtons.forEach((button) => {
-                const buttonElement = button as HTMLElement;
-                buttonElement.click();
-              });
+              newDeleteButtons.forEach((button) =>
+                changeDeleteButtonInnerHtml(button)
+              );
+            }
+          }
+        });
+      }
+    });
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+
+  /**
+   * This function does two main things:
+   *
+   * 1. Adds a click event listener to the button to control the collapsible flow:
+   *    - It finds the closest <label> element related to the button.
+   *    - Within that <label>, it looks for an element with the class 'optional-text'. If it finds 'optional-text', it toggles how that text is displayed (either with brackets or an icon).
+   *    - It also locates the nearest parent element with the classes 'subelement rounded-t-sm'. If that parent subelement exists, it toggles its state to either collapse or expand the form section.
+   *    - Finally, it rotates the collapse button each time it’s clicked.
+   *
+   * 2. It triggers the button click event if the subelement is optional using the flag: thisButtonBelongsToOptionalForm.
+   *    This ensures optional forms start off collapsed by default when rendered.
+   *
+   * @param button - The button element that manages the collapsible form section.
+   */
+  function attachCollapsableButtonEvents(button: HTMLButtonElement) {
+    const label = getClosestLabelDom(button);
+    const optionalLabel = label ? getOptionalTextDom(label) : null;
+    const subelement = label ? getClosestParentSubelementDom(label) : null;
+
+    const thisButtonBelongsToOptionalForm = optionalLabel !== null;
+    console.log(subelement);
+
+    button.addEventListener('click', () => {
+      if (optionalLabel) {
+        toggleOptionalText(optionalLabel);
+      }
+
+      if (subelement) {
+        toggleAccordionItems(subelement);
+      }
+
+      button.classList.toggle('rotate-180');
+    });
+
+    console.log(
+      thisButtonBelongsToOptionalForm,
+      !errorMessageExists(subelement)
+    );
+    if (thisButtonBelongsToOptionalForm && !errorMessageExists(subelement)) {
+      button.click();
+    }
+  }
+
+  /**
+   * Check if any error message exists in the subelement.
+   *
+   * @param subelement
+   */
+  function errorMessageExists(subelement) {
+    const errorDivs = subelement.querySelectorAll('.error');
+    const errorTexts = subelement.querySelectorAll('.text-danger-error');
+
+    for (const div of errorDivs) {
+      if (div.textContent.trim() !== '') {
+        return true;
+      }
+    }
+
+    for (const div of errorTexts) {
+      if (div.textContent.trim() !== '') {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Returns closest <label> element.
+   *
+   * @param button
+   */
+  function getClosestLabelDom(button): HTMLElement | null {
+    return button.closest('label') as HTMLLabelElement | null;
+  }
+
+  /**
+   * Returns closest element with class 'optional-text'.
+   *
+   * @param label
+   */
+  function getOptionalTextDom(label: HTMLElement) {
+    return label.querySelector('.optional-text');
+  }
+
+  /**
+   * Returns the first Nth parent that has class 'subelement'.
+   *
+   * @param label
+   */
+  function getClosestParentSubelementDom(label: HTMLElement) {
+    return label.closest('.subelement.rounded-t-sm') as HTMLElement | null;
+  }
+
+  /**
+   * Toggles what is rendered on optional text. (dot or bracket)
+   *
+   * @param optionalLabel
+   */
+  function toggleOptionalText(optionalLabel: Element) {
+    const optionalLabelWithSvg =
+      '<svg viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9a1.87 1.87 0 1 0 3.74 0A1.87 1.87 0 0 0 6 9Z" fill="#68797E"></path></svg><span>Optional</span>';
+    const optionalLabelWithBrackets = '<span>( Optional )</span>';
+    const svgExists = optionalLabel.querySelector('svg') !== null;
+
+    if (svgExists) {
+      optionalLabel.innerHTML = optionalLabelWithBrackets;
+    } else {
+      optionalLabel.innerHTML = optionalLabelWithSvg;
+    }
+  }
+
+  /**
+   * Toggles collapsed state. (expand or collapsed)
+   *
+   * Key considerations:
+   * 1. The "Add Additional" button can be either inside or outside the subelement.
+   * 2. When the button is outside, it will always be the immediate sibling to the subelement.
+   * 3. The collapse mechanism is handled by adjusting the max height to give the illusion of sliding up.
+   * 4. If the button is outside the subelement, the slide-up effect will not affect the button.
+   *    Therefore, we toggle the 'display-none' class to control its visibility.
+   *
+   * @param subelement
+   */
+  function toggleAccordionItems(subelement) {
+    function isAddAdditionalButtonOutside(subelement) {
+      const nextSibling = subelement.nextElementSibling;
+
+      if (nextSibling && nextSibling.tagName === 'BUTTON') {
+        return (
+          nextSibling.classList.contains('add_more') &&
+          nextSibling.classList.contains('button')
+        );
+      }
+
+      return false;
+    }
+
+    const hideableSubelements = [...subelement.children].filter(
+      (child) => child.tagName !== 'LABEL'
+    );
+
+    let outsideButton: null | Element = null;
+    const hasAddAdditionalButtonOutside =
+      isAddAdditionalButtonOutside(subelement);
+
+    if (hasAddAdditionalButtonOutside) {
+      outsideButton = subelement.nextElementSibling;
+      if (outsideButton) {
+        outsideButton.classList.toggle('display-none');
+      }
+    }
+
+    hideableSubelements.forEach((child) => {
+      if (hasAddAdditionalButtonOutside && outsideButton) {
+        subelement.classList.toggle('mb-6');
+      }
+
+      if (child.classList.contains('height-hide')) {
+        child.classList.remove('height-hide');
+        child.classList.add('height-show');
+      } else {
+        child.classList.remove('height-show');
+        child.classList.add('height-hide');
+      }
+    });
+  }
+
+  /**
+   * This function handles the forms rendered on initial page load.
+   */
+  function attachInitialCollapsableButtonEvents() {
+    const allCollapsableButtons = document.querySelectorAll<HTMLButtonElement>(
+      '.collapsable-button'
+    );
+    allCollapsableButtons.forEach((button) =>
+      attachCollapsableButtonEvents(button)
+    );
+  }
+
+  /**
+   * This function handles the forms rendered on clicking 'ADD ADDITIONAL X' button.
+   */
+  function observeNewCollapsableButtons() {
+    const observer = new MutationObserver((mutationsList) => {
+      mutationsList.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach((node) => {
+            if (node instanceof HTMLElement) {
+              const newCollapsableButtons =
+                node.querySelectorAll<HTMLButtonElement>('.collapsable-button');
+              newCollapsableButtons.forEach((button) =>
+                attachCollapsableButtonEvents(button)
+              );
             }
           });
         }
-      }
+      });
     });
 
     observer.observe(document.body, { childList: true, subtree: true });
   }
 
-  function getButtonInfo(collapsableItem: HTMLElement): AddButtonInfo {
-    let addButton = collapsableItem.nextElementSibling as HTMLElement | null;
-
-    if (addButton && addButton.tagName.toLowerCase() === 'button') {
-      return { dom: addButton, relation: 'sibling' };
-    }
-
-    addButton = collapsableItem.querySelector(
-      'button.add_more'
-    ) as HTMLElement | null;
-
-    if (addButton) {
-      return { dom: addButton, relation: 'child' };
-    }
-
-    return { dom: null, relation: 'none' };
-  }
-
-  function renderHideButton(
-    collapsableItem: HTMLElement,
-    buttonInfo: AddButtonInfo
-  ) {
-    const hideButton = document.createElement('button');
-    hideButton.className =
-      'absolute top-0 right-0 bg-spring-50 text-white px-2 collapsable-hide-button';
-    hideButton.textContent = 'Hide';
-    hideButton.setAttribute('type', 'button');
-
-    const handleHideButtonClick = () => {
-      hideElement(hideButtonHolder);
-      hideElement(buttonInfo.dom);
-      renderPlaceholderCard(collapsableItem, buttonInfo);
-    };
-
-    let hideButtonHolder: HTMLElement | null = null;
-
-    if (buttonInfo.dom === null) {
-      hideButtonHolder = Array.from(collapsableItem.children).find(
-        (child) => child.tagName === 'DIV'
-      ) as HTMLElement;
-    } else if (buttonInfo.relation === 'child') {
-      hideButtonHolder = buttonInfo.dom.parentElement;
-    } else {
-      const previousSibling = buttonInfo.dom
-        .previousElementSibling as HTMLElement;
-      hideButtonHolder = Array.from(previousSibling?.children || []).find(
-        (child) => child.tagName === 'DIV'
-      ) as HTMLElement;
-
-      if (hideButtonHolder) {
-        hideButton.addEventListener('click', () => {
-          Array.from(previousSibling.children).forEach((child) => {
-            if (
-              child.tagName !== 'LABEL' &&
-              !child.classList.contains('collapsable-placeholder')
-            ) {
-              hideElement(child as HTMLElement);
-            }
-          });
-          hideElement(buttonInfo.dom);
-        });
-      }
-    }
-
-    if (hideButtonHolder) {
-      hideButtonHolder.classList.add('relative');
-      hideButton.addEventListener('click', handleHideButtonClick);
-      hideButtonHolder.appendChild(hideButton);
-    }
-
-    return hideButton;
-  }
-
-  function renderPlaceholderCard(
-    collapsableItem: HTMLElement,
-    buttonInfo: AddButtonInfo
-  ): void {
-    const placeholderDiv = createPlaceholderDiv();
-
-    const displayName = getDisplayName(collapsableItem, buttonInfo);
-    placeholderDiv.innerHTML = `You can expand the optional <strong>${displayName}</strong> field by clicking here.`;
-
-    if (buttonInfo.dom === null) {
-      handleNoButtonInfo(collapsableItem, placeholderDiv);
-    } else if (buttonInfo.relation === 'child') {
-      handleChildRelation(collapsableItem, placeholderDiv);
-    } else {
-      handleSiblingRelation(collapsableItem, buttonInfo, placeholderDiv);
-    }
-
-    collapsableItem.appendChild(placeholderDiv);
-  }
-
-  function createPlaceholderDiv(): HTMLDivElement {
-    const placeholderDiv = document.createElement('div');
-    placeholderDiv.classList.add(
-      'border-x',
-      'border-y',
-      'border-spring-50',
-      'px-6',
-      'py-6',
-      'text-sm',
-      'text-n-40',
-      'cursor-pointer',
-      'collapsable-placeholder'
-    );
-    return placeholderDiv;
-  }
-
-  function getDisplayName(
-    collapsableItem: HTMLElement,
-    buttonInfo: AddButtonInfo
-  ): string {
-    const displayNameLabel = buttonInfo.dom
-      ? buttonInfo.dom.previousElementSibling?.querySelector('label')
-      : collapsableItem.querySelector('label');
-
-    let displayName = displayNameLabel?.innerText || 'element';
-
-    displayName = getFirstWordFromText(displayName);
-
-    if (displayName === 'narrative') {
-      return (
-        collapsableItem.getElementsByTagName('label')[0]?.innerText || 'element'
-      );
-    }
-
-    return displayName;
-  }
-
-  function handleNoButtonInfo(
-    collapsableItem: HTMLElement,
-    placeholderDiv: HTMLDivElement
-  ): void {
-    adjustBorders(collapsableItem, 'border-l');
-    adjustPadding(collapsableItem, 'pb-11');
-    addPlaceholderClickListener(collapsableItem, placeholderDiv);
-  }
-
-  function handleChildRelation(
-    collapsableItem: HTMLElement,
-    placeholderDiv: HTMLDivElement
-  ): void {
-    adjustBorders(collapsableItem, 'border-l');
-    adjustPadding(collapsableItem, 'pb-11');
-    addPlaceholderClickListener(collapsableItem, placeholderDiv);
-  }
-
-  function handleSiblingRelation(
-    collapsableItem: HTMLElement,
-    buttonInfo: AddButtonInfo,
-    placeholderDiv: HTMLDivElement
-  ): void {
-    placeholderDiv.classList.add('mb-6');
-    buttonInfo.dom?.classList.add('mb-6');
-    adjustBorders(collapsableItem, 'border-l');
-    adjustPadding(collapsableItem, 'pb-11');
-    addPlaceholderClickListener(collapsableItem, placeholderDiv, buttonInfo);
-  }
-
-  function adjustBorders(
-    collapsableItem: HTMLElement,
-    borderClass: string
-  ): void {
-    if (collapsableItem.classList.contains(borderClass)) {
-      collapsableItem.classList.add(`${borderClass}-was-here`);
-      collapsableItem.classList.remove(borderClass);
-    }
-  }
-
-  function adjustPadding(
-    collapsableItem: HTMLElement,
-    paddingClass: string
-  ): void {
-    if (collapsableItem.classList.contains(paddingClass)) {
-      collapsableItem.classList.add(`${paddingClass}-was-here`);
-      collapsableItem.classList.remove(paddingClass);
-    }
-  }
-
-  function addPlaceholderClickListener(
-    collapsableItem: HTMLElement,
-    placeholderDiv: HTMLDivElement,
-    buttonInfo?: AddButtonInfo
-  ): void {
-    placeholderDiv.addEventListener('click', () => {
-      if (collapsableItem.classList.contains('border-l-was-here')) {
-        collapsableItem.classList.add('border-l');
-        collapsableItem.classList.remove('border-l-was-here');
-      }
-
-      if (collapsableItem.classList.contains('pb-11-was-here')) {
-        collapsableItem.classList.add('pb-11');
-        collapsableItem.classList.remove('pb-11-was-here');
-      }
-
-      revealHiddenElements(collapsableItem);
-      if (buttonInfo?.dom) {
-        buttonInfo.dom.classList.remove('collapsable-hide');
-      }
-      removeElement(placeholderDiv);
-    });
-  }
-
-  function getFirstWordFromText(text): string {
-    const trimmedText = text.trim();
-    const words = trimmedText.split(/\s+/);
-
-    return words[0];
-  }
-
-  function revealHiddenElements(collapsableItem: HTMLElement): void {
-    collapsableItem.querySelectorAll('.collapsable-hide').forEach((element) => {
-      (element as HTMLElement).classList.remove('collapsable-hide');
-    });
-  }
-
-  function hideElement(element: HTMLElement | null) {
-    element?.classList?.add('collapsable-hide');
-  }
-
-  function removeElement(element: HTMLElement) {
-    element.remove();
-  }
-
-  handleInitialFormLoad();
-  handleNewAdditionsToFormViaMutatorsAndObservers();
+  attachInitialCollapsableButtonEvents();
+  observeNewCollapsableButtons();
 });
+
+function escapeHtml(unsafe: string) {
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}

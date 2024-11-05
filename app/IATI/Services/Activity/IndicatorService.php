@@ -157,7 +157,13 @@ class IndicatorService
         $element = getElementSchema('indicator');
         $this->resultElementFormCreator->url = route('admin.result.indicator.store', [$resultId]);
 
-        return $this->resultElementFormCreator->editForm([], $element, 'POST', route('admin.result.indicator.index', $resultId));
+        return $this->resultElementFormCreator->editForm(
+            model: [],
+            formData: $element,
+            method: 'POST',
+            parent_url: route('admin.result.indicator.index', $resultId),
+            formId: 'indicator-form-id'
+        );
     }
 
     /**
@@ -178,11 +184,12 @@ class IndicatorService
         $this->resultElementFormCreator->url = route('admin.result.indicator.update', [$resultId, $indicatorId]);
 
         return $this->resultElementFormCreator->editForm(
-            $resultIndicator->indicator,
-            $element,
+            model: $resultIndicator->indicator,
+            formData: $element,
             method:'PUT',
             parent_url: route('admin.result.indicator.index', $resultId),
-            deprecationStatusMap: $deprecationStatusMap
+            deprecationStatusMap: $deprecationStatusMap,
+            formId: 'indicator-form-id'
         );
     }
 

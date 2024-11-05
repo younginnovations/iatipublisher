@@ -6,13 +6,17 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Result\ResultRequest;
+use App\IATI\Models\Activity\Result;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ResultService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
 
 /**
@@ -20,6 +24,8 @@ use Illuminate\Support\Facades\Session;
  */
 class ResultController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var ResultService
      */
@@ -60,7 +66,7 @@ class ResultController extends Controller
             $toast = generateToastData();
 
             return view('admin.activity.result.index', compact('activity', 'results', 'types', 'toast'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.result.index', $activityId)->with(
@@ -88,7 +94,7 @@ class ResultController extends Controller
                 'message' => 'Results fetched successfully',
                 'data'    => $result,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
@@ -108,10 +114,26 @@ class ResultController extends Controller
             $element = getElementSchema('result');
             $activity = $this->activityService->getActivity($id);
             $form = $this->resultService->createFormGenerator($id, $activity->default_field_values ?? []);
-            $data = ['title' => $element['label'], 'name' => 'result'];
+
+            $formHeader = $this->getFormHeader(
+                hasData    : false,
+                elementName: 'result',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->resultBreadCrumbInfo(
+                activity: $activity,
+                result  : null
+            );
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'result',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.result.index', $id)->with(
@@ -142,7 +164,7 @@ class ResultController extends Controller
                 'success',
                 'Activity result created successfully.'
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.result.index', $activityId)->with(
@@ -170,7 +192,7 @@ class ResultController extends Controller
             $types = getResultTypes();
 
             return view('admin.activity.result.detail', compact('activity', 'result', 'types', 'toast', 'element'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.result.index', $activityId)->with(
@@ -193,11 +215,31 @@ class ResultController extends Controller
         try {
             $element = getElementSchema('result');
             $activity = $this->activityService->getActivity($activityId);
-            $form = $this->resultService->editFormGenerator($resultId, $activityId, $activity->default_field_values ?? []);
-            $data = ['title' => $element['label'], 'name' => 'result'];
+            $form = $this->resultService->editFormGenerator(
+                resultId                  : $resultId,
+                activityId                : $activityId,
+                activityDefaultFieldValues: $activity->default_field_values ?? []
+            );
+
+            $formHeader = $this->getFormHeader(
+                hasData    : true,
+                elementName: 'result',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->resultBreadCrumbInfo(
+                activity: $activity,
+                result  : $this->resultService->getResult($resultId)
+            );
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'result',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.result.index', $activityId)->with(
@@ -232,7 +274,7 @@ class ResultController extends Controller
                 'success',
                 'Activity result updated successfully.'
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.result.index', $activityId)->with(
@@ -261,7 +303,7 @@ class ResultController extends Controller
                 'msg'         => 'Result Deleted Successfully',
                 'activity_id' => $id,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
             Session::flash('error', 'Result Delete Error');
 

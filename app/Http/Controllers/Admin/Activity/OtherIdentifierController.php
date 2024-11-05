@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\OtherIdentifier\OtherIdentifierRequest;
 use App\IATI\Services\Activity\OtherIdentifierService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -17,6 +19,8 @@ use Illuminate\Support\Arr;
  */
 class OtherIdentifierController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var OtherIdentifierService
      */
@@ -47,17 +51,34 @@ class OtherIdentifierController extends Controller
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'other_identifier', []);
 
             $form = $this->otherIdentifierService->formGenerator(
-                id:$id,
+                id                        : $id,
                 activityDefaultFieldValues: $activity->default_field_values ?? [],
-                deprecationStatusMap: $deprecationStatusMap
+                deprecationStatusMap      : $deprecationStatusMap
             );
-            $data = ['title' => $element['label'], 'name' => 'other_identifier'];
+
+            $hasData = (bool) Arr::get($activity, 'other_identifier', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'other_identifier',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'other_identifier');
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'other_identifier',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.otherIdentifier.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening other-identifier edit form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while opening other-identifier edit form.'
+            );
         }
     }
 
@@ -77,7 +98,7 @@ class OtherIdentifierController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Other-identifier updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating other-identifier.');

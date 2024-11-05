@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Description\DescriptionRequest;
 use App\IATI\Services\Activity\DescriptionService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -17,6 +19,8 @@ use Illuminate\Support\Arr;
  */
 class DescriptionController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var DescriptionService
      */
@@ -45,14 +49,35 @@ class DescriptionController extends Controller
             $element = getElementSchema('description');
             $activity = $this->descriptionService->getActivityData($id);
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'description', []);
-            $form = $this->descriptionService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
-            $data = ['title' => $element['label'], 'name' => 'description'];
+            $form = $this->descriptionService->formGenerator(
+                id                        : $id,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap      : $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'description', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'description',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'description');
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'description',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.description.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering activity description form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while rendering activity description form.'
+            );
         }
     }
 
@@ -75,7 +100,7 @@ class DescriptionController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Description updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating description.');

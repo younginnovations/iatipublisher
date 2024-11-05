@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Budget\BudgetRequest;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\BudgetService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -18,6 +20,8 @@ use Illuminate\Support\Arr;
  */
 class BudgetController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var BudgetService
      */
@@ -54,17 +58,35 @@ class BudgetController extends Controller
             $activity = $this->activityService->getActivity($id);
 
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'budget', []);
-            $form = $this->budgetService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
+            $form = $this->budgetService->formGenerator(
+                id                        : $id,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap      : $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'budget', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'budget',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'budget');
+
             $data = [
-                'title'  => $element['label'],
-                'name'   => 'budget',
+                'title'            => $element['label'],
+                'name'             => 'budget',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
             ];
 
             return view('admin.activity.budget.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening budget form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while opening budget form.'
+            );
         }
     }
 
@@ -86,7 +108,7 @@ class BudgetController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Budget updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating budget.');

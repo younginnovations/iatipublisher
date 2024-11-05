@@ -54,6 +54,8 @@ class WrapperCollectionForm extends Form
                             'hover_text' => Arr::get($field, 'hover_text', ''),
                             'help_text' => Arr::get($field, 'help_text', ''),
                             'helper_text' => Arr::get($field, 'helper_text', ''),
+                            'is_collapsable'   => Arr::get($field, 'is_collapsable', ''),
+                            'label_indicator'  => Arr::get($field, 'label_indicator', ),
                             'wrapper'         => ['class' => $this->getSubElementFormWrapperClass($field, $data)],
                             'dynamic_wrapper' => ['class' => $this->getSubElementFormDynamicWrapperClasses($field, $data)],
                         ],
@@ -63,10 +65,16 @@ class WrapperCollectionForm extends Form
                 $name = isset($field['name']) ? $field['name'] : $data['name'];
 
                 if (isset($field['add_more']) && $field['add_more']) {
+                    $addMoreButtonClass = 'add_to_collection add_more button one relative my-3 pl-6 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral w-full';
+
+                    if (Arr::get($field, 'add_more_has_borders')) {
+                        $addMoreButtonClass = $addMoreButtonClass . getAddAdditionalButtonBorders();
+                    }
+
                     $this->add('add_to_collection_' . $name, 'button', [
                         'label' => generateAddAdditionalLabel($data['name'], Arr::get($data, 'attributes', null) ? $field['name'] : $data['name']),
                         'attr'  => [
-                            'class'     => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
+                            'class'     => $addMoreButtonClass,
                             'form_type' => $data['parent'] . '_' . $data['name'] . '_' . $field['name'],
                             'icon'      => true,
                         ],
@@ -76,9 +84,11 @@ class WrapperCollectionForm extends Form
         }
 
         if (isset($data['add_more']) && $data['add_more']) {
-            $this->add('delete_' . $data['name'] . '12', 'button', [
+            $name = $data['name'];
+            $this->add('delete_this_' . $data['name'], 'button', [
                 'attr' => [
-                    'class' => 'delete-parent delete-item absolute right-0 top-16 -translate-y-1/2 translate-x-1/2',
+                    'class' => 'delete-parent two text-crimson-40 font-bold text-md uppercase absolute right-0 -bottom-[1.2rem] w-[100%] justify-end pr-6 ' . " delete-parent-item-$name delete-parent-item delete-parent-selector",
+
                 ],
             ]);
         }
@@ -204,6 +214,8 @@ class WrapperCollectionForm extends Form
                     'hover_text' => Arr::get($field, 'hover_text', ''),
                     'help_text' => Arr::get($field, 'help_text', ''),
                     'helper_text' => Arr::get($field, 'helper_text', ''),
+                    'is_collapsable'   => Arr::get($field, 'is_collapsable', ''),
+                    'label_indicator'  => Arr::get($field, 'label_indicator', ),
                     'wrapper'         => ['class' => $this->getWrapperCollectionFormWrapperClasses()],
                     'dynamic_wrapper' => ['class' => $this->getWrapperCollectionFormDynamicWrapperClasses($field, $element)],
                 ],
@@ -211,11 +223,17 @@ class WrapperCollectionForm extends Form
         );
 
         if (isset($field['add_more']) && $field['add_more']) {
+            $addMoreButtonClass = 'add_to_collection add_more button 2 relative pl-6 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral 10 ';
+
+            if (Arr::get($field, 'add_more_has_borders')) {
+                $addMoreButtonClass = $addMoreButtonClass . getAddAdditionalButtonBorders();
+            }
+
             $this->add('add_to_collection_' . $field['name'], 'button', [
                 'label' => generateAddAdditionalLabel($element['name'], $field['name']),
                 'attr'  => [
-                    'class'     => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ',
-                    'form_type' =>  $field['name'],
+                    'class'     => $addMoreButtonClass,
+                    'form_type' => $field['name'],
                     'icon'      => true,
                 ],
             ]);
@@ -223,7 +241,7 @@ class WrapperCollectionForm extends Form
 
         $this->add('delete_' . $field['name'], 'button', [
             'attr' => [
-                'class' => 'delete-parent delete-item absolute right-0 top-16 -translate-y-1/2 translate-x-1/2',
+                'class' => 'delete-parent five delete-item two absolute right-0 top-16 -translate-y-1/2 translate-x-1/2 5',
             ],
         ]);
     }
@@ -232,7 +250,7 @@ class WrapperCollectionForm extends Form
     {
         return (Arr::get($data, 'attributes', null) && isset($field['name']) && strtolower(
             $field['name']
-        ) === 'narrative') ? 'form-field-group form-child-body xl:flex flex-wrap rounded-tl-lg rounded-br-lg border-y border-r border-spring-50 p-6' : 'form-field-group form-child-body xl:flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6';
+        ) === 'narrative') ? 'form-field-group form-child-body three xl:flex flex-wrap p-6' : 'form-field-group form-child-body four xl:flex flex-wrap p-6';
     }
 
     private function getSubElementFormDynamicWrapperClasses($field, $data): string
@@ -243,21 +261,23 @@ class WrapperCollectionForm extends Form
         $isNotMailingAddress = $data['name'] !== 'mailing_address';
 
         $collapsableClass = getCollapsableClass($field, 'wrapper-collection');
+        $formBorderClass = $this->shouldRenderBorderOnForm($field, $data) ? 'border-spring-50 border' : '';
+        $labelWithBorder = $this->shouldRenderBorderOnLabel($field, $data) ? 'label-with-border' : '';
 
         if ($hasAddMoreButton) {
             if ($isSubElementNarrative && !$hasAttributes && $isNotMailingAddress) {
-                return "border-l border-spring-50 pb-11 $collapsableClass";
+                return "border-spring-50 $collapsableClass";
             }
 
-            return "subelement rounded-tl-lg border-l border-spring-50 pb-11 $collapsableClass";
+            return "subelement rounded-t-sm eight border-spring-50 $collapsableClass $formBorderClass $labelWithBorder";
         }
 
-        return "subelement rounded-tl-lg border-l border-spring-50 mb-6 $collapsableClass";
+        return "subelement rounded-t-sm nine border-spring-50 $collapsableClass $formBorderClass $labelWithBorder";
     }
 
     private function getWrapperCollectionFormWrapperClasses(): string
     {
-        return 'wrapped-child-body';
+        return 'wrapped-child-body two ';
     }
 
     private function getWrapperCollectionFormDynamicWrapperClasses($field, $element): string
@@ -267,22 +287,59 @@ class WrapperCollectionForm extends Form
         $isSubElementNarrative = isset($field['name']) && strtolower($field['name']) === 'narrative';
 
         $collapsableClasses = getCollapsableClass($field, 'wrapper-collection-form');
+        $formBorderClass = $this->shouldRenderBorderOnForm($field, $element) ? 'border-spring-50 border' : '';
+        $labelWithBorder = $this->shouldRenderBorderOnLabel($field, $element) ? 'label-with-border' : '';
 
         if ($hasAddMoreButton) {
             if (!$hasAttributes && $isSubElementNarrative) {
-                return "border-l border-spring-50 pb-11 $collapsableClasses";
+                return "border-spring-50 $collapsableClasses $formBorderClass $labelWithBorder";
             }
 
-            return "subelement rounded-tl-lg border-l border-spring-50 pb-11 $collapsableClasses";
+            return "subelement rounded-t-sm ten border-spring-50 $collapsableClasses $formBorderClass $labelWithBorder";
         }
 
         $hasAttributes = Arr::get($field, 'attributes', null);
         $hasSubElementNarrative = $field['sub_elements'] && isset($field['sub_elements']['narrative']);
 
         if (!$hasAttributes && $hasSubElementNarrative) {
-            return "subelement rounded-tl-lg mb-6 $collapsableClasses";
+            return "subelement rounded-t-sm eleven  $collapsableClasses $formBorderClass $labelWithBorder";
         }
 
-        return "subelement rounded-tl-lg border-l border-spring-50 mb-6 $collapsableClasses";
+        return "subelement rounded-t-sm twelve border-spring-50 $collapsableClasses $formBorderClass $labelWithBorder";
+    }
+
+    private function shouldRenderBorderOnAddMoreButton($field): bool
+    {
+        /** Handles for contact_info */
+        $attr = Arr::get($field, 'name', '');
+        $noBorderAttrs = ['narrative', 'email', 'telephone', 'website'];
+
+        return Arr::get($field, 'add_more_has_borders') && !in_array($attr, $noBorderAttrs);
+    }
+
+    private function shouldRenderBorderOnForm($field, $element): bool
+    {
+        $baseElements = ['related_activity', 'legacy_data', 'default_aid_type'];
+
+        if (in_array(Arr::get($element, 'name'), $baseElements)) {
+            return Arr::get($element, 'form_has_borders', false);
+        }
+
+        /** Handles for contact_info */
+        $attr = Arr::get($field, 'name', '');
+        $noBorderAttrs = ['narrative', 'email', 'telephone', 'website'];
+
+        return Arr::get($field, 'form_has_borders') && !in_array($attr, $noBorderAttrs);
+    }
+
+    private function shouldRenderBorderOnLabel($field, $element): bool
+    {
+        $baseElements = ['related_activity', 'legacy_data', 'default_aid_type'];
+
+        if (in_array(Arr::get($element, 'name'), $baseElements)) {
+            return Arr::get($element, 'label_has_borders', false);
+        }
+
+        return Arr::get($field, 'label_has_borders') && Arr::get($field, 'name') != 'narrative';
     }
 }

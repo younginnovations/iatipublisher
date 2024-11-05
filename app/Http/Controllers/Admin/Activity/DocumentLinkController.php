@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\DocumentLink\DocumentLinkRequest;
 use App\IATI\Services\Activity\DocumentLinkService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
@@ -19,6 +21,7 @@ use Illuminate\Support\Arr;
  */
 class DocumentLinkController extends Controller
 {
+    use EditFormTrait;
     /**
      * @var DocumentLinkService
      */
@@ -56,14 +59,35 @@ class DocumentLinkController extends Controller
             $element = getElementSchema('document_link');
             $activity = $this->documentLinkService->getActivityData($id);
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'document_link', []);
-            $form = $this->documentLinkService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
-            $data = ['title' => $element['label'], 'name' => 'document_link'];
+            $form = $this->documentLinkService->formGenerator(
+                id                        : $id,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap      : $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'document_link', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'document_link',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'document_link');
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'document_link',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.documentLink.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering document-link form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while rendering document-link form.'
+            );
         }
     }
 
@@ -85,7 +109,7 @@ class DocumentLinkController extends Controller
             $this->db->commit();
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Document-link updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->db->rollBack();
             logger()->error($e->getMessage());
 

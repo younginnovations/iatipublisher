@@ -38,13 +38,7 @@ class ResultElementForm extends BaseForm
             foreach ($sub_elements as $name => $sub_element) {
                 $this->add(sprintf('sub_elements.%s.name_heading', $name), 'static', [
                     'title'   => true,
-                    'content' => '<div class="bg-white" id=' . $name . '>
-
-                    <div class="title flex items-center mb-4">
-                        <div class="text-sm shrink-0 uppercase text-n-40 font-bold">' . $name . '</div>
-                        <div class="line grow h-px border-b border-n-40 ml-4"></div>
-                    </div>
-                    </div>',
+                    'content' => '',
                 ]);
 
                 $this->add(
@@ -63,6 +57,8 @@ class ResultElementForm extends BaseForm
                             'hover_text'       => $this->getData(sprintf('sub_elements.%s.hover_text', $name)) ?? '',
                             'help_text'        => $this->getData(sprintf('sub_elements.%s.help_text', $name)) ?? '',
                             'helper_text'      => $this->getData(sprintf('sub_elements.%s.helper_text', $name)) ?? '',
+                            'is_collapsable'   => Arr::get($sub_element, 'is_collapsable', ''),
+                            'label_indicator'  => Arr::get($sub_element, 'label_indicator', ),
                             'wrapper'          => ['class' => $this->getBaseFormWrapperClasses()],
                             'dynamic_wrapper'  => ['class' => $this->getBaseFormDynamicWrapperClasses($sub_element)],
                         ],
@@ -70,10 +66,16 @@ class ResultElementForm extends BaseForm
                 );
 
                 if (Arr::get($sub_element, 'add_more', false) || Arr::get($sub_element, 'add_more_attributes', false)) {
+                    $addMoreButtonClass = 'add_to_parent add_more button two relative pl-6 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ';
+
+                    if (Arr::get($sub_element, 'add_more_has_borders')) {
+                        $addMoreButtonClass = $addMoreButtonClass . getAddAdditionalButtonBorders();
+                    }
+
                     $this->add('add_to_collection_' . $sub_element['name'], 'button', [
                         'label' => generateAddAdditionalLabel($sub_element['name'], $this->getData(sprintf('sub_elements.%s.name', $name))),
                         'attr'  => [
-                            'class'     => 'add_to_parent add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
+                            'class'     => $addMoreButtonClass,
                             'form_type' => $sub_element['name'],
                             'icon'      => true,
                         ],
@@ -85,15 +87,41 @@ class ResultElementForm extends BaseForm
 
     private function getBaseFormWrapperClasses()
     {
-        return 'multi-form relative';
+        return 'multi-form relative three pb-3';
     }
 
     private function getBaseFormDynamicWrapperClasses($sub_element)
     {
-        return (isset($sub_element['add_more']) && $sub_element['add_more']) ?
-            ((!Arr::get($sub_element, 'attributes', null) && strtolower(
-                $sub_element['name']
-            ) === 'narrative') ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
-            : ((empty($sub_element['attributes']) && $sub_element['sub_elements'] && isset($sub_element['sub_elements']['narrative'])) ? 'subelement rounded-tl-lg mb-6' : 'subelement rounded-tl-lg border-l border-spring-50 mb-6');
+        $hasAddMore = isset($sub_element['add_more']) && $sub_element['add_more'];
+        $isNarrative = strtolower($sub_element['name']) === 'narrative';
+        $hasAttributes = Arr::get($sub_element, 'attributes', null) !== null;
+        $hasSubElements = !empty($sub_element['sub_elements']);
+        $hasNarrativeSubElement = $hasSubElements && isset($sub_element['sub_elements']['narrative']);
+        $formBorderClass = $this->shouldRenderBorderOnForm($sub_element) ? 'border-spring-50 border' : '';
+        $labelBorderClass = $this->shouldRenderBorderOnLabel($sub_element) ? 'label-with-border' : '';
+
+        if ($hasAddMore) {
+            if (!$hasAttributes && $isNarrative) {
+                return "border-spring-50 one $formBorderClass $labelBorderClass";
+            }
+
+            return "subelement rounded-t-sm two border-spring-50 $formBorderClass $labelBorderClass";
+        }
+
+        if ($hasNarrativeSubElement && !$hasAttributes) {
+            return "subelement rounded-t-sm three $formBorderClass $labelBorderClass";
+        }
+
+        return "subelement rounded-t-sm four border-spring-50 mb-6 $formBorderClass $labelBorderClass";
+    }
+
+    private function shouldRenderBorderOnForm($element): bool
+    {
+        return Arr::get($element, 'form_has_borders', false);
+    }
+
+    private function shouldRenderBorderOnLabel($element): bool
+    {
+        return Arr::get($element, 'label_has_borders', false);
     }
 }

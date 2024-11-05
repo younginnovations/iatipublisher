@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Location\LocationRequest;
 use App\IATI\Services\Activity\LocationService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -18,6 +20,8 @@ use Illuminate\Support\Arr;
  */
 class LocationController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var LocationService
      */
@@ -46,14 +50,35 @@ class LocationController extends Controller
             $element = getElementSchema('location');
             $activity = $this->locationService->getActivityData($id);
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'location', []);
-            $form = $this->locationService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
-            $data = ['title' => $element['label'], 'name' => 'location'];
+            $form = $this->locationService->formGenerator(
+                id                        : $id,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap      : $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'location', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'location',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'location');
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'location',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.location.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering location form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while rendering location form.'
+            );
         }
     }
 
@@ -73,7 +98,7 @@ class LocationController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Location updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating location.');

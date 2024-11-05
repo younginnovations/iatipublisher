@@ -1,74 +1,57 @@
 .checkbox {
   @apply relative block cursor-pointer select-none;
-
   .checkmark {
     @apply flex h-4 w-4 items-center justify-center rounded border-2 border-n-20;
     transition: all 0.4s ease;
-
     &:after {
       border-width: 0 3px 3px 0;
       content: '';
       @apply mb-0.5 hidden h-2 w-[5px] rotate-45 border-spring-50;
     }
   }
-
   input {
     @apply absolute h-0 w-0 cursor-pointer opacity-0;
-
     &:checked ~ .checkmark {
       @apply border-spring-50;
-
-      &.white {
-        @apply border-white;
-      }
-
       &:after {
         @apply block;
       }
     }
   }
-
   &:hover input ~ .checkmark {
     @apply border-spring-50;
-
-    &.white {
-      @apply border-white;
-    }
   }
 }
-
 /**
   Laravel form design
  */
 form {
   .form-field-group {
-    @apply relative p-3;
-
-    &:not(:last-child) {
-      @apply mb-6;
-    }
+    @apply relative m-6 p-3;
+    background: #f1f7f9;
 
     .form-field {
       @apply p-3;
-
       .help-text {
         @apply mt-2 text-xs leading-relaxed;
       }
     }
   }
-
   button.delete-item {
     @apply absolute h-8 w-8 cursor-pointer overflow-hidden rounded-full bg-n-40 -indent-40;
-
     &:after {
       background: url('/images/trash_full.svg') no-repeat center;
       content: '';
       @apply absolute left-1/2 top-1/2 h-[18px] w-[18px] -translate-x-1/2 -translate-y-1/2;
     }
-
     &:hover {
       @apply bg-bluecoral;
     }
+  }
+
+  .form-field-group-outer {
+    background: #f1f7f9;
+    @apply mx-0 p-4;
   }
 
   .form-field-group-outer .form-field {
@@ -77,29 +60,23 @@ form {
 
   .form-field-label {
     @apply mb-2 flex justify-between;
-
     label {
       @apply text-xs leading-relaxed;
     }
-
     .required {
       @apply font-bold text-salmon-50;
     }
   }
-
   input[type='text'],
   input[type='date'],
   textarea {
     @apply mt-0 h-12 w-full rounded border border-n-30 px-4 py-2.5 text-sm leading-normal outline-none duration-300;
-
     &::placeholder {
       @apply text-sm text-n-40;
     }
-
     &:focus {
       @apply border border-n-50 bg-n-10;
     }
-
     &:focus::placeholder {
       @apply text-n-50;
     }
@@ -112,22 +89,18 @@ form {
 
   select {
     @apply w-full rounded border border-n-30 px-4 py-3 text-sm text-n-40 outline-none duration-300;
-
     &:focus {
       @apply border border-n-50 bg-n-10;
     }
   }
-
   .help {
     @apply relative;
-
     &__text {
       @apply invisible absolute top-4 z-20 space-y-1.5 rounded bg-eggshell p-4 text-left text-xs text-n-40 opacity-0 duration-200;
       box-shadow: 0px 4px 40px rgb(0 0 0 / 10%);
       transition: all 0.3s ease-out;
     }
   }
-
   .help:hover {
     .help__text {
       transform: translateY(5px);
@@ -135,19 +108,8 @@ form {
       opacity: 1;
     }
   }
-
   .add_more {
     @apply relative;
-
-    &:before {
-      content: '';
-      @apply absolute left-0 top-0 h-1/2 w-px border-l border-spring-50;
-    }
-
-    &:after {
-      content: '';
-      @apply absolute left-0 top-2/4 h-px w-3.5 -translate-y-1/2 border-b border-spring-50;
-    }
 
     i {
       width: 18px;
@@ -155,36 +117,24 @@ form {
       background: url('/images/add-more-green.svg') no-repeat center;
     }
   }
-
   .add_more.freeze {
     i {
       width: 18px;
       height: 18px;
       background: url('/images/add-more-grey.svg') no-repeat center;
     }
-
     &::before,
     &::after {
       border-color: rgba(var(--n-30));
     }
   }
-
   .subelement {
     &.border-l > label {
       border-left: 0;
     }
 
-    .subelement,
-    .subelement + button {
-      @apply ml-6;
-    }
-
     .wrapped-child-body {
       @apply relative;
-
-      > .delete-parent {
-        @apply block;
-      }
     }
 
     > .multi-form:only-of-type > .delete-parent,
@@ -209,13 +159,11 @@ form {
   .wrapped-child-body + .collection_error {
     display: block;
   }
-
   .control-label + .collection_error,
   .title-container .collection_error {
     display: block;
     padding-right: 24px;
     font-style: italic;
-
     .div {
       line-height: 4px !important;
     }
@@ -229,37 +177,29 @@ span.select2-container--default {
   width: 100% !important;
   max-width: 100%;
   margin-bottom: 0.5rem;
-
   .select2-selection--single {
     @apply h-12 w-full rounded border border-n-30 px-4 py-3 text-sm text-n-40 outline-none duration-300;
-
     .select2-selection__rendered {
       @apply p-0 text-sm leading-normal;
     }
-
     .select2-selection__arrow {
       @apply h-11;
     }
-
     .select2-selection__clear span {
       @apply mr-2.5 text-sm;
     }
-
     .select2-selection__placeholder {
       @apply text-sm text-n-40;
     }
   }
-
   .select2-results__option--highlighted[aria-selected] {
     color: #1f2937;
     background-color: #f3f4f6;
   }
-
   .select2-results__option[aria-selected] {
     @apply text-sm text-n-50;
   }
 }
-
 .max-w-half {
   max-width: 50%;
 }
@@ -304,31 +244,26 @@ span.select2-container--default {
       @apply text-n-20;
     }
   }
-
   .hover-text {
     svg {
       @apply text-n-30;
     }
   }
 }
-
 .elements-card {
   @media screen and (max-width: 1190px) {
     flex-basis: auto;
     width: 100%;
   }
 }
-
 .manual-import {
   .help__text {
     transform: translateX(0) !important;
-
     @media (max-width: 1024px) {
       width: 350px !important;
     }
   }
 }
-
 .register-page .help__text {
   transform: translateX(0%) !important;
 }
@@ -338,20 +273,17 @@ span.select2-container--default {
 aside {
   .help__text {
     transform: translateX(0) !important;
-
     @media (max-width: 1370px) {
       width: 250px !important;
     }
   }
 }
-
 .import-activity,
 .activities__content--element {
   .help__text {
     transform: translateX(0) !important;
   }
 }
-
 aside {
   .progress {
     .help__text {
@@ -363,40 +295,33 @@ aside {
     }
   }
 }
-
 .activities__content {
   width: 100%;
 }
-
 .tab-btn {
   .help__text {
     transform: translateX(0) !important;
-
     @media (max-width: 1024px) {
       left: 0;
     }
   }
 }
-
 .activity-default-value {
   .help__text {
     transform: translateX(0%) !important;
   }
 }
-
 .error-title {
   color: #d1001e;
   padding-top: 8px !important;
   padding-bottom: 8px !important;
 }
-
 .text-danger-info {
   font-style: italic;
   font-size: 12px;
   line-height: 18px;
   font-weight: 400;
 }
-
 .text-danger-error {
   color: #d1001e;
   font-style: italic;
@@ -404,9 +329,376 @@ aside {
   line-height: 18px;
   font-weight: 400;
 }
-
 .freeze {
   .delete.delete-item {
     background-color: rgba(var(--n-20));
+  }
+}
+
+.delete-subelement-hide {
+  display: none;
+}
+
+.multi-form.relative:not(.subelement):has(.add_to_collection.add_more):not(:first-of-type)::before {
+  content: '';
+  display: block;
+  height: 1px;
+  width: 96%;
+  background-color: #b1c6cc;
+  margin: 8px auto;
+}
+
+.subelement.rounded-t-sm.four:has(+ .add_to_collection.add_more.button.four) {
+  @apply border-x border-b border-spring-50;
+}
+
+.subelement.narrative {
+  border: 0;
+  .form-field-group.form-child-body {
+    @apply mb-0;
+  }
+  + .add_to_collection.add_more {
+    border: 0;
+    padding-bottom: 0;
+  }
+}
+
+.subelement.freeze.narrative {
+  @apply mb-4;
+}
+
+.subelement.rounded-t-sm.six {
+  /**For Activity
+   * -> document-link -> category, language
+   * -> contact-info -> telephone, email and website
+   * -> location -> location-id
+   */
+  .subelement.rounded-t-sm.four.label-with-border {
+    @apply mx-6;
+    + .add_to_collection.add_more.button {
+      width: calc(100% - 3rem);
+      margin: 0 auto;
+    }
+  }
+}
+
+/**For Document_link
+ * -> document_date
+ */
+.subelement.rounded-t-sm.six {
+  .subelement.rounded-t-sm.three {
+    @apply mt-6;
+  }
+}
+
+.subelement.rounded-t-sm.six:has(.subelement.rounded-t-sm.two) {
+  &:has(.subelement.rounded-t-sm.four) {
+    /** For Contact Info
+     * -> Telephone
+     * -> Email
+     * -> Website
+     */
+    .subelement.rounded-t-sm.four {
+      border-bottom: 0;
+
+      .form-field-group.form-child-body {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  /** For Contact Info -> mailing_address */
+  .subelement.rounded-t-sm.one {
+    @apply mx-6;
+
+    .add_to_collection.add_more.one {
+      @apply my-5;
+    }
+
+    + .add_to_collection.add_more.three {
+      @apply mx-6 w-[calc((100%-3rem))];
+    }
+  }
+}
+
+#transaction-form {
+  /** For transaction
+ * -> description
+ * -> provider-organization
+ * -> receiver-organization
+ * -> sector
+ * -> recipient-country
+ * -> recipient-region
+ */
+  .multi-form.relative:not(.subelement):has(.add_to_collection.add_more) {
+    @apply mb-0;
+  }
+
+  /** For transaction
+   * -> description
+   * -> provider-organization
+   * -> receiver-organization
+   * -> sector
+   * -> recipient-country
+   * -> recipient-region
+   * ADD MORE NARRATIVE button
+   */
+  .add_to_collection.add_more.button.four {
+    border: 0;
+    padding-top: 0;
+  }
+
+  .subelement.rounded-t-sm.four {
+    /** For transaction
+     * -> sector
+     * -> recipient-county
+     * ADD MORE NARRATIVE button
+     */
+    + .add_to_collection.add_more.button.four {
+      @apply border-b-0 py-4;
+    }
+  }
+
+  /** For transaction
+   * -> aid-type
+   * -> sector
+   * ADD MORE button
+   */
+  .add_to_parent.add_more.button.three {
+    @apply w-full border-x border-b border-spring-50 py-3;
+  }
+}
+
+#result-form-id {
+  .subelement.rounded-t-sm.four:has(+ .add_to_collection.add_more.button.four) {
+    /** For Result
+     * -> document-link -> category
+     */
+    @apply mx-6;
+
+    /** For Result
+     * -> document-link -> category -> code
+     */
+    .form-field-group.form-child-body {
+      @apply mb-0;
+    }
+
+    /** For Result
+     * -> document-link -> language
+     * -> category
+     * ADD MORE button
+     */
+    + .add_to_collection.add_more.button.four {
+      @apply mx-6 w-[calc(100%-3rem)];
+    }
+  }
+
+  .subelement.rounded-t-sm.two:has(.multi-form.relative.three) {
+    /** For Result
+     * -> document-link -> language
+     */
+    .subelement.rounded-t-sm.four {
+      &:has(+ .add_to_collection.add_more.button.four) {
+        @apply border-b-0;
+
+        + .add_to_collection.add_more.button.four {
+          @apply mb-6;
+        }
+      }
+    }
+
+    /** For Result
+     * -> document-link
+     */
+    + .add_to_parent.add_more.button {
+      @apply mb-6;
+    }
+  }
+}
+
+#indicator-form-id,
+#period-form-id {
+  .subelement.rounded-t-sm.one {
+    /** For Indicator
+     * -> document link
+     * -> location
+     */
+    @apply mx-6;
+
+    /** For Indicator
+     * -> document link
+     * -> location
+     * ADD MORE button
+     */
+    + .add_to_collection.add_more.button.three {
+      @apply mx-6 w-[calc(100%-3rem)];
+    }
+
+    /** For Indicator
+     * -> document link
+     * -> location
+     */
+    .wrapped-child-body.one {
+      @apply mb-6;
+    }
+
+    .subelement.rounded-t-sm.eight {
+      /**
+       * For Indicator
+       * -> document-link -> category
+       * -> document-link -> language
+       */
+      @apply mx-6;
+
+      &:has(+ .add_to_collection.add_more.button.one) {
+        /**
+         * For Indicator
+         * -> document-link -> category
+         * -> document-link -> language
+         */
+        @apply border-b-0;
+
+        /**
+         * For Indicator
+         * -> document-link -> category -> code
+         * -> document-link -> language -> code
+         */
+        .form-field-group {
+          @apply mb-0;
+        }
+
+        /**
+         * For Indicator
+         * -> document-link -> category
+         * -> document-link -> language
+         * ADD MORE NARRATIVE button
+         */
+        + .add_to_collection.add_more.button.one {
+          @apply mx-6 mb-4 mt-0 w-[calc(100%-3rem)] border-x border-b border-spring-50 py-4;
+        }
+      }
+    }
+
+    .subelement.rounded-t-sm.nine {
+      /**
+      * For Indicator
+      * -> document-link -> document-date
+      */
+      @apply mx-6;
+    }
+
+    .subelement.rounded-t-sm.eleven {
+      /**
+       * For Indicator
+       * -> document-link -> title
+       * -> document-link -> description
+       */
+      @apply mx-6 mb-6;
+    }
+  }
+
+  .subelement.rounded-t-sm.two {
+    /**
+       * For Indicator
+       * -> document-link -> category
+       * -> document-link -> language
+       * -> reference -> dimension
+       */
+    .subelement.rounded-t-sm.four {
+      @apply mx-6 border-b-0;
+
+      .form-field-group.form-child-body {
+        @apply mb-0;
+      }
+
+      + .add_to_collection.add_more.button.four {
+        @apply mx-6 w-[calc(100%-3rem)];
+      }
+    }
+
+    /**
+     * For Indicator
+     * -> Document-link -> document-date
+     */
+    .subelement.rounded-t-sm.three {
+      @apply mt-6;
+    }
+
+    /**
+     * For Indicator
+     * -> Document-link
+     * -> Reference
+     * -> Baseline
+     * ADD MORE button
+     */
+    + .add_to_parent.add_more.button.two {
+      @apply mb-6;
+    }
+  }
+}
+
+.subelement.rounded-t-sm.six:has(.multi-form.relative.one) {
+  .subelement.rounded-t-sm.one {
+    @apply mx-6;
+    + .add_to_collection.add_more.button.three {
+      @apply mx-6 w-[calc(100%-3rem)];
+    }
+
+    .subelement.rounded-t-sm.nine {
+      @apply mx-6;
+    }
+  }
+}
+
+.collapsable-button {
+  transition: transform 0.3s ease;
+}
+
+.subelement-accordian-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease; /* Sliding animation */
+}
+
+.subelement-accordian-content-expanded {
+  max-height: 1000px; /* Arbitrarily large max-height to ensure content can expand */
+  padding: 10px 15px; /* Padding for the expanded state */
+}
+
+.display-none {
+  display: none;
+}
+
+.height-hide {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+
+.height-show {
+  max-height: none;
+  transition: max-height 0.5s ease;
+}
+
+.delete-parent-selector {
+  transition: background 0.3s ease, border 0.3s ease; /* Adjust duration and timing as needed */
+}
+
+.select2-selection {
+  background: white;
+}
+
+.subelement {
+  &:has(.wrapped-child-body:nth-of-type(n + 2)) {
+    .wrapped-child-body {
+      margin-bottom: 32px !important;
+    }
+  }
+  &:has(.multi-form:nth-of-type(n + 2)) {
+    .multi-form {
+      margin-bottom: 32px !important;
+    }
   }
 }

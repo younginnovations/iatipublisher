@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\ParticipatingOrganization\ParticipatingOrganizationRequest;
 use App\IATI\Services\Activity\ParticipatingOrganizationService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -18,6 +20,8 @@ use Illuminate\Support\Arr;
  */
 class ParticipatingOrganizationController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var ParticipatingOrganizationService
      */
@@ -46,14 +50,35 @@ class ParticipatingOrganizationController extends Controller
             $element = getElementSchema('participating_org');
             $activity = $this->participatingOrganizationService->getActivityData($id);
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'participating_org', []);
-            $form = $this->participatingOrganizationService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
-            $data = ['title' => $element['label'], 'name' => 'participating_org'];
+            $form = $this->participatingOrganizationService->formGenerator(
+                id                        : $id,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap      : $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'participating_org', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'participating_org',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'participating_org');
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'participating_org',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.participatingOrganization.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering participating-organization form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while rendering participating-organization form.'
+            );
         }
     }
 
@@ -73,7 +98,7 @@ class ParticipatingOrganizationController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Participating-organization updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e);
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating participating-organization.');

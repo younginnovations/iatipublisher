@@ -150,7 +150,13 @@ class PeriodService
         $element = getElementSchema('period');
         $this->resultElementFormCreator->url = route('admin.indicator.period.store', $indicatorId);
 
-        return $this->resultElementFormCreator->editForm([], $element, 'POST', route('admin.indicator.period.index', $indicatorId));
+        return $this->resultElementFormCreator->editForm(
+            model: [],
+            formData: $element,
+            method: 'POST',
+            parent_url: route('admin.indicator.period.index', $indicatorId),
+            formId: 'period-form-id'
+        );
     }
 
     /**
@@ -171,11 +177,12 @@ class PeriodService
         $this->resultElementFormCreator->url = route('admin.indicator.period.update', [$indicatorId, $periodId]);
 
         return $this->resultElementFormCreator->editForm(
-            $indicatorPeriod->period,
-            $element,
+            model: $indicatorPeriod->period,
+            formData: $element,
             method: 'PUT',
             parent_url: route('admin.indicator.period.index', $indicatorId),
-            deprecationStatusMap: $deprecationStatusMap
+            deprecationStatusMap: $deprecationStatusMap,
+            formId: 'period-form-id'
         );
     }
 

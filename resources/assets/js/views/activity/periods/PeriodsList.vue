@@ -2,7 +2,7 @@
   <div class="relative bg-paper px-5 pb-[71px] pt-4 xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      title="Periods List"
+      title="Period List"
       :back-link="indicatorLink"
     >
       <div class="flex items-center space-x-3">
@@ -186,15 +186,23 @@ export default defineComponent({
         link: activityLink,
       },
       {
+        title: 'Result List',
+        link: `/activity/${activityId}/result`,
+      },
+      {
         title: getActivityTitle(resultTitle, 'en'),
         link: resultLink,
+      },
+      {
+        title: 'Indicator List',
+        link: `/result/${resultId}/indicator`,
       },
       {
         title: getActivityTitle(indicatorTitle, 'en'),
         link: indicatorLink,
       },
       {
-        title: 'Periods List',
+        title: 'Period List',
         link: '',
       },
     ];

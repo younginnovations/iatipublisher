@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\PolicyMarker\PolicyMarkerRequest;
 use App\IATI\Services\Activity\PolicyMarkerService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -17,6 +19,8 @@ use Illuminate\Support\Arr;
  */
 class PolicyMarkerController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var PolicyMarkerService
      */
@@ -45,14 +49,35 @@ class PolicyMarkerController extends Controller
             $element = getElementSchema('policy_marker');
             $activity = $this->policyMarkerService->getActivityData($id);
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'policy_marker', []);
-            $form = $this->policyMarkerService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
-            $data = ['title' => $element['label'], 'name' => 'policy_marker'];
+            $form = $this->policyMarkerService->formGenerator(
+                id: $id,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap: $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'policy_marker', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'policy_marker',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'policy_marker');
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'policy_marker',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.policyMarker.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening policy-marker form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while opening policy-marker form.'
+            );
         }
     }
 
@@ -72,7 +97,7 @@ class PolicyMarkerController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Policy-marker updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating policy-marker.');

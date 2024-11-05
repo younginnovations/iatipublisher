@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\ReportingOrg\ReportingOrgRequest;
 use App\IATI\Services\Activity\ReportingOrgService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
@@ -17,6 +19,8 @@ use Illuminate\Support\Facades\DB;
  */
 class ReportingOrgController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var ReportingOrgService
      */
@@ -46,14 +50,35 @@ class ReportingOrgController extends Controller
             $activity = $this->reportingOrgService->getActivityData($id);
 
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'reporting_org', []);
-            $form = $this->reportingOrgService->formGenerator($id, $activity->default_field_values ?? [], deprecationStatusMap: $deprecationStatusMap);
-            $data = ['title' => $element['label'], 'name' => 'reporting_org'];
+            $form = $this->reportingOrgService->formGenerator(
+                id                        : $id,
+                activityDefaultFieldValues: $activity->default_field_values ?? [],
+                deprecationStatusMap      : $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'reporting_org', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'reporting_org',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'reporting_org');
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'reporting_org',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.reportingOrg.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e);
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening activity reporting_org form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while opening activity reporting_org form.'
+            );
         }
     }
 
@@ -77,7 +102,7 @@ class ReportingOrgController extends Controller
             DB::commit();
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Activity reporting-org updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 

@@ -10,11 +10,14 @@ use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\IndicatorService;
 use App\IATI\Services\Activity\PeriodService;
 use App\IATI\Services\Activity\ResultService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
 
 /**
@@ -22,6 +25,8 @@ use Illuminate\Support\Facades\Session;
  */
 class PeriodController extends Controller
 {
+    use EditFormTrait;
+
     /**
      * @var PeriodService
      */
@@ -80,7 +85,7 @@ class PeriodController extends Controller
                 'message' => 'Period fetched successfully',
                 'data'    => $period,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
@@ -116,7 +121,7 @@ class PeriodController extends Controller
             $toast = generateToastData();
 
             return view('admin.activity.period.period', compact('activity', 'parentData', 'period', 'types', 'toast'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.indicator.period.index', $indicatorId)->with('error', 'Error has occurred while rendering activity transactions listing.');
@@ -137,13 +142,34 @@ class PeriodController extends Controller
             $indicator = $this->indicatorService->getIndicator($indicatorId);
             $activity = $indicator->result->activity;
             $form = $this->periodService->createFormGenerator($indicatorId);
-            $data = ['title' => $element['label'], 'name' => 'period'];
+
+            $formHeader = $this->getFormHeader(
+                hasData    : false,
+                elementName: 'indicator',
+                parentTitle: Arr::get($indicator, 'indicator.title.0.narrative.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->periodBreadCrumbInfo(
+                activity : $activity,
+                result   : $this->resultService->getResult($indicator->result_id),
+                indicator: $indicator,
+                period   : null,
+            );
+
+            $data = [
+                'title'            => $element['label'],
+                'name'             => 'period',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
+            ];
 
             return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.indicator.period.index', $indicatorId)->with('error', 'Error has occurred while rendering indicator period form.');
+            return redirect()->route('admin.indicator.period.index', $indicatorId)->with(
+                'error',
+                'Error has occurred while rendering indicator period form.'
+            );
         }
     }
 
@@ -169,7 +195,7 @@ class PeriodController extends Controller
                 'success',
                 'Indicator period created successfully.'
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.indicator.period.index', $indicatorId)->with(
@@ -210,7 +236,7 @@ class PeriodController extends Controller
             $toast = generateToastData();
 
             return view('admin.activity.period.detail', compact('activity', 'parentData', 'period', 'types', 'toast', 'element'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.indicator.period.index', [$indicatorId])->with(
@@ -235,10 +261,19 @@ class PeriodController extends Controller
             $indicator = $this->indicatorService->getIndicator($indicatorId);
             $activity = $indicator->result->activity;
             $form = $this->periodService->editFormGenerator($indicatorId, $periodId);
-            $data = ['title' => $element['label'], 'name' => 'period'];
+
+            $formHeader = $this->getFormHeader(true, 'indicator', Arr::get($indicator, 'indicator.title.0.narrative.0.narrative', 'Untitled'));
+            $breadCrumbInfo = $this->periodBreadCrumbInfo(
+                activity : $activity,
+                result   : $this->resultService->getResult($indicator->result_id),
+                indicator: $indicator,
+                period   : $this->periodService->getPeriod($periodId),
+            );
+
+            $data = ['title' => $element['label'], 'name' => 'period', 'form_header' => $formHeader, 'bread_crumb_info' => $breadCrumbInfo];
 
             return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.indicator.period.index', $indicatorId)->with('error', 'Error has occurred while rendering period form.');
@@ -271,7 +306,7 @@ class PeriodController extends Controller
                 'success',
                 'Indicator period updated successfully.'
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.indicator.period.show', [$indicatorId, $periodId])->with(
@@ -300,7 +335,7 @@ class PeriodController extends Controller
                 'msg'          => 'Period Deleted Successfully',
                 'indicator_id' => $id,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
             Session::flash('error', 'Period Delete Error');
 

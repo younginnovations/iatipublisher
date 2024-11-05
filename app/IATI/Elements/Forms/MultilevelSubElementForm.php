@@ -38,6 +38,12 @@ class MultilevelSubElementForm extends BaseForm
 
         if ($sub_elements) {
             foreach ($sub_elements as $name => $sub_element) {
+                $addMoreButtonClass = 'add_to_parent add_more button one relative pl-6 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ';
+
+                if ($this->shouldRenderBordersOnAddMoreButton($sub_element)) {
+                    $addMoreButtonClass = $addMoreButtonClass . getAddAdditionalButtonBorders();
+                }
+
                 $this->add(
                     $this->getData(sprintf('sub_elements.%s.name', $name)),
                     'collection',
@@ -54,14 +60,17 @@ class MultilevelSubElementForm extends BaseForm
                             'hover_text'       => $this->getData(sprintf('sub_elements.%s.hover_text', $name)) ?? '',
                             'help_text'        => $this->getData(sprintf('sub_elements.%s.help_text', $name)) ?? '',
                             'helper_text'      => $this->getData(sprintf('sub_elements.%s.helper_text', $name)) ?? '',
+                            'is_collapsable'   => Arr::get($sub_element, 'is_collapsable', ''),
+                            'label_indicator'  => Arr::get($sub_element, 'label_indicator', ),
                             'wrapper'          => ['class' => $this->getBaseFormWrapperClasses()],
                             'dynamic_wrapper'  => ['class' => $this->getBaseFormDynamicWrapperClasses($sub_element, $element)]],
                     ]
                 )->add('add_to_collection', 'button', [
                     'label' => generateAddAdditionalLabel($element['name'], $this->getData(sprintf('sub_elements.%s.name', $name))),
                     'attr' => [
-                        'class' => 'add_to_parent add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
-                        'icon' => true,                    ],
+                        'class' => $addMoreButtonClass,
+                        'icon' => true,
+                    ],
                 ]);
             }
         }
@@ -69,25 +78,40 @@ class MultilevelSubElementForm extends BaseForm
 
     private function getBaseFormWrapperClasses(): string
     {
-        return 'multi-form relative';
+        return 'multi-form relative two pb-3';
     }
 
     private function getBaseFormDynamicWrapperClasses($sub_element, $element): string
     {
-        $hasAddMoreButton = isset($sub_element['add_more']) && $sub_element['add_more'];
+        $hasAddMoreButton = Arr::get($sub_element, 'add_more', false);
         $canAddMoreAttributes = Arr::get($element, 'add_more_attributes', false);
-        $elementHasAttributes = isset($sub_element['attributes']) && !count($sub_element['attributes']) > 0;
-        $isSubElementNarrative = isset($sub_element['name']) && strtolower($sub_element['name']) === 'narrative';
+        $elementHasAttributes = !count(Arr::get($sub_element, 'attributes', [])) > 0;
+        $isSubElementNarrative = strtolower(Arr::get($sub_element, 'name', '')) === 'narrative';
         $collapsableClass = getCollapsableClass($element, 'multi-level-form');
+        $formBorderClass = $this->shouldRenderBorderOnForm($sub_element) ? 'border-spring-50 border' : '';
+        $elementLabelClass = $this->shouldRenderBorderOnLabel($sub_element) ? 'label-with-border' : '';
 
-        if ($hasAddMoreButton || $canAddMoreAttributes) {
-            if ($isSubElementNarrative && !$elementHasAttributes) {
-                return "border-l border-spring-50 pb-11 border-reed $collapsableClass";
-            }
+        $baseClasses = "subelement rounded-t-sm five $collapsableClass $formBorderClass $elementLabelClass";
 
-            return "subelement rounded-tl-lg border-l border-spring-50 pb-11 $collapsableClass";
+        if (($hasAddMoreButton || $canAddMoreAttributes) && ($isSubElementNarrative && !$elementHasAttributes)) {
+            return "$collapsableClass $formBorderClass $elementLabelClass";
         }
 
-        return "subelement rounded-tl-lg border-l border-spring-50 mb-6 $collapsableClass";
+        return $baseClasses;
+    }
+
+    private function shouldRenderBordersOnAddMoreButton($sub_element)
+    {
+        return Arr::get($sub_element, 'add_more_has_borders');
+    }
+
+    private function shouldRenderBorderOnForm($sub_element)
+    {
+        return Arr::get($sub_element, 'form_has_borders');
+    }
+
+    private function shouldRenderBorderOnLabel($sub_element)
+    {
+        return Arr::get($sub_element, 'label_has_borders');
     }
 }

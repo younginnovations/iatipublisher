@@ -20,7 +20,6 @@ class SubElementForm extends Form
     public function buildForm():void
     {
         $data = $this->getData();
-
         $this->setClientValidationEnabled(false);
 
         if (Arr::get($data, 'type', null)) {

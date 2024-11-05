@@ -253,6 +253,10 @@ export default defineComponent({
         link: activityLink,
       },
       {
+        title: 'Transaction List',
+        link: `/activity/${activityId}/transaction`,
+      },
+      {
         title: 'Transaction',
         link: '',
       },

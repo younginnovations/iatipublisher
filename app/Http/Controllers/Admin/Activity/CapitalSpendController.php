@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\CapitalSpend\CapitalSpendRequest;
 use App\IATI\Services\Activity\CapitalSpendService;
+use App\IATI\Traits\EditFormTrait;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -17,6 +19,7 @@ use Illuminate\Support\Arr;
  */
 class CapitalSpendController extends Controller
 {
+    use EditFormTrait;
     /**
      * @var CapitalSpendService
      */
@@ -45,17 +48,34 @@ class CapitalSpendController extends Controller
             $element = getElementSchema('capital_spend');
             $activity = $this->capitalSpendService->getActivityData($id);
             $deprecationStatusMap = Arr::get($activity->deprecation_status_map, 'capital_spend', []);
-            $form = $this->capitalSpendService->formGenerator($id, deprecationStatusMap: $deprecationStatusMap);
+            $form = $this->capitalSpendService->formGenerator(
+                id                  : $id,
+                deprecationStatusMap: $deprecationStatusMap
+            );
+
+            $hasData = (bool) Arr::get($activity, 'capital_spend', false);
+            $formHeader = $this->getFormHeader(
+                hasData    : $hasData,
+                elementName: 'capital_spend',
+                parentTitle: Arr::get($activity, 'title.0.narrative', 'Untitled')
+            );
+            $breadCrumbInfo = $this->basicBreadCrumbInfo($activity, 'capital_spend');
+
             $data = [
-                'title' => $element['label'],
-                'name' => 'capital_spend',
+                'title'            => $element['label'],
+                'name'             => 'capital_spend',
+                'form_header'      => $formHeader,
+                'bread_crumb_info' => $breadCrumbInfo,
             ];
 
             return view('admin.activity.capitalSpend.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering activity capital-spend form.');
+            return redirect()->route('admin.activity.show', $id)->with(
+                'error',
+                'Error has occurred while rendering activity capital-spend form.'
+            );
         }
     }
 
@@ -77,7 +97,7 @@ class CapitalSpendController extends Controller
             }
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Activity capital-spend updated successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity capital-spend.');
