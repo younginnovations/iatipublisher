@@ -473,6 +473,8 @@ class XmlGenerator
         $xmlData['iati-activity'] = $this->getXmlData($activity, $transaction, $result, $organization);
         $xmlData['iati-activity']['@attributes'] = $this->getXmlAttributes($defaultValues, $timestamp);
 
+        sanitizeControlCharacters($xmlData);
+
         return $this->arrayToXml->createXml('iati-activities', $xmlData);
     }
 
