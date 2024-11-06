@@ -3160,7 +3160,7 @@
             "form_has_borders": true,
             "label_has_borders": true,
             "is_collapsable": true,
-            "label_indicator": "optional_text",
+            "label_indicator": "required_icon",
             "wrapper_collection": false,
             "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/category/'>For more information.</a>",
             "help_text": "If you have provided a document link, then you must select a category that best describes the document.",
@@ -3492,7 +3492,7 @@
             "form_has_borders": true,
             "label_has_borders": true,
             "is_collapsable": true,
-            "label_indicator": "optional_text",
+            "label_indicator": "required_icon",
             "hover_text": "A short, human-readable title. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/title/'>For more information</a>",
             "attributes": {},
             "sub_elements": {
@@ -3535,7 +3535,7 @@
             "form_has_borders": true,
             "label_has_borders": true,
             "is_collapsable": true,
-            "label_indicator": "optional_text",
+            "label_indicator": "required_icon",
             "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/document-link/category/'>For more information</a>",
             "help_text": "If you have provided a document link, then select a category that best describes the document.",
             "attributes": {
@@ -3853,7 +3853,7 @@
                 "form_has_borders": true,
                 "label_has_borders": true,
                 "is_collapsable": true,
-                "label_indicator": "optional_text",
+                "label_indicator": "required_icon",
                 "hover_text": "A short, human-readable title. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/title/'>For more information</a>",
                 "sub_elements": {
                   "narrative": {
@@ -3895,7 +3895,7 @@
                 "form_has_borders": true,
                 "label_has_borders": true,
                 "is_collapsable": true,
-                "label_indicator": "optional_text",
+                "label_indicator": "required_icon",
                 "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/category/'>For more information</a>",
                 "help_text": "If you have provided a document link, select a category that best describes the document.",
                 "attributes": {
@@ -4230,7 +4230,7 @@
                 "form_has_borders": true,
                 "label_has_borders": true,
                 "is_collapsable": true,
-                "label_indicator": "optional_text",
+                "label_indicator": "required_icon",
                 "hover_text": "A short, human-readable title. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/title/'>For more information</a>",
                 "sub_elements": {
                   "narrative": {
@@ -4271,7 +4271,7 @@
                 "form_has_borders": true,
                 "label_has_borders": true,
                 "is_collapsable": true,
-                "label_indicator": "optional_text",
+                "label_indicator": "required_icon",
                 "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/category/'>For more information</a>",
                 "help_text": "If you have provided a document link, select a category that best describes the document.",
                 "attributes": {
@@ -4546,7 +4546,7 @@
                 "form_has_borders": true,
                 "label_has_borders": true,
                 "is_collapsable": true,
-                "label_indicator": "optional_text",
+                "label_indicator": "required_icon",
                 "hover_text": "A short, human-readable title. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/title/'>For more information</a>",
                 "sub_elements": {
                   "narrative": {
@@ -4588,7 +4588,7 @@
                 "form_has_borders": true,
                 "label_has_borders": true,
                 "is_collapsable": true,
-                "label_indicator": "optional_text",
+                "label_indicator": "required_icon",
                 "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/actual/document-link/category/'>For more information</a>",
                 "help_text": "If you have provided a document link, select a category that best describes the document.",
                 "attributes": {
