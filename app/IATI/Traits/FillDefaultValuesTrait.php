@@ -9,6 +9,7 @@ use App\IATI\Models\Activity\Indicator;
 use App\IATI\Models\Activity\Period;
 use App\IATI\Models\Activity\Result;
 use App\IATI\Models\Activity\Transaction;
+use App\IATI\Models\Organization\Organization;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
@@ -146,21 +147,41 @@ trait FillDefaultValuesTrait
 
         if (
             Arr::get($data, 'migrated_from_aidstream', false) &&
-            !$this->model->getModel() instanceof Activity
+            !$this->model->getModel() instanceof Activity &&
+            !$this->model->getModel() instanceof Organization
         ) {
-            foreach ($data as $key => $datum) {
-                $this->model->{$key} = $datum;
-            }
-
-            $this->model->setTouchedRelations([]);
-            $this->model->save();
-
-            return $this->model;
+            return $this->saveMigratedData($data, $this->model);
         }
 
         $data['default_field_values'] = $defaultFieldValues;
 
         return $this->model->create($data);
+    }
+
+    /**
+     * @param $data
+     * @param $model
+     *
+     * @return Model
+     */
+    public function saveMigratedData($data, $model): Model
+    {
+        $touchedRelations = $model->getTouchedRelations();
+        $parentModels = [];
+
+        foreach ($touchedRelations as $relation) {
+            // Ensure the relation is a valid method
+            if (method_exists($model, $relation)) {
+                $relatedModel = $model->$relation()->getRelated();
+                $parentModels[] = get_class($relatedModel);
+            }
+        }
+
+        $model->withoutTouchingOn($parentModels, function () use ($data, $model) {
+            return $model->create($data);
+        });
+
+        return $model;
     }
 
     /**

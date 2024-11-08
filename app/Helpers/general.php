@@ -1270,7 +1270,7 @@ if (!function_exists('refreshIndicatorDeprecationStatusMap')) {
             'description'   => doesDescriptionHaveDeprecatedCode(Arr::get($indicators, 'description', [])),
             'document_link' => doesDocumentLinkHaveDeprecatedCode(Arr::get($indicators, 'document_link', [])),
             'reference'     => doesReferenceHaveDeprecatedCode(Arr::get($indicators, 'reference', [])),
-            'baseline'      => doesBaselineHaveDeprecatedCode(Arr::get($indicators, 'baseline', []))];
+            'baseline'      => doesBaselineHaveDeprecatedCode(Arr::get($indicators, 'baseline', [])), ];
     }
 }
 

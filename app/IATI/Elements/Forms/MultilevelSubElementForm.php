@@ -63,7 +63,7 @@ class MultilevelSubElementForm extends BaseForm
                             'is_collapsable'   => Arr::get($sub_element, 'is_collapsable', ''),
                             'label_indicator'  => Arr::get($sub_element, 'label_indicator', ),
                             'wrapper'          => ['class' => $this->getBaseFormWrapperClasses()],
-                            'dynamic_wrapper'  => ['class' => $this->getBaseFormDynamicWrapperClasses($sub_element, $element)]],
+                            'dynamic_wrapper'  => ['class' => $this->getBaseFormDynamicWrapperClasses($sub_element, $element)], ],
                     ]
                 )->add('add_to_collection', 'button', [
                     'label' => generateAddAdditionalLabel($element['name'], $this->getData(sprintf('sub_elements.%s.name', $name))),
