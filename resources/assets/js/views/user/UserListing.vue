@@ -946,11 +946,13 @@ const setDateType = (dateType) => {
 const createUser = () => {
   isLoaderVisible.value = true;
   let passwordData = {
-    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ''),
-    password_confirmation: encrypt(
-      formData.password_confirmation,
-      process.env.MIX_ENCRYPTION_KEY ?? ''
-    ),
+    // password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ''),
+    // password_confirmation: encrypt(
+    //   formData.password_confirmation,
+    //   process.env.MIX_ENCRYPTION_KEY ?? ''
+    // ),
+    password: formData.password,
+    password_confirmation: formData.password_confirmation,
   };
 
   axios
@@ -1017,11 +1019,13 @@ const openStatusModel = (user) => {
 const updateUser = () => {
   isLoaderVisible.value = true;
   let passwordData = {
-    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ''),
-    password_confirmation: encrypt(
-      formData.password_confirmation,
-      process.env.MIX_ENCRYPTION_KEY ?? ''
-    ),
+    // password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ''),
+    // password_confirmation: encrypt(
+    //   formData.password_confirmation,
+    //   process.env.MIX_ENCRYPTION_KEY ?? ''
+    // ),
+    password: formData.password,
+    password_confirmation: formData.password_confirmation,
   };
 
   axios

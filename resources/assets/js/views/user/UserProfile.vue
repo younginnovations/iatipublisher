@@ -472,18 +472,21 @@ const resendVerificationEmail = () => {
 const updatePassword = () => {
   isLoaderVisible.value = true;
   let passwordFormData = {
-    current_password: encrypt(
-      passwordData.current_password,
-      process.env.MIX_ENCRYPTION_KEY ?? ''
-    ),
-    password: encrypt(
-      passwordData.password,
-      process.env.MIX_ENCRYPTION_KEY ?? ''
-    ),
-    password_confirmation: encrypt(
-      passwordData.password_confirmation,
-      process.env.MIX_ENCRYPTION_KEY ?? ''
-    ),
+    // current_password: encrypt(
+    //   passwordData.current_password,
+    //   process.env.MIX_ENCRYPTION_KEY ?? ''
+    // ),
+    // password: encrypt(
+    //   passwordData.password,
+    //   process.env.MIX_ENCRYPTION_KEY ?? ''
+    // ),
+    // password_confirmation: encrypt(
+    //   passwordData.password_confirmation,
+    //   process.env.MIX_ENCRYPTION_KEY ?? ''
+    // ),
+    current_password: passwordData.current_password,
+    password: passwordData.password,
+    password_confirmation: passwordData.password_confirmation,
     form_type: 'password',
   };
 

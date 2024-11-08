@@ -129,10 +129,11 @@ export default defineComponent({
 
       let form = {
         emailOrUsername: formData.emailOrUsername,
-        password: encrypt(
-          formData.password,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
+        // password: encrypt(
+        //   formData.password,
+        //   process.env.MIX_ENCRYPTION_KEY ?? ''
+        // ),
+        password: formData.password,
       };
 
       axios

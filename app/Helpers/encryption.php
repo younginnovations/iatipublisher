@@ -73,29 +73,30 @@ if (!function_exists('decryptString')) {
      */
     function decryptString(string $encryptedString, string $key): bool|string|null
     {
-        $json = json_decode(base64_decode($encryptedString), true, 512, JSON_THROW_ON_ERROR);
+        // $json = json_decode(base64_decode($encryptedString), true, 512, JSON_THROW_ON_ERROR);
 
-        try {
-            $salt = hex2bin($json['salt']);
-            $iv = hex2bin($json['iv']);
-        } catch (Exception $e) {
-            logger()->error($e->getMessage());
+        // try {
+        //     $salt = hex2bin($json['salt']);
+        //     $iv = hex2bin($json['iv']);
+        // } catch (Exception $e) {
+        //     logger()->error($e->getMessage());
 
-            return null;
-        }
+        //     return null;
+        // }
 
-        $cipherText = base64_decode($json['ciphertext']);
-        $iterations = (int) abs($json['iterations']);
+        // $cipherText = base64_decode($json['ciphertext']);
+        // $iterations = (int) abs($json['iterations']);
 
-        if ($iterations <= 0) {
-            $iterations = 999;
-        }
+        // if ($iterations <= 0) {
+        //     $iterations = 999;
+        // }
 
-        $hashKey = hash_pbkdf2('sha512', $key, $salt, $iterations, (256 / 4));
-        unset($iterations, $json, $salt);
-        $decrypted = openssl_decrypt($cipherText, 'AES-256-CBC', hex2bin($hashKey), OPENSSL_RAW_DATA, $iv);
-        unset($cipherText, $hashKey, $iv);
+        // $hashKey = hash_pbkdf2('sha512', $key, $salt, $iterations, (256 / 4));
+        // unset($iterations, $json, $salt);
+        // $decrypted = openssl_decrypt($cipherText, 'AES-256-CBC', hex2bin($hashKey), OPENSSL_RAW_DATA, $iv);
+        // unset($cipherText, $hashKey, $iv);
 
-        return $decrypted;
+        // return $decrypted;
+        return $encryptedString;
     }
 }

@@ -577,14 +577,16 @@ export default defineComponent({
       formData.identifier = `${formData.registration_agency}-${formData.registration_number}`;
 
       let form = {
-        password: encrypt(
-          formData.password,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
-        password_confirmation: encrypt(
-          formData.password_confirmation,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
+        // password: encrypt(
+        //   formData.password,
+        //   process.env.MIX_ENCRYPTION_KEY ?? ''
+        // ),
+        // password_confirmation: encrypt(
+        //   formData.password_confirmation,
+        //   process.env.MIX_ENCRYPTION_KEY ?? ''
+        // ),
+        password: formData.password,
+        password_confirmation: formData.password_confirmation,
       };
 
       axios
@@ -622,14 +624,16 @@ export default defineComponent({
       isLoaderVisible.value = true;
 
       let form = {
-        password: encrypt(
-          formData.password,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
-        password_confirmation: encrypt(
-          formData.password_confirmation,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
+        // password: encrypt(
+        //   formData.password,
+        //   process.env.MIX_ENCRYPTION_KEY ?? ''
+        // ),
+        // password_confirmation: encrypt(
+        //   formData.password_confirmation,
+        //   process.env.MIX_ENCRYPTION_KEY ?? ''
+        // ),
+        password: formData.password,
+        password_confirmation: formData.password_confirmation,
       };
 
       axios
