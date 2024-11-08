@@ -424,19 +424,52 @@ class ElementCompleteService
     }
 
     /**
-     * Returns participating_org_element_completed element complete status.
+     * Checks if the "participating_org" element in the given activity is complete.
+     *
+     * For the "participating_org" element to be considered complete, each entry within
+     * $participatingOrgData must meet the following conditions:
+     *  - The 'organization_role' field must have a non-empty value.
+     *  - Either the 'ref' field must be non-empty, or there must be at least one non-empty
+     *    'narrative' value within the 'narrative' array.
+     *
      *
      * @param $activity
      *
      * @return bool
-     *
-     * @throws JsonException
      */
     public function isParticipatingOrgElementCompleted($activity): bool
     {
         $this->element = 'participating_org';
 
-        return $this->isLevelOneMultiDimensionElementCompleted($activity->participating_org);
+        $participatingOrgData = $activity->participating_org;
+
+        if (is_variable_null($participatingOrgData)) {
+            return false;
+        }
+
+        foreach ($participatingOrgData as $participatingOrg) {
+            if ($this->isEmptyValue(Arr::get($participatingOrg, 'organization_role', ''))) {
+                return false;
+            }
+
+            $hasReference = !$this->isEmptyValue(Arr::get($participatingOrg, 'ref', ''));
+            $hasNonEmptyNarrative = false;
+
+            if (!$hasReference) {
+                foreach (Arr::get($participatingOrg, 'narrative', []) as $narrative) {
+                    if (!$this->isEmptyValue(Arr::get($narrative, 'narrative', ''))) {
+                        $hasNonEmptyNarrative = true;
+                        break;
+                    }
+                }
+
+                if (!$hasNonEmptyNarrative) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -1125,5 +1158,10 @@ class ElementCompleteService
         $activity->deprecation_status_map = $deprecationMap;
         $activity->timestamps = false;
         $activity->updateQuietly(['touch' => false]);
+    }
+
+    public function isEmptyValue($value): bool
+    {
+        return trim($value ?? '') === '';
     }
 }

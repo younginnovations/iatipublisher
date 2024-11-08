@@ -28,6 +28,7 @@ trait RegistersValidationRules
         $this->budgetValidation();
         $this->indicatorValidation();
         $this->mustMatchValidationForReportingOrg();
+        $this->participatingOrgRules();
     }
 
     /**

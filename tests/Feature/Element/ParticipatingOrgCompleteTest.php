@@ -35,7 +35,7 @@ class ParticipatingOrgCompleteTest extends ElementCompleteTest
      */
     public function test_participating_org_mandatory_sub_elements(): void
     {
-        $this->test_mandatory_sub_elements($this->element, []);
+        $this->test_mandatory_sub_elements($this->element, ['narrative'=>['narrative']]);
     }
 
     /**

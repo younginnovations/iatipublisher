@@ -27,6 +27,7 @@ trait RegistersValidationRules
         $this->recipientRegionCountryValidation();
         $this->budgetValidation();
         $this->indicatorValidation();
+        $this->participatingOrgRules();
     }
 
     /**
@@ -715,5 +716,19 @@ trait RegistersValidationRules
         $this->extend('qualitative_empty', function () {
             return false;
         });
+    }
+
+    /**
+     *  Register participating org's :
+     *   - required_when_narrative_is_empty
+     *   - required_when_reference_is_empty
+     *  rule for XLSX import.
+     *
+     * @return void
+     */
+    public function participatingOrgRules(): void
+    {
+        $this->extendImplicit('required_when_narrative_is_empty', fn () => false);
+        $this->extendImplicit('required_when_reference_is_empty', fn () => false);
     }
 }

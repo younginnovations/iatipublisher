@@ -2735,6 +2735,7 @@
     "label_has_borders": true,
     "add_more_has_borders": true,
     "do_not_repeat_button": true,
+    "narrative_first": true,
     "help_text": "Specify which organisations are involved with this activity, and what their individual roles are. For example they could be a donor, funder, implementing agency, etc.",
     "hover_text": "An organisation involved with the activity. May be a donor, funder, implementing agency, etc. Specifying the @ref identifier is strongly recommended. May contain the organisation name as narrative.</br><br>If the reporting organisation plays a role in the activity it should be repeated here. One organisation may play more than one role (eg, funding and implementing): in such a case each role should be reported and the name of the organisation repeated.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/participating-org/'>For more information</a>",
     "attributes": {
@@ -2795,12 +2796,12 @@
     "sub_elements": {
       "narrative": {
         "name": "narrative",
-        "label": "narrative",
+        "label": "name",
         "type": "textarea",
-        "placeholder": "Type narrative",
+        "placeholder": "Type name",
         "element_criteria": "recommended",
-        "required": false,
-        "criteria": "recommended",
+        "required": true,
+        "criteria": "mandatory",
         "add_more": true,
         "attr": {
           "row": 4

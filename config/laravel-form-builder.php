@@ -13,7 +13,7 @@ return [
         'field_class' => 'form-control',
         'field_error_class' => '',
         'help_block_class' => 'help-block help-text',
-        'error_class' => 'text-danger error px-6 py-2',
+        'error_class' => 'text-danger error py-2',
         'required_class' => 'required',
         'help_block_tag' => 'p',
 

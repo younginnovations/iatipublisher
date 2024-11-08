@@ -1105,9 +1105,10 @@ if (!function_exists('addAdditionalLabel')) {
      */
     function generateAddAdditionalLabel(string $parentElement, string $elementName): string
     {
+        $elementsToShowNarrativeAsName = ['reporting_org', 'participating_org'];
         $elementName = str_replace('_', ' ', $elementName);
 
-        if ($parentElement === 'reporting_org' && $elementName === 'narrative') {
+        if ($elementName === 'narrative' && in_array($parentElement, $elementsToShowNarrativeAsName)) {
             $elementName = 'name';
         }
 
