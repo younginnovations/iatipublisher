@@ -170,6 +170,8 @@ class ActivityExport implements WithMultipleSheets
 
         $sheets[] = new OptionExport('activity_instructions', 'Instructions');
 
+        sanitizeControlCharacters($data);
+
         foreach ($data as $key => $datum) {
             $sheets[] = new XlsExport(Arr::collapse($datum), $key, $xlsHeaders[$this->sheets[$key]], 'activity');
         }

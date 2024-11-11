@@ -182,6 +182,10 @@ class AuditService
      */
     public function getNewValues($auditables, $auditableType, $event): bool | string
     {
+        if (!$auditables) {
+            return false;
+        }
+
         $auditables = $auditables->toArray();
 
         if ($auditableType === 'App\\IATI\\Models\\User\\User' && $event !== 'signin') {

@@ -1380,3 +1380,23 @@ if (!function_exists('trimStringValueInArray')) {
         }, $array);
     }
 }
+
+if (!function_exists('sanitizeControlCharacters')) {
+    /**
+     * Remove all control characters (ASCII 0x00-0x1F and 0x7F).
+     *
+     * @param $data
+     *
+     * @return void
+     */
+    function sanitizeControlCharacters(&$data): void
+    {
+        if (is_string($data)) {
+            $data = preg_replace('/[\x00-\x1F\x7F]/u', '', $data);
+        } elseif (is_array($data)) {
+            foreach ($data as &$value) {
+                sanitizeControlCharacters($value);
+            }
+        }
+    }
+}
