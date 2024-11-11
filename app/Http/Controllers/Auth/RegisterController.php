@@ -102,8 +102,6 @@ class RegisterController extends Controller
     {
         try {
             $postData = $request->all();
-            $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], env('MIX_ENCRYPTION_KEY')) : '';
-            $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], env('MIX_ENCRYPTION_KEY')) : '';
 
             $validator = Validator::make($postData, [
                 'publisher_id'        => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
@@ -214,9 +212,6 @@ class RegisterController extends Controller
      */
     public function register(Request $request): JsonResponse|RedirectResponse
     {
-        $request['password'] = isset($request['password']) && $request['password'] ? decryptString($request['password'], env('MIX_ENCRYPTION_KEY')) : '';
-        $request['password_confirmation'] = isset($request['password_confirmation']) && $request['password_confirmation'] ? decryptString($request['password_confirmation'], env('MIX_ENCRYPTION_KEY')) : '';
-
         $validator = Validator::make($request->all(), [
             'username'              => ['required', 'string', 'max:255', 'unique:users,username', 'regex:/^[a-z]([0-9a-z-_])*$/'],
             'full_name'             => ['required', 'string', 'max:255'],
