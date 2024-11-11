@@ -246,8 +246,8 @@ trait MigrateResultIndicatorTrait
             $iatiOrganization
         );
 
-        $newIndicatorData['created_at'] = $aidstreamIndicator->created_at;
-        $newIndicatorData['updated_at'] = $aidstreamIndicator->updated_at;
+//        $newIndicatorData['created_at'] = $aidstreamIndicator->created_at;
+//        $newIndicatorData['updated_at'] = $aidstreamIndicator->updated_at;
 
         return $newIndicatorData;
     }

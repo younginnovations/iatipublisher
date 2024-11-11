@@ -72,10 +72,13 @@ trait MigrateGeneralTrait
      *
      * @return void
      */
-    public function logInfo($message): void
+    public function logInfo($message, $log = false): void
     {
         $this->info($message);
-        logger()->channel('migration')->info($message);
+
+        if ($log) {
+            logger()->channel('migration')->info($message);
+        }
     }
 
     /**
