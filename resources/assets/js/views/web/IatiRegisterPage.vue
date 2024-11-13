@@ -268,7 +268,7 @@ import EmailVerification from './EmailVerification.vue';
 import HoverText from './../../components/HoverText.vue';
 import Multiselect from '@vueform/multiselect';
 import Loader from '../../components/Loader.vue';
-import encrypt from 'Composable/encryption';
+
 import { generateUsername } from 'Composable/utils';
 
 export default defineComponent({
@@ -747,14 +747,8 @@ export default defineComponent({
       formData.step = '1';
 
       let form = {
-        password: encrypt(
-          formData.password,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
-        password_confirmation: encrypt(
-          formData.password_confirmation,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
+        password: formData.password,
+        password_confirmation: formData.password_confirmation,
       };
 
       axios
@@ -800,14 +794,8 @@ export default defineComponent({
       formData.step = '2';
 
       let form = {
-        password: encrypt(
-          formData.password,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
-        password_confirmation: encrypt(
-          formData.password_confirmation,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
+        password: formData.password,
+        password_confirmation: formData.password_confirmation,
       };
 
       axios
@@ -847,14 +835,8 @@ export default defineComponent({
       formData.step = '3';
 
       let form = {
-        password: encrypt(
-          formData.password,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
-        password_confirmation: encrypt(
-          formData.password_confirmation,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
+        password: formData.password,
+        password_confirmation: formData.password_confirmation,
       };
 
       axios
@@ -893,14 +875,8 @@ export default defineComponent({
       formData.step = '4';
 
       let form = {
-        password: encrypt(
-          formData.password,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
-        password_confirmation: encrypt(
-          formData.password_confirmation,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
+        password: formData.password,
+        password_confirmation: formData.password_confirmation,
       };
 
       axios

@@ -721,7 +721,7 @@ import Loader from '../../components/Loader.vue';
 import Toast from 'Components/ToastMessage.vue';
 import axios from 'axios';
 import PopupModal from 'Components/PopupModal.vue';
-import encrypt from 'Composable/encryption';
+
 import Multiselect from '@vueform/multiselect';
 import moment from 'moment';
 import Pagination from 'Components/TablePagination.vue';
@@ -946,11 +946,8 @@ const setDateType = (dateType) => {
 const createUser = () => {
   isLoaderVisible.value = true;
   let passwordData = {
-    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ''),
-    password_confirmation: encrypt(
-      formData.password_confirmation,
-      process.env.MIX_ENCRYPTION_KEY ?? ''
-    ),
+    password: formData.password,
+    password_confirmation: formData.password_confirmation,
   };
 
   axios
@@ -1017,11 +1014,8 @@ const openStatusModel = (user) => {
 const updateUser = () => {
   isLoaderVisible.value = true;
   let passwordData = {
-    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ''),
-    password_confirmation: encrypt(
-      formData.password_confirmation,
-      process.env.MIX_ENCRYPTION_KEY ?? ''
-    ),
+    password: formData.password,
+    password_confirmation: formData.password_confirmation,
   };
 
   axios

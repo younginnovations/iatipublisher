@@ -58,7 +58,7 @@ class AuthenticationTest extends TestCase
      */
     public function test_must_enter_email_or_username(): void
     {
-        $this->post('/login', ['password' => encryptString('password')])
+        $this->post('/login', ['password' => 'password'])
             ->assertRedirect('/')
             ->assertSessionHasErrors('emailOrUsername');
     }
@@ -71,7 +71,7 @@ class AuthenticationTest extends TestCase
      */
     public function test_invalid_credentials(): void
     {
-        $this->post('/login', ['emailOrUsername' => 'admin123', 'password' => encryptString('password')])
+        $this->post('/login', ['emailOrUsername' => 'admin123', 'password' => 'password'])
             ->assertRedirect('/')
             ->assertSessionHasErrors('emailOrUsername');
     }
@@ -89,7 +89,7 @@ class AuthenticationTest extends TestCase
 
         $response = $this->post('/login', [
             'emailOrUsername' => $org->user->username,
-            'password' => encryptString('password'),
+            'password' => 'password',
         ]);
 
         $response->assertRedirect('/activities');
@@ -102,7 +102,7 @@ class AuthenticationTest extends TestCase
 
         $response = $this->post('/login', [
             'emailOrUsername' => $org->user->email,
-            'password' => encryptString('password'),
+            'password' => 'password',
         ]);
 
         $response->assertRedirect('/activities');
@@ -117,7 +117,7 @@ class AuthenticationTest extends TestCase
 
         $response = $this->post('/login', [
             'emailOrUsername' => $uppercasedEmail,
-            'password' => encryptString('password'),
+            'password' => 'password',
         ]);
 
         $response->assertRedirect('/activities');

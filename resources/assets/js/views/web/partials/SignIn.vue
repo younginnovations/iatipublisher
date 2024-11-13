@@ -96,7 +96,7 @@
 import { defineComponent, reactive, ref } from 'vue';
 import axios from 'axios';
 import Loader from 'Components/Loader.vue';
-import encrypt from 'Composable/encryption';
+
 export default defineComponent({
   components: {
     Loader,
@@ -129,10 +129,8 @@ export default defineComponent({
 
       let form = {
         emailOrUsername: formData.emailOrUsername,
-        password: encrypt(
-          formData.password,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
+
+        password: formData.password,
       };
 
       axios

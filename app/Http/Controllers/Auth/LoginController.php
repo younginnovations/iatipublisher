@@ -164,10 +164,6 @@ class LoginController extends Controller
      */
     public function login(Request $request): Response
     {
-        if (isset($request['password'])) {
-            $request['password'] = decryptString($request['password'], env('MIX_ENCRYPTION_KEY'));
-        }
-
         $this->validateLogin($request);
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle

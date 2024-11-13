@@ -69,8 +69,8 @@ class UserRequest extends FormRequest
         $password_confirmation = Arr::get($request, 'password_confirmation', null);
 
         $this->merge([
-            'password' => $password ? decryptString($password, env('MIX_ENCRYPTION_KEY')) : '',
-            'password_confirmation' => $password_confirmation ? decryptString($password_confirmation, env('MIX_ENCRYPTION_KEY')) : '',
+            'password' => $password,
+            'password_confirmation' => $password_confirmation,
         ]);
     }
 
