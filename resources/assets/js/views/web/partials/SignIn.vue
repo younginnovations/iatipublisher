@@ -7,7 +7,9 @@
 
     <div class="right__container flex w-full flex-col" @keyup.enter="login">
       <h2 class="mb-2 hidden sm:block">{{ translatedData['sign_in'] }}</h2>
-      <span class="text-n-40">Welcome back! Please enter your details.</span>
+      <span class="text-n-40">{{
+        translatedData['sign_in_section.welcome_back_label']
+      }}</span>
       <div
         v-if="
           message !== '' &&
@@ -26,10 +28,12 @@
         <div class="flex space-x-2">
           <svg-vue class="text-spring-50" icon="tick" />
           <span class="flex flex-col space-y-2">
-            <span class="text-sm font-bold text-n-50">Password Updated!</span>
-            <span class="text-sm text-n-50"
-              >Please use your new password to login again.</span
-            >
+            <span class="text-sm font-bold text-n-50">{{
+              translatedData['password_changed_section.password_updated']
+            }}</span>
+            <span class="text-sm text-n-50">{{
+              translatedData['password_changed_section.use_new_password']
+            }}</span>
           </span>
         </div>
       </div>
