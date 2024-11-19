@@ -47,14 +47,15 @@ class TransactionService
     }
 
     /**
-     * @param int $activityId
-     * @param int $page
+     * @param int   $activityId
+     * @param int   $page
+     * @param array $queryParams
      *
      * @return LengthAwarePaginator|Collection
      */
-    public function getPaginatedTransaction(int $activityId, int $page): LengthAwarePaginator|Collection
+    public function getPaginatedTransactionAndStats(int $activityId, int $page, array $queryParams): LengthAwarePaginator|Collection
     {
-        return $this->transactionRepository->getPaginatedTransaction($activityId, $page);
+        return $this->transactionRepository->getPaginatedTransaction($activityId, $queryParams, $page);
     }
 
     /**
@@ -662,5 +663,15 @@ class TransactionService
         }
 
         return [];
+    }
+
+    /**
+     * @param int $activityId
+     *
+     * @return array
+     */
+    public function getTransactionCountStats(int $activityId): array
+    {
+        return $this->transactionRepository->getTransactionCountStats($activityId);
     }
 }

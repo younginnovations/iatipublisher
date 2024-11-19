@@ -561,6 +561,18 @@ if (!function_exists('getTableConfig')) {
             ],
             'user' => ['orderBy' => ['username', 'publisher_name', 'created_at', 'organisation', 'admin', 'general', 'active', 'deactivated', 'total', 'last_logged_in'], 'direction' => ['asc', 'desc']],
             'audit' => ['orderBy' => ['user_id', 'user_type', 'event', 'auditable_type', 'created_at'], 'direction' => ['asc', 'desc']],
+            'transaction' => [
+                'orderBy'   => ['type', 'value', 'date'],
+                'direction' => ['asc', 'desc'],
+                'filterBy'  => [
+                    'all',
+                    'incoming_funds',
+                    'outgoing_commitment',
+                    'disbursement',
+                    'expenditure',
+                    'others',
+                ],
+            ],
         ];
 
         return $tableConfig[$module];
