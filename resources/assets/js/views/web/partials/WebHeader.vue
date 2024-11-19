@@ -14,39 +14,48 @@
               class="nav__list flex pt-10 leading-5 xl:space-x-3"
             >
               <li class="nav__links active dropdown">
-                <a href="/about">ABOUT</a>
+                <a href="/about">{{
+                  translatedData['header.about.heading']
+                }}</a>
                 <NavDropdown
-                  name="About"
-                  text="IATI Publisher helps small and medium-sized organisations publish IATI data on development and humanitarian financing and activities"
-                  btn-text="Learn more"
+                  :name="translatedData['header.about.name']"
+                  :text="translatedData['header.about.description']"
+                  :btn-text="translatedData['header.learn_more']"
                   btn-link="/about"
                 />
               </li>
               <li class="nav__links active dropdown">
-                <a href="/publishing-checklist">PUBLISHING CHECKLIST</a>
+                <a href="/publishing-checklist">{{
+                  translatedData['header.publishing_checklist.heading']
+                }}</a>
                 <NavDropdown
-                  name="Publishing checklist"
-                  text="New to IATI? Use our checklist to track each step required for your organisation to successfully publish IATI data"
-                  btn-text="Read more"
+                  :name="translatedData['header.publishing_checklist.name']"
+                  :text="
+                    translatedData['header.publishing_checklist.description']
+                  "
+                  :btn-text="translatedData['header.read_more']"
                   btn-link="/publishing-checklist"
                 />
               </li>
               <li class="nav__links active dropdown relative">
-                <a href="/iati-standard">IATI STANDARD</a>
+                <a href="/iati-standard">{{
+                  translatedData['header.iati_standard.heading']
+                }}</a>
                 <NavDropdown
-                  name="IATI Standard"
-                  text="The IATI Standard provides information and guidance on all the data fields that
-                        your organisation can publish IATI data on"
-                  btn-text="See all data fields"
+                  :name="translatedData['header.iati_standard.name']"
+                  :text="translatedData['header.iati_standard.description']"
+                  :btn-text="translatedData['header.see_fields']"
                   btn-link="/iati-standard"
                 />
               </li>
               <li class="nav__links active dropdown">
-                <a href="/support">SUPPORT</a>
+                <a href="/support">{{
+                  translatedData['header.support.heading']
+                }}</a>
                 <NavDropdown
-                  name="Support"
-                  text=" Any questions? Get help to publish your organisation’s data"
-                  btn-text="Read more"
+                  :name="translatedData['header.support.name']"
+                  :text="translatedData['header.support.description']"
+                  :btn-text="translatedData['header.read_more']"
                   btn-link="/support"
                 />
               </li>
@@ -78,7 +87,9 @@
             <!-- commented to temporarily hide language buttons -->
 
             <div class="flex">
-              <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0">Language:</span>
+              <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0"
+                >{{ translatedData['header.language'] }}:</span
+              >
               <ul class="flex items-center justify-center">
                 <li class="nav__links">
                   <button
@@ -162,11 +173,18 @@ export default defineComponent({
     superAdmin: { type: Boolean, required: false, default: false },
   },
   setup() {
+    const translatedData = ref({});
     const currentLanguage = ref('en');
     onMounted(async () => {
       document.body.classList.add('no-nav');
 
       currentLanguage.value = await LanguageService.getLanguage();
+
+      LanguageService.getTranslatedData('public')
+        .then((response) => {
+          translatedData.value = response.data;
+        })
+        .catch((error) => console.log(error));
     });
     onUnmounted(() => {
       document.body.classList.remove('no-nav');
@@ -185,7 +203,7 @@ export default defineComponent({
 
     return {
       changeLanguage,
-      currentLanguage,
+      translatedData,
     };
   },
 });
