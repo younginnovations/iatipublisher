@@ -417,7 +417,7 @@
         "label": "percentage",
         "type": "text",
         "placeholder": "Select percentage",
-        "required": false,
+        "required": true,
         "criteria": "recommended",
         "hover_text": "The percentage of total commitments or total activity budget to this item. Content must be a decimal number between 0 and 100 inclusive, with no percentage sign. Percentages for all reported countries and regions within a vocabulary MUST add up to 100.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/recipient-country/'>For more information</a>",
         "help_text": "Select the percentage of funding benefitting this country. Percentages for all reported countries and regions MUST add up to 100. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/countries-regions/'>Further guidance.</a>"
@@ -537,7 +537,7 @@
         "label": "percentage",
         "type": "text",
         "placeholder": "Type percentage",
-        "required": false,
+        "required": true,
         "criteria": "recommended",
         "hover_text": "The percentage of total commitments or total activity budget to this item. Content must be a decimal number between 0 and 100 inclusive, with no percentage sign. Percentages for all reported countries and regions within a vocabulary MUST add up to 100. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/recipient-region/'>For more information</a>",
         "help_text": "The percentage of total commitments or total activity budget to this item. Content must be a decimal number between 0 and 100 inclusive, with no percentage sign. Percentages for all reported countries and regions within a vocabulary MUST add up to 100.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/recipient-region/'>For more information</a>"
@@ -720,7 +720,7 @@
         "label": "percentage",
         "type": "text",
         "placeholder": "Type percentage",
-        "required": false,
+        "required": true,
         "criteria": "recommended",
         "hover_text": "The percentage of total commitments or total activity budget to this item. Content must be a decimal number between 0 and 100 inclusive, with no percentage sign. All reported sectors from the same vocabulary MUST add up to 100. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/sector/'>For more information</a>",
         "help_text": "If you have selected more than one sector (from the same list), each sector must be given a percentage. These percentages can then be applied to the funding amounts to estimate the resources allocated to each sector. For example, using the OECD DAC 5-digit sector codelist you could allocate 50% of the funding for the activity to the sector code ‘teacher training’ (11130) and 50% to ‘primary education’ (11220)."
@@ -1239,8 +1239,8 @@
             "label": "percentage",
             "type": "text",
             "placeholder": "Type percentage",
-            "required": false,
-            "criteria": "",
+            "required": true,
+            "criteria": "recommended",
             "hover_text": "When multiple budget-item elements are declared within a single country-budget-items element, then, for each vocabulary used, the percentage values should sum 100%.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/country-budget-items/budget-item/'>For more information</a>",
             "help_text": "If no value is selected, default value is assumed."
           }
