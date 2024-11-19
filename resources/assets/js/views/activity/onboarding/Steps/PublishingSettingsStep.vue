@@ -197,7 +197,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, watchEffect, defineEmits, watch } from 'vue';
+import { ref, defineProps, watchEffect, defineEmits } from 'vue';
 import LinesLoader from 'Components/LinesLoader.vue';
 import axios from 'axios';
 import ShimmerLoading from 'Components/ShimmerLoading.vue';
@@ -246,7 +246,8 @@ const isVerifyingToken = ref(false);
 const isSaving = ref(false);
 const isSuccess = ref(false);
 
-const tokenStatus = ref(props.publisherSetting?.token_status || '');
+const tokenStatus = ref(props.publisherSetting?.token_status || null);
+
 const verifyTokenStatus = ref(false);
 
 const organizationRegistrationType = ref('');
@@ -255,12 +256,16 @@ const toastVisibility = ref(false);
 const toastMessage = ref('');
 const toastType = ref(false);
 
-watch(
-  () => props.publisherSetting?.token_status,
-  (newStatus) => {
-    tokenStatus.value = newStatus;
+watchEffect(() => {
+  if (typeof props.publisherSetting === 'undefined') {
+    tokenStatus.value = ' ';
+    return;
   }
-);
+
+  if (props.publisherSetting.token_status) {
+    tokenStatus.value = props.publisherSetting.token_status;
+  }
+});
 
 watchEffect(() => {
   apiToken.value = props?.publisherSetting?.api_token;
@@ -276,7 +281,7 @@ const verifyToken = () => {
   emit('changeRender');
   axios
     .post('/setting/verify', {
-      api_token: apiToken.value,
+      api_token: apiToken.value ?? null,
       publisher_id: props.publisherId,
     })
     .then((response: { data: { data: { token_status: string } } }) => {
@@ -304,7 +309,7 @@ const proceedStep = async () => {
   isSaving.value = true;
   await axios
     .post('/setting/store/publisher', {
-      api_token: apiToken.value,
+      api_token: apiToken.value ?? null,
       publisher_id: props.publisherId,
       organization_id: props.organizationId,
       publisher_verification: props.publisherSetting?.publisher_verification,
