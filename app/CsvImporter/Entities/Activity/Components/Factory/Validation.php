@@ -155,6 +155,7 @@ class Validation extends Factory
         $this->budgetValidation();
         $this->transactionValidation();
         $this->mustMatchValidationForReportingOrg();
+        $this->participatingOrgRules();
     }
 
     /**
@@ -734,5 +735,19 @@ class Validation extends Factory
         $this->extend('sector_required', function () {
             return false;
         });
+    }
+
+    /**
+     * Register participating org's :
+     *  - required_when_narrative_is_empty
+     *  - required_when_reference_is_empty
+     * rule for CSV import.
+     *
+     * @return void
+     */
+    public function participatingOrgRules(): void
+    {
+        $this->extendImplicit('required_when_narrative_is_empty', fn () => false);
+        $this->extendImplicit('required_when_reference_is_empty', fn () => false);
     }
 }

@@ -23,40 +23,80 @@ class BaseForm extends Form
         $attributes = Arr::get($element, 'attributes', null);
         $sub_elements = Arr::get($element, 'sub_elements', null);
 
-        if ($attributes) {
-            if (Arr::get($element, 'add_more', false) && !$sub_elements && Arr::get(
-                $element,
-                'make_collection',
-                true
-            )) {
-                $this->buildCollection($attributes);
-            } else {
-                foreach ($attributes as $i => $attribute) {
-                    if (is_array($attribute)) {
-                        $this->buildField($attribute, $i);
+        if (Arr::get($element, 'narrative_first')) {
+            if ($sub_elements) {
+                foreach ($sub_elements as $i => $sub_element) {
+                    $this->buildCollection($sub_element);
+                    if (Arr::get($element, 'add_more', false) && Arr::get($sub_element, 'add_more', false) && !Arr::get($element, 'do_not_repeat_button', false)) {
+                        $this->add('delete_this_' . $element['name'] ?? $sub_element['name'], 'button', [
+                            'attr' => [
+                                'class' => 'delete-parent one text-crimson-40 font-bold text-md uppercase absolute right-0 -bottom-[1.2rem] w-[100%] justify-end pr-6 delete-parent-item delete-parent-selector',
+                            ],
+                        ]);
                     }
                 }
+            }
 
-                if (Arr::get($element, 'add_more', false) || Arr::get($element, 'add_more_attributes', false)) {
-                    $name = $element['name'];
-                    $this->add('delete_this_' . $element['name'], 'button', [
-                        'attr' => [
-                            'class' => 'delete-parent one text-crimson-40 font-bold text-md uppercase absolute right-0 -bottom-[1.2rem] w-[100%] justify-end pr-6 ' . " delete-parent-item-$name delete-parent-item delete-parent-selector",
-                        ],
-                    ]);
+            if ($attributes) {
+                if (Arr::get($element, 'add_more', false) && !$sub_elements && Arr::get(
+                    $element,
+                    'make_collection',
+                    true
+                )) {
+                    $this->buildCollection($attributes);
+                } else {
+                    foreach ($attributes as $i => $attribute) {
+                        if (is_array($attribute)) {
+                            $this->buildField($attribute, $i);
+                        }
+                    }
+
+                    if (Arr::get($element, 'add_more', false) || Arr::get($element, 'add_more_attributes', false)) {
+                        $name = $element['name'];
+                        $this->add('delete_this_' . $element['name'], 'button', [
+                            'attr' => [
+                                'class' => 'delete-parent one text-crimson-40 font-bold text-md uppercase absolute right-0 -bottom-[1.2rem] w-[100%] justify-end pr-6 ' . " delete-parent-item-$name delete-parent-item delete-parent-selector",
+                            ],
+                        ]);
+                    }
                 }
             }
-        }
+        } else {
+            if ($attributes) {
+                if (Arr::get($element, 'add_more', false) && !$sub_elements && Arr::get(
+                    $element,
+                    'make_collection',
+                    true
+                )) {
+                    $this->buildCollection($attributes);
+                } else {
+                    foreach ($attributes as $i => $attribute) {
+                        if (is_array($attribute)) {
+                            $this->buildField($attribute, $i);
+                        }
+                    }
 
-        if ($sub_elements) {
-            foreach ($sub_elements as $i => $sub_element) {
-                $this->buildCollection($sub_element);
-                if (Arr::get($element, 'add_more', false) && Arr::get($sub_element, 'add_more', false) && !Arr::get($element, 'do_not_repeat_button', false)) {
-                    $this->add('delete_this_' . $element['name'] ?? $sub_element['name'], 'button', [
-                        'attr' => [
-                            'class' => 'delete-parent one text-crimson-40 font-bold text-md uppercase absolute right-0 -bottom-[1.2rem] w-[100%] justify-end pr-6 delete-parent-item delete-parent-selector',
-                        ],
-                    ]);
+                    if (Arr::get($element, 'add_more', false) || Arr::get($element, 'add_more_attributes', false)) {
+                        $name = $element['name'];
+                        $this->add('delete_this_' . $element['name'], 'button', [
+                            'attr' => [
+                                'class' => 'delete-parent one text-crimson-40 font-bold text-md uppercase absolute right-0 -bottom-[1.2rem] w-[100%] justify-end pr-6 ' . " delete-parent-item-$name delete-parent-item delete-parent-selector",
+                            ],
+                        ]);
+                    }
+                }
+            }
+
+            if ($sub_elements) {
+                foreach ($sub_elements as $i => $sub_element) {
+                    $this->buildCollection($sub_element);
+                    if (Arr::get($element, 'add_more', false) && Arr::get($sub_element, 'add_more', false) && !Arr::get($element, 'do_not_repeat_button', false)) {
+                        $this->add('delete_this_' . $element['name'] ?? $sub_element['name'], 'button', [
+                            'attr' => [
+                                'class' => 'delete-parent one text-crimson-40 font-bold text-md uppercase absolute right-0 -bottom-[1.2rem] w-[100%] justify-end pr-6 delete-parent-item delete-parent-selector',
+                            ],
+                        ]);
+                    }
                 }
             }
         }

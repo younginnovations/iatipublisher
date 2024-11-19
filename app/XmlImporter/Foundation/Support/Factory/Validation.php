@@ -7,6 +7,7 @@ namespace App\XmlImporter\Foundation\Support\Factory;
 use App\Xml\Validator\Traits\RegistersValidationRules;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Factory;
 
@@ -549,5 +550,17 @@ class Validation extends Factory
                 return false;
             }
         );
+    }
+
+    /**
+     * Register participating org's :
+     *  - required_when_narrative_is_empty
+     *  - required_when_reference_is_empty
+     * rule for XML import.
+     */
+    public function participatingOrgRules(): void
+    {
+        $this->extendImplicit('required_when_narrative_is_empty', fn () => false);
+        $this->extendImplicit('required_when_reference_is_empty', fn () => false);
     }
 }

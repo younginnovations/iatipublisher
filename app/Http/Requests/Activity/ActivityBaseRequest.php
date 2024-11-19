@@ -121,6 +121,9 @@ class ActivityBaseRequest extends FormRequest
                 return false;
             }
         );
+
+        Validator::extendImplicit('required_when_narrative_is_empty', fn () => false);
+        Validator::extendImplicit('required_when_reference_is_empty', fn () => false);
     }
 
     /**

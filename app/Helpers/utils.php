@@ -409,3 +409,27 @@ if (!function_exists('getEmptyIatiActivitiesXml')) {
         ";
     }
 }
+
+if (!function_exists('hasOnlyEmptyValues')) {
+    /**
+     * Checks if array has empty string or null values in every index or depth.
+     *
+     * @param array $arr
+     *
+     * @return bool
+     */
+    function hasOnlyEmptyValues(array $arr): bool
+    {
+        foreach ($arr as $value) {
+            if (is_array($value)) {
+                if (!hasOnlyEmptyValues($value)) {
+                    return false;
+                }
+            } elseif (trim((string) $value) !== '') {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
