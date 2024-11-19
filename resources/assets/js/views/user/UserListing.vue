@@ -159,9 +159,11 @@
               <input
                 id="password"
                 v-model="formData.password"
+                autocomplete="one-time-code"
                 :class="
                   formError['password'] ? 'border-crimson-50' : 'border-n-30'
                 "
+                placeholder="Enter new password"
                 class="w-full rounded border border-n-30 p-3"
                 type="password"
               />
@@ -182,6 +184,8 @@
               <input
                 id="password-confirmation"
                 v-model="formData.password_confirmation"
+                autocomplete="one-time-code"
+                placeholder="Confirm password"
                 :class="
                   formError['password_confirmation']
                     ? 'border-crimson-50'
