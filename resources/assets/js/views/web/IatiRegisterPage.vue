@@ -6,12 +6,11 @@
     <div class="section__container">
       <div class="section__title">
         <h2 class="text-2xl font-bold md:text-4xl">
-          Create IATI Publisher Account and IATI Registry Account
+          {{ translatedData['register.not_registered_page.heading'] }}
         </h2>
 
         <p>
-          Start your IATI publishing journey by creating accounts in both IATI
-          Publisher and the IATI Registry
+          {{ translatedData['register.not_registered_page.start_journey'] }}
         </p>
       </div>
       <div class="section__wrapper flex justify-center">
@@ -19,7 +18,15 @@
         <div v-else class="form input__field" @keyup.enter="goToNextForm">
           <aside class="mb-4 block border-b border-b-n-10 pb-4 xl:hidden">
             <span class="text-base font-bold"
-              >Step {{ getCurrentStep() }} out of 5</span
+              >{{
+                translatedData['register.not_registered_page.step_section.step']
+              }}
+              {{ getCurrentStep() }}
+              {{
+                translatedData[
+                  'register.not_registered_page.step_section.total_step'
+                ]
+              }}</span
             >
             <ul class="relative mt-3 text-sm text-n-40">
               <li
@@ -68,7 +75,11 @@
               <div class="flex items-center">
                 <small class="label">
                   <span class="required-icon px-1">*</span>
-                  <span>Mandatory fields</span>
+                  <span>{{
+                    translatedData[
+                      'register.not_registered_page.register_section.mandatory_fields'
+                    ]
+                  }}</span>
                 </small>
               </div>
             </div>
@@ -262,7 +273,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, watch } from 'vue';
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from 'vue';
 import axios from 'axios';
 import EmailVerification from './EmailVerification.vue';
 import HoverText from './../../components/HoverText.vue';
@@ -270,6 +288,7 @@ import Multiselect from '@vueform/multiselect';
 import Loader from '../../components/Loader.vue';
 
 import { generateUsername } from 'Composable/utils';
+import LanguageService from 'Services/language';
 
 export default defineComponent({
   components: {
@@ -287,6 +306,7 @@ export default defineComponent({
   },
 
   setup(props) {
+    const translatedData = ref({});
     const step = ref(1);
     const publisherExists = ref(true);
     const isLoaderVisible = ref(false);
@@ -943,6 +963,14 @@ export default defineComponent({
       step.value -= 1;
     }
 
+    onMounted(() => {
+      LanguageService.getTranslatedData('public')
+        .then((response) => {
+          translatedData.value = response.data;
+        })
+        .catch((error) => console.log(error));
+    });
+
     return {
       registerForm,
       formData,
@@ -959,6 +987,7 @@ export default defineComponent({
       step,
       resize,
       textarea,
+      translatedData,
     };
   },
 });
