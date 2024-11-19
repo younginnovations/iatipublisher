@@ -8,7 +8,7 @@ return [
     'defaults' => [
         // 'wrapper_class'       => 'form-group form-field-group',
         'wrapper_class' => 'subelement rounded-t-sm 13 border-l border-spring-50 pb-11',
-        'wrapper_error_class' => 'has-error',
+        'wrapper_error_class' => 'has_error',
         'label_class' => 'flex control-label py-4 px-6 font-bold text-sm leading-relaxed rounded-t-sm  items-center',
         'field_class' => 'form-control',
         'field_error_class' => '',

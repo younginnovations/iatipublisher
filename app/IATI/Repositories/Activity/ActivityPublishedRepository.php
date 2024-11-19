@@ -98,11 +98,11 @@ class ActivityPublishedRepository extends Repository
     }
 
     /**
-     * @param $orgId
+     * @param int|string $orgId
      *
      * @return int|float
      */
-    public function getPublisherFileSize($orgId): float|int
+    public function getPublisherFileSize(int|string $orgId): float|int
     {
         return $this->model->where('organization_id', $orgId)?->first()->filesize ?? 0;
     }
