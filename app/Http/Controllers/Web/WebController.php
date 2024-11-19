@@ -147,9 +147,9 @@ class WebController extends Controller
 
             $cacheData = Cache::get("translated_data_{$lang}");
 
-            if ($cacheData) {
-                return response()->json(['success' => true, 'data' => Arr::get($cacheData, $folder, [])]);
-            }
+//            if ($cacheData) {
+//                return response()->json(['success' => true, 'data' => Arr::get($cacheData, $folder, [])]);
+//            }
 
             $folders = File::directories(base_path("lang/{$lang}"));
 
@@ -181,10 +181,10 @@ class WebController extends Controller
             Cache::put("translated_data_{$lang}", $cacheData, now()->addHours(24));
 
             if ($folder !== 'general') {
-                return response()->json(['success' => true, 'data' => $translations]);
+                return response()->json(['success' => true, 'data' => Arr::dot($cacheData[$folder])]);
             }
 
-            return response()->json(['success' => true, 'data' => $outerFiletranslations]);
+            return response()->json(['success' => true, 'data' => Arr::dot($outerFiletranslations)]);
         } catch (\Exception $e) {
             logger()->error($e);
 

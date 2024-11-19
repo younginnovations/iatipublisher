@@ -9,25 +9,42 @@
         <div class="left__container rounded-lg p-5 sm:p-10">
           <span class="left__title font-bold">IATI Publisher</span>
           <p class="pt-2 sm:pb-8 sm:pt-6">
-            Welcome to IATI Publisher. This lets you publish IATI data on your
-            organisation's development and humanitarian activities.
+            {{
+              translatedData['login.iati_publishing_tool_section.welcome_text']
+            }}
             <br />
             <span v-if="pageContent !== 'Join Now'">
-              Use this page to create a new account for your organisation.
+              {{
+                translatedData[
+                  'login.iati_publishing_tool_section.page_to_register'
+                ]
+              }}.
             </span>
           </p>
           <div class="block">
             <span class="flex flex-wrap">
               {{
                 pageContent === 'Join Now'
-                  ? "Haven't registered yet?"
-                  : 'Already have an account?'
+                  ? translatedData[
+                      'login.iati_publishing_tool_section.havent_registered_label'
+                    ]
+                  : translatedData[
+                      'login.iati_publishing_tool_section.already_have_account_label'
+                    ]
               }}
               <button
                 class="ml-1 border-b-2 border-b-transparent text-base text-turquoise hover:border-b-2 hover:border-b-turquoise"
                 @click="togglePage"
               >
-                {{ pageContent }}
+                {{
+                  pageContent === 'Join Now'
+                    ? translatedData[
+                        'login.iati_publishing_tool_section.join_now'
+                      ]
+                    : translatedData[
+                        'login.iati_publishing_tool_section.sign_in'
+                      ]
+                }}
               </button>
             </span>
           </div>
@@ -45,9 +62,10 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import SignIn from './partials/SignIn.vue';
 import JoinNow from './partials/JoinNow.vue';
+import LanguageService from 'Services/language';
 
 export default defineComponent({
   components: {
@@ -70,6 +88,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translatedData = ref({});
     const pageContent = ref(props.page === 'signin' ? 'Join Now' : 'Sign In');
 
     function togglePage() {
@@ -77,9 +96,18 @@ export default defineComponent({
         pageContent.value === 'Join Now' ? 'Sign In' : 'Join Now';
     }
 
+    onMounted(() => {
+      LanguageService.getTranslatedData('public')
+        .then((response) => {
+          translatedData.value = response.data;
+        })
+        .catch((error) => console.log(error));
+    });
+
     return {
       pageContent,
       togglePage,
+      translatedData,
     };
   },
 });
