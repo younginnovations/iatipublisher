@@ -58,9 +58,9 @@ class ActivityPublishedService
      *
      * @param $organization_id
      *
-     * @return object
+     * @return object|null
      */
-    public function getActivityPublished($organization_id): object
+    public function getActivityPublished($organization_id): object|null
     {
         return $this->activityPublishedRepository->findBy('organization_id', $organization_id);
     }
@@ -82,10 +82,33 @@ class ActivityPublishedService
     /**
      * Updates activity published table.
      *
+     * @param $activityPublished
+     *
      * @return void
      */
     public function updateStatus($activityPublished): void
     {
         $this->activityPublishedRepository->updateStatus($activityPublished);
+    }
+
+    /**
+     * @param           $activityPublished
+     * @param float|int $mergedFilesize
+     *
+     * @return void
+     */
+    public function updateFilesize($activityPublished, float|int $mergedFilesize): void
+    {
+        $this->activityPublishedRepository->updateFilesize($activityPublished, $mergedFilesize);
+    }
+
+    /**
+     * @param $orgId
+     *
+     * @return int|float
+     */
+    public function getPublisherFileSize($orgId): int|float
+    {
+        return $this->activityPublishedRepository->getPublisherFileSize($orgId);
     }
 }

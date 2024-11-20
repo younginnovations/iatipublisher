@@ -89,6 +89,7 @@ const state = {
         status: false,
       },
     },
+    error_type: 'generic',
   },
   publishAlertValue: false,
   isPublishedModalMinimized: false,

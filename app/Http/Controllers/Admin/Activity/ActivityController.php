@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Activity;
 
+use App\Console\Commands\DuplicateActivities;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\ActivityCreateRequest;
 use App\IATI\Models\Activity\Activity;
@@ -22,6 +23,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -539,5 +541,34 @@ class ActivityController extends Controller
                 500
             );
         }
+    }
+
+    /**
+     * Trigger the duplicate activity command via API.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function duplicateActivity(Request $request): JsonResponse
+    {
+        if (env('APP_ENV') === 'production') {
+            abort(403, 'This operation is not allowed in the production environment.');
+        }
+
+        $validated = $request->validate([
+            'activity_id'      => 'required|integer',
+            'no_of_iterations' => 'required|integer|min:1',
+        ]);
+
+        Artisan::call(DuplicateActivities::class, [
+            'activity_id'      => $validated['activity_id'],
+            'no_of_iterations' => $validated['no_of_iterations'],
+        ]);
+
+        return response()->json([
+            'message' => 'Activity duplication completed successfully.',
+        ]);
     }
 }

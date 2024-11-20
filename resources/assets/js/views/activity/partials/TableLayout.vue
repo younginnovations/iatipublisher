@@ -39,19 +39,25 @@
           </th>
           <th id="cb" scope="col">
             <span>
-              <span
-                class="cursor-pointer"
-                @click="toggleSelectAll(data.data, selectAllValue)"
-              >
-                <svg-vue icon="checkbox" />
+              <span class="cursor-pointer" @click="toggleSelectAll(data.data)">
+                <svg-vue
+                  icon="checkbox"
+                  :class="isAllValueSelected ? '!text-spring-50' : ''"
+                />
               </span>
             </span>
           </th>
         </tr>
       </thead>
       <tbody v-if="data.total > 0">
+        <tr v-if="loader">
+          <td colspan="5" class="text-center">
+            <div colspan="5" class="spin"></div>
+          </td>
+        </tr>
         <tr
           v-for="(datum, index) in data.data"
+          v-else
           :key="datum['id']"
           :class="{
             'already-published':
@@ -63,7 +69,7 @@
               v-if="datum['linked_to_iati'] && datum['status'] === 'draft'"
               class="absolute left-0 top-0 inline-block whitespace-nowrap"
             />
-            {{ (currentPage - 1) * 10 + Number(index) + 1 }}
+            {{ (currentPage - 1) * 25 + Number(index) + 1 }}
           </td>
           <td class="title">
             <div
@@ -166,6 +172,7 @@
                 v-model="store.state.selectedActivities"
                 :value="datum.id"
                 type="checkbox"
+                class="cursor-pointer"
               />
               <span class="checkmark" />
             </label>
@@ -183,9 +190,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import { defineProps, watch, ref } from 'vue';
 import moment from 'moment';
-import { useToggle } from '@vueuse/core';
 
 // Vuex Store
 import { useStore } from 'Store/activities/index';
@@ -193,36 +199,40 @@ import { useStore } from 'Store/activities/index';
 import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
 import Publish from 'Components/buttons/PublishButton.vue';
 import UnPublish from 'Components/buttons/UnPublishButton.vue';
-// import Shimmer from "Components/ShimmerLoading.vue";
 
-const [selectAllValue, selectAllToggle] = useToggle();
-
-defineProps({
+const props = defineProps({
   data: { type: Object, required: true },
   loader: { type: Boolean, required: false },
+  onlyLoader: { type: Boolean, required: false, default: false },
   currentPage: { type: Number, required: true, default: 1 },
 });
 
+const isAllValueSelected = ref(false);
 const store = useStore();
-
 function formatDate(date: Date) {
   return moment(date).fromNow();
 }
 
-function toggleSelectAll(
-  activities: { [x: string]: { id: number } },
-  selectAllValue: boolean
-) {
-  if (!selectAllValue) {
-    let ids = [] as number[];
-    for (const datum in activities) {
-      ids.push(activities[datum].id);
+function toggleSelectAll(activities: { [key: string]: { id: number } }) {
+  try {
+    const selectedIds = Object.values(activities).map((item) => item.id);
+    const newSet = [...store.state.selectedActivities, ...selectedIds];
+    if (newSet.length > 0) {
+      const filteredSet = [...new Set(newSet)];
+
+      if (isAllValueSelected.value) {
+        const filterAllCurrentPage = store.state.selectedActivities.filter(
+          (item) => !selectedIds.includes(item)
+        );
+        store.dispatch('updateSelectedActivities', filterAllCurrentPage);
+        isAllValueSelected.value = false;
+        return;
+      }
+      store.dispatch('updateSelectedActivities', filteredSet);
     }
-    store.dispatch('updateSelectedActivities', ids);
-  } else {
-    store.dispatch('updateSelectedActivities', []);
+  } catch (error) {
+    console.error('An error occurred while toggling select all:', error);
   }
-  selectAllToggle();
 }
 
 //Sorting by update_at
@@ -257,6 +267,32 @@ const sortByDateUrl = () => {
 
   return `?${params.toString()}`;
 };
+
+function containsAllValues(): boolean {
+  const selectedIds = Object.values(props.data.data).map(
+    (item: any) => item.id
+  );
+
+  return selectedIds.every((item) =>
+    store.state.selectedActivities.includes(item)
+  );
+}
+
+watch(
+  () => props.data.data,
+  () => {
+    isAllValueSelected.value = containsAllValues();
+  },
+  { deep: true }
+);
+
+watch(
+  () => store.state.selectedActivities,
+  () => {
+    isAllValueSelected.value = containsAllValues();
+  },
+  { deep: true }
+);
 </script>
 <style scoped>
 @keyframes spinner {

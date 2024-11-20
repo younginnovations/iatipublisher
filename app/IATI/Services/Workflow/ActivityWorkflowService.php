@@ -17,6 +17,7 @@ use App\IATI\Services\Xml\XmlGeneratorService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Support\Arr;
 
 /**
@@ -69,6 +70,8 @@ class ActivityWorkflowService
      */
     protected ApiLogRepository $apiLogRepo;
 
+    private Client $client;
+
     /**
      * ActivityWorkflowService Constructor.
      *
@@ -102,6 +105,8 @@ class ActivityWorkflowService
         $this->validatorService = $validatorService;
         $this->apiLogRepo = $apiLogRepo;
         $this->auditService = $auditService;
+
+        $this->client = new Client();
     }
 
     /**
@@ -195,6 +200,12 @@ class ActivityWorkflowService
         $publishingInfo = $settings->publishing_info;
         $this->publisherService->publishFile($publishingInfo, $activityPublished, $organization);
 
+        $publisherId = Arr::get($settings, 'publishing_info.publisher_id', false);
+        $mergedXmlPath = "xml/mergedActivityXml/$publisherId-activities.xml";
+        $mergedFilesize = calculateStringSizeInMb(awsGetFile($mergedXmlPath));
+
+        $this->activityPublishedService->updateFilesize($activityPublished, $mergedFilesize);
+
         foreach ($successfullyProcessedActivities as $activity) {
             $this->activityService->updatePublishedStatus($activity, 'published', true);
             $this->activitySnapshotService->createOrUpdateActivitySnapshot($activity);
@@ -285,7 +296,6 @@ class ActivityWorkflowService
      */
     public function getResponse($xmlData): string
     {
-        file_put_contents(storage_path('test.xml'), $xmlData);
         $client = new Client();
         $URI = env('IATI_VALIDATOR_ENDPOINT');
         $params['headers'] = ['Content-Type' => 'application/json', 'Ocp-Apim-Subscription-Key' => env('IATI_VALIDATOR_KEY')];
@@ -294,6 +304,25 @@ class ActivityWorkflowService
         $response = $client->post($URI, $params);
 
         return $response->getBody()->getContents();
+    }
+
+    public function getResponseAsync(string $xmlData): PromiseInterface
+    {
+        $client = new Client();
+        $URI = env('IATI_VALIDATOR_ENDPOINT');
+        $params = [
+            'headers' => [
+                'Content-Type'              => 'application/json',
+                'Ocp-Apim-Subscription-Key' => env('IATI_VALIDATOR_KEY'),
+            ],
+            'query'   => [
+                'group'   => 'false',
+                'details' => 'true',
+            ],
+            'body'    => $xmlData,
+        ];
+
+        return $client->postAsync($URI, $params);
     }
 
     /**
@@ -414,5 +443,13 @@ class ActivityWorkflowService
         }
 
         return $activity->refresh();
+    }
+
+    /**
+     * @throws GuzzleException
+     */
+    public function validateMultipleActivities(string $xmlData): string
+    {
+        return $this->getResponse($xmlData);
     }
 }

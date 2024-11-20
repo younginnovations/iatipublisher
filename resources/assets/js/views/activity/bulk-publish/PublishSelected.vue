@@ -103,6 +103,7 @@ import BulkPublishingModal from './bulkPublishModal/BulkPublish.vue';
 import { useSharedMinimize } from 'Composable/useSharedLocalStorage';
 // Vuex Store
 import { useStore } from 'Store/activities/index';
+import { ErrorInterface } from 'Interfaces/ErrorInterface';
 
 defineProps({
   type: { type: String, default: 'primary' },
@@ -187,18 +188,18 @@ const cancelBulkPublishing = async () => {
 };
 
 // toast visibility
-interface MessageTypeface {
-  message: string;
-  type: boolean;
-  visibility: boolean;
-}
 
-const errorData = inject('errorData') as MessageTypeface;
+const errorData = inject('errorData') as ErrorInterface;
 
-const displayToast = (message, type) => {
+const displayToast = (
+  message: string,
+  type: boolean,
+  extraInfo: unknown = null
+) => {
   errorData.message = message;
   errorData.type = type;
   errorData.visibility = true;
+  errorData.extra_info = extraInfo;
 };
 
 const emptybulkPublishStatus = () => {
@@ -262,41 +263,54 @@ let coreCompletedActivities: Ref<actTypeface[]> = ref([]),
   permalink = `/activity/`;
 let deprecationStatusMap = ref([]);
 
+const handleUnsuccessfulResponse = (response) => {
+  cancelValidation();
+
+  if (response.in_progress) {
+    coreElementLoader.value = false;
+
+    emptybulkPublishStatus();
+    Object.assign(bulkPublishStatus, response.data.activities);
+  } else {
+    const extraInfo = response.error_type
+      ? { error_type: response.error_type }
+      : null;
+    displayToast(response.message, response.success, extraInfo);
+  }
+};
+
+const handleSuccessfulResponse = (response) => {
+  coreElementLoader.value = false;
+
+  const { core_elements_completion, deprecation_status_map } = response.data;
+
+  coreCompletedActivities.value = core_elements_completion.complete;
+  coreInCompletedActivities.value = core_elements_completion.incomplete;
+  deprecationStatusMap.value = deprecation_status_map;
+
+  const isFullyCompleted =
+    deprecation_status_map.length === 0 &&
+    core_elements_completion.incomplete.length === 0 &&
+    core_elements_completion.complete.length !== 0;
+
+  if (isFullyCompleted) {
+    validateActivities();
+  }
+};
 const verifyCoreElements = () => {
   coreElementLoader.value = true;
   const activities = store.state.selectedActivities.join(',');
+
   axios
     .get(`/activities/core-elements-completed?activities=[${activities}]`)
     .then((res) => {
       const response = res.data;
+
       if (response.success) {
-        if (
-          response.data.deprecation_status_map.length == 0 &&
-          response.data.core_elements_completion.incomplete.length == 0 &&
-          response.data.core_elements_completion.complete.length !== 0
-        ) {
-          // store.dispatch('updateStartValidation', true);
-          coreElementLoader.value = false;
-          validateActivities();
-        }
-        coreCompletedActivities.value =
-          response.data.core_elements_completion.complete;
-        coreInCompletedActivities.value =
-          response.data.core_elements_completion.incomplete;
-
-        deprecationStatusMap.value = response.data.deprecation_status_map;
+        handleSuccessfulResponse(response);
       } else {
-        coreElementLoader.value = false;
-        cancelValidation();
-
-        if (response?.in_progress) {
-          emptybulkPublishStatus();
-          Object.assign(bulkPublishStatus, response.data.activities);
-        } else {
-          displayToast(response.message, response.success);
-        }
+        handleUnsuccessfulResponse(response);
       }
-      coreElementLoader.value = false;
     });
 };
 

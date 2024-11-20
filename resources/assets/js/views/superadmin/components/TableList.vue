@@ -664,6 +664,7 @@ import DateRangeWidget from 'Components/DateRangeWidget.vue';
 import { useStore } from 'Store/activities/index';
 import PopupModal from 'Components/PopupModal.vue';
 import SpinnerLoader from 'Components/spinnerLoader.vue';
+import { ToastInterface } from 'Interfaces/ToastInterface';
 
 export default defineComponent({
   name: 'TableList',
@@ -688,12 +689,6 @@ export default defineComponent({
   },
 
   setup(props) {
-    // inject
-    interface ToastInterface {
-      visibility: boolean;
-      message: string;
-      type: boolean;
-    }
     const toastMessage = inject('toastData') as ToastInterface;
 
     interface LoaderInterface {

@@ -12,7 +12,42 @@
         v-if="typeof props.message === 'string'"
         class="list-disc rounded-md bg-salmon-10 p-3 font-medium"
       >
-        {{ props.message }}
+        <span
+          v-if="
+            props.extraInfo &&
+            props.extraInfo.error_type === 'max_size_exception'
+          "
+        >
+          <span class="text-md">
+            This organization has surpassed the tool's maximum allowed file size
+            for publishing.
+            <span
+              class="cursor-pointer font-bold text-bluecoral"
+              @click="
+                () => {
+                  close();
+                  openZendeskLauncher();
+                }
+              "
+            >
+              Contact support
+            </span>
+          </span>
+        </span>
+        <span
+          v-else-if="
+            props.extraInfo &&
+            props.extraInfo.error_type === 'batch_size_exception'
+          "
+        >
+          <span class="text-md">
+            The selected items exceed the allowed size for publishing at once.
+            Please try publishing a smaller batch.
+          </span>
+        </span>
+        <span v-else>
+          {{ props.message }}
+        </span>
       </p>
       <ul v-else class="list-disc rounded-md bg-salmon-10 p-3 font-medium">
         <li
@@ -57,7 +92,12 @@ const props = defineProps({
     type: (Array as PropType<Array<string>>) || String,
   },
   title: { type: String, required: true },
+  extraInfo: {
+    type: Object as PropType<{ error_type?: string }>,
+    default: null,
+  },
 });
+
 const close = () => {
   emit('close-popup', 'closed');
 };
@@ -67,4 +107,18 @@ onMounted(() => {
 onUnmounted(() => {
   document.documentElement.style.overflow = 'auto';
 });
+
+function openZendeskLauncher() {
+  if (window.zE && window.zE.activate) {
+    window.zE.activate();
+  }
+}
+
+declare global {
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    zE: any;
+  }
+}
 </script>

@@ -312,13 +312,23 @@ const checkValidationStatus = () => {
         }
 
         if (response.data.status == 'completed') {
-          store.state.bulkActivityPublishStatus.iatiValidatorLoader = false; // Assuming you need to set this to false to stop the loader
-          if (!validationFailedActivities.value) {
-            store.dispatch('updateStartValidation', false);
-            // localStorage.removeItem('validatingActivities');
-            store.dispatch('updateStartBulkPublish', true);
-            localStorage.removeItem('activityValidating');
-            store.state.bulkActivityPublishStatus.completedSteps = [1];
+          store.state.bulkActivityPublishStatus.iatiValidatorLoader = false;
+
+          if (
+            'error_type' in response.data &&
+            response.data.error_type == 'max_merge_size_exception'
+          ) {
+            store.state.bulkActivityPublishStatus.error_type =
+              'max_merge_size_exception';
+          } else {
+            store.state.bulkActivityPublishStatus.error_type = 'generic';
+            if (!validationFailedActivities.value) {
+              store.dispatch('updateStartValidation', false);
+              // localStorage.removeItem('validatingActivities');
+              store.dispatch('updateStartBulkPublish', true);
+              localStorage.removeItem('activityValidating');
+              store.state.bulkActivityPublishStatus.completedSteps = [1];
+            }
           }
         } else {
           setTimeout(poll, 3000); // Call poll again after 3 seconds

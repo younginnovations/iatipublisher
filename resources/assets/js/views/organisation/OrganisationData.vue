@@ -85,7 +85,7 @@
               :type="toastData.type"
               class="mr-4"
             />
-            <ErrorPopUp
+            <ErrorPopupForPublish
               v-if="errorData.visibility"
               :message="errorData.message"
               title="Organisation couldn’t be published because"
@@ -309,7 +309,7 @@ import Toast from 'Components/ToastMessage.vue';
 import PublishUnpublish from 'Components/sections/OrganizationPublishUnpublishButton.vue';
 import { useToggle } from '@vueuse/core';
 import { watchIgnorable } from '@vueuse/core';
-import ErrorPopUp from 'Components/ErrorPopUp.vue';
+import ErrorPopupForPublish from 'Components/ErrorPopupForPublish.vue';
 
 export default defineComponent({
   name: 'OrganisationData',
@@ -320,8 +320,7 @@ export default defineComponent({
     OrganisationElementsDetail,
     Toast,
     PublishUnpublish,
-
-    ErrorPopUp,
+    ErrorPopupForPublish: ErrorPopupForPublish,
   },
   props: {
     elements: {

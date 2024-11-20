@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\IATI\Traits;
 
-use App\IATI\Elements\Xml\XmlGenerator;
 use App\IATI\Services\Activity\ActivityService;
+use ArrayAccess;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
+use JsonException;
 
 /**
  * IatiValidatorResponseTrait.
@@ -35,27 +36,25 @@ trait IatiValidatorResponseTrait
      *
      * @return array
      *
-     * @throws \JsonException
+     * @throws BindingResolutionException
+     * @throws JsonException
      */
     public function addElementOnIatiValidatorResponse($response, $activity): array
     {
-        $xmlGenerator = app()->make(XmlGenerator::class);
         $response = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
         $errors = $response['errors'];
         $updatedErrors = [];
 
-        $xmlFile = awsGetFile("xmlValidation/$activity->org_id/activity_$activity->id.xml");
-        $xml = simplexml_load_string((string) $xmlFile);
-        $xmlString = $xml->asXML();
+        $path = "xmlValidation/$activity->org_id/activity_$activity->id.xml";
+        $xmlString = awsGetFile($path);
+        $xml = simplexml_load_string((string) $xmlString);
 
         if (!empty($errors)) {
-            logger()->info('Getting validation errors');
             foreach ($errors as $error) {
                 $updatedErrors[] = $this->getValidatorErrors($activity, $error, $xml, $xmlString);
             }
 
             $response['errors'] = $updatedErrors;
-            logger()->info('Clearing XML Validaton on s3');
             $this->clearXmlValidationOnS3($activity);
             $this->clearCache($activity);
         }
@@ -84,8 +83,13 @@ trait IatiValidatorResponseTrait
      *
      * @param $activity
      * @param $error
+     * @param $xml
+     * @param $xmlString
      *
      * @return array
+     *
+     * @throws BindingResolutionException
+     * @throws JsonException
      */
     public function getValidatorErrors($activity, $error, $xml, $xmlString): array
     {
@@ -126,7 +130,6 @@ trait IatiValidatorResponseTrait
             $error['response'][0]['iati_path'] = checkUrlExists("/activity/$activity->id/$lastSegment") ? "/activity/$activity->id/$lastSegment" : "/activity/$activity->id";
             $error['response'][0]['message'] = "activity>$activity->id";
         } else {
-            logger()->info('else part');
             $error['response'][0]['iati_path'] = "/activity/$activity->id";
             $error['response'][0]['message'] = "activity>$activity->id";
         }
@@ -157,15 +160,17 @@ trait IatiValidatorResponseTrait
     }
 
     /**
-     * Returns response of a iati validator error whose response has line number in detail.
+     * Returns response of an IATI validator error whose response has line number in detail.
      *
      * @param $detailedError
      * @param $activity
+     * @param $xml
+     * @param $xmlString
      *
      * @return array
      *
      * @throws BindingResolutionException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getDetailWithErrorLineResponse($detailedError, $activity, $xml, $xmlString): array
     {
@@ -191,7 +196,7 @@ trait IatiValidatorResponseTrait
      * @return array
      *
      * @throws BindingResolutionException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getCaseContextErrorResponse($detailedErrors, $activity, $errorMessage, $xml, $xmlString): array
     {
@@ -217,11 +222,13 @@ trait IatiValidatorResponseTrait
      * @param $error
      * @param $activity
      * @param $errorMessage
+     * @param $xml
+     * @param $xmlString
      *
      * @return array
      *
      * @throws BindingResolutionException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getCaseContextStartErrorResponse($error, $activity, $errorMessage, $xml, $xmlString): array
     {
@@ -248,11 +255,13 @@ trait IatiValidatorResponseTrait
      * @param $error
      * @param $activity
      * @param $errorMessage
+     * @param $xml
+     * @param $xmlString
      *
      * @return array
      *
      * @throws BindingResolutionException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getXpathContextWithLineNumberErrorResponse($error, $activity, $errorMessage, $xml, $xmlString): array
     {
@@ -295,7 +304,7 @@ trait IatiValidatorResponseTrait
      * @return string|null
      *
      * @throws BindingResolutionException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getNodeByLineNumber($lineNumber, $activity, $xml, $xmlString): ?string
     {
@@ -354,7 +363,7 @@ trait IatiValidatorResponseTrait
      *
      * @return string
      *
-     * @throws \JsonException
+     * @throws JsonException
      * @throws BindingResolutionException
      */
     public function generateUrlPath($targetNode, $activity): string
@@ -482,7 +491,7 @@ trait IatiValidatorResponseTrait
      * @param $idPath
      * @param $activityId
      *
-     * @return array|\ArrayAccess|mixed
+     * @return array|ArrayAccess|mixed
      *
      * @throws BindingResolutionException
      */

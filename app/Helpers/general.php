@@ -1381,3 +1381,148 @@ if (!function_exists('trimStringValueInArray')) {
         }, $array);
     }
 }
+
+if (!function_exists('calculateStringSizeInMb')) {
+    /**
+     * @param string $stringVal
+     *
+     * @return float|int
+     */
+    function calculateStringSizeInMb(string $stringVal): float|int
+    {
+        return strlen($stringVal) / 1048576;
+    }
+}
+
+function getOffset($childXmlLineDetails, $identifier, $order)
+{
+    if ($order === 0) {
+        return 0;
+    }
+
+    $firstXmlOffsetInfo = Arr::first(array_filter($childXmlLineDetails, fn ($detail) => Arr::get($detail, 'order') === 0));
+
+    $baseOffset = Arr::get($firstXmlOffsetInfo, 'offset');
+    $currentXmlOffsetInfo = Arr::get($childXmlLineDetails, $identifier);
+
+    return $currentXmlOffsetInfo['offset'] - $baseOffset;
+}
+
+if (!function_exists('mapErrorLinesToChildren')) {
+    function mapErrorLinesToChildren($identifier, $childXmlLineDetails, $originalErrorLineNumbers, $arrayWithErrorLineNumbersInsideTextMessage): array
+    {
+        $childXmlLineDetail = $childXmlLineDetails[$identifier];
+        $order = Arr::get($childXmlLineDetail, 'order');
+        $offset = getOffset($childXmlLineDetails, $identifier, $order);
+
+        $extraOffset = count(array_filter($childXmlLineDetails, fn ($detail) => Arr::get($detail, 'order') < $order));
+        if ($order !== 0) {
+            $arrayWithErrorLineNumbersInsideTextMessage = json_encode($arrayWithErrorLineNumbersInsideTextMessage);
+
+            foreach ($originalErrorLineNumbers as $key => $lineNumber) {
+                $newLineNumber = $lineNumber - $offset;
+                $newLineNumber = str_contains($key, '.lineNumber') ? $newLineNumber + $extraOffset : $newLineNumber + 1;
+
+                $arrayWithErrorLineNumbersInsideTextMessage = str_replace("At line: $lineNumber", "At line: $newLineNumber", $arrayWithErrorLineNumbersInsideTextMessage);
+                $arrayWithErrorLineNumbersInsideTextMessage = str_replace("at line: $lineNumber", "at line: $newLineNumber", $arrayWithErrorLineNumbersInsideTextMessage);
+
+                $originalErrorLineNumbers[$key] = $newLineNumber;
+            }
+
+            $arrayWithErrorLineNumbersInsideTextMessage = json_decode($arrayWithErrorLineNumbersInsideTextMessage, true);
+        }
+
+        return [$originalErrorLineNumbers, $arrayWithErrorLineNumbersInsideTextMessage];
+    }
+}
+
+if (!function_exists('getItemsWhereKeyContains')) {
+    function getItemsWhereKeyContains(array $array, string $searchString): array
+    {
+        return Arr::where($array, function ($value, $key) use ($searchString) {
+            return str_contains($key, $searchString);
+        });
+    }
+}
+
+if (!function_exists('getLineNumbersOfEachActivity')) {
+    function getLineNumbersOfEachActivity($xmlDoc, array $uniqueIdentifiers, array $individualActivityXmlLength): array
+    {
+        $sumOfPreviousNodes = 0;
+        $result = [];
+        $xpath = new DOMXPath($xmlDoc);
+        $nodes = $xpath->query('//iati-activities/iati-activity/iati-identifier');
+
+        foreach ($nodes as $index => $node) {
+            $identifier = $node->textContent;
+
+            if (in_array($identifier, $uniqueIdentifiers)) {
+                if ($index == 0) {
+                    $lineNumber = 0;
+                    $sumOfPreviousNodes = $individualActivityXmlLength[$identifier] + 3; // this is correct
+                } else {
+                    $lineNumber = $sumOfPreviousNodes;
+                    $sumOfPreviousNodes = $sumOfPreviousNodes + $individualActivityXmlLength[$identifier]; //55 -> 55+36
+                }
+
+                $result[$identifier] = [
+                    'order' => $index,
+                    'beginsOn' => $lineNumber,
+                    'individualLength' => $individualActivityXmlLength[$identifier],
+                ];
+            }
+        }
+
+        return $result;
+    }
+}
+
+if (!function_exists('filterErrorsByIdentifier')) {
+    function filterErrorsByIdentifier(array $errors, string $identifier): array
+    {
+        return array_values(array_filter($errors, function ($error) use ($identifier) {
+            return $error['identifier'] === $identifier;
+        }));
+    }
+}
+
+function getIndividualActivityXmlLength(string $fileContent): int
+{
+    return substr_count($fileContent, PHP_EOL) + 1 - 3;
+}
+
+function regroupResponseForAllActivity(array $response, array $uniqueIdentifiers, array $xmlLineNumberMap): array
+{
+    $groupedResponses = [];
+
+    foreach ($uniqueIdentifiers as $identifier) {
+        $clonedResponse = $response;
+        $clonedResponse['errors'] = filterErrorsByIdentifier($response['errors'], $identifier);
+        $clonedResponse['summary'] = ['critical' => 0, 'error' => 0, 'warning' => 0, 'advisory' => 0];
+
+        foreach ($clonedResponse['errors'] as $error) {
+            $severity = Arr::get($error, 'severity');
+            $clonedResponse['summary'][$severity]++;
+        }
+
+        $clonedResponse = flattenArrayWithKeys($clonedResponse);
+        $arrayOfErrorLineNumbersInValue = getItemsWhereKeyContains($clonedResponse, 'line');
+        $arrayOfErrorLineNumbersInTextMessage = getItemsWhereKeyContains($clonedResponse, '.text');
+
+        [$mappedLineNumbersInValue, $mappedLineNumbersInTextMessage] = mapErrorLinesToChildren($identifier, $xmlLineNumberMap, $arrayOfErrorLineNumbersInValue, $arrayOfErrorLineNumbersInTextMessage);
+
+        foreach ($arrayOfErrorLineNumbersInValue as $key => $value) {
+            $clonedResponse[$key] = $mappedLineNumbersInValue[$key];
+        }
+
+        foreach ($arrayOfErrorLineNumbersInTextMessage as $key => $value) {
+            $clonedResponse[$key] = $mappedLineNumbersInTextMessage[$key];
+        }
+
+        $clonedResponse = convertDotKeysToNestedArray($clonedResponse);
+
+        $groupedResponses[$identifier] = $clonedResponse;
+    }
+
+    return $groupedResponses;
+}
