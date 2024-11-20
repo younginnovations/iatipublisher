@@ -22,7 +22,7 @@
           Validation incomplete
         </h3>
       </div>
-      <h6 class="my-2 text-sm" v-if="errorType === 'generic'">
+      <h6 v-if="errorType === 'generic'" class="my-2 text-sm">
         <b class="text-[18px]"
           >{{ Object.keys(validActivities).length }}/{{
             Object.keys(activitiesList).length
@@ -32,7 +32,7 @@
         to publish the validated files?
       </h6>
 
-      <h6 class="my-2 text-sm" v-if="errorType === 'max_merge_size_exception'">
+      <h6 v-if="errorType === 'max_merge_size_exception'" class="my-2 text-sm">
         <b class="text-[16px] text-crimson-50">
           Exceeded max publish size.
           <a
