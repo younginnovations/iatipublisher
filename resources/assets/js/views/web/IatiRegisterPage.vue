@@ -194,16 +194,17 @@
               @click="goToPreviousForm()"
             >
               <svg-vue class="mr-3 cursor-pointer" icon="left-arrow" />
-              Go back
+              {{ translatedData['register.commons.go_back'] }}
             </button>
             <span
               v-if="checkStep(1)"
               class="pb-4 text-sm font-normal text-n-40 sm:pb-0"
-              >Already have an account?
+            >
+              {{ translatedData['register.commons.already_have_an_account'] }}
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
-                >Sign In.</a
+                >{{ translatedData['register.commons.sign_in'] }}</a
               ></span
             >
             <button
@@ -211,17 +212,17 @@
               class="btn btn-next"
               @click="goToNextForm()"
             >
-              Next Step
+              {{ translatedData['register.commons.next_step'] }}
               <svg-vue class="text-2xl" icon="right-arrow" />
             </button>
           </div>
           <div v-if="checkStep(2)" class="mt-6 text-center">
-            <span class="text-sm font-normal text-n-40"
-              >Already have an account?
+            <span class="text-sm font-normal text-n-40">
+              {{ translatedData['register.commons.already_have_an_account'] }}
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
-                >Sign In.</a
+                >{{ translatedData['register.commons.sign_in'] }}</a
               ></span
             >
           </div>
@@ -229,7 +230,15 @@
 
         <aside class="register__sidebar hidden xl:block">
           <span class="text-base font-bold"
-            >Step {{ getCurrentStep() }} out of 5</span
+            >{{
+              translatedData['register.not_registered_page.step_section.step']
+            }}
+            {{ getCurrentStep() }}
+            {{
+              translatedData[
+                'register.not_registered_page.step_section.total_step'
+              ]
+            }}</span
           >
           <ul class="relative mt-6 text-sm text-n-40">
             <li
@@ -280,6 +289,7 @@ import {
   reactive,
   ref,
   watch,
+  watchEffect,
 } from 'vue';
 import axios from 'axios';
 import EmailVerification from './EmailVerification.vue';
@@ -427,6 +437,310 @@ export default defineComponent({
       return (formStep: string | number) => {
         return parseInt(formStep.toString()) === step.value;
       };
+    });
+
+    watchEffect(() => {
+      if (translatedData.value && registerForm) {
+        // Form 1
+        registerForm[1].title =
+          translatedData.value[
+            'register.not_registered_page.register_section.heading_one'
+          ];
+        registerForm[1].description =
+          translatedData.value[
+            'register.not_registered_page.register_section.publisher_information_description'
+          ];
+        registerForm[1].hover_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.publisher_information_hover_text'
+          ];
+        registerForm[1].fields.publisher_name.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.publisher_name'
+          ];
+        registerForm[1].fields.publisher_name.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.publisher_name_placeholder'
+          ];
+        registerForm[1].fields.publisher_name.hover_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.publisher_name_hover_text'
+          ];
+        registerForm[1].fields.publisher_id.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.publisher_id'
+          ];
+        registerForm[1].fields.publisher_id.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.publisher_id_placeholder'
+          ];
+        registerForm[1].fields.publisher_id.hover_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.publisher_id_hover_text'
+          ];
+        registerForm[1].fields.country.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.country'
+          ];
+        registerForm[1].fields.country.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.country_placeholder'
+          ];
+        registerForm[1].fields.country.hover_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.country_hover_text'
+          ];
+        registerForm[1].fields.registration_agency.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.organisation_registration_agency'
+          ];
+        registerForm[1].fields.registration_agency.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.organisation_registration_agency_placeholder'
+          ];
+        registerForm[1].fields.registration_agency.hover_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.organisation_registration_agency_hover_text'
+          ];
+        registerForm[1].fields.registration_number.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.registration_number'
+          ];
+        registerForm[1].fields.registration_number.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.registration_number_placeholder'
+          ];
+        registerForm[1].fields.registration_number.hover_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.registration_number_hover_text'
+          ];
+        registerForm[1].fields.registration_number.help_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.registration_number_help_text'
+          ];
+        registerForm[1].fields.identifier.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.identifier'
+          ];
+        registerForm[1].fields.identifier.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.identifier_placeholder'
+          ];
+        registerForm[1].fields.identifier.hover_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.identifier_hover_text'
+          ];
+        registerForm[1].fields.identifier.help_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.identifier_help_text'
+          ];
+        registerForm[1].fields.publisher_type.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.organisation_type'
+          ];
+        registerForm[1].fields.publisher_type.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.organisation_type_placeholder'
+          ];
+        registerForm[1].fields.publisher_type.hover_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.organisation_type_hover_text'
+          ];
+        registerForm[1].fields.license_id.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.data_licence'
+          ];
+        registerForm[1].fields.license_id.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.data_licence_placeholder'
+          ];
+        registerForm[1].fields.license_id.hover_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.data_licence_hover_text'
+          ];
+        registerForm[1].fields.image_url.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.publisher_logo_url'
+          ];
+        registerForm[1].fields.image_url.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.publisher_logo_url_placeholder'
+          ];
+        registerForm[1].fields.image_url.hover_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.publisher_logo_url_hover_text'
+          ];
+        registerForm[1].fields.description.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.organisation_description'
+          ];
+        registerForm[1].fields.description.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.organisation_description_placeholder'
+          ];
+        registerForm[1].fields.description.hover_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.organisation_description_hover_text'
+          ];
+        // Form 2
+        registerForm[2].title =
+          translatedData.value[
+            'register.not_registered_page.register_section.heading_two'
+          ];
+        registerForm[2].description =
+          translatedData.value[
+            'register.not_registered_page.register_section.contact_information_description'
+          ];
+        registerForm[2].fields.contact_email.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.contact_email'
+          ];
+        registerForm[2].fields.contact_email.hover_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.contact_email_hover_text'
+          ];
+
+        registerForm[2].fields.website.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.website'
+          ];
+
+        registerForm[2].fields.website.hover_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.website_hover_text'
+          ];
+        registerForm[2].fields.website.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.website_placeholder'
+          ];
+        registerForm[2].fields.address.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.address'
+          ];
+        registerForm[2].fields.address.hover_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.address_hover_text'
+          ];
+        registerForm[2].fields.address.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.address_placeholder'
+          ];
+        // Form 3
+        registerForm[3].title =
+          translatedData.value[
+            'register.not_registered_page.register_section.heading_three'
+          ];
+        registerForm[3].description =
+          translatedData.value[
+            'register.not_registered_page.register_section.publishing_additional_information_description'
+          ];
+        registerForm[3].fields.source.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.source'
+          ];
+        registerForm[3].fields.source.hover_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.source_hover_text'
+          ];
+        registerForm[3].fields.source.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.source_placeholder'
+          ];
+        registerForm[3].fields.default_language.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.default_language'
+          ];
+        registerForm[3].fields.default_language.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.default_language_placeholder'
+          ];
+
+        registerForm[3].fields.record_exclusions.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.record_exclusions'
+          ];
+        registerForm[3].fields.record_exclusions.hover_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.record_exclusions_hover_text'
+          ];
+        registerForm[3].fields.record_exclusions.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.record_exclusions_placeholder'
+          ];
+        // Form 4
+        registerForm[4].title =
+          translatedData.value[
+            'register.not_registered_page.register_section.heading_four'
+          ];
+        registerForm[4].description =
+          translatedData.value[
+            'register.not_registered_page.register_section.administrator_information_description'
+          ];
+        registerForm[4].fields.full_name.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.full_name'
+          ];
+        registerForm[4].fields.full_name.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.full_name_placeholder'
+          ];
+
+        registerForm[4].fields.email.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.email'
+          ];
+        registerForm[4].fields.email.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.email_placeholder'
+          ];
+
+        registerForm[4].fields.username.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.username'
+          ];
+        registerForm[4].fields.username.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.username_placeholder'
+          ];
+        registerForm[4].fields.username.hover_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.username_hover_text'
+          ];
+        registerForm[4].fields.password.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.password'
+          ];
+        registerForm[4].fields.password.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.password_placeholder'
+          ];
+
+        registerForm[4].fields.password.help_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.password_help_text'
+          ];
+        registerForm[4].fields.password_confirmation.label =
+          translatedData.value[
+            'register.not_registered_page.register_section.confirm_password'
+          ];
+        registerForm[4].fields.password_confirmation.placeholder =
+          translatedData.value[
+            'register.not_registered_page.register_section.confirm_password_placeholder'
+          ];
+        registerForm[4].fields.password_confirmation.help_text =
+          translatedData.value[
+            'register.not_registered_page.register_section.confirm_password_help_text'
+          ];
+        // Form 5
+        registerForm[5].title =
+          translatedData.value[
+            'register.not_registered_page.register_section.heading_five'
+          ];
+        registerForm[5].description =
+          translatedData.value[
+            'register.not_registered_page.register_section.email_verification_description'
+          ];
+      }
     });
 
     /**

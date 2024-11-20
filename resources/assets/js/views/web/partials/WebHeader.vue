@@ -204,6 +204,7 @@ export default defineComponent({
     return {
       changeLanguage,
       translatedData,
+      currentLanguage,
     };
   },
 });
