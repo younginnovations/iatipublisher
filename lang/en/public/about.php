@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'about_iati_publisher' => 'About IATI Publisher',
     'what_is_iati_publisher' => 'What is IATI Publisher?',
     'iati_introduction' => 'IATI Publisher enables organisations to publish data on activities and resource flows according to the IATI Standard. The IATI Standard is a set of rules and guidance on how to publish useful development and humanitarian data.',
     'use_iati' => [
