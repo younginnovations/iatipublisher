@@ -600,8 +600,8 @@ class BulkPublishingController extends Controller
     private function getPossibleMergeableFilesize(int|float $publishBatchSize): float|int
     {
         $organisation = auth()->user()->organization;
-        $activityPublished = $this->activityPublishedService->getPublisherFileSize($organisation->id);
-        $mergedFileSize = $activityPublished ? $activityPublished->filesize : 0;
+        $publishedFileSize = $this->activityPublishedService->getPublisherFileSize($organisation->id);
+        $mergedFileSize = $publishedFileSize;
 
         return $mergedFileSize + $publishBatchSize;
     }
