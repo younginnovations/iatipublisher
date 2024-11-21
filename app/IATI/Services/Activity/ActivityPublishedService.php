@@ -107,7 +107,7 @@ class ActivityPublishedService
      *
      * @return int|float
      */
-    public function getPublisherFileSize($orgId): int|float
+    public function getPublisherFileSize(int|string $orgId): int|float
     {
         return $this->activityPublishedRepository->getPublisherFileSize($orgId);
     }

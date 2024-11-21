@@ -42,6 +42,7 @@ class ActivityPublished extends Model implements Auditable
     protected $casts
         = [
             'published_activities' => 'json',
+            'filesize'=>'float',
         ];
 
     /**

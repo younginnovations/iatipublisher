@@ -68,8 +68,8 @@ class IndicatorRequest extends ActivityBaseRequest
         }
 
         $tempRules = [
-            $this->getWarningForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
-            $this->getWarningForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
+            $this->getWarningForNarrative(Arr::get($formFields, 'title.0.narrative', []), 'title.0'),
+            $this->getWarningForNarrative(Arr::get($formFields, 'description.0.narrative', []), 'description.0'),
             $this->getWarningForDocumentLink(Arr::get($formFields, 'document_link', [])),
             $this->getWarningForReference(Arr::get($formFields, 'reference', []), $fileUpload, $result, $resultId),
             $this->getWarningForBaseline(Arr::get($formFields, 'baseline', [])),
