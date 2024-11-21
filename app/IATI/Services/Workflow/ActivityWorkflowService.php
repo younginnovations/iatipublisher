@@ -12,8 +12,10 @@ use App\IATI\Services\Activity\ActivitySnapshotService;
 use App\IATI\Services\Audit\AuditService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Publisher\PublisherService;
+use App\IATI\Services\Setting\SettingService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use App\IATI\Services\Xml\XmlGeneratorService;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
@@ -29,6 +31,11 @@ class ActivityWorkflowService
      * @var OrganizationService
      */
     protected OrganizationService $organizationService;
+
+    /**
+     * @var SettingService
+     */
+    protected SettingService $settingService;
 
     /**
      * @var ActivityService
@@ -75,18 +82,20 @@ class ActivityWorkflowService
     /**
      * ActivityWorkflowService Constructor.
      *
-     * @param OrganizationService $organizationService
-     * @param ActivityService $activityService
-     * @param XmlGeneratorService $xmlGeneratorService
-     * @param PublisherService $publisherService
-     * @param ActivityPublishedService $activityPublishedService
-     * @param ActivitySnapshotService $activitySnapshotService
-     * @param ActivityValidatorResponseService $validatorService
-     * @param AuditService $auditService
-     * @param ApiLogRepository $apiLogRepo
+     * @param OrganizationService                       $organizationService
+     * @param SettingService $settingService
+     * @param ActivityService                           $activityService
+     * @param XmlGeneratorService                       $xmlGeneratorService
+     * @param PublisherService                          $publisherService
+     * @param ActivityPublishedService                  $activityPublishedService
+     * @param ActivitySnapshotService                   $activitySnapshotService
+     * @param ActivityValidatorResponseService          $validatorService
+     * @param ApiLogRepository                          $apiLogRepo
+     * @param AuditService                              $auditService
      */
     public function __construct(
         OrganizationService $organizationService,
+        SettingService $settingService,
         ActivityService $activityService,
         XmlGeneratorService $xmlGeneratorService,
         PublisherService $publisherService,
@@ -97,6 +106,7 @@ class ActivityWorkflowService
         AuditService $auditService
     ) {
         $this->organizationService = $organizationService;
+        $this->settingService = $settingService;
         $this->activityService = $activityService;
         $this->xmlGeneratorService = $xmlGeneratorService;
         $this->publisherService = $publisherService;
@@ -129,7 +139,7 @@ class ActivityWorkflowService
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function publishActivity($activity, bool $publishFile = true): void
     {
@@ -146,7 +156,7 @@ class ActivityWorkflowService
         if ($generatedXmlContent) {
             $this->xmlGeneratorService->appendCompleteActivityXmlToMergedXml($generatedXmlContent, $settings, $activity, $organization);
         } else {
-            throw new \Exception('Failed appending new activity to merged xml.');
+            throw new Exception('Failed appending new activity to merged xml.');
         }
 
         if ($publishFile) {
@@ -219,7 +229,7 @@ class ActivityWorkflowService
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function unpublishActivity($activity): void
     {
@@ -369,12 +379,13 @@ class ActivityWorkflowService
     /**
      * Returns errors related to publishing activity.
      *
-     * @param $organization
+     * @param        $organization
      * @param string $type
      *
      * @return array
      *
      * @throws \JsonException
+     * @throws GuzzleException
      */
     public function getPublishErrorMessage($organization, string $type = 'activity'): array
     {
@@ -383,8 +394,24 @@ class ActivityWorkflowService
         if (!$this->isUserVerified()) {
             $messages[] = 'You have not verified your email address.';
         }
-        if ($this->hasNoPublisherInfo($organization->settings)) {
+        if ($this->hasNoPublisherInfo($organization)) {
             $messages[] = 'Your API Key is not valid or it is empty.';
+
+            try {
+                $tokenVerificationStatus = $this->settingService->verifyPublisher($organization->toArray());
+                $tokenVerificationStatus = json_decode(json_encode($tokenVerificationStatus), true);
+
+                if ($tokenVerificationStatus['state'] === 'active') {
+                    $publisherInfo = Arr::get($organization, 'settings.publishing_info', []);
+                    $publisherInfo['token_status'] = Arr::get($tokenVerificationStatus, 'state', 'pending');
+                    $publisherInfo['token_verification'] = $publisherInfo['token_status'] === 'active';
+
+                    $this->settingService->storePublishingInfo($publisherInfo);
+
+                    array_pop($messages);
+                }
+            } catch (Exception $e) {
+            }
         }
         if ($type === 'activity' && !$this->isOrganizationPublished($organization)) {
             $messages[] = 'Your Organisation data is not published.';
