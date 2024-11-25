@@ -27,7 +27,7 @@
                   rel="noopener noreferrer"
                   class="cursor-pointer"
                   @click="downloadManual('user')"
-                  >User Manual V1.0</a
+                  >User Manual v1.1</a
                 >
               </li>
             </ul>
@@ -99,7 +99,7 @@ import axios from 'axios';
 
 function downloadManual(type: string) {
   let fileName = {
-    user: 'IATI_Publisher-User_Manual_v1.0.pdf',
+    user: 'IATI_Publisher-User_Manual_v1.1.pdf',
   };
   let url = window.location.origin + `/Data/Manuals/${fileName[type]}`;
 
