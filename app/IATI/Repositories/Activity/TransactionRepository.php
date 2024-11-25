@@ -144,4 +144,13 @@ class TransactionRepository extends Repository
             ->first()
             ->toArray();
     }
+
+    /** @param array $transactionIds
+     *
+     * @return bool
+     */
+    public function bulkDeleteTransactions(array $transactionIds): bool
+    {
+        return (bool) $this->model->whereIn('id', $transactionIds)->delete();
+    }
 }

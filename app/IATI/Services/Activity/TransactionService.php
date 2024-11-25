@@ -674,4 +674,13 @@ class TransactionService
     {
         return $this->transactionRepository->getTransactionCountStats($activityId);
     }
+
+    /** @param array $transactionIds
+     *
+     * @return bool
+     */
+    public function bulkDeleteTransactions(array $transactionIds): bool
+    {
+        return $this->transactionRepository->bulkDeleteTransactions($transactionIds);
+    }
 }

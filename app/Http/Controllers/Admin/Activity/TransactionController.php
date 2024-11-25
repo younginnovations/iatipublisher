@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Transaction\TransactionRequest;
+use App\Http\Requests\BulkDeleteTransactionRequest;
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\TransactionService;
@@ -17,6 +18,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 /**
@@ -357,6 +359,40 @@ class TransactionController extends Controller
             return response()->json([
                 'status'      => false,
                 'msg'         => 'Transaction Delete Error',
+                'activity_id' => $id,
+            ], 400);
+        }
+    }
+
+    /**
+     * Bulk deletes transactions.
+     *
+     * @param BulkDeleteTransactionRequest $request
+     * @param                                                 $id
+     *
+     * @return JsonResponse
+     */
+    public function bulkDeleteTransactions(BulkDeleteTransactionRequest $request, $id): JsonResponse
+    {
+        try {
+            $transactionIds = $request->validated('transaction_ids');
+
+            DB::beginTransaction();
+            $this->transactionService->bulkDeleteTransactions($transactionIds);
+            DB::commit();
+
+            return response()->json([
+                'status'      => true,
+                'msg'         => 'Transactions Deleted Successfully',
+                'activity_id' => $id,
+            ], 200);
+        } catch (Exception $e) {
+            DB::rollback();
+            logger()->error($e);
+
+            return response()->json([
+                'status'      => false,
+                'msg'         => 'Failed to bulk delete transactions.',
                 'activity_id' => $id,
             ], 400);
         }
