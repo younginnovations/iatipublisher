@@ -1,6 +1,7 @@
 <template>
   <div>
     <h4
+      v-if="!isChecking"
       class="mb-4 flex items-center gap-1 border-b border-n-20 pb-2 text-sm font-bold"
     >
       <span> Publishing Activity </span>
@@ -11,6 +12,7 @@
       </span>
     </h4>
     <WizardIndex
+      v-if="!isChecking"
       :completed-steps="store.state.bulkActivityPublishStatus.completedSteps"
     />
 
@@ -82,14 +84,13 @@
         "
         class="flex items-center gap-3 rounded-md bg-mint p-3 text-xs"
       >
-        Activity has been published successfully, Close and refresh to see
-        changes.
+        Activity has been published successfully, Close to see changes.
       </p>
       <BtnComponent
         type="primary"
         text="Close"
         class="bg-white px-6 uppercase"
-        @click="cancelActivityPublishing()"
+        @click="cancelActivityPublishing(true)"
       />
     </div>
     <template v-else>
@@ -150,6 +151,12 @@
             :disabled="newSelectedActivities.length === 0"
             @click="startBulkPublish()"
           />
+          <BulkPublishRevalidatePopup
+            :data-changed="dataChanged"
+            :show-slide-in="showSlideIn"
+            @cancel="handleCancel"
+            @reverify="reValidateActivities"
+          />
         </template>
       </template>
     </template>
@@ -165,6 +172,7 @@ import {
   ref,
   provide,
   watchEffect,
+  onMounted,
 } from 'vue';
 import WizardIndex from '../wizardSteps/WizardIndex.vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
@@ -174,6 +182,8 @@ import IatiValidate from './iatiValidate/IatiValidate.vue';
 import { useStore } from 'Store/activities/index';
 import PublishingActivity from './publishingActivity/PublishingActivity.vue';
 import { useSharedMinimize } from 'Composable/useSharedLocalStorage';
+import BulkPublishRevalidatePopup from 'Components/BulkPublishRevalidatePopup.vue';
+import axios from 'axios';
 
 const store = useStore();
 const props = defineProps({
@@ -214,6 +224,10 @@ const props = defineProps({
 
 const sharedMinimize = useSharedMinimize();
 const newSelectedActivities = ref([] as number[]);
+const isChecking = ref(true);
+const dataChanged = ref(false);
+const showSlideIn = ref(false);
+
 provide('newSelectedActivities', newSelectedActivities);
 
 const emit = defineEmits([
@@ -224,6 +238,7 @@ const emit = defineEmits([
 ]);
 
 const validateActivities = () => {
+  isChecking.value = false;
   emit('validateActivities');
 };
 
@@ -243,12 +258,40 @@ watch(
   }
 );
 
-const startBulkPublish = () => {
-  store.dispatch('updateStartValidation', false);
-  // localStorage.removeItem('validatingActivities');
-  store.dispatch('updateStartBulkPublish', true);
-  localStorage.removeItem('activityValidating');
-  store.state.bulkActivityPublishStatus.completedSteps = [1];
+const startBulkPublish = async () => {
+  const response = await axios.get('/activities/detect-change');
+
+  if (response.data.data.has_changed) {
+    dataChanged.value = true;
+    setTimeout(() => {
+      showSlideIn.value = true;
+    }, 300);
+  } else {
+    store.dispatch('updateStartValidation', false);
+    // localStorage.removeItem('validatingActivities');
+    store.dispatch('updateStartBulkPublish', true);
+    localStorage.removeItem('activityValidating');
+    store.state.bulkActivityPublishStatus.completedSteps = [1];
+  }
+};
+
+const handleCancel = () => {
+  if (dataChanged.value) {
+    showSlideIn.value = false;
+    setTimeout(() => {
+      dataChanged.value = false;
+    }, 300);
+  } else {
+    dataChanged.value = true;
+  }
+};
+
+const reValidateActivities = async () => {
+  showSlideIn.value = false;
+  setTimeout(() => {
+    dataChanged.value = false;
+  }, 300);
+  emit('validateActivities');
 };
 
 const handleMinimize = () => {
@@ -262,9 +305,12 @@ const showPublishingActivityModal = computed(() => {
   );
 });
 
-const cancelActivityPublishing = () => {
+const cancelActivityPublishing = (isFinalStep?: boolean) => {
   localStorage.setItem('vue-use-local-storage', 'publishingActivities:{}');
   emit('cancelBulkPublishing');
+  if (isFinalStep) {
+    window.location.reload();
+  }
 };
 
 const cancelValidation = () => {
@@ -300,6 +346,48 @@ const publishingActivityCount = computed(() => {
 watchEffect(() => {
   if (sharedMinimize.value) {
     store.state.isPublishedModalMinimized = sharedMinimize.value;
+  }
+});
+
+watchEffect(() => {
+  if (
+    props.coreInCompletedActivities.length === 0 &&
+    props.coreCompletedActivities.length > 0
+  ) {
+    isChecking.value = false;
+  }
+});
+
+watchEffect(() => {
+  const validationPercent = localStorage.getItem('validationPercent');
+  const activityValidating = localStorage.getItem('activityValidating');
+  const validatingActivities = store.state.validatingActivities;
+
+  if (
+    (validationPercent === '100' && activityValidating === 'false') ||
+    (validatingActivities !== '' && activityValidating === 'true')
+  ) {
+    isChecking.value = false;
+  }
+});
+
+onMounted(() => {
+  const publishingStatus = localStorage.getItem('vue-use-local-storage');
+
+  const validatingActivities = localStorage.getItem('validatingActivities');
+  if (validatingActivities) {
+    store.state.selectedActivities = validatingActivities
+      .split(',')
+      .map(Number);
+  }
+
+  if (publishingStatus) {
+    const parsedStatus = JSON.parse(publishingStatus);
+    const publishingActivities = parsedStatus.publishingActivities;
+
+    if (publishingActivities && Object.keys(publishingActivities).length > 0) {
+      isChecking.value = false;
+    }
   }
 });
 </script>

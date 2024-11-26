@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\Workflow;
 use App\Constants\Enums;
 use App\Exceptions\MaxBatchSizeExceededException;
 use App\Exceptions\MaxMergeSizeExceededException;
+use App\Helpers\BulkPublishCacheHelper;
 use App\Http\Controllers\Controller;
 use App\IATI\Elements\Xml\XmlGenerator;
 use App\IATI\Services\Activity\ActivityPublishedService;
@@ -56,10 +57,11 @@ class BulkPublishingController extends Controller
     /**
      * BulkPublishingController Constructor.
      *
-     * @param BulkPublishingService       $bulkPublishingService
-     * @param ActivityService             $activityService
-     * @param ActivityWorkflowService     $activityWorkflowService
-     * @param BulkPublishingStatusService $publishingStatusService
+     * @param BulkPublishingService                                $bulkPublishingService
+     * @param ActivityService                                      $activityService
+     * @param ActivityWorkflowService                              $activityWorkflowService
+     * @param BulkPublishingStatusService                          $publishingStatusService
+     * @param ActivityPublishedService $activityPublishedService
      */
     public function __construct(
         BulkPublishingService $bulkPublishingService,
@@ -263,20 +265,33 @@ class BulkPublishingController extends Controller
             }
 
             if ($this->publishingStatusService->ongoingBulkPublishing($organization->id)) {
-                $pubishingStatus = $this->bulkPublishingService->getOrganisationBulkPublishingStatus();
+                $publishingStatus = $this->bulkPublishingService->getOrganisationBulkPublishingStatus();
 
                 return response()->json([
                     'success'     => false,
                     'message'     => 'Another bulk publishing is already in progress.',
-                    'data'        => $pubishingStatus['publishingData'],
-                    'in_progress' => $pubishingStatus['inProgress'],
+                    'data'        => $publishingStatus['publishingData'],
+                    'in_progress' => $publishingStatus['inProgress'],
                 ]);
             }
 
             $activityIds = json_decode($request->get('activities'), false, 512, JSON_THROW_ON_ERROR);
 
             if (!empty($activityIds)) {
-                $activities = $this->activityService->getActivitiesHavingIds($activityIds);
+                $filteredActivityIds = $this->bulkPublishingService->getPublishableActivityIds($activityIds);
+
+                if (empty($filteredActivityIds)) {
+                    return response()->json(
+                        [
+                            'success' => false,
+                            'status'  => 'error',
+                            'message' => 'All of the selected activities have critical error.',
+                            'data'    => ['activity_ids' => $activityIds],
+                        ]
+                    );
+                }
+
+                $activities = $this->activityService->getActivitiesHavingIds($filteredActivityIds);
 
                 if (!count($activities)) {
                     return response()->json(['success' => false, 'message' => 'No activities selected.']);
@@ -311,7 +326,6 @@ class BulkPublishingController extends Controller
             return response()->json(['success' => false, 'message' => 'No activities selected.']);
         } catch (Exception $e) {
             DB::rollBack();
-            logger()->error($e->getMessage());
             logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Bulk publishing failed.']);
@@ -336,6 +350,10 @@ class BulkPublishingController extends Controller
 
                 if ($publishStatus && count($publishStatus)) {
                     $response = $this->bulkPublishingService->getPublishingResponse($publishStatus);
+
+                    if ($this->bulkPublishCompleted($response)) {
+                        BulkPublishCacheHelper::clearBulkPublishCache($organizationId);
+                    }
 
                     return response()->json(
                         [
@@ -371,8 +389,11 @@ class BulkPublishingController extends Controller
     {
         try {
             DB::beginTransaction();
-            $deletedIds = $this->bulkPublishingService->stopBulkPublishing(auth()->user()->organization->id);
+            $orgId = auth()->user()->organization_id;
+            $deletedIds = $this->bulkPublishingService->stopBulkPublishing($orgId);
             $numberOfDeletedRows = count($deletedIds);
+
+            BulkPublishCacheHelper::clearBulkPublishCache($orgId);
 
             if ($deletedIds) {
                 DB::commit();
@@ -389,6 +410,7 @@ class BulkPublishingController extends Controller
             return response()->json(['success' => true, 'message' => 'No bulk publish were cancelled.']);
         } catch (Exception $e) {
             DB::rollBack();
+            BulkPublishCacheHelper::clearBulkPublishCache(auth()->user()->organization_id);
             logger()->error($e->getMessage());
             logger()->error($e);
 
@@ -505,6 +527,10 @@ class BulkPublishingController extends Controller
                 $filteredActivityIds = $this->filterOutPublishedStateActivityIds($activityIds, $activities->toArray());
                 $response = $this->bulkPublishingService->getActivityValidationStatus($filteredActivityIds);
 
+                if ($this->validationCompleted($response)) {
+                    BulkPublishCacheHelper::setInitialBulkPublishCache(auth()->user()->organization_id);
+                }
+
                 $hasFailedStatus = $response['failed_count'] > 0;
 
                 return response()->json(['success' => !$hasFailedStatus, 'data' => $response]);
@@ -559,6 +585,7 @@ class BulkPublishingController extends Controller
             $this->bulkPublishingService->deleteValidationResponses();
             Cache::put('activity-validation-delete', true);
             Cache::forget('activity-validation-' . auth()->user()->id);
+            BulkPublishCacheHelper::clearBulkPublishCache(auth()->user()->organization_id);
 
             return response()->json(['success' => true, 'message' => 'Successfully Deleted.']);
         } catch (Exception|\Throwable $exception) {
@@ -567,6 +594,34 @@ class BulkPublishingController extends Controller
             return response()->json(
                 ['success' => false, 'message' => 'Error has occurred while deleting validation status.']
             );
+        }
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function detectChange(): JsonResponse
+    {
+        try {
+            $orgId = auth()->user()->organization_id;
+            $hasChanged = BulkPublishCacheHelper::activitiesHaveChanged($orgId);
+            $affectedActivities = BulkPublishCacheHelper::getActivityIdsInCache($orgId);
+
+            return response()->json([
+                'success' => true,
+                'message' => $hasChanged ? 'Change detected.' : 'No change detected.',
+                'data'    => [
+                    'has_changed'         => $hasChanged,
+                    'affected_activities' => $affectedActivities,
+                ],
+            ]);
+        } catch (Exception $e) {
+            logger()->error($e);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error has occurred while detecting change.',
+            ]);
         }
     }
 
@@ -631,5 +686,15 @@ class BulkPublishingController extends Controller
         }
 
         return $batchSize;
+    }
+
+    private function validationCompleted(array $response): bool
+    {
+        return Arr::get($response, 'status') === 'completed';
+    }
+
+    private function bulkPublishCompleted(array $response): bool
+    {
+        return Arr::get($response, 'status') === 'completed';
     }
 }

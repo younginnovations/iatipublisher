@@ -495,6 +495,7 @@ watch(
 );
 
 const showValidationPopup = computed(() => {
+  if (window.location.pathname !== '/activities') return false;
   return store.state.startValidation || store.state.validationRunning;
 });
 

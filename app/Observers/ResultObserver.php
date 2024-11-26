@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Observers;
 
+use App\Helpers\BulkPublishCacheHelper;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\Activity\Result;
 use App\IATI\Services\ElementCompleteService;
@@ -49,6 +50,13 @@ class ResultObserver
             $activityObj->saveQuietly(['touch'=>false]);
         } else {
             $activityObj->saveQuietly();
+        }
+
+        $orgId = $activityObj->org_id;
+        $activityId = $activityObj->id;
+
+        if (BulkPublishCacheHelper::hasOngoingBulkPublish($orgId)) {
+            BulkPublishCacheHelper::appendActivityIdInBulkPublishCache($orgId, $activityId);
         }
     }
 
