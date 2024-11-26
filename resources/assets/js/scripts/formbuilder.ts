@@ -637,7 +637,6 @@ $(function () {
     const subelement = label ? getClosestParentSubelementDom(label) : null;
 
     const thisButtonBelongsToOptionalForm = optionalLabel !== null;
-    console.log(subelement);
 
     button.addEventListener('click', () => {
       if (optionalLabel) {
@@ -651,10 +650,6 @@ $(function () {
       button.classList.toggle('rotate-180');
     });
 
-    console.log(
-      thisButtonBelongsToOptionalForm,
-      !errorMessageExists(subelement)
-    );
     if (thisButtonBelongsToOptionalForm && !errorMessageExists(subelement)) {
       button.click();
     }

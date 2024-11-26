@@ -106,10 +106,18 @@
                   id="default-hierarchy"
                   v-model="allDefaultValue.hierarchy"
                   class="mb-2 w-full rounded-[4px] border border-n-20 py-2 pl-4 focus:outline-0 focus-visible:outline-0"
+                  :class="hierarchyErrors.length > 0 ? 'border-crimson-50' : ''"
                   type="text"
                   placeholder="Type default hierarchy here"
                 />
-                <p class="pt-2 text-xs text-n-40">
+
+                <p
+                  v-if="hierarchyErrors.length > 0"
+                  class="pt-2 text-xs text-crimson-50"
+                >
+                  {{ hierarchyErrors[0] }}
+                </p>
+                <p v-else class="pt-2 text-xs text-n-40">
                   If hierarchy is not reported then 1 is assumed. If multiple
                   levels are reported then, to avoid double counting, financial
                   transactions should only be reported at the lowest
@@ -422,6 +430,7 @@ const allDefaultValue = ref({
 
 const isSavingStarted = ref(false);
 const isSaved = ref(false);
+const hierarchyErrors = ref([]);
 
 watchEffect(() => {
   if (props.defaultValues) {
@@ -458,15 +467,18 @@ const proceedStep = () => {
 
           setTimeout(() => {
             props.fetchData();
-
             defaultValueCompletedCheck(defaultValues);
-
             emit('proceedStep');
           }, 3000);
         }
       }
     )
-    .catch((err) => console.log('Error', err));
+    .catch((error) => {
+      if (error.response.data.errors.hierarchy) {
+        hierarchyErrors.value = error.response.data.errors.hierarchy;
+      }
+      isSavingStarted.value = false;
+    });
 };
 
 const defaultValueCompletedCheck = (defaultValues: {

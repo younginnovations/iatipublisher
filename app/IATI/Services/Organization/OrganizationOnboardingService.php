@@ -77,6 +77,21 @@ class OrganizationOnboardingService
                     'title'    => OrganizationOnboarding::PUBLISHING_SETTINGS,
                     'complete' => false,
                 ],
+                [
+                    'step'     => 2,
+                    'title'    => OrganizationOnboarding::DEFAULT_VALUES,
+                    'complete' => false,
+                ],
+                [
+                    'step'     => 3,
+                    'title'    => OrganizationOnboarding::ORGANIZATION_DATA,
+                    'complete' => false,
+                ],
+                [
+                    'step'     => 4,
+                    'title'    => OrganizationOnboarding::ACTIVITY,
+                    'complete' => false,
+                ],
             ];
         }
 
