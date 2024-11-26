@@ -13,10 +13,10 @@
         >
           <span class="inline-block -translate-x-1/2">
             {{
-              step.name == 'Checking'
+              step.name == 'Validating'
                 ? completedSteps.includes(step.id)
-                  ? 'Checked'
-                  : 'Checking'
+                  ? 'Validated'
+                  : 'Validating'
                 : completedSteps.includes(step.id)
                 ? store.state.bulkActivityPublishStatus.publishing
                     .hasFailedActivities.ids.length > 0
@@ -50,7 +50,7 @@
             ]"
           >
             <template v-if="completedSteps.includes(step.id)">
-              <span v-if="step.name == 'Checking'">
+              <span v-if="step.name == 'Validating'">
                 <svg
                   width="11"
                   height="8"
@@ -109,7 +109,7 @@ import { useStore } from 'Store/activities/index';
 const store = useStore();
 const steps = [
   {
-    name: 'Checking',
+    name: 'Validating',
     id: 1,
   },
   {

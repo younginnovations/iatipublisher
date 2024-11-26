@@ -17,7 +17,7 @@
               <span class="sorting-indicator" :class="sortingDirection()">
                 <svg-vue :icon="`${sortingDirection()}-arrow`" />
               </span>
-              <span class="">Publishing Progress</span>
+              <span class="">Core Completeness</span>
             </a>
           </th>
           <th id="date" scope="col">
@@ -98,7 +98,13 @@
             </div>
           </td>
 
-          <td class="text-n-40">
+          <td class="flex items-center justify-end gap-2 text-n-40">
+            <div v-if="datum['complete_percentage'] !== 100">
+              <svg-vue
+                icon="warning-activity"
+                class="mr-2 grow-0 text-base text-salmon-50"
+              ></svg-vue>
+            </div>
             <div class="progress-bar-parent">
               <div class="progress-bar-wrapper">
                 <div class="progress-bar-container bg-spring-10">

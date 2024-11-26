@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=19eed7d34b7abea8bbea0ef35dee13d6",
     "/js/script.js": "/js/script.js?id=573e5816f1296bbce2c2c0084e92e523",
     "/js/webportal-script.js": "/js/webportal-script.js?id=06d4c518a25c033e1989b9db84a1dd01",
@@ -6,5 +7,79 @@
     "/manifest.js": "/manifest.js?id=3ed1124c8f4dcb98acc36de67cb80349",
     "/css/webportal-app.css": "/css/webportal-app.css?id=cf479c1171b18dd7973e15cb1e00a74a",
     "/css/app.css": "/css/app.css?id=0a95c56dcafc82b54821bd9af0b46332",
+=======
+<<<<<<< HEAD
+    "/js/app.js": "/js/app.js?id=7c44e4d9cf743e3a5ffc3277abd3feba",
+=======
+<<<<<<< HEAD
+    "/js/app.js": "/js/app.js?id=98d2dab6aacd7ea60c8a24b07e4f5364",
+=======
+<<<<<<< HEAD
+    "/js/app.js": "/js/app.js?id=75d010634adbd8f89d258514fd8fc9c5",
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+    "/js/app.js": "/js/app.js?id=f371f64bf38e6cd75a1ebfb2373ac0ac",
+=======
+    "/js/app.js": "/js/app.js?id=3dbc0ce6f2e4cf65d78488a41b7bedc0",
+>>>>>>> 29e24926 (-[x] Select All Fixing)
+>>>>>>> 04aa4a9b (-[x] New Tab Popup Close Fix, Flow Change Bulk Publish)
+>>>>>>> 7f0feeea (-[x] New Tab Popup Close Fix, Flow Change Bulk Publish)
+>>>>>>> 58d3f8f6 (-[x] New Tab Popup Close Fix, Flow Change Bulk Publish)
+    "/js/script.js": "/js/script.js?id=5664c41472ea07b11e7b9e7ad4007a4c",
+    "/js/webportal-script.js": "/js/webportal-script.js?id=ec424584e8e86829641c324d807c42b5",
+    "/js/formbuilder.js": "/js/formbuilder.js?id=0da9ac4d5b4cf5740657fde41069a985",
+    "/manifest.js": "/manifest.js?id=3ed1124c8f4dcb98acc36de67cb80349",
+<<<<<<< HEAD
+    "/css/webportal-app.css": "/css/webportal-app.css?id=748c68cfdd3038df623a0f7018f87a2d",
+    "/css/app.css": "/css/app.css?id=f749d1220687f1c434814561b27c0420",
+>>>>>>> a92eba6f (-[x] New Tab Popup Close Fix, Flow Change Bulk Publish)
     "/js/vendor.js": "/js/vendor.js?id=1d9dc84f31934bcf90e4083803feee6b"
+=======
+<<<<<<< HEAD
+    "/css/webportal-app.css": "/css/webportal-app.css?id=48a13c761549a94d368d78ff0d883e80",
+    "/css/app.css": "/css/app.css?id=13a0e760a5bb911b9a0f2ca0fb556038",
+    "/js/vendor.js": "/js/vendor.js?id=b96ff904c65416fa7e99073fcdfc268a"
+=======
+<<<<<<< HEAD
+    "/css/webportal-app.css": "/css/webportal-app.css?id=b16001ccbc67c449eb71cab6c22b49ea",
+    "/css/app.css": "/css/app.css?id=a74597b729c45066ec62ad809784cfa7",
+=======
+    "/css/webportal-app.css": "/css/webportal-app.css?id=dfbd1cf43a1f659dfe73981284a00931",
+    "/css/app.css": "/css/app.css?id=749fb3e3babcc3e69d0367ab12fab709",
+=======
+    "/js/app.js": "/js/app.js?id=83b70c8eb4bdb9bd777601b97831dc7d",
+=======
+    "/js/app.js": "/js/app.js?id=535ca75d4d34621240b7c806418c99ff",
+>>>>>>> 51d10629 (-[x] WIP Bulk Publish Progress)
+=======
+    "/js/app.js": "/js/app.js?id=dc442b7910c17b0ad1ead5ce362400e8",
+>>>>>>> 1429b96e (- Added top_level_error in validator status check response)
+=======
+    "/js/app.js": "/js/app.js?id=be7ae7e98bfc1f0a1245e3d156c6a5a2",
+>>>>>>> 975178e9 (-[x] Added Critical Error Check)
+    "/js/script.js": "/js/script.js?id=5664c41472ea07b11e7b9e7ad4007a4c",
+    "/js/webportal-script.js": "/js/webportal-script.js?id=ec424584e8e86829641c324d807c42b5",
+    "/js/formbuilder.js": "/js/formbuilder.js?id=0da9ac4d5b4cf5740657fde41069a985",
+    "/manifest.js": "/manifest.js?id=3ed1124c8f4dcb98acc36de67cb80349",
+<<<<<<< HEAD
+<<<<<<< HEAD
+    "/css/webportal-app.css": "/css/webportal-app.css?id=e8d5cb26784514194f176211b481d5b3",
+    "/css/app.css": "/css/app.css?id=c28f0bdc64a98698367f4d567593d1ab",
+>>>>>>> 7b532c76 (-[x] New Tab Popup Close Fix, Flow Change Bulk Publish)
+=======
+    "/css/webportal-app.css": "/css/webportal-app.css?id=a1ca4ba6a136d22be34aeee3bca3f077",
+    "/css/app.css": "/css/app.css?id=0a5978696814f3f75d9669363474cd73",
+>>>>>>> 51d10629 (-[x] WIP Bulk Publish Progress)
+=======
+    "/css/webportal-app.css": "/css/webportal-app.css?id=09b9016909d38c9ef696da01efd9d69e",
+    "/css/app.css": "/css/app.css?id=23a5335c536392fbf6e7a7abf4980665",
+>>>>>>> 975178e9 (-[x] Added Critical Error Check)
+>>>>>>> 04aa4a9b (-[x] New Tab Popup Close Fix, Flow Change Bulk Publish)
+    "/js/vendor.js": "/js/vendor.js?id=1d9dc84f31934bcf90e4083803feee6b"
+>>>>>>> 7f0feeea (-[x] New Tab Popup Close Fix, Flow Change Bulk Publish)
+>>>>>>> 58d3f8f6 (-[x] New Tab Popup Close Fix, Flow Change Bulk Publish)
 }
