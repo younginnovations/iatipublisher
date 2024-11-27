@@ -15,7 +15,7 @@
               'register.not_registered_page.verification_email.verification_email_sent_to'
             ]
           }}
-          <span class="font-bold text-n-50"> {{ props.email }}</span>
+          <span class="font-bold text-n-50"> {{ props.email }}. </span>
           {{
             translatedData[
               'register.not_registered_page.verification_email.please_click_link_to_verify'
