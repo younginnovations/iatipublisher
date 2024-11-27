@@ -14,7 +14,6 @@ return [
         'step_section' => [
             'step' => 'Step FR language',
             'total_step' => 'out of 5 FR language',
-            'step_one_description' => 'This information will be used to register your organisation as an IATI publisher FR language',
         ],
         'register_section' => [
             // 1st Form
@@ -52,7 +51,7 @@ return [
             'publisher_logo_url_hover_text' => 'Provide a link to an image to your organisation\'s logo (Optimum size: 200 x 120 px) FR language',
             'organisation_description' => 'Organisation Description FR language',
             'organisation_description_placeholder' => 'Type description here FR language',
-            'organisation_description_hover_text' => ' Provide a short description about your organisation. FR language',
+            'organisation_description_hover_text' => 'Provide a short description about your organisation. FR language',
             // 2nd Form
             'heading_two' => 'Contact Information FR language',
             'contact_information_description' => 'This is your organisation\'s contact information FR language',
@@ -99,7 +98,7 @@ return [
         'verification_email'=>[
             'please_verify_your_account' => 'Please verify your account FR language',
             'verification_email_sent_to' => 'A verification email has been sent to FR language',
-            'please_click_link_to_verify' => '. Please click on the link in the email to verify and activate your new IATI publisher account. FR language',
+            'please_click_link_to_verify' => 'Please click on the link in the email to verify and activate your new IATI publisher account. FR language',
             'get_started' => 'Get Started FR language',
 
         ]
@@ -110,7 +109,6 @@ return [
         'step_section' => [
             'step' => 'Step FR language',
             'total_step' => 'out of 3 FR language',
-            'step_one_description' => 'This information will be used to register your organisation as an IATI publisher FR language',
         ],
         'register_section'=>[
             // Form 1
