@@ -1,0 +1,11 @@
+{
+    "name": "VisualModule",
+    "alias": "visualmodule",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\VisualModule\\Providers\\VisualModuleServiceProvider"
+    ],
+    "files": []
+}
