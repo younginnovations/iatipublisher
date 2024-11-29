@@ -7,6 +7,11 @@ function dateFormat(date: Date, format = 'MMMM DD, YYYY' as string) {
     case 'fromNow':
       format_date = date ? moment(date).fromNow() : '';
       break;
+
+    case 'calendar':
+      format_date = date ? moment(date).calendar() : '';
+      break;
+
     default:
       format_date = date ? moment(date).format(format) : '';
   }

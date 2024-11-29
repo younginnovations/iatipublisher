@@ -8,6 +8,7 @@ use App\IATI\Models\Activity\Transaction;
 use App\IATI\Repositories\Repository;
 use App\IATI\Traits\FillDefaultValuesTrait;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 
 /**
  * Class TransactionRepository.
@@ -27,14 +28,39 @@ class TransactionRepository extends Repository
     /**
      * Returns paginated transactions.
      *
-     * @param int $activityId
-     * @param int $page
+     * @param int   $activityId
+     * @param array $queryParams
+     * @param int   $page
      *
      * @return LengthAwarePaginator
      */
-    public function getPaginatedTransaction(int $activityId, int $page = 1): LengthAwarePaginator
+    public function getPaginatedTransaction(int $activityId, array $queryParams, int $page = 1): LengthAwarePaginator
     {
-        return $this->model->where('activity_id', $activityId)->orderBy('created_at', 'DESC')->paginate(10, ['*'], 'transaction', $page);
+        $query = $this->model->where('activity_id', $activityId);
+
+        $filterApplied = Arr::get($queryParams, 'filterBy', 'all');
+        $orderBy = Arr::get($queryParams, 'orderBy', 'created_at');
+        $direction = strtoupper(Arr::get($queryParams, 'direction', 'ASC'));
+        $limit = Arr::get($queryParams, 'limit', 10);
+
+        $query = $query->when($filterApplied != 'all', function ($query) use ($filterApplied) {
+            if ($filterApplied === 'others') {
+                return $query->whereRaw("(transaction->'transaction_type'->0->>'transaction_type_code')::INTEGER NOT IN (1, 2, 3, 4)");
+            }
+
+            return $query->whereRaw("(transaction->'transaction_type'->0->>'transaction_type_code') = '$filterApplied'");
+        });
+
+        $query = $query->when(true, function ($query) use ($orderBy, $direction) {
+            return match ($orderBy) {
+                'type'  => $query->orderByRaw("(transaction->'transaction_type'->0->>'transaction_type_code')::INTEGER $direction, created_at DESC"),
+                'value' => $query->orderByRaw("(transaction->'value'->0->>'amount')::NUMERIC $direction, created_at DESC"),
+                'date'  => $query->orderByRaw("(transaction->'transaction_date'->0->>'date')::DATE $direction, created_at DESC"),
+                default => $query->orderBy('created_at', 'desc'),
+            };
+        });
+
+        return $query->orderBy('id', 'desc')->paginate($limit, ['*'], 'transaction', $page);
     }
 
     /**
@@ -97,5 +123,25 @@ class TransactionRepository extends Repository
     public function insert($transactions): bool
     {
         return $this->model->insert($transactions);
+    }
+
+    /**
+     * @param int $activityId
+     *
+     * @return array
+     */
+    public function getTransactionCountStats(int $activityId): array
+    {
+        return $this->model->where('activity_id', $activityId)
+            ->selectRaw("
+                COUNT(*) as all,
+                COUNT(CASE WHEN (transaction->'transaction_type'->0->>'transaction_type_code')::INTEGER = 1 THEN 1 END) as incoming_funds,
+                COUNT(CASE WHEN (transaction->'transaction_type'->0->>'transaction_type_code')::INTEGER = 2 THEN 2 END) as outgoing_commitment,
+                COUNT(CASE WHEN (transaction->'transaction_type'->0->>'transaction_type_code')::INTEGER = 3 THEN 3 END) as disbursement,
+                COUNT(CASE WHEN (transaction->'transaction_type'->0->>'transaction_type_code')::INTEGER = 4 THEN 4 END) as expenditure,
+                COUNT(CASE WHEN (transaction->'transaction_type'->0->>'transaction_type_code')::INTEGER NOT IN (1,2,3,4) THEN 1 END) as others
+            ")
+            ->first()
+            ->toArray();
     }
 }

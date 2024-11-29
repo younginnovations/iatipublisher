@@ -95,18 +95,60 @@ class TransactionController extends Controller
     public function getPaginatedTransactions(int $activityId, int $page = 1): JsonResponse
     {
         try {
-            $transaction = $this->transactionService->getPaginatedTransaction($activityId, $page);
+            $transaction = $this->transactionService->getPaginatedTransactionAndStats($activityId, $page, $this->sanitizeRequest(request()));
+            $stats = $this->transactionService->getTransactionCountStats($activityId);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Transactions fetched successfully',
-                'data'    => $transaction,
+                'data'    => [
+                    'transactions' => $transaction,
+                    'stats'        => $stats,
+                ],
             ]);
         } catch (Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
         }
+    }
+
+    public function sanitizeRequest(\Illuminate\Http\Request $request): array
+    {
+        $tableConfig = getTableConfig('transaction');
+        $transactionTypeMap = [
+            'all'                 => 'all',
+            'incoming_funds'      => 1,
+            'outgoing_commitment' => 2,
+            'disbursement'        => 3,
+            'expenditure'         => 4,
+            'others'              => 'others',
+        ];
+
+        $queryParams = [];
+
+        if (!empty($request->get('q')) || $request->get('q') === '0') {
+            $queryParams['query'] = $request->get('q');
+        }
+
+        if (!empty($request->get('limit'))) {
+            $queryParams['limit'] = $request->get('limit') ?? 10;
+        }
+
+        if (in_array($request->get('orderBy'), $tableConfig['orderBy'], true)) {
+            $queryParams['orderBy'] = $request->get('orderBy') ?? '';
+
+            if (in_array($request->get('direction'), $tableConfig['direction'], true)) {
+                $queryParams['direction'] = $request->get('direction') ?? 'asc';
+            }
+        }
+
+        if (in_array($request->get('filterBy'), $tableConfig['filterBy'], true)) {
+            $queryParams['filterBy'] = $request->get('filterBy');
+            $queryParams['filterBy'] = Arr::get($transactionTypeMap, $queryParams['filterBy'], 'all');
+        }
+
+        return $queryParams;
     }
 
     /**
