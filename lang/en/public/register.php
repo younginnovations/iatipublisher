@@ -157,11 +157,7 @@ return [
             'email_verification_description' => 'Please verify and activate your IATI Publisher account through your provided email',
             // Error
             'info_doesnt_match_iati_registry' => 'Sorry, the information you provided doesn’t match your IATI Registry information.',
-            'note_account_holder_in' => 'Please note that if you’re an account holder in',
-            'make_sure_your' => ', make sure your',
-            'publisher_name_id_orgid' => 'Publisher Name, Publisher ID and IATI Organisation ID',
-            'match_iati' => 'match your IATI Registry Information. Contact',
-            'for_more_details' => 'for more details.',
+            'make_sure_account_holder' => 'Please note that if you\’re an account holder in, <a href="https://iatiregistry.org/">IATI Registry</a>, make sure your <span class="font-bold">Publisher Name, Publisher ID and IATI Organisation ID</span> match your IATI Registry Information. Contact <a class="text-bluecoral" href="mailto:support@iatistandard.org">support@iatistandard.org</a>',
 
         ]
     ]

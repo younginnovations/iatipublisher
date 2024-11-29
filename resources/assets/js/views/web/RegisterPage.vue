@@ -94,42 +94,14 @@
                   ]
                 }}
               </p>
-              <p class="ml-8 xl:mr-1">
-                {{
+              <p
+                class="ml-8 xl:mr-1"
+                v-html="
                   translatedData[
-                    'register.registered_page.register_section.note_account_holder_in'
+                    'register.registered_page.register_section.make_sure_account_holder'
                   ]
-                }},
-                <span
-                  ><a href="https://iatiregistry.org/">IATI Registry</a></span
-                >{{
-                  translatedData[
-                    'register.registered_page.register_section.make_sure_your'
-                  ]
-                }}
-                <span class="font-bold">{{
-                  translatedData[
-                    'register.registered_page.register_section.publisher_name_id_orgid'
-                  ]
-                }}</span>
-                {{
-                  translatedData[
-                    'register.registered_page.register_section.match_iati'
-                  ]
-                }}
-                <span
-                  ><a
-                    class="text-bluecoral"
-                    href="mailto:support@iatistandard.org"
-                    >support@iatistandard.org</a
-                  ></span
-                >
-                {{
-                  translatedData[
-                    'regsiter.registered_page.register_section.for_more_details'
-                  ]
-                }}
-              </p>
+                "
+              ></p>
             </div>
             <div class="form__content">
               <div
