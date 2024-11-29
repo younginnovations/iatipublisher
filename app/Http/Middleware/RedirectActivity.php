@@ -72,13 +72,15 @@ class RedirectActivity
      */
     public function handle(Request $request, Closure $next): mixed
     {
+        /**
+         * Basically avoid any checks.
+         */
         $byPassActivityRoutes = [
             'admin.activities.index',
             'admin.activities.paginate',
             'admin.activities.codelist',
             'admin.activity.store',
             'admin.activities.paginate',
-            //'admin.activities.validateActivity'
         ];
 
         if (in_array($request->route()->getName(), $byPassActivityRoutes, true)) {
@@ -109,7 +111,16 @@ class RedirectActivity
                     }
                 }
 
-                $byPassTransactionRoutes = ['admin.activity.transaction.index', 'admin.activity.transactions.paginate', 'admin.activity.transaction.create', 'admin.activity.transaction.store'];
+                /**
+                 * Basically avoid the `activityTransactionExists()` check.
+                 */
+                $byPassTransactionRoutes = [
+                    'admin.activity.transaction.index',
+                    'admin.activity.transactions.paginate',
+                    'admin.activity.transaction.create',
+                    'admin.activity.transaction.store',
+                    'admin.activity.transactions.bulkDelete',
+                ];
 
                 if (in_array($subModule, ['transaction', 'transactions']) && !in_array($request->route()->getName(), $byPassTransactionRoutes, true)) {
                     $transactionId = (int) $request->route('transactionId');

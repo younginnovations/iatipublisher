@@ -14,12 +14,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from 'vue';
+import { ref, defineProps, defineEmits, watch } from 'vue';
 
 const props = defineProps({
   pills: {
     type: Object,
     required: true,
+  },
+  reset: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 });
 
@@ -31,4 +36,13 @@ const filterBy = (title: string, code: string) => {
   active.value = title;
   emit('filterBy', code);
 };
+
+watch(
+  () => props.reset,
+  (newVal) => {
+    if (newVal) {
+      active.value = props.pills[0]?.title || '';
+    }
+  }
+);
 </script>

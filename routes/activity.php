@@ -40,15 +40,20 @@ use App\Http\Controllers\Admin\Workflow\ActivityWorkflowController;
 use Illuminate\Support\Facades\Route;
 
 /*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+ * README by @PG-Momik
+ *
+ * Activity Routes Group
+ *
+ * This group has the following middleware applied to it:
+ *  - 'can:crud_activity' : This is visible right here in this file.
+ *  - 'admin', 'auth', 'activity': These are applied from RouteServiceProvider.
+ *
+ * This group of routes also have a group prefix of : 'admin.'.
+ *
+ * SEE : \App\Providers\RouteServiceProvider for all the groups and middleware applied.
+ * SEE : \App\Providers\RouteServiceProvider if you get 302 redirects for no apparent reason.
+ *
+ */
 Route::group(['middleware' => ['can:crud_activity']], static function () {
     Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
     Route::get('/activities/page/{page?}', [ActivityController::class, 'getPaginatedActivities'])->name('activities.paginate');
@@ -119,6 +124,7 @@ Route::group(['middleware' => ['can:crud_activity']], static function () {
 
     Route::resource('activity.transaction', TransactionController::class)->parameters(['activity' => 'id', 'transaction' => 'transactionId']);
     Route::get('/activity/{id}/transactions/page/{page?}', [TransactionController::class, 'getPaginatedTransactions'])->name('activity.transactions.paginate');
+    Route::delete('/activity/{id}/transactions', [TransactionController::class, 'bulkDeleteTransactions'])->name('activity.transactions.bulkDelete');
 
     // Publish Activity
     Route::post('activity/{id}/publish', [ActivityWorkflowController::class, 'publish'])->name('activity.publish');

@@ -5,6 +5,7 @@ interface ActivitiesInterface {
 }
 interface StateInterface {
   selectedActivities: number[];
+  selectedTransactions: number[];
   bulkPublishLength: number;
   cancelUpload: boolean;
   maximizeXls: boolean;
@@ -38,6 +39,7 @@ interface actElements {
 
 const state = {
   selectedActivities: [] as number[],
+  selectedTransactions: [] as number[],
   bulkPublishLength: 0,
   cancelUpload: false,
   startBulkPublish: false,

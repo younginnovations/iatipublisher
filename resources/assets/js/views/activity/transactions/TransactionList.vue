@@ -12,6 +12,13 @@
           :type="toastData.type"
           class="mr-3"
         />
+        <ButtonComponent
+          v-if="store.state.selectedTransactions.length > 0"
+          type="secondary"
+          :text="`Delete Selected (${store.state.selectedTransactions.length})`"
+          icon="delete"
+          @click="initiateDelete('bulk')"
+        />
         <a :href="`${activityLink}/transaction/create`">
           <Btn text="Add Transaction" icon="plus" type="primary" />
         </a>
@@ -19,8 +26,8 @@
     </PageTitle>
 
     <FilteringPills
-      v-if="showPills"
       :pills="titles"
+      :reset="resetPill"
       @filter-by="handleFilter"
     />
 
@@ -106,6 +113,19 @@
             <th id="action" scope="col">
               <span>Action</span>
             </th>
+            <th id="select_all" scope="col">
+              <span>
+                <span
+                  class="cursor-pointer"
+                  @click="toggleSelectAll(transactionsData.data)"
+                >
+                  <svg-vue
+                    icon="checkbox"
+                    :class="isAllValueSelected ? '!text-spring-50' : ''"
+                  />
+                </span>
+              </span>
+            </th>
           </tr>
         </thead>
         <tbody v-if="transactionsData.data && transactionsData.data.length > 0">
@@ -176,8 +196,30 @@
                 >
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
-                <DeleteAction :item-id="trans.id" item-type="transaction" />
+                <span
+                  class="cursor-pointer"
+                  @click="initiateDelete('single', trans.id)"
+                >
+                  <svg-vue icon="delete" class="text-xl"></svg-vue>
+                </span>
+                <!-- <DeleteAction :item-id="trans.id" item-type="transaction" /> -->
               </div>
+            </td>
+
+            <td
+              class="check-column"
+              @click="(event: Event) => event.stopPropagation()"
+            >
+              <label class="sr-only" for=""> Select transaction </label>
+              <label class="checkbox">
+                <input
+                  v-model="store.state.selectedTransactions"
+                  :value="trans.id"
+                  type="checkbox"
+                  class="cursor-pointer"
+                />
+                <span class="checkmark" />
+              </label>
             </td>
           </tr>
         </tbody>
@@ -194,18 +236,56 @@
         @fetch-activities="fetchListings"
       />
     </div>
+    <PopupModal
+      :modal-active="deleteModalShow"
+      width="583"
+      @close="deleteToggle"
+    >
+      <div class="mb-4">
+        <div class="title mb-6 flex">
+          <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
+          <b>Delete Transaction</b>
+        </div>
+        <div class="rounded-lg bg-rose p-4">
+          <p>
+            Are you sure you want to delete
+            {{
+              deleteTransactionList.type === 'single'
+                ? 'this transaction'
+                : 'these transactions'
+            }}?
+          </p>
+        </div>
+      </div>
+      <div class="flex justify-end">
+        <div class="inline-flex">
+          <ButtonComponent
+            class="bg-white px-6 uppercase"
+            text="Go Back"
+            type=""
+            @click="deleteModalShow = false"
+          />
+          <ButtonComponent
+            class="space"
+            text="Delete"
+            type="primary"
+            @click="confirmDelete"
+          />
+        </div>
+      </div>
+    </PopupModal>
   </div>
 </template>
 
 <script lang="ts">
 import {
-  ref,
   defineComponent,
   toRefs,
   reactive,
   onMounted,
   provide,
   computed,
+  ref,
 } from 'vue';
 import axios from 'axios';
 
@@ -214,7 +294,6 @@ import Btn from 'Components/ButtonComponent.vue';
 import Pagination from 'Components/TablePagination.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
 import Toast from 'Components/ToastMessage.vue';
-import DeleteAction from 'Components/sections/DeleteAction.vue';
 import FilteringPills from 'Components/FilteringPills.vue';
 
 //composable
@@ -222,6 +301,9 @@ import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
 import { useToggle } from '@vueuse/core';
 import moment from 'moment';
+import { useStore } from 'Store/activities/index';
+import ButtonComponent from 'Components/ButtonComponent.vue';
+import PopupModal from 'Components/PopupModal.vue';
 
 // toggle state for modal popup
 let [deleteValue, deleteToggle] = useToggle();
@@ -233,8 +315,9 @@ export default defineComponent({
     Pagination,
     PageTitle,
     Toast,
-    DeleteAction,
     FilteringPills,
+    ButtonComponent,
+    PopupModal,
   },
   props: {
     activity: {
@@ -271,9 +354,17 @@ export default defineComponent({
       value: 'ascending',
       date: 'ascending',
     });
-    const activePage = ref(1);
     const showPills = ref(false);
     const isPaginationReset = ref(false);
+    const store = useStore();
+    const isAllValueSelected = ref(false);
+    const activePage = ref(1);
+    const deleteModalShow = ref(false);
+    const deleteTransactionList = ref({
+      type: '',
+      id: 0,
+    });
+    const resetPill = ref(false);
 
     interface TransactionInterface {
       last_page: number;
@@ -389,27 +480,137 @@ export default defineComponent({
 
     const handleFilter = (filterType: string) => {
       searchTerm.value = filterType;
-      sortByOrder(currentlySortedBy.value);
-      resetPagination();
-    };
-
-    const resetPagination = () => {
       activePage.value = 1;
       isPaginationReset.value = true;
       setTimeout(() => {
         isPaginationReset.value = false;
       }, 100);
+      sortByOrder(currentlySortedBy.value);
+    };
+
+    const toggleSelectAll = (data: { id: number }[]) => {
+      const allSelected = data.every((item) =>
+        store.state.selectedTransactions.includes(item.id)
+      );
+
+      isAllValueSelected.value = !allSelected;
+
+      if (allSelected) {
+        store.state.selectedTransactions =
+          store.state.selectedTransactions.filter(
+            (id) => !data.some((item) => item.id === id)
+          );
+      } else {
+        const newIds = data.map((item) => item.id);
+        store.state.selectedTransactions = [
+          ...new Set([...store.state.selectedTransactions, ...newIds]),
+        ];
+      }
+    };
+
+    const showToast = (type: boolean, message: string) => {
+      toastData.type = type;
+      toastData.visibility = true;
+      toastData.message = message;
+      setTimeout(() => {
+        toastData.visibility = false;
+      }, 5000);
+    };
+
+    const handleApiError = (error) => {
+      if (error?.response?.status === 422) {
+        showToast(false, error?.response?.data?.errors?.transaction_ids[0]);
+      } else {
+        showToast(
+          false,
+          'Failed to delete transactions. Something went wrong.'
+        );
+      }
+    };
+
+    // Final Delete Transaction Logic
+    const deleteTransaction = async (
+      url: string,
+      data?: { transaction_ids?: number[] }
+    ) => {
+      try {
+        const response = await axios.delete(url, data ? { data } : undefined);
+        if (response.data.status) {
+          showToast(true, response.data.msg);
+          getTransactions();
+          resetPill.value = true;
+          isPaginationReset.value = true;
+
+          setTimeout(() => {
+            isPaginationReset.value = false;
+            resetPill.value = false;
+          }, 100);
+        }
+      } catch (error) {
+        handleApiError(error);
+      }
+    };
+
+    // Single Transaction Delete Need ID
+    const singleDeleteTransaction = async (id: number) => {
+      await deleteTransaction(`/activity/${activityId}/transaction/${id}`);
+    };
+
+    // Bulk Transaction Delete, Retrieves Selected From Store
+    const bulkDeleteTransactions = async () => {
+      const { selectedTransactions } = store.state;
+
+      if (selectedTransactions.length > 0) {
+        await deleteTransaction(`/activity/${activityId}/transactions`, {
+          transaction_ids: selectedTransactions,
+        });
+
+        store.state.selectedTransactions = [];
+        isAllValueSelected.value = false;
+
+        isPaginationReset.value = true;
+        setTimeout(() => {
+          isPaginationReset.value = false;
+        }, 100);
+
+        getTransactions();
+      }
+    };
+
+    // Initial Delete Function Called To Show Popup
+    const initiateDelete = (type: string, id?: number) => {
+      deleteTransactionList.value = {
+        type,
+        id: id ?? 0,
+      };
+      deleteModalShow.value = true;
+    };
+
+    // Delete Confirmation From Popup
+    const confirmDelete = () => {
+      deleteModalShow.value = false;
+      if (
+        deleteTransactionList.value.type === 'single' &&
+        deleteTransactionList.value.id > 0
+      ) {
+        singleDeleteTransaction(deleteTransactionList.value.id);
+      } else {
+        bulkDeleteTransactions();
+      }
+    };
+
+    const getTransactions = async () => {
+      await axios
+        .get(`/activity/${activityId}/transactions/page/${activePage.value}`)
+        .then((res) => {
+          const response = res.data;
+          countData.value = response.data.stats;
+          Object.assign(transactionsData, response.data.transactions);
+        });
     };
 
     onMounted(async () => {
-      await axios
-        .get(`/activity/${activityId}/transactions/page/1`)
-        .then((res) => {
-          const response = res.data;
-          Object.assign(transactionsData, response.data.transactions);
-          countData.value = response.data.stats;
-          showPills.value = true;
-        });
+      getTransactions();
 
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
@@ -489,6 +690,16 @@ export default defineComponent({
       columnDirections,
       showPills,
       isPaginationReset,
+      store,
+      toggleSelectAll,
+      isAllValueSelected,
+      bulkDeleteTransactions,
+      singleDeleteTransaction,
+      deleteModalShow,
+      confirmDelete,
+      initiateDelete,
+      deleteTransactionList,
+      resetPill,
     };
   },
   computed: {
