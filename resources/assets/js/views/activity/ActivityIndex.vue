@@ -356,7 +356,7 @@ export default defineComponent({
       () => store.state.closeXlsModel,
       (value) => {
         if (value) {
-          checkXlsstatus();
+          checkXlsStatus();
         }
       }
     );
@@ -372,8 +372,8 @@ export default defineComponent({
       }
     });
 
-    const checkXlsstatus = () => {
-      axios.get('/import/xls/progress_status').then((res) => {
+    const checkXlsStatus = () => {
+      axios.get('/import/xls/poll-import-progress-status').then((res) => {
         activityName.value = res?.data?.status?.template;
         xlsData.value = Object.keys(res.data.status).length > 0;
 
@@ -426,7 +426,7 @@ export default defineComponent({
     onMounted(() => {
       publishingActivities.value = pa.value?.publishingActivities;
 
-      checkXlsstatus();
+      checkXlsStatus();
       checkDownloadStatus();
 
       currentFilterBy.value = getCurrentFilterBy();

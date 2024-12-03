@@ -190,27 +190,48 @@ trait XlsMapperHelper
 
     /**
      * Stores validated data to valid.json file.
+     * Basically the logic here if to fetch valid.json from s3 and append current data, then push to s3 again.
+     * With an additional condition that checks if the current activity being processed already exists or not in s3's valid.json.
+     * If already exists in valid.json, do not append. (To avoid duplication in the import listing page).
      *
-     * @param $processedXlsData
-     * @param $errors
-     * @param $existingIdentifier
+     * @param      $processedXlsData
+     * @param      $errors
+     * @param      $existingIdentifier
+     * @param      $identifier
+     * @param null $parentIdentifier
+     * @param null $code
      *
      * @return void
+     * @throws \JsonException
      */
     public function storeValidatedData($processedXlsData, $errors, $existingIdentifier, $identifier, $parentIdentifier = null, $code = null): void
     {
-        $fileData = awsGetFile($this->validatedDataFilePath);
-        $currentContents = $fileData ? json_decode(awsGetFile($this->validatedDataFilePath), true, 512, JSON_THROW_ON_ERROR) : [];
-        $currentContents[] = [
-            'data' => $processedXlsData,
-            'errors' => $errors,
-            'existing' => $existingIdentifier,
-            'parentIdentifier' => $parentIdentifier,
-            'code' => $code,
-            'identifier' => $identifier,
-            'status' => 'processed',
-        ];
-        $content = json_encode($currentContents, JSON_THROW_ON_ERROR);
+        $validJsonFile = awsGetFile($this->validatedDataFilePath);
+        $contentInValidDotJson = $validJsonFile ? json_decode($validJsonFile, true, 512, JSON_THROW_ON_ERROR) : [];
+
+        $contentInValidDotJson = collect($contentInValidDotJson);
+
+        $activityIdentifiersPresentInValidJson = $contentInValidDotJson
+            ->pluck('data.iati_identifier.activity_identifier')
+            ->filter();
+
+        $currentActivityIdentifier = Arr::get($processedXlsData, 'iati_identifier.activity_identifier', '');
+
+        if (!$activityIdentifiersPresentInValidJson->contains($currentActivityIdentifier)) {
+            $appendableData = [
+                'data'             => $processedXlsData,
+                'errors'           => $errors,
+                'existing'         => $existingIdentifier,
+                'parentIdentifier' => $parentIdentifier,
+                'code'             => $code,
+                'identifier'       => $identifier,
+                'status'           => 'processed',
+            ];
+
+            $contentInValidDotJson->push($appendableData);
+        }
+
+        $content = json_encode($contentInValidDotJson, JSON_THROW_ON_ERROR);
         $status = json_encode([
             'success' => true,
             'message' => 'Processing',

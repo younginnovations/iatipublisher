@@ -33,7 +33,10 @@ class ImportStatusRepository extends Repository
      */
     public function getImportStatus($organizationId, $userId): array
     {
-        $status = $this->model->where('organization_id', $organizationId)->where('user_id', $userId)->first();
+        $status = $this->model->where('organization_id', $organizationId)
+            ->where('user_id', $userId)
+            ->where('type', 'xls')
+            ->first();
 
         return $status ? $status->toArray() : [];
     }
@@ -54,22 +57,77 @@ class ImportStatusRepository extends Repository
     /**
      * Create import status.
      *
-     * @param $organizationId
-     * @param $userId
-     * @param $fileType
-     * @param $template
-     * @param $status
+     * @param        $organizationId
+     * @param        $userId
+     * @param        $fileType
+     * @param string $template
+     * @param string $status
      *
-     * @return Model
+     * @return Model|null
      */
-    public function storeStatus($organizationId, $userId, $fileType, $template = 'activity', $status = 'processing'): ?Model
+    public function storeStatus($organizationId, $userId, $fileType, string $template = 'activity', string $status = 'processing'): ?Model
     {
         return $this->model->create([
             'organization_id' => $organizationId,
-            'user_id' => $userId,
-            'status' => $status,
-            'type' => $fileType,
-            'template' => $template,
+            'user_id'         => $userId,
+            'status'          => $status,
+            'type'            => $fileType,
+            'template'        => $template,
         ]);
+    }
+
+    /**
+     * @param int $orgId
+     *
+     * @return array
+     */
+    public function getOrganisationImportStatus(int $orgId): array
+    {
+        $status = $this->model->where('organization_id', '=', $orgId)
+            ->where('status', '=', 'processing')
+            ->where('template', '=', 'activity')
+            ->first();
+
+        return $status ? $status->toArray() : [];
+    }
+
+    /**
+     * @param int    $organization_id
+     * @param string $type
+     *
+     * @return int
+     */
+    public function completeOrganisationImportStatus(int $organization_id, string $type): int
+    {
+        return $this->model->where('organization_id', '=', $organization_id)
+            ->where('type', '=', $type)
+            ->where('template', '=', 'activity')
+            ->where('status', '=', 'processing')
+            ->update(['status' => 'completed']);
+    }
+
+    /**
+     * @param int    $organization_id
+     * @param int    $userId
+     * @param string $type
+     *
+     * @return Model|null
+     */
+    public function setOrganisationImportStatus(int $organization_id, int $userId, string $type): ?Model
+    {
+        return $this->storeStatus($organization_id, $userId, $type);
+    }
+
+    /**
+     * @param int $orgId
+     *
+     * @return int
+     */
+    public function deleteOngoingImports(int $orgId): int
+    {
+        return $this->model->where('organization_id', '=', $orgId)
+            ->where('template', '=', 'activity')
+            ->where('status', '=', 'processing')
+            ->delete();
     }
 }

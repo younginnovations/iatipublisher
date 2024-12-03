@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\XmlImporter\Foundation\Queue;
 
+use App\IATI\Repositories\Import\ImportStatusRepository;
 use App\Jobs\Job;
 use App\XmlImporter\Foundation\XmlQueueProcessor;
 
@@ -32,6 +33,11 @@ class ImportXml extends Job
     private $organizationReportingOrg;
 
     /**
+     * @var \Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private ImportStatusRepository $importStatusRepository;
+
+    /**
      * ImportXml constructor.
      *
      * @param $organizationId
@@ -39,6 +45,7 @@ class ImportXml extends Job
      * @param $userId
      * @param $filename
      * @param $iatiIdentifiers
+     * @param $organizationReportingOrg
      */
     public function __construct($organizationId, $orgRef, $userId, $filename, $iatiIdentifiers, $organizationReportingOrg)
     {
@@ -48,6 +55,7 @@ class ImportXml extends Job
         $this->userId = $userId;
         $this->iatiIdentifiers = $iatiIdentifiers;
         $this->organizationReportingOrg = $organizationReportingOrg;
+        $this->importStatusRepository = app(ImportStatusRepository::class);
     }
 
     /**

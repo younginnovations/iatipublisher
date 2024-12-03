@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\CsvImporter\Entities\Activity\Components;
 
 use App\CsvImporter\Entities\Row;
+use App\Helpers\ImportCacheHelper;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -262,10 +263,16 @@ class ActivityRow extends Row
      */
     public function keep(): void
     {
-        /*$this->makeDirectoryIfNonExistent()
-        ->writeCsvDataAsJson($this->getCsvFilepath());*/
+        $activityIdentifier = Arr::get($this->data(), 'identifier.activity_identifier');
+
+        if (ImportCacheHelper::activityAlreadyBeingImported($this->organizationId, $activityIdentifier)) {
+            return;
+        }
+
+        ImportCacheHelper::appendActivityIdentifiersToCache($this->organizationId, $activityIdentifier);
 
         $path = sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, $this->userId, self::VALID_CSV_FILE);
+
         $this->writeCsvDataAsJson($path);
     }
 
@@ -511,62 +518,59 @@ class ActivityRow extends Row
 
     /**
      * Write the validated data into the designated destination file.
+     * Basically the logic here if to fetch valid.json from s3 and append current data, then push to s3 again.
+     * With an additional condition that checks if the current activity being processed already exists or not in s3's valid.json.
+     * If already exists in valid.json, do not append. (To avoid duplication in the import listing page).
      *
-     * @param $destinationFilePath
+     * @param string $destinationFilePath
      *
      * @return void
      * @throws \JsonException
      */
-    protected function writeCsvDataAsJson($destinationFilePath): void
+    protected function writeCsvDataAsJson(string $destinationFilePath): void
     {
         $validJsonFile = awsGetFile($destinationFilePath);
 
-        if ($validJsonFile) {
-            $content = $this->appendDataIntoFile($validJsonFile);
+        if (!$validJsonFile) {
+            $contentInValidDotJson = collect([
+                [
+                    'data'      => $this->data(),
+                    'errors'    => $this->errors(),
+                    'status'    => 'processed',
+                    'existence' => $this->existence,
+                ],
+            ]);
         } else {
-            $content = json_encode([['data' => $this->data(), 'errors' => $this->errors(), 'status' => 'processed', 'existence' => $this->existence]], JSON_THROW_ON_ERROR);
+            $contentInValidDotJson = collect(json_decode($validJsonFile, true, 512, JSON_THROW_ON_ERROR));
+
+            $activityIdentifiersPresentInValidJson = $contentInValidDotJson
+                ->pluck('data.identifier.activity_identifier')
+                ->filter();
+
+            $currentActivityIdentifier = Arr::get($this->data(), 'identifier.activity_identifier', '');
+
+            if (!$activityIdentifiersPresentInValidJson->contains($currentActivityIdentifier)) {
+                $appendableData = [
+                    'data'      => $this->data(),
+                    'errors'    => $this->errors(),
+                    'status'    => 'processed',
+                    'existence' => $this->existence,
+                ];
+
+                $contentInValidDotJson->push($appendableData);
+            }
         }
 
+        $this->uploadContent($destinationFilePath, $contentInValidDotJson->toJson(JSON_THROW_ON_ERROR));
+    }
+
+    private function uploadContent(string $path, string $content): void
+    {
         try {
-            $path = sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, $this->userId, self::VALID_CSV_FILE);
             awsUploadFile($path, $content);
         } catch (\Exception $e) {
             awsUploadFile('error-csv-appendDataIntoFile.log', $e->getMessage());
         }
-    }
-
-    /**
-     * Append data into the file containing previous data.
-     *
-     * @param $destinationFilePath
-     *
-     * @return string
-     * @throws \JsonException
-     */
-    protected function appendDataIntoFile($destinationFilePath): string
-    {
-        $currentContents = json_decode($destinationFilePath, true, 512, JSON_THROW_ON_ERROR);
-        $content = '';
-
-        if ($currentContents) {
-            $currentContents[] = ['data' => $this->data(), 'errors' => $this->errors(), 'status' => 'processed', 'existence' => $this->existence];
-            $content = json_encode($currentContents, JSON_THROW_ON_ERROR);
-        }
-
-        return $content;
-    }
-
-    /**
-     * Write the validated data into a new file.
-     *
-     * @param $destinationFilePath
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    protected function createNewFile($destinationFilePath): void
-    {
-        file_put_contents($destinationFilePath, json_encode([['data' => $this->data(), 'errors' => $this->errors(), 'status' => 'processed', 'existence' => $this->existence]], JSON_THROW_ON_ERROR));
     }
 
     /**

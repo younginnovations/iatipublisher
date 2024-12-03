@@ -70,8 +70,34 @@
     <div
       class="mx-10 flex min-h-[65vh] w-[500px] items-start justify-center rounded-lg border border-n-20 bg-white md:w-[calc(100%_-_80px)]"
     >
-      <div class="mt-24 max-w-[95%] rounded-lg border border-n-30">
-        <div>
+      <div class="mt-24">
+        <div
+          v-if="hasOngoingImportWarning"
+          class="border-orangeish my-2 flex max-w-[95%] items-center space-x-2 rounded-md bg-eggshell px-4 py-6 align-middle text-xs font-normal text-n-50"
+        >
+          Cannot import.
+          <template v-if="ongoingImportType === ''">
+            {{ ongoingImportType }}
+            <a href="#" class="px-1 font-bold" @click="openZendeskLauncher"
+              >Contact support</a
+            >
+          </template>
+          <template v-else>
+            Another import is in progress. Please try again later or
+            <a
+              :href="
+                ongoingImportType === 'xls'
+                  ? '/import/xls/list'
+                  : '/import/list'
+              "
+              class="px-1 font-bold"
+            >
+              view import list </a
+            >.
+          </template>
+        </div>
+
+        <div class="mt-2 max-w-[95%] rounded-lg border border-n-30">
           <p
             class="border-b border-n-30 p-4 text-sm font-bold uppercase text-n-50"
           >
@@ -94,7 +120,7 @@
                 type="primary"
                 text="Upload file"
                 icon="upload-file"
-                @click="uploadFile"
+                @click="checkOngoingImports"
               />
               <div class="flex items-center space-x-2.5">
                 <button class="relative text-sm text-bluecoral">
@@ -134,9 +160,36 @@ import axios from 'axios';
 const file = ref(),
   error = ref(''),
   loader = ref(false),
-  loaderText = ref('Please Wait');
+  loaderText = ref('Please Wait'),
+  hasOngoingImportWarning = ref(false),
+  ongoingImportType = ref('');
 
-function uploadFile() {
+async function checkOngoingImports() {
+  try {
+    const response = await axios.get('/import/check-ongoing-import');
+
+    if (hasOngoingImport(response.data.data)) {
+      console.log('response data', response.data);
+      showHasOngoingImportWarning(response.data.data.import_type);
+    } else {
+      uploadFile();
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function hasOngoingImport(responseDataWithHasImportFlag): boolean {
+  return responseDataWithHasImportFlag?.has_ongoing_import ?? false;
+}
+
+function showHasOngoingImportWarning(importType: null | string) {
+  hasOngoingImportWarning.value = true;
+  ongoingImportType.value = importType ? importType : '';
+  console.log(importType);
+}
+
+async function uploadFile() {
   loader.value = true;
   loaderText.value = 'Uploading .csv/.xml file';
   let activity = file.value.files.length ? file.value.files[0] : '';
@@ -149,22 +202,28 @@ function uploadFile() {
   data.append('activity', activity);
   error.value = '';
 
-  axios
-    .post('/import', data, config)
-    .then((res) => {
-      if (file.value.files.length && res?.data?.success) {
-        setTimeout(() => {
-          window.location.href = '/import/list';
-        }, 5000);
+  try {
+    const response = await axios.post('/import', data, config);
+
+    console.log('response', response);
+
+    if (response?.data?.success && file.value.files.length) {
+      setTimeout(() => {
+        window.location.href = '/import/list';
+      }, 5000);
+    } else {
+      if (hasOngoingImport(response?.data?.errors)) {
+        showHasOngoingImportWarning(response.data.errors.import_type);
       } else {
-        error.value = Object.values(res.data.errors).join(' ');
-        loader.value = false;
+        error.value = Object.values(response.data.errors).join(' ');
       }
-    })
-    .catch(() => {
-      error.value = 'Error has occured while uploading file.';
+
       loader.value = false;
-    });
+    }
+  } catch (err) {
+    error.value = 'Error has occurred while uploading the file.';
+    loader.value = false;
+  }
 }
 
 function downloadExcel() {
@@ -181,6 +240,19 @@ function downloadExcel() {
     link.download = 'Import_Activity_CSV_Template.csv';
     link.click();
   });
+}
+
+function openZendeskLauncher() {
+  if (window.zE && window.zE.activate) {
+    window.zE.activate();
+  }
+}
+
+declare global {
+  interface Window {
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    zE: any;
+  }
 }
 </script>
 

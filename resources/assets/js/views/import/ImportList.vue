@@ -12,6 +12,14 @@
           </nav>
         </div>
       </div>
+      <div class="relative py-2">
+        <Toast
+          v-if="toastVisibility"
+          class="toast absolute right-0 bottom-2"
+          :message="toastMessage"
+          :type="toastType"
+        />
+      </div>
       <div class="flex items-end gap-4">
         <div class="title max-w-[50%] basis-6/12">
           <div class="inline-flex w-full items-center">
@@ -64,14 +72,25 @@
         <div class="actions relative flex grow flex-col items-end justify-end">
           <div class="inline-flex justify-end">
             <div class="actions flex grow justify-end">
-              <div class="inline-flex justify-center">
+              <div class="inline-flex justify-center gap-2">
+                <button
+                  class="rounded bg-n-0 px-4 py-3 text-xs font-bold uppercase text-bluecoral shadow-md"
+                  @click="cancelOngoingImports"
+                >
+                  <span><svg-vue class="pt-1.5 text-2xl" icon="cross" /></span>
+                  <span>cancel this import</span>
+                </button>
                 <BtnComponent
-                  v-if="selectedActivities.length > 0"
-                  class="mr-3.5"
+                  :class="[
+                    selectedActivities.length === 0
+                      ? 'cursor-not-allowed opacity-50'
+                      : '',
+                  ]"
+                  :disabled="selectedActivities.length === 0"
                   type="primary"
                   :text="`Import (${selectedCount}/${activitiesLength})`"
                   icon="download-file"
-                  @click="importActivities"
+                  @click.once="importActivities"
                 />
               </div>
             </div>
@@ -138,6 +157,7 @@ import Loader from 'Components/sections/ProgressLoader.vue';
 import Placeholder from './ImportPlaceholder.vue';
 import ListElement from './ListElement.vue';
 import axios from 'axios';
+import Toast from 'Components/ToastMessage.vue';
 
 let activities = reactive({});
 const selectedActivities: Array<string> = reactive([]);
@@ -148,6 +168,9 @@ const selectAll = ref(false);
 const loaderText = ref('Please Wait');
 const tableRow = ref({});
 const tableWidth = ref({});
+const toastMessage = ref('');
+const toastType = ref(false);
+const toastVisibility = ref(false);
 
 let timer;
 const getDimensions = async () => {
@@ -165,7 +188,7 @@ onMounted(() => {
   let count = 0;
   timer = setInterval(() => {
     axios
-      .get('/import/check_status')
+      .get('/import/get-import-list-data')
       .then((res) => {
         Object.assign(activities, res.data.data);
         activitiesLength.value = res.data.data.length;
@@ -189,6 +212,33 @@ onMounted(() => {
       });
   }, 3000);
 });
+
+const cancelOngoingImports = async () => {
+  try {
+    const res = await axios.delete('/import/delete-ongoing-import');
+    const response = res.data;
+
+    toastMessage.value = response.message;
+    toastType.value = response.success;
+    toastVisibility.value = true;
+
+    setTimeout(() => (toastVisibility.value = false), 1500);
+
+    if (response.success) {
+      setTimeout(() => {
+        window.location.href = '/activities';
+      }, 2000);
+    }
+  } catch (error) {
+    console.error(error);
+
+    toastMessage.value = 'An error occurred while canceling ongoing imports.';
+    toastType.value = false;
+    toastVisibility.value = true;
+
+    setTimeout(() => (toastVisibility.value = false), 3000);
+  }
+};
 
 function updateSelectedActivities(activity_id) {
   let index = selectedActivities.indexOf(activity_id);

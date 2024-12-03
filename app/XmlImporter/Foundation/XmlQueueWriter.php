@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\XmlImporter\Foundation;
 
+use App\Helpers\ImportCacheHelper;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Activity\DocumentLinkRepository;
 use App\IATI\Repositories\Activity\ResultRepository;
@@ -139,15 +140,20 @@ class XmlQueueWriter
      */
     public function save($mappedActivity): bool
     {
-        $activity_identifier = Arr::get($mappedActivity, 'iati_identifier.activity_identifier');
+        $activityIdentifier = Arr::get($mappedActivity, 'iati_identifier.activity_identifier');
+
+        if (ImportCacheHelper::activityAlreadyBeingImported($this->orgId, $activityIdentifier)) {
+            return false;
+        }
+
+        ImportCacheHelper::appendActivityIdentifiersToCache($this->orgId, $activityIdentifier);
+
         $xmlValidator = (app(XmlValidator::class))->reportingOrganisationInOrganisation($this->organizationReportingOrg);
-        $existence = $this->activityAlreadyExists($activity_identifier);
+        $existence = $this->activityAlreadyExists($activityIdentifier);
         $duplicate = $this->activityIsDuplicate(Arr::get($mappedActivity, 'iati_identifier.iati_identifier_text'));
         $isIdentifierValid = $this->isIdentifierValid(Arr::get($mappedActivity, 'iati_identifier.iati_identifier_text'));
 
-        $errors = $xmlValidator
-            ->init($mappedActivity)
-            ->validateActivity($duplicate, $isIdentifierValid);
+        $errors = $xmlValidator->init($mappedActivity)->validateActivity($duplicate, $isIdentifierValid);
 
         $mappedActivity['org_id'] = $this->orgId;
         $this->success++;
@@ -193,8 +199,12 @@ class XmlQueueWriter
         return str_starts_with($identifier, $this->orgRef . '-');
     }
 
-    /**iI
+    /**
      * Append data into the file containing previous data.
+     * Stores validated data to valid.json file.
+     * Basically the logic here if to fetch valid.json from s3 and append current data, then push to s3 again.
+     * With an additional condition that checks if the current activity being processed already exists or not in s3's valid.json.
+     * If already exists in valid.json, do not append. (To avoid duplication in the import listing page).
      *
      * @param $data
      * @param $errors
@@ -205,22 +215,57 @@ class XmlQueueWriter
      */
     protected function appendDataIntoFile($data, $errors, $existence): void
     {
-        array_walk_recursive($errors, static function ($a) use (&$return) {
-            $return[] = $a;
-        });
+        $path = sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, $this->orgId, $this->userId, 'valid.json');
+        $validJsonFile = awsGetFile($path);
 
-        $validJsonFile = awsGetFile(sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, $this->orgId, $this->userId, 'valid.json'));
+        if (!$validJsonFile) {
+            $contentInValidDotJson = collect([
+                [
+                    'data'      => $data,
+                    'errors'    => $errors,
+                    'status'    => 'processed',
+                    'existence' => $existence,
+                ],
+            ]);
 
-        if ($validJsonFile) {
-            $currentContents = json_decode($validJsonFile, true, 512, JSON_THROW_ON_ERROR);
-            $currentContents[] = ['data' => $data, 'errors' => $errors, 'status' => 'processed', 'existence' => $existence];
-            $content = json_encode($currentContents, JSON_THROW_ON_ERROR);
-        } else {
-            $content = json_encode([['data' => $data, 'errors' => $errors, 'status' => 'processed', 'existence' => $existence]], JSON_THROW_ON_ERROR);
+            $this->uploadContent($path, $contentInValidDotJson->toJson(JSON_THROW_ON_ERROR));
+
+            return;
         }
 
+        $contentInValidDotJson = collect(json_decode($validJsonFile, true, 512, JSON_THROW_ON_ERROR));
+
+        $activityIdentifiersPresentInValidJson = $contentInValidDotJson
+            ->pluck('data.iati_identifier.activity_identifier')
+            ->filter();
+
+        $currentActivityIdentifier = Arr::get($data, 'iati_identifier.activity_identifier', '');
+
+        if (!$activityIdentifiersPresentInValidJson->contains($currentActivityIdentifier)) {
+            $appendableData = [
+                'data'      => $data,
+                'errors'    => $errors,
+                'status'    => 'processed',
+                'existence' => $existence,
+            ];
+
+            $contentInValidDotJson->push($appendableData);
+        }
+
+        $this->uploadContent($path, $contentInValidDotJson->toJson(JSON_THROW_ON_ERROR));
+    }
+
+    /**
+     * Upload content to aws.
+     *
+     * @param string $path
+     * @param string $content
+     *
+     * @return void
+     */
+    private function uploadContent(string $path, string $content): void
+    {
         try {
-            $path = sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, $this->orgId, $this->userId, 'valid.json');
             awsUploadFile($path, $content);
         } catch (\Exception $e) {
             awsUploadFile('error-appendDataIntoFile.log', $e->getMessage());
