@@ -137,6 +137,7 @@ Route::group(['middleware' => ['can:crud_activity']], static function () {
 
     Route::resource('activity.result', ResultController::class)->parameters(['activity' => 'id', 'result' => 'resultId']);
     Route::get('/activity/{id}/results/page/{page?}', [ResultController::class, 'getPaginatedResults'])->name('activity.results.paginate');
+    Route::delete('/activity/{id}/results', [ResultController::class, 'bulkDeleteResults'])->name('activity.results.bulkDelete');
 
     Route::resource('result.indicator', IndicatorController::class)->parameters(['result' => 'id', 'indicator' => 'indicatorId']);
     Route::get('/result/{id}/indicators/page/{page?}', [IndicatorController::class, 'getPaginatedIndicators'])->name('result.indicators.paginate');

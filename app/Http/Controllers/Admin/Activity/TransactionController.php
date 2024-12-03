@@ -368,7 +368,7 @@ class TransactionController extends Controller
      * Bulk deletes transactions.
      *
      * @param BulkDeleteTransactionRequest $request
-     * @param                                                 $id
+     * @param $id
      *
      * @return JsonResponse
      */
