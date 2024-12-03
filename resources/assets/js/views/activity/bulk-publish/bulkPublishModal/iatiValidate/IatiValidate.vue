@@ -193,7 +193,7 @@
                     {{ value.title ?? '' }}
                   </div>
                   <div v-if="value.top_level_error === 'critical'">
-                    <span class="text-xs italic">
+                    <span class="text-xs italic text-crimson-50">
                       (The activity contains critical errors and thus cannot be
                       published.)
                     </span>
