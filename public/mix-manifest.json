@@ -1,6 +1,7 @@
 {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=19eed7d34b7abea8bbea0ef35dee13d6",
     "/js/script.js": "/js/script.js?id=573e5816f1296bbce2c2c0084e92e523",
     "/js/webportal-script.js": "/js/webportal-script.js?id=06d4c518a25c033e1989b9db84a1dd01",
@@ -11,11 +12,15 @@
 =======
 =======
 >>>>>>> c6c32afb (-[x] Disabled Checkbox for Critical Errored Activitities)
+=======
+>>>>>>> 70812d5c (- [x] Added skipping critical error activities on publish)
 <<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=7c44e4d9cf743e3a5ffc3277abd3feba",
 =======
 =======
 >>>>>>> dfa5ec96 (-[x] Disabled Checkbox for Critical Errored Activitities)
+=======
+>>>>>>> b83d0831 (- [x] Added skipping critical error activities on publish)
 <<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=98d2dab6aacd7ea60c8a24b07e4f5364",
 =======
@@ -44,11 +49,18 @@
     "/js/app.js": "/js/app.js?id=92bbc7be49c5b28adecdea7571b9a51c",
 >>>>>>> f00f34ca (-[x] Disabled Checkbox for Critical Errored Activitities)
 >>>>>>> 971c6045 (-[x] Disabled Checkbox for Critical Errored Activitities)
+<<<<<<< HEAD
 >>>>>>> dfa5ec96 (-[x] Disabled Checkbox for Critical Errored Activitities)
+=======
+=======
+    "/js/app.js": "/js/app.js?id=394eb1a7e674c85cbd5beeb3c6153a76",
+>>>>>>> a8e12173 (- [x] Added skipping critical error activities on publish)
+>>>>>>> b83d0831 (- [x] Added skipping critical error activities on publish)
     "/js/script.js": "/js/script.js?id=5664c41472ea07b11e7b9e7ad4007a4c",
     "/js/webportal-script.js": "/js/webportal-script.js?id=ec424584e8e86829641c324d807c42b5",
     "/js/formbuilder.js": "/js/formbuilder.js?id=0da9ac4d5b4cf5740657fde41069a985",
     "/manifest.js": "/manifest.js?id=3ed1124c8f4dcb98acc36de67cb80349",
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     "/css/webportal-app.css": "/css/webportal-app.css?id=748c68cfdd3038df623a0f7018f87a2d",
@@ -58,6 +70,8 @@
 =======
 =======
 >>>>>>> dfa5ec96 (-[x] Disabled Checkbox for Critical Errored Activitities)
+=======
+>>>>>>> b83d0831 (- [x] Added skipping critical error activities on publish)
 <<<<<<< HEAD
     "/css/webportal-app.css": "/css/webportal-app.css?id=48a13c761549a94d368d78ff0d883e80",
     "/css/app.css": "/css/app.css?id=13a0e760a5bb911b9a0f2ca0fb556038",
@@ -101,9 +115,10 @@
 >>>>>>> 975178e9 (-[x] Added Critical Error Check)
 >>>>>>> 04aa4a9b (-[x] New Tab Popup Close Fix, Flow Change Bulk Publish)
 =======
+=======
+>>>>>>> a8e12173 (- [x] Added skipping critical error activities on publish)
     "/css/webportal-app.css": "/css/webportal-app.css?id=1621513e488183c4f3f7d48c8e71fe3e",
     "/css/app.css": "/css/app.css?id=deb09ddfdcf1f43142ef9e8b2b247960",
->>>>>>> f00f34ca (-[x] Disabled Checkbox for Critical Errored Activitities)
     "/js/vendor.js": "/js/vendor.js?id=1d9dc84f31934bcf90e4083803feee6b"
 >>>>>>> 7f0feeea (-[x] New Tab Popup Close Fix, Flow Change Bulk Publish)
 >>>>>>> 58d3f8f6 (-[x] New Tab Popup Close Fix, Flow Change Bulk Publish)

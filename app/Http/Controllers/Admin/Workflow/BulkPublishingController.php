@@ -265,20 +265,35 @@ class BulkPublishingController extends Controller
             }
 
             if ($this->publishingStatusService->ongoingBulkPublishing($organization->id)) {
-                $pubishingStatus = $this->bulkPublishingService->getOrganisationBulkPublishingStatus();
+                $publishingStatus = $this->bulkPublishingService->getOrganisationBulkPublishingStatus();
 
                 return response()->json([
                     'success'     => false,
                     'message'     => 'Another bulk publishing is already in progress.',
-                    'data'        => $pubishingStatus['publishingData'],
-                    'in_progress' => $pubishingStatus['inProgress'],
+                    'data'        => $publishingStatus['publishingData'],
+                    'in_progress' => $publishingStatus['inProgress'],
                 ]);
             }
 
             $activityIds = json_decode($request->get('activities'), false, 512, JSON_THROW_ON_ERROR);
 
             if (!empty($activityIds)) {
-                $activities = $this->activityService->getActivitiesHavingIds($activityIds);
+                $filteredActivityIds = $this->bulkPublishingService->getPublishableActivityIds($activityIds);
+
+                if (empty($filteredActivityIds)) {
+                    return response()->json(
+                        [
+                            'success' => false,
+                            'status'  => 'error',
+                            'message' => 'All of the selected activities have critical error.',
+                            'data'    => ['activity_ids' => $activityIds],
+                        ]
+                    );
+                }
+
+                DB::beginTransaction();
+
+                $activities = $this->activityService->getActivitiesHavingIds($filteredActivityIds);
 
                 if (!count($activities)) {
                     return response()->json(['success' => false, 'message' => 'No activities selected.']);
