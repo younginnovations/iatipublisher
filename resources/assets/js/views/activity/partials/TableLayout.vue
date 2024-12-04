@@ -173,6 +173,7 @@
                 :value="datum.id"
                 type="checkbox"
                 class="cursor-pointer"
+                @change="(e) => handleCheckboxChange(e, datum.status, datum.id)"
               />
               <span class="checkmark" />
             </label>
@@ -213,10 +214,17 @@ function formatDate(date: Date) {
   return moment(date).fromNow();
 }
 
-function toggleSelectAll(activities: { [key: string]: { id: number } }) {
+function toggleSelectAll(activities: {
+  [key: string]: { id: number; status: string };
+}) {
   try {
     const selectedIds = Object.values(activities).map((item) => item.id);
     const newSet = [...store.state.selectedActivities, ...selectedIds];
+    const selectedStatus = Object.values(activities).map((item) => ({
+      activity_id: item.id,
+      status: item.status,
+    }));
+
     if (newSet.length > 0) {
       const filteredSet = [...new Set(newSet)];
 
@@ -224,12 +232,25 @@ function toggleSelectAll(activities: { [key: string]: { id: number } }) {
         const filterAllCurrentPage = store.state.selectedActivities.filter(
           (item) => !selectedIds.includes(item)
         );
+
+        store.state.selectedActivityStatus =
+          store.state.selectedActivityStatus.filter(
+            (item) => !selectedIds.includes(item.activity_id)
+          );
+
         store.dispatch('updateSelectedActivities', filterAllCurrentPage);
         isAllValueSelected.value = false;
         return;
       }
       store.dispatch('updateSelectedActivities', filteredSet);
     }
+
+    store.state.selectedActivityStatus = [
+      ...store.state.selectedActivityStatus.filter(
+        (item) => !selectedIds.includes(item.activity_id)
+      ),
+      ...selectedStatus,
+    ];
   } catch (error) {
     console.error('An error occurred while toggling select all:', error);
   }
@@ -266,6 +287,35 @@ const sortByDateUrl = () => {
   params.set('direction', direction);
 
   return `?${params.toString()}`;
+};
+
+/**
+ * Handles a checkbox change event for the activity status checkboxes.
+ *
+ * If the checkbox is checked, adds the activity status to the
+ * store's selectedActivityStatus array. If the checkbox is unchecked,
+ * removes the activity status from the store's selectedActivityStatus array.
+ *
+ * @param {Event} e - The checkbox change event.
+ * @param {string} value - The value of the checkbox (the activity status).
+ * @param {number} id - The ID of the activity.
+ */
+const handleCheckboxChange = (e: Event, value: string, id: number): void => {
+  if (e.target) {
+    const isChecked = (e.target as HTMLInputElement).checked;
+
+    if (isChecked) {
+      store.state.selectedActivityStatus = [
+        ...store.state.selectedActivityStatus,
+        { activity_id: id, status: value },
+      ];
+    } else {
+      store.state.selectedActivityStatus =
+        store.state.selectedActivityStatus.filter(
+          (item) => item.activity_id !== id
+        );
+    }
+  }
 };
 
 function containsAllValues(): boolean {
