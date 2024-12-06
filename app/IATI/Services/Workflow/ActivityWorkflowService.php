@@ -391,6 +391,10 @@ class ActivityWorkflowService
     {
         $messages = [];
 
+        if ($organization->publisher_id === env('PRODUCTION_TEST_ACC')) {
+            return $messages;
+        }
+
         if (!$this->isUserVerified()) {
             $messages[] = 'You have not verified your email address.';
         }
