@@ -64,3 +64,5 @@ data:
 
   SENTRY_LARAVEL_DSN: "https://c4ba35dbbb854aa78db042552d692104@o4504553711796224.ingest.sentry.io/4504553729359872"
   SENTRY_TRACES_SAMPLE_RATE: "1.0"
+
+  PRODUCTION_TEST_ACC: "young_innovation_production_test"
