@@ -92,7 +92,8 @@
                   icon="approved-cloud"
                   :disabled="
                     store.state.selectedActivities.length === 0 ||
-                    store.state.selectedActivities.length > 100
+                    store.state.selectedActivities.length > 100 ||
+                    isDisabledPublish
                   "
                   :tooltip-text="
                     store.state.selectedActivities.length > 100
@@ -124,7 +125,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref, Ref } from 'vue';
+import { inject, ref, Ref, defineProps } from 'vue';
 import DownloadActivityButton from './DownloadActivityButton.vue';
 import AddActivityButton from './AddActivityButton.vue';
 import Toast from 'Components/ToastMessage.vue';
@@ -149,6 +150,13 @@ const toastMessage = inject('toastData') as ToastInterface;
 const errorData = inject('errorData') as ErrorInterface;
 const store = useStore();
 const publishRef: Ref<typeof PublishSelected | null> = ref(null);
+
+defineProps({
+  isDisabledPublish: {
+    type: Boolean,
+    required: true,
+  },
+});
 
 const checkPublish = () => {
   if (publishRef.value) {

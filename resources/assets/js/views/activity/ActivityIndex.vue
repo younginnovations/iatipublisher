@@ -5,7 +5,7 @@
   >
     <div id="activity">
       <Loader v-if="isLoading"></Loader>
-      <PageTitle />
+      <PageTitle :is-disabled-publish="isDisabledPublish" />
       <div class="overflow-hidden" :class="{ 'bg-white': isEmpty }">
         <ErrorMessage :is-empty="isEmpty"></ErrorMessage>
         <EmptyActivity v-if="isEmpty" />
@@ -243,6 +243,7 @@ export default defineComponent({
     });
 
     const paginationReset = ref(false);
+    const isDisabledPublish = ref(false);
 
     fetchActivitiesCountByPublishStatus();
 
@@ -359,6 +360,17 @@ export default defineComponent({
         }
       }
     );
+
+    watchEffect(() => {
+      const status = Object.values(store.state.selectedActivityStatus).map(
+        (item) => item.status
+      );
+      if (status.every((item) => item === 'published') && status.length > 0) {
+        isDisabledPublish.value = true;
+      } else {
+        isDisabledPublish.value = false;
+      }
+    });
 
     const checkXlsstatus = () => {
       axios.get('/import/xls/progress_status').then((res) => {
@@ -612,6 +624,7 @@ export default defineComponent({
       allPublishStatusCountMap,
       currentPage,
       paginationReset,
+      isDisabledPublish,
     };
   },
 });
