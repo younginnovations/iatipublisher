@@ -1263,7 +1263,7 @@
                 "type": "textarea",
                 "placeholder": "Type narrative",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "add_more": true,
                 "attr": {
                   "row": 4
@@ -1823,7 +1823,7 @@
             "type": "textarea",
             "placeholder": "Type narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -1838,7 +1838,7 @@
                 "placeholder": "Select language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/contact-info/organisation/narrative/'>For more information</a>",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -1864,7 +1864,7 @@
             "type": "textarea",
             "placeholder": "Type narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -1879,7 +1879,7 @@
                 "placeholder": "Select language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/contact-info/department/narrative/'>For more information</a>",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -1946,7 +1946,7 @@
             "type": "textarea",
             "placeholder": "Type narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -1961,7 +1961,7 @@
                 "placeholder": "Select language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/contact-info/department/narrative/'>For more information</a>",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -2057,7 +2057,7 @@
             "type": "textarea",
             "placeholder": "Type narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -2124,7 +2124,7 @@
             "placeholder": "Select code",
             "choices": "Activity/GeographicLocationReach.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "An IATI code for the geographic scope of the activity. This attribute is required.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-reach/'>For more information</a>",
             "help_text": "Please choose an option to describe the reach of the location.<br><br>1. <b>Activity</b> - The location specifies where the activity is carried out<br><br>2. <b>Intended Beneficiaries</b> - The location specifies where the intended beneficiaries of the activity live</li></ol>"
           }
@@ -2150,7 +2150,7 @@
             "placeholder": "Select vocabulary",
             "choices": "Activity/GeographicVocabulary.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "An IATI code for a recognised gazetteer or administrative boundary repository.</br>This attribute is required.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-id/'>For more information</a>",
             "help_text": "Please select the gazetteer or administrative boundary repository that you will provide a code from.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/geographicvocabulary/'>View more information about each option.</a>"
           },
@@ -2184,7 +2184,7 @@
             "type": "textarea",
             "placeholder": "Type narrative here",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -2199,7 +2199,7 @@
                 "placeholder": "Select language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/name/narrative/'>For more information</a>",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -2224,7 +2224,7 @@
             "type": "textarea",
             "placeholder": "Type narrative here",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -2239,7 +2239,7 @@
                 "placeholder": "Select language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/description/narrative/'>For more information</a>",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -2265,7 +2265,7 @@
             "type": "textarea",
             "placeholder": "Type narrative here",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -2280,7 +2280,7 @@
                 "placeholder": "Select language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/activity-description/narrative/'>For more information</a>",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -2307,7 +2307,7 @@
             "placeholder": "Select vocabulary",
             "choices": "Activity/GeographicVocabulary.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "An IATI code for a recognised administrative boundary repository.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": "Select an <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/GeographicVocabulary/'>administrative boundary list</a> that includes a code to represent your activity location."
           },
@@ -2318,7 +2318,7 @@
             "placeholder": "Select code",
             "choices": "Activity/Country.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "The code for the administrative area being reported from the vocabulary specified.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": "Provide a code to represent your activity location (from your chosen <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/GeographicVocabulary/'>administrative boundary list</a>)."
           },
@@ -2352,7 +2352,7 @@
             "type": "text",
             "placeholder": "Type srs name",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "The name of the spatial reference system used by the coordinates.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/point/'>For more information</a>",
             "help_text": "This value never changes."
           }
@@ -2370,7 +2370,7 @@
                 "type": "text",
                 "placeholder": "Type latitude value",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": ""
               },
@@ -2406,7 +2406,7 @@
             "placeholder": "Select code",
             "choices": "Activity/GeographicExactness.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "A code from the Geographic Exactness Codelist. This attribute is required.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/exactness/'>For more information</a>",
             "help_text": "If you have provided the geo-coordinates for the activity location, then select an option from the <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/geographicexactness/'>Geographic Exactness list</a> to specify whether the location is exact or approximate."
           }
@@ -2430,7 +2430,7 @@
             "placeholder": "Select code",
             "choices": "Activity/GeographicLocationClass.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "A code from the Location Class codelist. This attribute is required.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-class/'>For more information</a>",
             "help_text": "Please specify the form of the activity location from the <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/GeographicLocationClass/'>Geographic Location Class list</a>. For example a populated place (town, farm), or topographical feature (mountain, river)."
           }
@@ -2454,7 +2454,7 @@
             "placeholder": "Select code",
             "choices": "Activity/LocationType.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "A feature designation code form the authorised list (maintained by the US National Geospatial-Intelligence Agency).<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/feature-designation/'>For more information</a>",
             "help_text": "You can provide more detail on the type of your activity’s location (e.g. beach, well or college).Please make a selection from the <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/LocationType/'>Location Type list.</a>"
           }
@@ -2525,7 +2525,7 @@
             "type": "date",
             "placeholder": "YYYY-MM-DD",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "The ending date for the period in which this specific disbursement will be made.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/period-end/'>For more information</a>",
             "help_text": ""
           }

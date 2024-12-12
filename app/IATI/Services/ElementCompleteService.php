@@ -635,7 +635,16 @@ class ElementCompleteService
     {
         $this->element = 'contact_info';
 
-        return $this->isLevelTwoMultiDimensionElementCompleted($activity->contact_info);
+        foreach ($activity->contact_info as $contactInfo) {
+            $contactInfoTypeIsEmpty = empty(Arr::get($contactInfo, 'type'));
+            $allOtherFieldsAreEmpty = is_variable_null(Arr::except($contactInfo, 'type'));
+
+            if ($contactInfoTypeIsEmpty || $allOtherFieldsAreEmpty) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

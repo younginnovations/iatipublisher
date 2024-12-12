@@ -74,6 +74,11 @@ class TransactionObserver
             $elementStatus['recipient_region'] = true;
             $elementStatus['recipient_country'] = true;
         }
+        // TODO: RESOLVE THIS
+        if (!$recipientRegionOrCountryIsCompleteInTransaction && !$recipientRegionOrCountryIsCompleteInActivity) {
+            $elementStatus['recipient_region'] = false;
+            $elementStatus['recipient_country'] = false;
+        }
 
         $activityObj->element_status = $elementStatus;
         $activityObj->complete_percentage = $this->elementCompleteService->calculateCompletePercentage($activityObj->element_status);

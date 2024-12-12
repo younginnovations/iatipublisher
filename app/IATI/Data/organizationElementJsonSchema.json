@@ -325,7 +325,7 @@
                 "type": "text",
                 "placeholder": "Type value here",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": ""
               },
@@ -336,7 +336,7 @@
                 "multiselect": false,
                 "choices": "Activity/Currency.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "placeholder": "Select currency",
                 "hover_text": "A three letter ISO 4217 code for the original currency of the amount.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/budget-line/value/'>For more information</a>",
                 "help_text": "If no currency is selected, your default currency is assumed."
@@ -347,7 +347,7 @@
                 "type": "date",
                 "placeholder": "YYYY-MM-DD",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "The date to be used for determining the exchange rate for currency conversions.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/budget-line/value/'>For more information</a>",
                 "help_text": ""
               }
@@ -360,7 +360,7 @@
             "type": "textarea",
             "placeholder": "Type narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "form_has_borders": true,
             "label_has_borders": true,
@@ -378,7 +378,7 @@
                 "choices": "Activity/Language.json",
                 "placeholder": "Select language",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/narrative/'>For more information</a>",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -601,7 +601,7 @@
                 "type": "text",
                 "placeholder": "Type value here",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": ""
               },
@@ -613,7 +613,7 @@
                 "choices": "Activity/Currency.json",
                 "placeholder": "Select currency",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "A three letter ISO 4217 code for the original currency of the amount. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/budget-line/value/'>For more information</a>",
                 "help_text": "If no currency is selected, your default currency is assumed."
               },
@@ -623,7 +623,7 @@
                 "type": "date",
                 "placeholder": "YYYY-MM-DD",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "The date to be used for determining the exchange rate for currency conversions.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/budget-line/value/'>For more information</a>",
                 "help_text": ""
               }
@@ -636,7 +636,7 @@
             "type": "textarea",
             "placeholder": "Type narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "form_has_borders": true,
             "label_has_borders": true,
@@ -654,7 +654,7 @@
                 "choices": "Activity/Language.json",
                 "placeholder": "Select language",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/narrative/'>For more information</a>",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -698,7 +698,7 @@
         "form_has_borders": true,
         "label_has_borders": true,
         "is_collapsable": true,
-        "label_indicator": "optional_text",
+        "label_indicator": "required_icon",
         "element_criteria": "mandatory",
         "hover_text": "The supranational geographic region where funds have been allocated.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/recipient-region/'>For more information</a>",
         "attributes": {
@@ -914,7 +914,7 @@
                 "type": "text",
                 "placeholder": "Type value here",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": ""
               },
@@ -926,7 +926,7 @@
                 "choices": "Activity/Currency.json",
                 "placeholder": "Select currency",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "A three letter ISO 4217 code for the original currency of the amount. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/value/'>For more information</a>",
                 "help_text": "If no currency is selected, your default currency is assumed."
               },
@@ -936,7 +936,7 @@
                 "type": "date",
                 "placeholder": "YYYY-MM-DD",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "The date to be used for determining the exchange rate for currency conversions. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/value/'>For more information</a>",
                 "help_text": ""
               }
@@ -949,7 +949,7 @@
             "type": "textarea",
             "placeholder": "Type narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/narrative/'>For more information</a>",
             "help_text": "Provide a description for this budget line.",
@@ -965,7 +965,7 @@
                 "choices": "Activity/Language.json",
                 "placeholder": "Select language",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/narrative/'>For more information</a>",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -1225,7 +1225,7 @@
             "name": "narrative",
             "label": "narrative",
             "type": "textarea",
-            "placeholder": "Select language",
+            "placeholder": "Type narrative",
             "required": true,
             "criteria": "mandatory",
             "add_more": true,
@@ -1399,7 +1399,7 @@
                 "type": "text",
                 "placeholder": "Type value here",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": ""
               },
@@ -1411,7 +1411,7 @@
                 "choices": "Activity/Currency.json",
                 "placeholder": "Select currency",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "A three letter ISO 4217 code for the original currency of the amount.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/expense-line/value/'>For more information</a>",
                 "help_text": "If no currency is selected, your default currency is assumed."
               },
@@ -1421,7 +1421,7 @@
                 "type": "date",
                 "placeholder": "YYYY-MM-DD",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "The date to be used for determining the exchange rate for currency conversions.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/expense-line/value/'>For more information</a>",
                 "help_text": ""
               }
@@ -1434,7 +1434,7 @@
             "type": "textarea",
             "placeholder": "Type narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/expense-line/narrative/'>For more information</a>",
             "help_text": "Provide a description for this expense line.",
@@ -1450,7 +1450,7 @@
                 "choices": "Activity/Language.json",
                 "placeholder": "Select language",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/expense-line/narrative/'>For more information</a>",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -1679,7 +1679,7 @@
             "choices": "Activity/Country.json",
             "placeholder": "Select code",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "ISO 3166-1 alpha-2 code for the country. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/recipient-country/'>For more information</a>",
             "help_text": "Select the recipient country that is the focus for this document or webpage."
           }
@@ -1691,7 +1691,7 @@
             "type": "textarea",
             "placeholder": "Type narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -1707,7 +1707,7 @@
                 "choices": "Activity/Language.json",
                 "placeholder": "Select language",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/narrative/'>For more information</a>",
                 "help_text": "If no language is selected, your default language is assumed."
               }

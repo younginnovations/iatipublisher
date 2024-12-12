@@ -153,7 +153,7 @@ class CountryBudgetItemService
                             'code',
                             null
                         ),
-                        'percentage' => Arr::get($budgetItem, 'percentage', null),
+                        'percentage' => Arr::get($budgetItem, 'percentage') ?? 100,
                     ],
                     'description' => [
                         'narrative' => $this->buildNarrative(
