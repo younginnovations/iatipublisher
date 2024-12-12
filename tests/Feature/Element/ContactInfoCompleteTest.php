@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Element;
 
+use App\IATI\Models\Activity\Activity;
+use App\IATI\Services\ElementCompleteService;
+use Illuminate\Support\Arr;
+
 /**
- * Class ContactInfoCompleteTest.
+ * Class LocationCompleteTest.
  */
 class ContactInfoCompleteTest extends ElementCompleteTest
 {
     /**
-     * Element contact_info.
+     * Element location.
      *
      * @var string
      */
@@ -22,9 +26,10 @@ class ContactInfoCompleteTest extends ElementCompleteTest
      * @return void
      * @throws \JsonException
      */
-    public function test_contact_info_mandatory_attributes(): void
+    public function test_contact_info_mandatory_attributes_have_not_changed(): void
     {
-        $this->test_mandatory_attributes($this->element, []);
+        $mandatoryAttributes = ['type'];
+        $this->test_mandatory_attributes($this->element, $mandatoryAttributes);
     }
 
     /**
@@ -33,39 +38,34 @@ class ContactInfoCompleteTest extends ElementCompleteTest
      * @return void
      * @throws \JsonException
      */
-    public function test_condition_mandatory_sub_elements(): void
+    public function test_contact_info_sub_elements_have_not_changed(): void
     {
-        $this->test_mandatory_sub_elements($this->element, []);
+        $mandatorySubelements = [];
+
+        $contactInfoSchema = Arr::get(readElementJsonSchema(), $this->element, []);
+        $contactInfoFlattened = flattenArrayWithKeys($contactInfoSchema);
+        $contactInfoFlattened = getItemsWhereKeyContains($contactInfoFlattened, '.criteria');
+        unset($contactInfoFlattened['attributes.type.criteria']);
+        $mandatorySubelementsInSchema = array_filter($contactInfoFlattened, fn ($item) => !empty($item));
+
+        $this->assertEquals($mandatorySubelements, $mandatorySubelementsInSchema, 'Mandatory attributes have changed.');
     }
 
     /**
-     * Empty contact_info data test.
+     * Empty data test.
      *
      * @return void
      * @throws \JsonException
      */
-    public function test_contact_info_empty_data(): void
+    public function test_contact_info_is_not_complete_in_empty_data(): void
     {
-        $actualData = '';
+        $actualData = [];
 
         $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
     }
 
     /**
-     * Empty contact_info array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_empty_array(): void
-    {
-        $actualData = json_decode('[]', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Empty contact_info json array test.
+     * Empty json array test.
      *
      * @return void
      * @throws \JsonException
@@ -77,448 +77,59 @@ class ContactInfoCompleteTest extends ElementCompleteTest
         $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
     }
 
-    /**
-     * Sub element person_name empty test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_empty_person_name(): void
+    public function test_contact_info_is_incomplete_without_type()
     {
+        $activity = new Activity();
+        $data = '[{"type": null,"organisation": [{"narrative": [{"narrative": "Org name","language": "ng"}]}],"department": [{"narrative": [{"narrative": "Dept","language": "ng"}]}],"person_name": [{"narrative": [{"narrative": "John","language": "ng"}]}],"job_title": [{"narrative": [{"narrative": "PM","language": "ng"}]}],"telephone": [{"telephone": "9860123456"}],"email": [{"email": "superadmin@yipl.com.np"}],"website": [{"website": "https://iatipublisher-staging.yipl.com.np"}],"mailing_address": [{"narrative": [{"narrative": "Mahalaxmi-sthan, Patan","language": "ng"}]}]]';
         $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":"","job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
+            $data,
             true,
             512,
             JSON_THROW_ON_ERROR
         );
+        $activity->contact_info = $actualData;
 
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
+        $elementCompleteService = new ElementCompleteService();
+
+        $this->assertFalse($elementCompleteService->isContactInfoElementCompleted($activity));
     }
 
-    /**
-     * Sub element person_name empty array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_empty_person_name_array(): void
+    public function test_contact_info_is_complete_with_type()
     {
+        $activity = new Activity();
+        $data = '[{"type": "1","organisation": [{"narrative": [{"narrative": "Org name","language": "ng"}]}],"department": [{"narrative": [{"narrative": "Dept","language": "ng"}]}],"person_name": [{"narrative": [{"narrative": "John","language": "ng"}]}],"job_title": [{"narrative": [{"narrative": "PM","language": "ng"}]}],"telephone": [{"telephone": "9860123456"}],"email": [{"email": "superadmin@yipl.com.np"}],"website": [{"website": "https://iatipublisher-staging.yipl.com.np"}],"mailing_address": [{"narrative": [{"narrative": "Mahalaxmi-sthan, Patan","language": "ng"}]}]]';
         $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[],"job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
+            $data,
             true,
             512,
             JSON_THROW_ON_ERROR
         );
+        $activity->contact_info = $actualData;
 
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
+        $elementCompleteService = new ElementCompleteService();
+
+        $this->assertTrue($elementCompleteService->isContactInfoElementCompleted($activity));
     }
 
     /**
-     * Sub element person_name empty json array test.
-     *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_contact_info_sub_element_empty_person_name_json_array(): void
+    public function test_contact_info_is_incomplete_when_attribute_is_filled(): void
     {
+        $activity = new Activity();
+
         $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{}],"job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
+            '[{"ref":null,"location_reach":[{"code":null}],"location_id":null,"name":[{"narrative":[{"narrative":null,"language":null}]}],"description":[{"narrative":[{"narrative":null,"language":null}]}],"activity_description":[{"narrative":[{"narrative":null,"language":null}]}],"administrative":[{"vocabulary":null,"code":null,"level":null}],"point":[{"srs_name":null,"pos":[{"latitude":null,"longitude":null}]}],"exactness":[{"code":null}],"location_class":[{"code":null}],"feature_designation":[{"code":null}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
         );
+        $activity->location = $actualData;
 
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
-    }
+        $elementCompleteService = new ElementCompleteService();
 
-    /**
-     * Sub element person_name empty narrative test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_person_name_empty_narrative(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":""}],"job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element person_name empty narrative array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_person_name_empty_narrative_array(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[]}],"job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element person_name empty narrative json array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_person_name_empty_narrative_json_array(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{}]}],"job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element person_name sub element narrative empty narrative test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_person_name_sub_element_narrative_empty_narrative(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"","language":"en"}]}],"job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element person_name sub element narrative no narrative key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_person_name_sub_element_narrative_no_narrative_key(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"language":"en"}]}],"job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element job_title empty test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_empty_job_title(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":"","telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element job_title empty array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_empty_job_title_array(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element job_title empty json array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_empty_job_title_json_array(): void
-    {
-        $actualData = json_decode('[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element job_title empty narrative test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_job_title_empty_narrative(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{"narrative":""}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element job_title empty narrative array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_job_title_empty_narrative_array(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{"narrative":[]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element job_title empty narrative json array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_job_title_empty_narrative_json_array(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element job_title sub element narrative empty narrative test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_job_title_sub_element_narrative_empty_narrative(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{"narrative":[{"narrative":"","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element job_title sub element narrative no narrative key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_job_title_sub_element_narrative_no_narrative_key(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{"narrative":[{"language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element mailing_address empty test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_empty_mailing_address(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"contact-info1-person-name-narrative1","language":"ae"}]}],"job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":""}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element mailing_address empty array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_empty_mailing_address_array(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element mailing_address empty json array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_empty_mailing_address_json_array(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element mailing_address empty narrative test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_mailing_address_empty_narrative(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{"narrative":""}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":""}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * ub element mailing_address empty narrative array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_mailing_address_empty_narrative_array(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{"narrative":[]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element mailing_address empty narrative json array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_mailing_address_empty_narrative_json_array(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element mailing_address sub element narrative empty narrative test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_mailing_address_sub_element_narrative_empty_narrative(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{"narrative":[{"narrative":"","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element mailing_address sub element narrative no narrative key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_mailing_address_sub_element_narrative_no_narrative_key(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{"narrative":[{"language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Contact Info element complete test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_element_complete(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"contact-info1-person-name-narrative1","language":"ae"}]}],"job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
+        $this->assertFalse($elementCompleteService->isContactInfoElementCompleted($activity));
     }
 }
