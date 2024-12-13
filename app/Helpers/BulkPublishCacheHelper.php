@@ -77,9 +77,7 @@ class BulkPublishCacheHelper
      */
     public static function setInitialBulkPublishCache(int $orgId): void
     {
-        logger('set inital called');
         if (!self::hasOngoingBulkPublish($orgId)) {
-            logger('set inital ko if ma');
             $cacheValue = self::EMPTY_CACHE;
             $cacheValue['status'] = true;
 
@@ -98,16 +96,11 @@ class BulkPublishCacheHelper
     {
         $cacheValue = self::getOrganisationBulkPublishCache($orgId);
 
-        logger('before set');
-        logger($cacheValue);
-
         if (!in_array($activityId, $cacheValue['activity_ids'], true)) {
             $cacheValue['activity_ids'][] = $activityId;
 
             self::updateCache($orgId, $cacheValue);
         }
-        logger('after set');
-        logger($cacheValue);
     }
 
     /**

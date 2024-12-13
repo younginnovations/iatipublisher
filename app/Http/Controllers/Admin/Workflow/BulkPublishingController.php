@@ -291,8 +291,6 @@ class BulkPublishingController extends Controller
                     );
                 }
 
-                DB::beginTransaction();
-
                 $activities = $this->activityService->getActivitiesHavingIds($filteredActivityIds);
 
                 if (!count($activities)) {
@@ -328,7 +326,6 @@ class BulkPublishingController extends Controller
             return response()->json(['success' => false, 'message' => 'No activities selected.']);
         } catch (Exception $e) {
             DB::rollBack();
-            logger()->error($e->getMessage());
             logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Bulk publishing failed.']);
@@ -531,8 +528,6 @@ class BulkPublishingController extends Controller
                 $response = $this->bulkPublishingService->getActivityValidationStatus($filteredActivityIds);
 
                 if ($this->validationCompleted($response)) {
-                    logger('vitra vitra');
-
                     BulkPublishCacheHelper::setInitialBulkPublishCache(auth()->user()->organization_id);
                 }
 
