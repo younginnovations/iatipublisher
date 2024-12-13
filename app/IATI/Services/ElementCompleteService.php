@@ -635,6 +635,10 @@ class ElementCompleteService
     {
         $this->element = 'contact_info';
 
+        if (!$activity->contact_info) {
+            return false;
+        }
+
         foreach ($activity->contact_info as $contactInfo) {
             $contactInfoTypeIsEmpty = empty(Arr::get($contactInfo, 'type'));
             $allOtherFieldsAreEmpty = is_variable_null(Arr::except($contactInfo, 'type'));
@@ -660,7 +664,17 @@ class ElementCompleteService
     {
         $this->element = 'location';
 
-        return !is_variable_null($activity->location);
+        if (!$activity->location) {
+            return false;
+        }
+
+        foreach ($activity->location as $location) {
+            if (is_variable_null($location)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

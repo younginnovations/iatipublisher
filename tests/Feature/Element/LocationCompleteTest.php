@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace Tests\Feature\Element;
 
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Services\ElementCompleteService;
 use Illuminate\Support\Arr;
+use Tests\Traits\FilterMandatoryItemsTrait;
 
 /**
  * Class LocationCompleteTest.
  */
 class LocationCompleteTest extends ElementCompleteTest
 {
+    use FilterMandatoryItemsTrait;
+
     /**
      * Element location.
      *
@@ -21,39 +23,58 @@ class LocationCompleteTest extends ElementCompleteTest
     private string $element = 'location';
 
     /**
-     * Mandatory attribute test.
+     * @var array
+     */
+    private array $mandatoryAttributes = [];
+
+    /**
+     * @var array
+     */
+    private array $mandatorySubelements = [];
+
+    /**
+     * Test that mandatory attributes for location have not changed since the time of writing this test.
      *
      * @return void
+     *
      * @throws \JsonException
      */
     public function test_location_mandatory_attributes_have_not_changed(): void
     {
-        $mandatoryAttributes = [];
-        $this->test_mandatory_attributes($this->element, $mandatoryAttributes);
+        $locationSchema = Arr::get(readElementJsonSchema(), $this->element, []);
+        $locationFlattened = flattenArrayWithKeys($locationSchema);
+        $locationFlattened = getItemsWhereKeyContains($locationFlattened, '.criteria');
+        $mandatoryItemsInSchema = array_filter($locationFlattened, fn ($item) => !empty($item) && $item == 'mandatory');
+
+        $this->unsetMandatorySubelements($mandatoryItemsInSchema);
+
+        $this->assertEquals($mandatoryItemsInSchema, $this->mandatoryAttributes);
     }
 
     /**
-     * Mandatory sub element test.
+     * Test that mandatory subelements for location have not changed since the time of writing this test.
      *
      * @return void
+     *
      * @throws \JsonException
      */
     public function test_location_sub_elements_have_not_changed(): void
     {
-        $mandatorySubelements = [];
-
         $locationSchema = Arr::get(readElementJsonSchema(), $this->element, []);
         $locationFlattened = flattenArrayWithKeys($locationSchema);
         $locationFlattened = getItemsWhereKeyContains($locationFlattened, '.criteria');
-        $mandatorySubelementsInSchema = array_filter($locationFlattened, fn ($item) => !empty($item));
+        $mandatoryItemsInSchema = array_filter($locationFlattened, fn ($item) => !empty($item) && $item == 'mandatory');
 
-        $this->assertEquals($mandatorySubelements, $mandatorySubelementsInSchema, 'Mandatory attributes have changed.');
+        $this->unsetMandatoryAttributes($mandatoryItemsInSchema);
+
+        $this->assertEquals($mandatoryItemsInSchema, $this->mandatorySubelements);
     }
 
     /**
-     * Empty data test.
+     * Test that 'location' is not complete when data is empty.
      *
      * @return void
+     *
      * @throws \JsonException
      */
     public function test_location_is_not_complete_in_empty_data(): void
@@ -64,9 +85,10 @@ class LocationCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * Empty json array test.
+     * Test that 'location' is not complete when the data is an empty JSON array.
      *
      * @return void
+     *
      * @throws \JsonException
      */
     public function test_location_empty_json_array(): void
@@ -77,6 +99,8 @@ class LocationCompleteTest extends ElementCompleteTest
     }
 
     /**
+     * Test that 'location' is incomplete when an attribute is filled.
+     *
      * @return void
      *
      * @throws \JsonException
@@ -93,15 +117,14 @@ class LocationCompleteTest extends ElementCompleteTest
         );
         $activity->location = $actualData;
 
-        $elementCompleteService = new ElementCompleteService();
-
-        $this->assertFalse($elementCompleteService->isLocationElementCompleted($activity));
+        $this->assertFalse($this->elementCompleteService->isLocationElementCompleted($activity));
     }
 
     /**
-     * Sub element location_id empty test.
+     * Test that 'location' is complete when an attribute is filled.
      *
      * @return void
+     *
      * @throws \JsonException
      */
     public function test_location_is_complete_when_attribute_is_filled(): void
@@ -116,13 +139,11 @@ class LocationCompleteTest extends ElementCompleteTest
         );
         $activity->location = $actualData;
 
-        $elementCompleteService = new ElementCompleteService();
-
-        $this->assertTrue($elementCompleteService->isLocationElementCompleted($activity));
+        $this->assertTrue($this->elementCompleteService->isLocationElementCompleted($activity));
     }
 
     /**
-     * Sub element location_id empty test.
+     * Test that 'location' is complete when any sub-element is filled - 1.
      *
      * @return void
      * @throws \JsonException
@@ -139,12 +160,12 @@ class LocationCompleteTest extends ElementCompleteTest
         );
         $activity->location = $actualData;
 
-        $elementCompleteService = new ElementCompleteService();
-
-        $this->assertTrue($elementCompleteService->isLocationElementCompleted($activity));
+        $this->assertTrue($this->elementCompleteService->isLocationElementCompleted($activity));
     }
 
     /**
+     * Test that 'location' is complete when any sub-element is filled - 2.
+     *
      * @return void
      *
      * @throws \JsonException
@@ -161,12 +182,12 @@ class LocationCompleteTest extends ElementCompleteTest
         );
         $activity->location = $actualData;
 
-        $elementCompleteService = new ElementCompleteService();
-
-        $this->assertTrue($elementCompleteService->isLocationElementCompleted($activity));
+        $this->assertTrue($this->elementCompleteService->isLocationElementCompleted($activity));
     }
 
     /**
+     * Test that 'location' is complete when any sub-element is filled - 3.
+     *
      * @return void
      *
      * @throws \JsonException
@@ -183,12 +204,12 @@ class LocationCompleteTest extends ElementCompleteTest
         );
         $activity->location = $actualData;
 
-        $elementCompleteService = new ElementCompleteService();
-
-        $this->assertTrue($elementCompleteService->isLocationElementCompleted($activity));
+        $this->assertTrue($this->elementCompleteService->isLocationElementCompleted($activity));
     }
 
     /**
+     * Test that 'location' is complete when any sub-element is filled - 4.
+     *
      * @return void
      *
      * @throws \JsonException
@@ -205,13 +226,14 @@ class LocationCompleteTest extends ElementCompleteTest
         );
         $activity->location = $actualData;
 
-        $elementCompleteService = new ElementCompleteService();
-
-        $this->assertTrue($elementCompleteService->isLocationElementCompleted($activity));
+        $this->assertTrue($this->elementCompleteService->isLocationElementCompleted($activity));
     }
 
     /**
+     * Test that 'location' is complete when any sub-element is filled - 5.
+     *
      * @return void
+     *
      * @throws \JsonException
      */
     public function test_location_is_complete_when_any_sub_element_is_filled_5(): void
@@ -226,13 +248,14 @@ class LocationCompleteTest extends ElementCompleteTest
         );
         $activity->location = $actualData;
 
-        $elementCompleteService = new ElementCompleteService();
-
-        $this->assertTrue($elementCompleteService->isLocationElementCompleted($activity));
+        $this->assertTrue($this->elementCompleteService->isLocationElementCompleted($activity));
     }
 
     /**
+     * Test that 'location' is complete when any sub-element is filled - 6.
+     *
      * @return void
+     *
      * @throws \JsonException
      */
     public function test_location_is_complete_when_any_sub_element_is_filled_6(): void
@@ -247,13 +270,14 @@ class LocationCompleteTest extends ElementCompleteTest
         );
         $activity->location = $actualData;
 
-        $elementCompleteService = new ElementCompleteService();
-
-        $this->assertTrue($elementCompleteService->isLocationElementCompleted($activity));
+        $this->assertTrue($this->elementCompleteService->isLocationElementCompleted($activity));
     }
 
     /**
+     * Test that 'location' is complete when any sub-element is filled - 7.
+     *
      * @return void
+     *
      * @throws \JsonException
      */
     public function test_location_is_complete_when_any_sub_element_is_filled_7(): void
@@ -268,13 +292,14 @@ class LocationCompleteTest extends ElementCompleteTest
         );
         $activity->location = $actualData;
 
-        $elementCompleteService = new ElementCompleteService();
-
-        $this->assertTrue($elementCompleteService->isLocationElementCompleted($activity));
+        $this->assertTrue($this->elementCompleteService->isLocationElementCompleted($activity));
     }
 
     /**
+     * Test that 'location' is complete when any sub-element is filled - 8.
+     *
      * @return void
+     *
      * @throws \JsonException
      */
     public function test_location_is_complete_when_any_sub_element_is_filled_8(): void
@@ -289,11 +314,16 @@ class LocationCompleteTest extends ElementCompleteTest
         );
         $activity->location = $actualData;
 
-        $elementCompleteService = new ElementCompleteService();
-
-        $this->assertTrue($elementCompleteService->isLocationElementCompleted($activity));
+        $this->assertTrue($this->elementCompleteService->isLocationElementCompleted($activity));
     }
 
+    /**
+     * Test that 'location' is complete when any sub-element is filled - 9.
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
     public function test_location_is_complete_when_any_sub_element_is_filled_9(): void
     {
         $activity = new Activity();
@@ -306,13 +336,14 @@ class LocationCompleteTest extends ElementCompleteTest
         );
         $activity->location = $actualData;
 
-        $elementCompleteService = new ElementCompleteService();
-
-        $this->assertTrue($elementCompleteService->isLocationElementCompleted($activity));
+        $this->assertTrue($this->elementCompleteService->isLocationElementCompleted($activity));
     }
 
     /**
+     * Test that 'location' is complete when any sub-element is filled - 10.
+     *
      * @return void
+     *
      * @throws \JsonException
      */
     public function test_location_is_complete_when_any_sub_element_is_filled_10(): void
@@ -327,8 +358,65 @@ class LocationCompleteTest extends ElementCompleteTest
         );
         $activity->location = $actualData;
 
-        $elementCompleteService = new ElementCompleteService();
+        $this->assertTrue($this->elementCompleteService->isLocationElementCompleted($activity));
+    }
 
-        $this->assertTrue($elementCompleteService->isLocationElementCompleted($activity));
+    /**
+     * Test location is incomplete when one of many location instance is incomplete.
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function test_multiple_location_is_incomplete_when_one_is_incomplete(): void
+    {
+        $activity = new Activity();
+
+        $actualData = json_decode(
+            '[{"ref":null,"location_reach":[{"code":null}],"location_id":[{"vocabulary":null,"code":null}],"name":[{"narrative":[{"narrative":null,"language":null}]}],"description":[{"narrative":[{"narrative":null,"language":null}]}],"activity_description":[{"narrative":[{"narrative":null,"language":null}]}],"administrative":[{"vocabulary":null,"code":null,"level":null}],"point":[{"srs_name":null,"pos":[{"latitude":null,"longitude":null}]}],"exactness":[{"code":null}],"location_class":[{"code":null}],"feature_designation":[{"code":"AIRQ"}]}, {"ref":null,"location_reach":[{"code":null}],"location_id":[{"vocabulary":null,"code":null}],"name":[{"narrative":[{"narrative":null,"language":null}]}],"description":[{"narrative":[{"narrative":null,"language":null}]}],"activity_description":[{"narrative":[{"narrative":null,"language":null}]}],"administrative":[{"vocabulary":null,"code":null,"level":null}],"point":[{"srs_name":null,"pos":[{"latitude":null,"longitude":null}]}],"exactness":[{"code":null}],"location_class":[{"code":null}],"feature_designation":[{"code":null}]}]',
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+        $activity->location = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isLocationElementCompleted($activity));
+    }
+
+    /**
+     * Test location is complete when all of the location instances are incomplete.
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function test_multiple_location_is_complete_when_all_are_complete(): void
+    {
+        $activity = new Activity();
+
+        $actualData = json_decode(
+            '[{"ref":null,"location_reach":[{"code":null}],"location_id":[{"vocabulary":null,"code":null}],"name":[{"narrative":[{"narrative":null,"language":null}]}],"description":[{"narrative":[{"narrative":null,"language":null}]}],"activity_description":[{"narrative":[{"narrative":null,"language":null}]}],"administrative":[{"vocabulary":null,"code":null,"level":null}],"point":[{"srs_name":null,"pos":[{"latitude":null,"longitude":null}]}],"exactness":[{"code":null}],"location_class":[{"code":null}],"feature_designation":[{"code":"AIRQ"}]}, {"ref":null,"location_reach":[{"code":null}],"location_id":[{"vocabulary":null,"code":null}],"name":[{"narrative":[{"narrative":null,"language":null}]}],"description":[{"narrative":[{"narrative":null,"language":null}]}],"activity_description":[{"narrative":[{"narrative":null,"language":null}]}],"administrative":[{"vocabulary":null,"code":null,"level":null}],"point":[{"srs_name":null,"pos":[{"latitude":null,"longitude":null}]}],"exactness":[{"code":null}],"location_class":[{"code":null}],"feature_designation":[{"code":"AIRQ"}]}]',
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+        $activity->location = $actualData;
+
+        $this->assertTrue($this->elementCompleteService->isLocationElementCompleted($activity));
+    }
+
+    /**
+     * Test location is incomplete when null.
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function test_contact_info_is_incomplete_when_contact_info_element_is_missing()
+    {
+        $activity = new Activity();
+        $activity->location = null;
+
+        $this->assertFalse($this->elementCompleteService->isContactInfoElementCompleted($activity));
     }
 }
