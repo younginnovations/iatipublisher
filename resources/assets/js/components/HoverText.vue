@@ -19,12 +19,21 @@
           : 'help__text right-0 ' + width,
       ]"
     >
-      <div v-if="showIatiReference" class="mb-2 italic text-bluecoral">
-        IATI standard reference
-      </div>
+      <span
+        class="close-help absolute top-4 right-2 z-[50] scale-[2] cursor-pointer"
+        ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 12 14"
+          fill="none"
+        >
+          <path
+            fill="#2A2F30"
+            d="M4.588 3.5 7.212.88a.418.418 0 0 0-.591-.592L4 2.913 1.38.288a.418.418 0 1 0-.593.591L3.413 3.5.787 6.12a.417.417 0 0 0 .136.684.417.417 0 0 0 .456-.091L4 4.088l2.62 2.625a.417.417 0 0 0 .684-.136.417.417 0 0 0-.092-.456L4.588 3.5Z"
+          /></svg
+      ></span>
       <span class="font-bold text-bluecoral">{{ name }}</span>
       <!-- eslint-disable vue/no-v-html -->
-      <p v-html="hoverText" />
+      <p class="!text-black" v-html="hoverText" />
       <!--eslint-enable-->
       <a v-if="link" :href="link" class="inline-block font-bold text-bluecoral"
         >Learn more</a
@@ -92,15 +101,15 @@ export default defineComponent({
   }
 }
 
-.help:hover {
-  .help__text {
-    //! Removed Transition of Hover Here
-    // transform: translate(50%, 5px);
-    visibility: visible;
-    opacity: 1;
-    @media (max-width: 1024px) {
-      width: 200px;
-    }
-  }
-}
+// .help:hover {
+//   .help__text {
+//     //! Removed Transition of Hover Here
+//     // transform: translate(50%, 5px);
+//     visibility: visible;
+//     opacity: 1;
+//     @media (max-width: 1024px) {
+//       width: 200px;
+//     }
+//   }
+// }
 </style>

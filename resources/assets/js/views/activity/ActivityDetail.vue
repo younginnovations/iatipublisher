@@ -278,16 +278,19 @@
           <div
             class="mb-3 inline-flex max-w-[70%] flex-wrap gap-2 lg:max-w-full"
           >
-            <a
+            <div
               v-for="(post, key, index) in groupedData"
               :key="index"
-              v-smooth-scroll
-              :href="`#${String(key)}`"
-              class="tab-btn-anchor"
+              class="tab-btn-anchor focus:outline-0"
             >
-              <button :disabled="post.status == 'disabled'" class="tab-btn">
-                <span>{{ post.label }}</span>
-                <span class="hover__text">
+              <button
+                :disabled="post.status == 'disabled'"
+                class="tab-btn !p-0"
+              >
+                <a :href="`#${String(key)}`" class="p-2 !pr-0">{{
+                  post.label
+                }}</a>
+                <span class="hover__text pr-2">
                   <HoverText
                     :name="post.label"
                     hover-text="You cannot publish an activity until all the mandatory fields have been filled."
@@ -295,7 +298,7 @@
                   />
                 </span>
               </button>
-            </a>
+            </div>
           </div>
           <div class="activities__content--elements -mx-3 flex flex-wrap">
             <template v-for="(post, key, index) in groupedData" :key="index">
