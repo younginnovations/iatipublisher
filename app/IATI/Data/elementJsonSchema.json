@@ -1002,7 +1002,7 @@
             "placeholder": "Select language",
             "choices": "Activity/Language.json",
             "required": false,
-            "criteria": "recommended",
+            "criteria": "",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<br>This value should be on the Language codelist.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/policy-marker/narrative/'>For more information</a>",
             "help_text": "If no language is selected, your default language is assumed."
           }

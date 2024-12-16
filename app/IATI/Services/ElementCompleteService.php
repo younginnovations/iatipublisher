@@ -420,7 +420,21 @@ class ElementCompleteService
     {
         $this->element = 'policy_marker';
 
-        return $this->isLevelOneMultiDimensionElementCompleted($activity->policy_marker);
+        if (!$activity->policy_marker) {
+            return false;
+        }
+
+        foreach ($activity->policy_marker as $policyMarker) {
+            $isIncomplete = $this->policyMarkerVocabIsCustom($policyMarker)
+                ? $this->customPolicyMarkerIsIncomplete($policyMarker)
+                : $this->policyMarkerIsIncomplete($policyMarker);
+
+            if ($isIncomplete) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -1183,8 +1197,43 @@ class ElementCompleteService
         $activity->updateQuietly(['touch' => false]);
     }
 
+    /**
+     * @param $value
+     *
+     * @return bool
+     */
     public function isEmptyValue($value): bool
     {
         return trim($value ?? '') === '';
+    }
+
+    /**
+     * @param $policy_marker
+     *
+     * @return bool
+     */
+    private function policyMarkerVocabIsCustom($policy_marker): bool
+    {
+        return Arr::get($policy_marker, 'policy_marker_vocabulary') !== '1';
+    }
+
+    /**
+     * @param $policyMarker
+     *
+     * @return bool
+     */
+    private function customPolicyMarkerIsIncomplete($policyMarker): bool
+    {
+        return $this->isEmptyValue(Arr::get($policyMarker, 'policy_marker_text'));
+    }
+
+    /**
+     * @param $policyMarker
+     *
+     * @return bool
+     */
+    private function policyMarkerIsIncomplete($policyMarker): bool
+    {
+        return $this->isEmptyValue(Arr::get($policyMarker, 'policy_marker'));
     }
 }

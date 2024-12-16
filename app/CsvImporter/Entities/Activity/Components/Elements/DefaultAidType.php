@@ -8,6 +8,7 @@ use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Elemen
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\DefaultAidType\DefaultAidTypeRequest;
 use App\IATI\Traits\DataSanitizeTrait;
+use Illuminate\Support\Arr;
 
 /**
  * Class DefaultAidType.
@@ -46,6 +47,8 @@ class DefaultAidType extends Element
      */
     public function __construct($fields, Validation $factory)
     {
+        dump('fields');
+        dump($fields);
         $this->prepare($fields);
         $this->factory = $factory;
         $this->request = new DefaultAidTypeRequest();
@@ -137,8 +140,8 @@ class DefaultAidType extends Element
         }
 
         if ($key === $this->_csvHeaders[1]) {
-            $defaultAidTypeVocabulary = $this->data['default_aid_type'][$index]['default_aid_type_vocabulary'] ?? '';
-            $defaultAidTypeVocabulary = empty($defaultAidTypeVocabulary) ?: (int) $defaultAidTypeVocabulary;
+            $accessKey = "default_aid_type.$index.default_aid_type_vocabulary";
+            $defaultAidTypeVocabulary = Arr::get($this->data, $accessKey, '1');
             $value = is_null($value) ? '' : trim($value);
 
             switch ($defaultAidTypeVocabulary) {
