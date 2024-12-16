@@ -53,11 +53,20 @@ class XlsMapper
         $validatedDataFilePath = sprintf('%s/%s/%s/%s', $xls_data_storage_path, $orgId, $userId, 'valid.json');
         $statusFilePath = sprintf('%s/%s/%s/%s', $xls_data_storage_path, $orgId, $userId, 'status.json');
         $globalErrorFilePath = sprintf('%s/%s/%s/%s', $xls_data_storage_path, $orgId, $userId, 'globalError.json');
+
+        /**
+         * $mapper will be an instance of either one of these:
+         *  \App\XlsImporter\Foundation\Mapper\Activity
+         *  \App\XlsImporter\Foundation\Mapper\Result
+         *  \App\XlsImporter\Foundation\Mapper\Period
+         *  \App\XlsImporter\Foundation\Mapper\Indicator
+         */
         $xlsMapper = new $mapper();
         $xlsMapper->initMapper($validatedDataFilePath, $statusFilePath, $globalErrorFilePath, $dbIatiIdentifiers);
 
         if ($xlsType === 'activity') {
-            $xlsMapper->fillOrganizationReportingOrg($reportingOrg);
+            /* @var $xlsMapper \App\XlsImporter\Foundation\Mapper\Activity */
+            $xlsMapper->fillOrganizationReportingOrg($reportingOrg)->setOrgId($orgId);
         }
 
         $tempFlattened = flattenArrayWithKeys($xlsData);

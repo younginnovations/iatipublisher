@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\XlsImporter\Foundation\Mapper;
 
+use App\Helpers\ImportCacheHelper;
 use App\XlsImporter\Foundation\Mapper\Traits\XlsMapperHelper;
 use App\XlsImporter\Foundation\XlsValidator\Validators\ActivityValidator;
 use Illuminate\Support\Arr;
@@ -214,6 +215,8 @@ class Activity
      */
     protected array $organizationReportingOrg = [];
 
+    private int $orgId;
+
     /**
      * Fill organization Reporting org.
      *
@@ -224,6 +227,18 @@ class Activity
     public function fillOrganizationReportingOrg($organizationReportingOrg = []): static
     {
         $this->organizationReportingOrg = $organizationReportingOrg ?? [];
+
+        return $this;
+    }
+
+    /**
+     * @param int $orgId
+     *
+     * @return static
+     */
+    public function setOrgId(int $orgId): static
+    {
+        $this->orgId = $orgId;
 
         return $this;
     }
@@ -274,6 +289,7 @@ class Activity
      */
     public function validateAndStoreData(): void
     {
+        $orgId = $this->orgId;
         $activityValidator = app(ActivityValidator::class);
         $this->totalCount = count($this->activities);
 
@@ -297,7 +313,11 @@ class Activity
                 $this->errorCount['critical'] += count(Arr::get($this->processingErrors, $activityIdentifier));
             }
 
-            $this->storeValidatedData($activity, $error, $existingId, $activityIdentifier);
+            if (!ImportCacheHelper::activityAlreadyBeingImported($orgId, $activityIdentifier)) {
+                $this->storeValidatedData($activity, $error, $existingId, $activityIdentifier);
+            }
+
+            ImportCacheHelper::appendActivityIdentifiersToCache($orgId, $activityIdentifier);
         }
 
         $this->storeGlobalErrors();
@@ -558,8 +578,8 @@ class Activity
 
         foreach ($data as $row) {
             foreach ($row as $fieldName => $fieldValue) {
-                list($baseCount, $parentBaseCount, $dependentOnValue) = $this->checkElementAddMore($elementBase, $elementBasePeer, $elementAddMore, $dependentOnValue, $fieldName, $fieldValue, $baseCount, $parentBaseCount, $row, $element);
-                list($parentBaseCount, $dependentOnValue) = $this->checkSubElementAddMore($fieldDependency, $parentBaseCount, $parentDependentOn, $dependentOnValue, $fieldName, $fieldValue, $row);
+                [$baseCount, $parentBaseCount, $dependentOnValue] = $this->checkElementAddMore($elementBase, $elementBasePeer, $elementAddMore, $dependentOnValue, $fieldName, $fieldValue, $baseCount, $parentBaseCount, $row, $element);
+                [$parentBaseCount, $dependentOnValue] = $this->checkSubElementAddMore($fieldDependency, $parentBaseCount, $parentDependentOn, $dependentOnValue, $fieldName, $fieldValue, $row);
                 $cell = Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName);
 
                 if (!empty($dependentOn)) {

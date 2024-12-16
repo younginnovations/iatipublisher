@@ -21,7 +21,7 @@
         <button
           :class="selectedActivities.length === 0 && ' cursor-not-allowed'"
           class="rounded bg-bluecoral px-4 py-3 text-xs font-bold uppercase text-n-0"
-          @click="addActivities"
+          @click.once="addActivities"
         >
           <svg-vue class="mr-2 text-sm" icon="up-arrow-outline" />
           <span class="mr-2">add </span> ({{ selectedActivities.length }} /

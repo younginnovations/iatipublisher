@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\ImportActivity;
 
+use App\Helpers\ImportCacheHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\UploadActivity\ImportActivityRequest;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\ImportActivity\ImportCsvService;
+use App\IATI\Services\ImportActivity\ImportStatusService;
 use App\IATI\Services\ImportActivity\ImportXmlService;
 use App\IATI\Services\ImportActivityError\ImportActivityErrorService;
 use Exception;
@@ -17,7 +19,9 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 /**
@@ -50,6 +54,8 @@ class ImportActivityController extends Controller
      */
     protected DatabaseManager $db;
 
+    protected ImportStatusService $importStatusService;
+
     /**
      * @var string
      */
@@ -63,19 +69,21 @@ class ImportActivityController extends Controller
     /**
      * ActivityController Constructor.
      *
-     * @param ActivityService  $activityService
-     * @param ImportCsvService $importCsvService
-     * @param ImportXmlService $importXmlService
+     * @param ActivityService            $activityService
+     * @param ImportCsvService           $importCsvService
+     * @param ImportXmlService           $importXmlService
      * @param ImportActivityErrorService $importActivityErrorService
-     * @param DatabaseManager  $db
+     * @param DatabaseManager            $db
+     * @param ImportStatusService        $importStatusService
      */
-    public function __construct(ActivityService $activityService, ImportCsvService $importCsvService, ImportXmlService $importXmlService, ImportActivityErrorService $importActivityErrorService, DatabaseManager $db)
+    public function __construct(ActivityService $activityService, ImportCsvService $importCsvService, ImportXmlService $importXmlService, ImportActivityErrorService $importActivityErrorService, DatabaseManager $db, ImportStatusService $importStatusService)
     {
         $this->activityService = $activityService;
         $this->importCsvService = $importCsvService;
         $this->importXmlService = $importXmlService;
         $this->importActivityErrorService = $importActivityErrorService;
         $this->db = $db;
+        $this->importStatusService = $importStatusService;
         $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'CsvImporter/tmp');
         $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH', 'XmlImporter/tmp');
     }
@@ -112,14 +120,34 @@ class ImportActivityController extends Controller
     public function store(ImportActivityRequest $request): JsonResponse
     {
         try {
+            DB::beginTransaction();
+
             $file = $request->file('activity');
             $filetype = $file->extension();
+            $user = Auth::user();
+            $orgId = $user->organization_id;
+
+            $ongoingImportStatus = $this->importStatusService->getOrganisationImportStatus($orgId);
+
+            if (ImportCacheHelper::hasOngoingImport($orgId) || Arr::get($ongoingImportStatus, 'status') === 'processing') {
+                return response()->json([
+                    'success' => false,
+                    'status'  => 'error',
+                    'errors'  => [
+                        'has_ongoing_import' => true,
+                        'import_type'        => Arr::get($ongoingImportStatus, 'type', 'xml'),
+                    ],
+                    'message' => 'Import is currently on progress. Please cancel the current import to continue.',
+                ]);
+            }
+
             Session::put('import_filetype', $filetype);
+            ImportCacheHelper::setSessionConsistentFiletype($orgId, $filetype);
 
             if ($filetype === 'xml') {
                 if ($this->importXmlService->store($file)) {
-                    $user = Auth::user();
-                    $this->importXmlService->startImport($file->getClientOriginalName(), $user->id, $user->organization_id);
+                    $this->importStatusService->setOrganisationImportStatus($orgId, $user->id, 'xml');
+                    $this->importXmlService->startImport($file->getClientOriginalName(), $user->id, $orgId);
                 }
             } else {
                 if ($this->importCsvService->isCsvFileEmpty($file)) {
@@ -128,17 +156,26 @@ class ImportActivityController extends Controller
                     return response()->json($response);
                 }
 
+                $this->importStatusService->setOrganisationImportStatus($orgId, $user->id, 'csv');
+
                 $this->importCsvService->clearOldImport();
 
                 if ($this->importCsvService->storeCsv($file)) {
                     $filename = str_replace(' ', '', $file->getClientOriginalName());
-                    $this->importCsvService->startImport($filename)
-                        ->fireCsvUploadEvent($filename);
+                    $this->importCsvService->startImport($filename)->fireCsvUploadEvent($filename);
                 }
             }
 
+            DB::commit();
+
+            ImportCacheHelper::setImportStepToValidating($orgId);
+
             return response()->json(['success' => true, 'message' => 'Uploaded successfully', 'type' => $filetype]);
         } catch (Exception $e) {
+            DB::rollback();
+
+            ImportCacheHelper::clearImportCache(Auth::user()->organization_id);
+
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while rendering activity import page.']);
@@ -158,14 +195,29 @@ class ImportActivityController extends Controller
         try {
             $this->db->beginTransaction();
             $activities = $request->get('activities');
-            $filetype = Session::get('import_filetype');
+            $orgId = Auth::user()->organization_id;
+            $filetype = Session::get('import_filetype') ?? ImportCacheHelper::getSessionConsistentFiletype($orgId);
+
+            logger('ImportCacheHelper::organisationHasCompletedValidatingData($orgId)');
+            logger(ImportCacheHelper::organisationHasCompletedValidatingData($orgId));
+            logger('ImportCacheHelper::getImportStep($orgId)');
+            logger(ImportCacheHelper::getImportStep($orgId));
+
+            if (!ImportCacheHelper::organisationHasCompletedValidatingData($orgId)) {
+                return response()->json(['success' => false, 'message' => 'No data to import.', 'type' => $filetype]);
+            }
+
+            logger('thichna paiyo00');
+            ImportCacheHelper::setImportStepToImported($orgId);
 
             if ($activities) {
                 if ($filetype === 'xml') {
                     $this->importXmlService->create($activities);
+                    $this->importStatusService->completeOrganisationImportStatus($orgId, 'xml');
                 } else {
                     $this->importCsvService->create($activities);
                     $this->importCsvService->endImport();
+                    $this->importStatusService->completeOrganisationImportStatus($orgId, 'csv');
                 }
             }
 
@@ -175,10 +227,13 @@ class ImportActivityController extends Controller
             Session::forget('error');
             Session::put('success', 'Imported data successfully.');
 
+            ImportCacheHelper::clearImportCache($orgId);
+
             return response()->json(['success' => true, 'message' => 'Imported successfully', 'type' => $filetype]);
         } catch (Exception $e) {
             Session::put('error', 'Error occurred while importing activity');
             logger()->error($e);
+            ImportCacheHelper::clearImportCache(Auth::user()->organization_id);
 
             return redirect()->back()->withResponse(['success' => false, 'message' => 'Error has occurred while importing activity.']);
         }
@@ -192,9 +247,9 @@ class ImportActivityController extends Controller
     public function status(): View|RedirectResponse
     {
         try {
-            $filetype = Session::get('import_filetype');
             $orgId = Auth::user()->organization_id;
             $userId = Auth::user()->id;
+            $filetype = Session::get('import_filetype') ?? ImportCacheHelper::getSessionConsistentFiletype($orgId);
 
             if (!$orgId) {
                 Session::put('error', 'User is not associated with any organization.');
@@ -210,7 +265,8 @@ class ImportActivityController extends Controller
             $schema_error = awsGetFile(sprintf('%s/%s/%s/%s', $filetype === 'xml' ? $this->xml_data_storage_path : $this->csv_data_storage_path, $orgId, $userId, 'schema_error.log'));
 
             if (!$status) {
-                Session::put('error', 'status.json file not present in AWS');
+                Session::put('error', 'status.json file not present in AWS. Please try again.');
+                $this->importStatusService->deleteOngoingImports($orgId);
 
                 return redirect()->route('admin.activities.index');
             }
@@ -220,6 +276,8 @@ class ImportActivityController extends Controller
             if ($schema_error) {
                 Session::put('error', $status['message'] . '. To see errors <b>
                 <a href=' . awsUrl(sprintf('%s/%s/%s/%s', $filetype === 'xml' ? $this->xml_data_storage_path : $this->csv_data_storage_path, $orgId, $userId, 'schema_error.log')) . ' target="_blank">Open Error File</a></b>');
+
+                $this->importStatusService->deleteOngoingImports($orgId);
 
                 return redirect()->route('admin.activities.index');
             }
@@ -243,10 +301,11 @@ class ImportActivityController extends Controller
      *
      * @return JsonResponse
      */
-    public function checkStatus(): JsonResponse
+    public function getImportListData(): JsonResponse
     {
         try {
-            $filetype = Session::get('import_filetype');
+            $orgId = Auth::user()->organization_id;
+            $filetype = Session::get('import_filetype') ?? ImportCacheHelper::getSessionConsistentFiletype($orgId);
 
             if (!$filetype) {
                 Session::put('error', 'Please upload csv or xml file to import activity.');
@@ -327,6 +386,64 @@ class ImportActivityController extends Controller
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while trying to delete import error.']);
+        }
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function checkOngoingImport(): JsonResponse
+    {
+        $orgId = Auth::user()->organization_id;
+        $status = $this->importStatusService->getOrganisationImportStatus($orgId);
+
+        $hasOngoingImport = !empty($status);
+        $message = $hasOngoingImport
+            ? 'Ongoing Import in progress for this organisation.'
+            : 'No Import in progress for this organisation.';
+
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'data'    => [
+                'has_ongoing_import' => $hasOngoingImport,
+                'import_type'        => $hasOngoingImport ? $status['type'] : '',
+            ],
+        ]);
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function deleteOngoingImports(): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+
+            $this->importStatusService->deleteOngoingImports(Auth::user()->organization_id);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Deleted ongoing imports.',
+                'data'    => [
+                    'has_ongoing_import' => false,
+                    'import_type'        => '',
+                ],
+            ]);
+        } catch (Exception $e) {
+            logger($e);
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete  ongoing imports.',
+                'data'    => [
+                    'has_ongoing_import' => false,
+                    'import_type'        => '',
+                ],
+            ]);
         }
     }
 }

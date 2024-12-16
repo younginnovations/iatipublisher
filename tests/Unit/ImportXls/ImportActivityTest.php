@@ -29,7 +29,7 @@ class ImportActivityTest extends TestCase
 
         $xlsMapper = new Activity();
 
-        $xlsMapper->fillOrganizationReportingOrg(null);
+        $xlsMapper->fillOrganizationReportingOrg(null)->setOrgId(1);
 
         $xlsMapper->map($xlsData);
         $processedData = $xlsMapper->getActivityData();

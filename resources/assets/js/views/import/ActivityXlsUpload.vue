@@ -142,6 +142,35 @@
             </label>
           </div>
         </div>
+
+        <div class="flex items-center justify-around">
+          <div
+            v-if="hasOngoingImportWarning"
+            class="border-orangeish my-2 flex max-w-[95%] items-center space-x-2 rounded-md bg-eggshell px-4 py-6 align-middle text-xs font-normal text-n-50"
+          >
+            Cannot import.
+            <template v-if="ongoingImportType === ''">
+              {{ ongoingImportType }}
+              <a href="#" class="px-1 font-bold" @click="openZendeskLauncher"
+                >Contact support</a
+              >
+            </template>
+            <template v-else>
+              Another import is in progress. Please try again later or
+              <a
+                :href="
+                  ongoingImportType === 'xls'
+                    ? '/import/xls/list'
+                    : '/import/list'
+                "
+                class="px-1 font-bold"
+              >
+                view import list </a
+              >.
+            </template>
+          </div>
+        </div>
+
         <div class="mx-auto mb-4 max-w-[565px] rounded bg-eggshell px-6 py-3">
           <div class="flex">
             <div class="w-[30px]">
@@ -178,7 +207,7 @@
               text="Upload file"
               icon="upload-file"
               :activity-length="activityLength"
-              @click="uploadFile"
+              @click="checkOngoingImports"
             />
           </div>
           <div v-if="error" class="error mx-auto max-w-[700px] px-6">
@@ -551,6 +580,8 @@ const store = useStore();
 const searchValue: Ref<string | null> = ref('');
 const direction = ref('');
 const processing = ref();
+const hasOngoingImportWarning = ref(false);
+const ongoingImportType = ref('');
 
 const sortingDirection = () => {
   direction.value === 'asc'
@@ -589,6 +620,30 @@ const mapActivityName = (name) => {
       return name;
   }
 };
+async function checkOngoingImports() {
+  try {
+    const response = await axios.get('/import/check-ongoing-import');
+
+    if (hasOngoingImport(response.data.data)) {
+      console.log('response data', response.data);
+      showHasOngoingImportWarning(response.data.data.import_type);
+    } else {
+      uploadFile();
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function hasOngoingImport(responseDataWithHasImportFlag): boolean {
+  return responseDataWithHasImportFlag?.has_ongoing_import ?? false;
+}
+
+function showHasOngoingImportWarning(importType: null | string) {
+  hasOngoingImportWarning.value = true;
+  ongoingImportType.value = importType ? importType : '';
+  console.log(importType);
+}
 
 watch(
   () => store.state.startBulkPublish,
@@ -816,7 +871,7 @@ const pollingForXlsStatus = () => {
 };
 
 const checkXlsstatus = () => {
-  axios.get('/import/xls/progress_status').then((res) => {
+  axios.get('/import/xls/poll-import-progress-status').then((res) => {
     uploadComplete.value = false;
     activityName.value = res?.data?.status?.template;
     currentActivity.value = mapActivityName(activityName.value);

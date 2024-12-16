@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\CsvImporter\Queue\Jobs;
 
 use App\CsvImporter\Queue\CsvProcessor;
+use App\IATI\Repositories\Import\ImportStatusRepository;
 use App\Jobs\Job;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Session;
@@ -61,11 +62,17 @@ class ImportActivity extends Job implements ShouldQueue
     protected array $organizationReportingOrg;
 
     /**
+     * @var ImportStatusRepository
+     */
+    private ImportStatusRepository $importStatusRepository;
+
+    /**
      * Create a new job instance.
      *
      * @param CsvProcessor $csvProcessor
      * @param              $filename
      * @param              $activityIdentifiers
+     * @param              $organizationReportingOrg
      */
     public function __construct(CsvProcessor $csvProcessor, $filename, $activityIdentifiers, $organizationReportingOrg)
     {
@@ -77,6 +84,7 @@ class ImportActivity extends Job implements ShouldQueue
         $this->csv_file_storage_path = env('CSV_FILE_STORAGE_PATH', 'CsvImporter/file');
         $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'CsvImporter/tmp');
         $this->organizationReportingOrg = $organizationReportingOrg;
+        $this->importStatusRepository = app(ImportStatusRepository::class);
     }
 
     /**

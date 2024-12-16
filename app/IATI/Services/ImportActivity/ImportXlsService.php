@@ -135,13 +135,14 @@ class ImportXlsService
      * @param $xlsType
      *
      * @return bool
-     * @throws \JsonException
+     * @throws \JsonException|BindingResolutionException
      */
     public function create($activities, $xlsType = 'activity'): bool
     {
         switch ($xlsType) {
             case 'activity':
                 $this->saveActivities($activities);
+                $this->importStatusRepo->completeOrganisationImportStatus(Auth::user()->organization_id, 'xls');
                 break;
             case 'result':
                 $this->saveResults($activities);
@@ -656,7 +657,8 @@ class ImportXlsService
      *
      * @param $filename
      *
-     * @return object
+     * @return object|array
+     * @throws \JsonException
      */
     public function getAwsXlsData($filename): object|array
     {
