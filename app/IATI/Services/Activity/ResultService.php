@@ -47,18 +47,27 @@ class ResultService
     /**
      * Returns paginated results.
      *
-     * @param int $activityId
-     * @param int $page
+     * @param int   $activityId
+     * @param int   $page
+     * @param array $queryParams
      *
      * @return LengthAwarePaginator|Collection
      */
-    public function getPaginatedResult(int $activityId, int $page): LengthAwarePaginator|Collection
+    public function getPaginatedResult(int $activityId, int $page, array $queryParams): LengthAwarePaginator|Collection
     {
-        $results = $this->resultRepository->getPaginatedResult($activityId, $page);
+        $results = $this->resultRepository->getPaginatedResult($activityId, $queryParams, $page);
 
-        foreach ($results as $idx => $result) {
-            $results[$idx]['default_title_narrative'] = $result->default_title_narrative;
+        $items = $results->items();
+
+        foreach ($items as $idx => $result) {
+            $items[$idx]['default_title_narrative'] = $result->default_title_narrative;
         }
+
+        if ($this->sortByResultNarrative($queryParams)) {
+            $this->sortItemsByTitleNarrative($queryParams, $items);
+        }
+
+        $results->setCollection(collect($items));
 
         return $results;
     }
@@ -581,5 +590,40 @@ class ResultService
         }
 
         return [];
+    }
+
+    private function sortByResultNarrative(array $queryParams): bool
+    {
+        return Arr::get($queryParams, 'orderBy', false) === 'name';
+    }
+
+    private function sortItemsByTitleNarrative(array $queryParams, array &$items): void
+    {
+        $direction = Arr::get($queryParams, 'direction', 'asc');
+
+        $items = collect($items)->sortBy(function ($item) {
+            return $item['default_title_narrative'];
+        });
+
+        if (strtoupper($direction) === 'DESC') {
+            $items = $items->reverse();
+        }
+
+        $items = $items->toArray();
+    }
+
+    /**
+     * @param array $resultIds
+     *
+     * @return bool
+     */
+    public function bulkDeleteResults(array $resultIds): bool
+    {
+        return $this->resultRepository->bulkDeleteResults($resultIds);
+    }
+
+    public function getResultCountStats(int $activityId): array
+    {
+        return $this->resultRepository->getResultCountStats($activityId);
     }
 }

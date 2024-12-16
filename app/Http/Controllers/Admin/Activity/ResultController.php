@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Result\ResultRequest;
+use App\Http\Requests\BulkDeleteResultRequest;
 use App\IATI\Models\Activity\Result;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ResultService;
@@ -17,6 +18,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 /**
@@ -87,18 +89,59 @@ class ResultController extends Controller
     public function getPaginatedResults(int $activityId, int $page = 1): JsonResponse
     {
         try {
-            $result = $this->resultService->getPaginatedResult($activityId, $page);
+            $result = $this->resultService->getPaginatedResult($activityId, $page, $this->sanitizeRequest(request()));
+            $stats = $this->resultService->getResultCountStats($activityId);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Results fetched successfully',
-                'data'    => $result,
+                'data'    => [
+                    'results' => $result,
+                    'stats'   => $stats,
+                ],
             ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
         }
+    }
+
+    public function sanitizeRequest(\Illuminate\Http\Request $request)
+    {
+        $tableConfig = getTableConfig('result');
+        $transactionTypeMap = [
+            'all'     => 'all',
+            'output'  => 1,
+            'outcome' => 2,
+            'impact'  => 3,
+            'other'   => 9,
+        ];
+
+        $queryParams = [];
+
+        if (!empty($request->get('q'))) {
+            $queryParams['query'] = filter_var($request->get('q'), FILTER_SANITIZE_STRING);
+        }
+
+        if (!empty($request->get('limit'))) {
+            $queryParams['limit'] = $request->get('limit') ?? 10;
+        }
+
+        if (in_array($request->get('orderBy'), $tableConfig['orderBy'], true)) {
+            $queryParams['orderBy'] = $request->get('orderBy') ?? '';
+
+            if (in_array($request->get('direction'), $tableConfig['direction'], true)) {
+                $queryParams['direction'] = $request->get('direction') ?? 'asc';
+            }
+        }
+
+        if (in_array($request->get('filterBy'), $tableConfig['filterBy'], true)) {
+            $queryParams['filterBy'] = $request->get('filterBy');
+            $queryParams['filterBy'] = Arr::get($transactionTypeMap, $queryParams['filterBy'], 'all');
+        }
+
+        return $queryParams;
     }
 
     /**
@@ -310,6 +353,40 @@ class ResultController extends Controller
             return response()->json([
                 'status'      => true,
                 'msg'         => 'Result Delete Error',
+                'activity_id' => $id,
+            ], 400);
+        }
+    }
+
+    /**
+     * Bulk deletes transactions.
+     *
+     * @param BulkDeleteResultRequest $request
+     * @param $id
+     *
+     * @return JsonResponse
+     */
+    public function bulkDeleteResults(BulkDeleteResultRequest $request, $id): JsonResponse
+    {
+        try {
+            $resultIds = $request->validated('result_ids');
+
+            DB::beginTransaction();
+            $this->resultService->bulkDeleteResults($resultIds);
+            DB::commit();
+
+            return response()->json([
+                'status'      => true,
+                'msg'         => 'Results Deleted Successfully',
+                'activity_id' => $id,
+            ], 200);
+        } catch (Exception $e) {
+            DB::rollback();
+            logger()->error($e);
+
+            return response()->json([
+                'status'      => false,
+                'msg'         => 'Failed to bulk delete results.',
                 'activity_id' => $id,
             ], 400);
         }

@@ -101,7 +101,13 @@ class RedirectActivity
                     return redirect(RouteServiceProvider::HOME)->with('error', 'Activity does not exist');
                 }
 
-                $byPassResultRoutes = ['admin.activity.result.index', 'admin.activity.results.paginate', 'admin.activity.result.create', 'admin.activity.result.store'];
+                $byPassResultRoutes = [
+                    'admin.activity.result.index',
+                    'admin.activity.results.paginate',
+                    'admin.activity.result.create',
+                    'admin.activity.result.store',
+                    'admin.activity.results.bulkDelete',
+                ];
 
                 if (in_array($subModule, ['result', 'results']) && !in_array($request->route()->getName(), $byPassResultRoutes, true)) {
                     $resultId = (int) $request->route('resultId');

@@ -145,7 +145,8 @@ class TransactionRepository extends Repository
             ->toArray();
     }
 
-    /** @param array $transactionIds
+    /**
+     * @param array $transactionIds
      *
      * @return bool
      */

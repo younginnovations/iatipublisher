@@ -573,6 +573,17 @@ if (!function_exists('getTableConfig')) {
                     'others',
                 ],
             ],
+            'result'=>[
+                'orderBy'   => ['name', 'type'],
+                'direction' => ['asc', 'desc'],
+                'filterBy'  => [
+                    'all',
+                    'output',
+                    'outcome',
+                    'impact',
+                    'other',
+                ],
+            ],
         ];
 
         return $tableConfig[$module];

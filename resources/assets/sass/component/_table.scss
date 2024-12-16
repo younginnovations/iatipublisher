@@ -175,10 +175,10 @@
   tr {
     overflow-y: visible;
   }
-  td:nth-child(1) {
+  td:nth-child(1):not(.exception) {
     max-width: 150px !important;
 
-    a {
+    a:not(.exception) {
       max-width: 145px;
       white-space: nowrap;
       overflow: hidden;
@@ -187,6 +187,23 @@
     }
   }
 }
+
+// Changed For Source :1620-improvements-to-results-list-usability
+// Exception class added to fix the spacing issue in results list table
+.iati-list-table.exception {
+  td:nth-child(1).exception {
+    max-width: 70ch !important;
+    a.exception {
+      max-width: 70ch;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      line-clamp: 2;
+      -webkit-line-clamp: 2;
+    }
+  }
+}
+
 td {
   border: none !important;
 }

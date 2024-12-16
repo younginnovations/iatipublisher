@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 
 /**
  * Class ResultRepository.
@@ -42,14 +43,50 @@ class ResultRepository extends Repository
     /**
      * Returns paginated results.
      *
-     * @param int $activityId
-     * @param int $page
+     * @param int   $activityId
+     * @param array $queryParams
+     * @param int   $page
      *
      * @return Collection|LengthAwarePaginator
      */
-    public function getPaginatedResult(int $activityId, int $page = 1): Collection|LengthAwarePaginator
+    public function getPaginatedResult(int $activityId, array $queryParams, int $page = 1): Collection|LengthAwarePaginator
     {
-        return $this->model->where('activity_id', $activityId)->orderBy('created_at', 'DESC')->paginate(10, ['*'], 'result', $page);
+        $query = $this->model->where('activity_id', $activityId);
+
+        $searchParam = Arr::get($queryParams, 'query', false);
+        $filterApplied = Arr::get($queryParams, 'filterBy', 'all');
+        $orderBy = Arr::get($queryParams, 'orderBy', 'created_at');
+        $direction = strtoupper(Arr::get($queryParams, 'direction', 'ASC'));
+        $limit = Arr::get($queryParams, 'limit', 10);
+
+        $query = $query->when($filterApplied != 'all', function ($query) use ($filterApplied) {
+            return $query->whereRaw("(result->>'type') = '$filterApplied'");
+        });
+
+        if ($searchParam) {
+            $query->whereRaw("
+                EXISTS (
+                        SELECT 1
+                        FROM json_array_elements(result->'title') AS title_array,
+                             json_array_elements(title_array->'narrative') AS narrative_array
+                        WHERE narrative_array->>'narrative' ILIKE ?
+                    )
+                ", ["%{$searchParam}%"]);
+        }
+
+        /**
+         * Sorting by name will be handled in ResultService as sorting by requires activity default language.
+         * Default language cannot be easily queried here. So it's simpler to sort outside.
+         */
+        $query = $query
+            ->when($orderBy === 'type', function ($query) use ($direction) {
+                return $query->orderByRaw("(result->>'type')::NUMERIC $direction, created_at DESC");
+            })
+            ->when(!in_array($orderBy, ['name', 'type']), function ($query) {
+                return $query->orderBy('created_at', 'desc');
+            });
+
+        return $query->orderBy('id', 'desc')->paginate($limit, ['*'], 'result', $page);
     }
 
     /**
@@ -159,5 +196,24 @@ class ResultRepository extends Repository
         $result = $this->model->where('id', $resultId)->first();
 
         return $result->activity;
+    }
+
+    public function bulkDeleteResults(array $resultIds): bool
+    {
+        return (bool) $this->model->whereIn('id', $resultIds)->delete();
+    }
+
+    public function getResultCountStats(int $activityId): array
+    {
+        return $this->model->where('activity_id', $activityId)
+            ->selectRaw("
+                COUNT(*) as all,
+                COUNT(CASE WHEN (result->>'type')::INTEGER = 1 THEN 1 END) as output,
+                COUNT(CASE WHEN (result->>'type')::INTEGER = 2 THEN 2 END) as outcome,
+                COUNT(CASE WHEN (result->>'type')::INTEGER = 3 THEN 3 END) as impact,
+                COUNT(CASE WHEN (result->>'type')::INTEGER = 9 THEN 9 END) as other
+            ")
+            ->first()
+            ->toArray();
     }
 }

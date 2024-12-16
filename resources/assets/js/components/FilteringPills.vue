@@ -7,7 +7,7 @@
       :class="active === item.title ? 'active' : ''"
     >
       <button @click="filterBy(item.title, item.searchTerm)">
-        <span>{{ item.title }} ({{ item.count }})</span>
+        <span>{{ item.title }} ({{ item.count ?? 0 }})</span>
       </button>
     </div>
   </div>
