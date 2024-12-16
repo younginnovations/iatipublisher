@@ -112,6 +112,7 @@ class Sector extends Element
      * @param $index
      *
      * @return void
+     * @throws \JsonException
      */
     public function map($key, $value, $index): void
     {
@@ -161,45 +162,48 @@ class Sector extends Element
     /**
      * Set sector code for Sector.
      *
-     * @param $key
-     * @param $value
-     * @param $index
+     * This method handles setting the sector code based on the sector vocabulary.
+     *
+     * Extra condition:
+     *   - Adds or unsets the 'text' key based on allowed sector vocabularies.
+     *   - Allowed vocabularies: null, '', '3', '4', '5', '6', '9', '10', '11', '12', '98', '99'.
+     *   - If the sector vocabulary is one of the allowed values, it makes sure 'text' key exists.
+     *   - If the sector vocabulary is not allowed, it unsets the 'text' key.
+     *
+     * Based on the sector vocabulary, it performs different actions:
+     *   - '1'     -> Calls handleSectorVocabularyOne() to process value.
+     *   - '2'     -> Calls setSectorCategoryCode() to process value.
+     *   - '7'     -> Calls setSectorSdgGoal() to process value.
+     *   - '8'     -> Calls setSectorSdgTarget() to process value.
+     *   - default -> Calls setSectorText() to process value.
+     *
+     * @param mixed $key   The key for the sector field.
+     * @param mixed $value The value to be processed for the sector.
+     * @param int   $index The index of the sector.
      *
      * @return void
+     * @throws \JsonException
      */
     protected function setSectorCode($key, $value, $index): void
     {
-        if (!isset($this->data['sector'][$index]['text'])) {
-            $this->data['sector'][$index]['text'] = '';
+        $accessKey = "sector.$index.sector_vocabulary";
+        $allowedVocabularies = [null, '', '3', '4', '5', '6', '9', '10', '11', '12', '98', '99'];
+        $sectorVocabulary = Arr::get($this->data, $accessKey);
+
+        if (!in_array($sectorVocabulary, $allowedVocabularies, true)) {
+            unset($this->data['sector'][$index]['text']);
+        } else {
+            $this->data['sector'][$index]['text'] = $this->data['sector'][$index]['text'] ?? '';
         }
 
         if ($key === $this->_csvHeaders[1]) {
-            $sectorVocabulary = Arr::get($this->data['sector'], $index . '.sector_vocabulary', null);
-
-            if ($sectorVocabulary === '1') {
-                $value = $value ? trim($value) : $value;
-                $this->codes[] = $value;
-                $validSectorCode = $this->loadCodeList('SectorCode');
-
-                if ($value) {
-                    foreach ($validSectorCode as $code => $name) {
-                        if (strcasecmp($value, $name) === 0) {
-                            $value = (string) $code;
-                            break;
-                        }
-                    }
-                }
-
-                $this->data['sector'][$index]['code'] = $value;
-            } elseif ($sectorVocabulary === '2') {
-                $this->setSectorCategoryCode($value, $index);
-            } elseif ($sectorVocabulary === '7') {
-                $this->setSectorSdgGoal($value, $index);
-            } elseif ($sectorVocabulary === '8') {
-                $this->setSectorSdgTarget($value, $index);
-            } else {
-                $this->setSectorText($value, $index);
-            }
+            match ($sectorVocabulary) {
+                '1'     => $this->handleSectorVocabularyOne($value, $index),
+                '2'     => $this->setSectorCategoryCode($value, $index),
+                '7'     => $this->setSectorSdgGoal($value, $index),
+                '8'     => $this->setSectorSdgTarget($value, $index),
+                default => $this->setSectorText($value, $index),
+            };
         }
     }
 
@@ -217,6 +221,33 @@ class Sector extends Element
         if ($key === $this->_csvHeaders[3] && (Arr::get($this->data(), 'sector.' . $index . '.sector_vocabulary') === '98' || Arr::get($this->data(), 'sector.' . $index . '.sector_vocabulary') === '99')) {
             $this->data['sector'][$index]['vocabulary_uri'] = $value;
         }
+    }
+
+    /**
+     * Handle for sector vocab 1.
+     *
+     * @param $value
+     * @param $index
+     *
+     * @return void
+     * @throws \JsonException
+     */
+    protected function handleSectorVocabularyOne($value, $index): void
+    {
+        $value = $value ? trim($value) : $value;
+        $this->codes[] = $value;
+        $validSectorCode = $this->loadCodeList('SectorCode');
+
+        if ($value) {
+            foreach ($validSectorCode as $code => $name) {
+                if (strcasecmp($value, $name) === 0) {
+                    $value = (string) $code;
+                    break;
+                }
+            }
+        }
+
+        $this->data['sector'][$index]['code'] = $value;
     }
 
     /**
@@ -301,7 +332,7 @@ class Sector extends Element
      */
     protected function setSectorText($value, $index): void
     {
-        ($value) ?: $value = '';
+        $value = $value ?: '';
         $this->codes[] = $value;
         $this->data['sector'][$index]['text'] = $value;
     }

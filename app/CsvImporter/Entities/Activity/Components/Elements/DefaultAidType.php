@@ -47,8 +47,6 @@ class DefaultAidType extends Element
      */
     public function __construct($fields, Validation $factory)
     {
-        dump('fields');
-        dump($fields);
         $this->prepare($fields);
         $this->factory = $factory;
         $this->request = new DefaultAidTypeRequest();
