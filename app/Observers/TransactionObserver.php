@@ -49,7 +49,7 @@ class TransactionObserver
         $isSectorCompletedInActivityLevel = Arr::get($elementStatus, 'sector', false);
         $transactionService = app()->make(TransactionService::class);
         $isSectorFilledInTransactionLevel = $transactionService->checkIfTransactionHasElementDefined($activityObj, 'sector');
-        $isSectorCompleteInTransactionLevel = $this->elementCompleteService->isSectorElementCompleted(new Activity(['sector' => $transaction->transaction['sector']]));
+        $isSectorCompleteInTransactionLevel = $this->elementCompleteService->isSectorElementCompleted(new Activity(['sector' => Arr::get($transaction, 'transaction.sector')]));
 
         switch([
             $isSectorFilledInActivityLevel,
@@ -73,6 +73,11 @@ class TransactionObserver
         if ($recipientRegionOrCountryIsCompleteInTransaction || $recipientRegionOrCountryIsCompleteInActivity) {
             $elementStatus['recipient_region'] = true;
             $elementStatus['recipient_country'] = true;
+        }
+        // TODO: RESOLVE THIS
+        if (!$recipientRegionOrCountryIsCompleteInTransaction && !$recipientRegionOrCountryIsCompleteInActivity) {
+            $elementStatus['recipient_region'] = false;
+            $elementStatus['recipient_country'] = false;
         }
 
         $activityObj->element_status = $elementStatus;

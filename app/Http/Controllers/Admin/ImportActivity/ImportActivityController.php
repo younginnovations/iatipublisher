@@ -198,16 +198,10 @@ class ImportActivityController extends Controller
             $orgId = Auth::user()->organization_id;
             $filetype = Session::get('import_filetype') ?? ImportCacheHelper::getSessionConsistentFiletype($orgId);
 
-            logger('ImportCacheHelper::organisationHasCompletedValidatingData($orgId)');
-            logger(ImportCacheHelper::organisationHasCompletedValidatingData($orgId));
-            logger('ImportCacheHelper::getImportStep($orgId)');
-            logger(ImportCacheHelper::getImportStep($orgId));
-
             if (!ImportCacheHelper::organisationHasCompletedValidatingData($orgId)) {
                 return response()->json(['success' => false, 'message' => 'No data to import.', 'type' => $filetype]);
             }
 
-            logger('thichna paiyo00');
             ImportCacheHelper::setImportStepToImported($orgId);
 
             if ($activities) {

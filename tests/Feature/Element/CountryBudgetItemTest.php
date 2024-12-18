@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Element;
 
+use App\IATI\Models\Activity\Activity;
+use Illuminate\Support\Arr;
+use Tests\Traits\FilterMandatoryItemsTrait;
+
 /**
  * Class CountryBudgetItemTest.
  */
 class CountryBudgetItemTest extends ElementCompleteTest
 {
+    use FilterMandatoryItemsTrait;
+
     /**
      * Element country_budget_items.
      *
@@ -17,249 +23,344 @@ class CountryBudgetItemTest extends ElementCompleteTest
     private string $element = 'country_budget_items';
 
     /**
-     * Mandatory attribute test.
+     * @var array|string[]
+     */
+    private array $mandatorySubelements = ['sub_elements.budget_item.attributes.code.criteria' => 'mandatory'];
+
+    /**
+     * @var array|string[]
+     */
+    private array $mandatoryAttributes = ['attributes.country_budget_vocabulary.criteria' => 'mandatory'];
+
+    /**
+     * Test for ensuring mandatory attributes have not changed since the time of writing this test.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_country_budget_items_mandatory_attributes(): void
+    public function test_contact_info_mandatory_attributes_have_not_changed(): void
     {
-        $this->test_mandatory_attributes($this->element, ['country_budget_vocabulary']);
+        $countryBudgetItemSchema = Arr::get(readElementJsonSchema(), $this->element, []);
+        $countryBudgetItemFlattened = flattenArrayWithKeys($countryBudgetItemSchema);
+        $countryBudgetItemFlattened = getItemsWhereKeyContains($countryBudgetItemFlattened, '.criteria');
+        $mandatoryItemsInSchema = array_filter(
+            $countryBudgetItemFlattened,
+            fn ($item) => !empty($item) && $item == 'mandatory'
+        );
+
+        $this->unsetMandatorySubelements($mandatoryItemsInSchema);
+
+        $this->assertEquals($mandatoryItemsInSchema, $this->mandatoryAttributes);
     }
 
     /**
-     * Mandatory sub element test.
+     * Test for ensuring mandatory subelements have not changed since the time of writing this test.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_country_budget_items_mandatory_sub_elements(): void
+    public function test_contact_info_subelements_have_not_changed(): void
     {
-        $this->test_mandatory_sub_elements($this->element, ['budget_item' => ['code']]);
+        $countryBudgetItemSchema = Arr::get(readElementJsonSchema(), $this->element, []);
+        $countryBudgetItemFlattened = flattenArrayWithKeys($countryBudgetItemSchema);
+        $countryBudgetItemFlattened = getItemsWhereKeyContains($countryBudgetItemFlattened, '.criteria');
+        $mandatoryItemsInSchema = array_filter(
+            $countryBudgetItemFlattened,
+            fn ($item) => !empty($item) && $item == 'mandatory'
+        );
+
+        $this->unsetMandatoryAttributes($mandatoryItemsInSchema);
+
+        $this->assertEquals($mandatoryItemsInSchema, $this->mandatorySubelements);
     }
 
     /**
-     * Empty all element test.
+     * Test for ensuring the contact info is not complete with null value.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_country_budget_items_all_empty(): void
+    public function test_contact_info_is_not_complete_in_empty_null(): void
+    {
+        $actualData = null;
+        $activity = new Activity();
+        $activity->country_budget_items = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isCountryBudgetItemsElementCompleted($activity));
+    }
+
+    /**
+     * Test for ensuring the contact info is not complete with empty array as value.
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function test_contact_info_is_not_complete_in_empty_array(): void
+    {
+        $actualData = [];
+        $activity = new Activity();
+        $activity->country_budget_items = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isCountryBudgetItemsElementCompleted($activity));
+    }
+
+    /**
+     * Test for ensuring the contact info is not complete with empty json array as value.
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function test_contact_info_is_not_complete_in_empty_json_array(): void
+    {
+        $actualData = json_decode('[{}]');
+        $activity = new Activity();
+        $activity->country_budget_items = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isCountryBudgetItemsElementCompleted($activity));
+    }
+
+    /**
+     * Test for ensuring the contact info is not complete when country budget vocabulary key is missing.
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function test_country_budget_item_incomplete_when_country_budget_vocab_key_missing(): void
     {
         $actualData = json_decode(
-            '{"country_budget_vocabulary":"","budget_item":[{"code":"","percentage":"50","description":[{"narrative":[{"narrative":"","language":"aa"}]}]}]}',
+            '{"budget_item":[{"code":null,"percentage":null,"description":[{"narrative":[{"narrative":null,"language":null}]}]}]}',
             true,
             512,
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
+        $activity = new Activity();
+        $activity->country_budget_items = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isCountryBudgetItemsElementCompleted($activity));
     }
 
     /**
-     * Attribute country_budget_vocabulary empty test.
+     * Test for ensuring the contact info is not complete when budget item key is missing.
      *
      * @return void
      * @throws \JsonException
      */
-    public function test_country_budget_items_attribute_empty_country_budget_vocabulary(): void
+    public function test_country_budget_item_incomplete_when_budget_item_key_missing(): void
     {
         $actualData = json_decode(
-            '{"country_budget_vocabulary":"","budget_item":[{"code":"12","percentage":"50","description":[{"narrative":[{"narrative":"asdas","language":"aa"}]}]}]}',
+            '{"country_budget_vocabulary":null}',
             true,
             512,
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
+        $activity = new Activity();
+        $activity->country_budget_items = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isCountryBudgetItemsElementCompleted($activity));
     }
 
     /**
-     * Sub element budget_item empty data test.
+     * Test for ensuring the contact info is not complete when all values are null.
      *
      * @return void
      * @throws \JsonException
      */
-    public function test_country_budget_items_sub_element_empty_budget_item(): void
-    {
-        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":""}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element budget_item empty array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_country_budget_items_sub_element_empty_budget_item_array(): void
-    {
-        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[]}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element budget_item empty json array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_country_budget_items_sub_element_empty_budget_item_json_array(): void
-    {
-        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{}]}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element budget_item attribute empty code test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_country_budget_items_sub_element_budget_item_attribute_empty_code(): void
+    public function test_country_budget_item_incomplete_when_all_null(): void
     {
         $actualData = json_decode(
-            '{"country_budget_vocabulary":"2","budget_item":[{"code":"","percentage":"50","description":[{"narrative":[{"narrative":"asdas","language":"aa"}]}]}]}',
+            '{"country_budget_vocabulary":null,"budget_item":[{"code":null,"percentage":null,"description":[{"narrative":[{"narrative":null,"language":null}]}]}]}',
             true,
             512,
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
+        $activity = new Activity();
+        $activity->country_budget_items = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isCountryBudgetItemsElementCompleted($activity));
     }
 
     /**
-     * Sub element budget_item sub element empty description test.
+     * Test for ensuring the contact info is not complete when only country budget vocab is filled.
      *
      * @return void
-     * @throws \JsonException
-     */
-    public function test_country_budget_items_sub_element_budget_item_sub_element_empty_description(): void
-    {
-        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code":"123","percentage":"50","description":""}]}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element budget_item sub element empty description array test.
      *
-     * @return void
      * @throws \JsonException
      */
-    public function test_country_budget_items_sub_element_budget_item_sub_element_empty_description_array(): void
-    {
-        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code":"123","percentage":"50","description":[]}]}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element budget_item sub element empty description json array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_country_budget_items_sub_element_budget_item_sub_element_empty_description_json_array(): void
-    {
-        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code":"123","percentage":"50","description":[{}]}]}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element budget_item sub element description empty narrative test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_country_budget_items_sub_element_budget_item_sub_element_description_empty_narrative(): void
-    {
-        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code":"123","percentage":"50","description":[{"narrative":""}]}]}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element budget_item sub element description empty narrative array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_country_budget_items_sub_element_budget_item_sub_element_description_empty_narrative_array(): void
-    {
-        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code":"123","percentage":"50","description":[{"narrative":[]}]}]}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element budget_item sub element description empty narrative json array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_country_budget_items_sub_element_budget_item_sub_element_description_empty_narrative_json_array(): void
-    {
-        $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{"code":"123","percentage":"50","description":[{"narrative":[{}]}]}]}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element budget_item sub element description no narrative key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_country_budget_items_sub_element_budget_item_sub_element_description_sub_element_narrative_no_narrative_key(): void
+    public function test_country_budget_item_incomplete_when_only_attribute_is_filled(): void
     {
         $actualData = json_decode(
-            '{"country_budget_vocabulary":"2","budget_item":[{"code":"123","percentage":"50","description":[{"narrative":[{"language":"en"}]}]}]}',
+            '{"country_budget_vocabulary":"2","budget_item":[{"code":null,"percentage":null,"description":[{"narrative":[{"narrative":null,"language":null}]}]}]}',
             true,
             512,
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
+        $activity = new Activity();
+        $activity->country_budget_items = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isCountryBudgetItemsElementCompleted($activity));
     }
 
     /**
-     * Sub element budget_item sub element description empty narrative test.
+     * Test for ensuring the contact info is not complete when all mandatory empty string.
      *
      * @return void
      * @throws \JsonException
      */
-    public function test_country_budget_items_sub_element_budget_item_sub_element_description_sub_element_narrative_empty_narrative(): void
+    public function test_country_budget_items_when_all_mandatory_fields_are_empty_string(): void
     {
         $actualData = json_decode(
-            '{"country_budget_vocabulary":"2","budget_item":[{"code":"123","percentage":"50","description":[{"narrative":[{"narrative":"","language":"en"}]}]}]}',
+            '{"country_budget_vocabulary":"","budget_item":[{"code":"","percentage":null,"description":[{"narrative":[{"narrative":null,"language":null}]}]}]}',
             true,
             512,
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
+        $activity = new Activity();
+        $activity->country_budget_items = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isCountryBudgetItemsElementCompleted($activity));
     }
 
     /**
-     * Country Budget Items element complete test.
+     * Test for ensuring the contact info is not complete when some mandatory empty string.
      *
      * @return void
      * @throws \JsonException
      */
-    public function test_country_budget_items_element_complete(): void
+    public function test_country_budget_items_when_some_mandatory_fields_are_empty_string(): void
     {
         $actualData = json_decode(
-            '{"country_budget_vocabulary":"2","budget_item":[{"code":"asdasd","percentage":"50","description":[{"narrative":[{"narrative":"asdas","language":"aa"}]}]},{"code":"asdad","percentage":"50","description":[{"narrative":[{"narrative":"asdadasddad","language":"ae"}]}]}]}',
+            '{"country_budget_vocabulary":"2","budget_item":[{"code":"","percentage":null,"description":[{"narrative":[{"narrative":null,"language":null}]}]}]}',
             true,
             512,
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_three_single_dimensional_element_complete($this->element, $actualData);
+        $activity = new Activity();
+        $activity->country_budget_items = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isCountryBudgetItemsElementCompleted($activity));
+    }
+
+    /**
+     * Test for ensuring the contact info is complete when mandatory fields are filled + percentage is null.
+     *
+     * @return void
+     * @throws \JsonException
+     */
+    public function test_country_budget_items_when_mandatory_fields_are_filled_and_percentage_is_null(): void
+    {
+        $actualData = json_decode(
+            '{"country_budget_vocabulary":"2","budget_item":[{"code":"1.2.1","percentage":null,"description":[{"narrative":[{"narrative":null,"language":null}]}]}]}',
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+
+        $activity = new Activity();
+        $activity->country_budget_items = $actualData;
+
+        $this->assertTrue($this->elementCompleteService->isCountryBudgetItemsElementCompleted($activity));
+    }
+
+    /**
+     * Test for ensuring the contact info is complete when mandatory fields are filled + percentage is 100.
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function test_country_budget_items_when_mandatory_fields_are_filled_and_percentage_is_100(): void
+    {
+        $actualData = json_decode(
+            '{"country_budget_vocabulary":"2","budget_item":[{"code":"1.2.1","percentage":"100","description":[{"narrative":[{"narrative":null,"language":null}]}]}]}',
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+
+        $activity = new Activity();
+        $activity->country_budget_items = $actualData;
+
+        $this->assertTrue($this->elementCompleteService->isCountryBudgetItemsElementCompleted($activity));
+    }
+
+    /**
+     * Test for ensuring the contact info is not complete when
+     * multiple budget item are filled but some of them are incomplete.
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function test_country_budget_items_when_multiple_budget_items_are_filled_with_some_mandatory_fields_not_filled(
+    ): void {
+        $actualData = json_decode(
+            '{"country_budget_vocabulary":"2","budget_item":[{"code":"1.2.1","percentage":"50","description":[{"narrative":[{"narrative":null,"language":null}]}]},{"code":null,"percentage":"50","description":[{"narrative":[{"narrative":null,"language":null}]}]}]}',
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+
+        $activity = new Activity();
+        $activity->country_budget_items = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isCountryBudgetItemsElementCompleted($activity));
+    }
+
+    /**
+     * Test for ensuring the contact info is not complete when
+     * multiple budget item are filled and all their required fields are filled.
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function test_country_budget_items_when_multiple_budget_items_are_filled_with_mandatory_fields_filled(): void
+    {
+        $actualData = json_decode(
+            '{"country_budget_vocabulary":"2","budget_item":[{"code":"1.2.1","percentage":"50","description":[{"narrative":[{"narrative":null,"language":null}]}]},{"code":"1.1.1","percentage":"50","description":[{"narrative":[{"narrative":null,"language":null}]}]}]}',
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+
+        $activity = new Activity();
+        $activity->country_budget_items = $actualData;
+
+        $this->assertTrue($this->elementCompleteService->isCountryBudgetItemsElementCompleted($activity));
+    }
+
+    /**
+     * Test for ensuring the contact info is not complete when
+     * multiple budget item are filled and all their required fields are filled.
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function test_country_budget_items_when_multiple_budget_items_are_filled_and_everything_is_filled(): void
+    {
+        $actualData = json_decode(
+            '{"country_budget_vocabulary":"2","budget_item":[{"code":"1.2.1","percentage":"41","description":[{"narrative":[{"narrative":null,"language":null}]}]},{"code":"1.2.1","percentage":"59","description":[{"narrative":[{"narrative":"budget item 2 description","language":"ak"}]}]}]}',
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+
+        $activity = new Activity();
+        $activity->country_budget_items = $actualData;
+
+        $this->assertTrue($this->elementCompleteService->isCountryBudgetItemsElementCompleted($activity));
     }
 }

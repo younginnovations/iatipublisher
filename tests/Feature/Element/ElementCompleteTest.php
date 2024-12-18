@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Element;
 
 use App\IATI\Services\ElementCompleteService;
+use Illuminate\Support\Arr;
 use Tests\TestCase;
 
 /**
@@ -44,12 +45,12 @@ class ElementCompleteTest extends TestCase
         }
 
         foreach ($expected as $key => $value) {
-            if (!$this->arrayStructure($actual[$key], $value)) {
+            if (!$this->arrayStructure(Arr::get($actual, $key, []), $value)) {
                 return false;
             }
         }
         foreach ($actual as $key => $value) {
-            if (!$this->arrayStructure($value, $expected[$key])) {
+            if (!$this->arrayStructure($value, Arr::get($expected, $key, []))) {
                 return false;
             }
         }

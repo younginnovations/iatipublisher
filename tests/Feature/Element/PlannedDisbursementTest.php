@@ -4,17 +4,38 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Element;
 
+use App\IATI\Models\Activity\Activity;
+use Illuminate\Support\Arr;
+use Tests\Traits\FilterMandatoryItemsTrait;
+
 /**
  * Class PlannedDisbursementTest.
  */
 class PlannedDisbursementTest extends ElementCompleteTest
 {
+    use FilterMandatoryItemsTrait;
+
     /**
      * Element planned_disbursement.
      *
      * @var string
      */
     private string $element = 'planned_disbursement';
+
+    /**
+     * @var array|string[]
+     */
+    private array $mandatorySubelements = [
+        'sub_elements.period_start.attributes.date.criteria' => 'mandatory',
+        'sub_elements.value.attributes.amount.criteria'      => 'mandatory',
+        'sub_elements.value.attributes.currency.criteria'    => 'mandatory',
+        'sub_elements.value.attributes.value_date.criteria'  => 'mandatory',
+    ];
+
+    /**
+     * @var array|string[]
+     */
+    private array $mandatoryAttributes = [];
 
     /**
      * Mandatory attribute test.
@@ -24,7 +45,17 @@ class PlannedDisbursementTest extends ElementCompleteTest
      */
     public function test_humanitarian_scope_mandatory_attributes(): void
     {
-        $this->test_mandatory_attributes($this->element, []);
+        $countryBudgetItemSchema = Arr::get(readElementJsonSchema(), $this->element, []);
+        $countryBudgetItemFlattened = flattenArrayWithKeys($countryBudgetItemSchema);
+        $countryBudgetItemFlattened = getItemsWhereKeyContains($countryBudgetItemFlattened, '.criteria');
+        $mandatoryItemsInSchema = array_filter(
+            $countryBudgetItemFlattened,
+            fn ($item) => !empty($item) && $item == 'mandatory'
+        );
+
+        $this->unsetMandatorySubelements($mandatoryItemsInSchema);
+
+        $this->assertEquals($mandatoryItemsInSchema, $this->mandatoryAttributes);
     }
 
     /**
@@ -35,7 +66,27 @@ class PlannedDisbursementTest extends ElementCompleteTest
      */
     public function test_humanitarian_scope_mandatory_sub_elements(): void
     {
-        $this->test_mandatory_sub_elements($this->element, ['period_start' => ['date'], 'period_end' => ['date'], 'value' => ['amount', 'currency', 'value_date']]);
+        $countryBudgetItemSchema = Arr::get(readElementJsonSchema(), $this->element, []);
+        $countryBudgetItemFlattened = flattenArrayWithKeys($countryBudgetItemSchema);
+        $countryBudgetItemFlattened = getItemsWhereKeyContains($countryBudgetItemFlattened, '.criteria');
+        $mandatoryItemsInSchema = array_filter(
+            $countryBudgetItemFlattened,
+            fn ($item) => !empty($item) && $item == 'mandatory'
+        );
+
+        $this->unsetMandatoryAttributes($mandatoryItemsInSchema);
+
+        $this->assertEquals($mandatoryItemsInSchema, $this->mandatorySubelements);
+    }
+
+    public function test_planned_disbursement_null_value(): void
+    {
+        $actualData = null;
+        $activity = new Activity();
+
+        $activity->{$this->element} = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
     }
 
     /**
@@ -44,11 +95,14 @@ class PlannedDisbursementTest extends ElementCompleteTest
      * @return void
      * @throws \JsonException
      */
-    public function test_planned_disbursement_empty_data(): void
+    public function test_planned_disbursement_empty_string(): void
     {
         $actualData = '';
+        $activity = new Activity();
 
-        $this->test_level_one_multi_dimensional_element_incomplete($this->element, $actualData);
+        $activity->{$this->element} = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
     }
 
     /**
@@ -59,9 +113,11 @@ class PlannedDisbursementTest extends ElementCompleteTest
      */
     public function test_planned_disbursement_empty_array(): void
     {
-        $actualData = json_decode('[]', true);
+        $actualData = [];
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
 
-        $this->test_level_one_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->assertFalse($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
     }
 
     /**
@@ -72,18 +128,103 @@ class PlannedDisbursementTest extends ElementCompleteTest
      */
     public function test_planned_disbursement_empty_json_array(): void
     {
-        $actualData = json_decode('[{}]', true);
+        $actualData = json_decode('[{}]');
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->assertFalse($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
     }
 
     /**
-     * Sub element period_start no key test.
+     * Test incomplete when mandatory subelements are null.
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function test_planned_disbursement_incomplete_when_mandatory_subelement_keys_are_null(): void
+    {
+        $actualData = json_decode(
+            '[{"planned_disbursement_type":"1","period_start":null,"period_end":[{"date":"2022-07-27"}],"value":null,"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
+    }
+
+    /**
+     * Test incomplete when mandatory subelements are empty array.
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function test_planned_disbursement_incomplete_when_mandatory_subelement_keys_are_empty_array(): void
+    {
+        $actualData = json_decode(
+            '[{"planned_disbursement_type":"1","period_start":[],"period_end":[{"date":"2022-07-27"}],"value":[],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
+    }
+
+    /**
+     * Test incomplete when mandatory subelements are null.
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function test_planned_disbursement_incomplete_when_mandatory_subelement_keys_are_null_values(): void
+    {
+        $actualData = json_decode(
+            '[{"planned_disbursement_type":"1","period_start":[{"date":null}],"period_end":[{"date":"2022-07-27"}],"value":[{"amount":null,"currency":null,"value_date":null}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
+    }
+
+    /**
+     * Test incomplete when mandatory subelements are missing.
      *
      * @return void
      * @throws \JsonException
      */
-    public function test_planned_disbursement_sub_element_no_period_start_key(): void
+    public function test_planned_disbursement_incomplete_when_mandatory_subelement_keys_are_missing(): void
+    {
+        $actualData = json_decode(
+            '[{"planned_disbursement_type":"1","period_end":[{"date":"2022-07-27"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
+    }
+
+    /**
+     * Sub element period_start key missing test.
+     *
+     * @return void
+     * @throws \JsonException
+     */
+    public function test_planned_disbursement_incomplete_when_period_start_key_is_missing(): void
     {
         $actualData = json_decode(
             '[{"planned_disbursement_type":"1","period_end":[{"date":"2022-07-27"}],"value":[{"amount":"1111","currency":"AOA","value_date":"2022-07-30"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
@@ -91,17 +232,19 @@ class PlannedDisbursementTest extends ElementCompleteTest
             512,
             JSON_THROW_ON_ERROR
         );
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->assertFalse($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
     }
 
     /**
-     * Sub element period_end no key test.
+     * Sub element period_end key missing test.
      *
      * @return void
      * @throws \JsonException
      */
-    public function test_planned_disbursement_sub_element_no_period_end_key(): void
+    public function test_planned_disbursement_complete_even_when_period_end_key_is_missing(): void
     {
         $actualData = json_decode(
             '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-19"}],"value":[{"amount":"1111","currency":"AOA","value_date":"2022-07-30"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
@@ -109,17 +252,19 @@ class PlannedDisbursementTest extends ElementCompleteTest
             512,
             JSON_THROW_ON_ERROR
         );
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->assertTrue($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
     }
 
     /**
-     * Sub element value no key test.
+     * Sub element period_end key missing test.
      *
      * @return void
      * @throws \JsonException
      */
-    public function test_planned_disbursement_sub_element_no_value_key(): void
+    public function test_planned_disbursement_incomplete_when_value_key_is_missing(): void
     {
         $actualData = json_decode(
             '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-19"}],"period_end":[{"date":"2022-07-27"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
@@ -127,17 +272,39 @@ class PlannedDisbursementTest extends ElementCompleteTest
             512,
             JSON_THROW_ON_ERROR
         );
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $this->assertFalse($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
     }
 
     /**
-     * Sub element receiver_org no key test.
+     * Sub element provider_org key missing test.
      *
      * @return void
      * @throws \JsonException
      */
-    public function test_planned_disbursement_sub_element_no_receiver_org_key(): void
+    public function test_planned_disbursement_complete_even_when_provider_org_key_is_missing(): void
+    {
+        $actualData = json_decode(
+            '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-19"}],"value":[{"amount":"1111","currency":"AOA","value_date":"2022-07-30"}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
+
+        $this->assertTrue($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
+    }
+
+    /**
+     * Sub element receiver_org key missing test.
+     *
+     * @return void
+     * @throws \JsonException
+     */
+    public function test_planned_disbursement_complete_even_when_receiver_org_key_is_missing(): void
     {
         $actualData = json_decode(
             '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-19"}],"value":[{"amount":"1111","currency":"AOA","value_date":"2022-07-30"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}]}]',
@@ -146,312 +313,229 @@ class PlannedDisbursementTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
+
+        $this->assertTrue($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
     }
 
     /**
-     * All element empty test.
+     * Test incomplete for value amount value is null.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_planned_disbursement_all_element_empty(): void
+    public function test_planned_disbursement_is_incomplete_when_value_amount_is_null()
     {
         $actualData = json_decode(
-            '[{"planned_disbursement_type":"","period_start":[{"date":""}],"period_end":[{"date":""}],"value":[{"amount":"","currency":"","value_date":""}],"provider_org":[{"ref":"","provider_activity_id":"","type":"","narrative":[{"narrative":"","language":"ab"}]}],"receiver_org":[{"ref":"","provider_activity_id":"","type":"","narrative":[{"narrative":"","language":"af"}]}]}]',
+            '[{"planned_disbursement_type":"1","period_start":[{"date":"2023-11-12"}],"period_end":[{"date":"2023-11-13"}],"value":[{"amount":null,"currency":"AED","value_date":"2024-11-12"}],"provider_org":[{"ref":"provider ref val","provider_activity_id":"provider-activity-123","type":"10","narrative":[{"narrative":"narr","language":"ng"}]}],"receiver_org":[{"ref":"receiver ref val","receiver_activity_id":"receiver-activity-123","type":"21","narrative":[{"narrative":"narr","language":"ng"}]}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
     }
 
     /**
-     * Sub element period_start empty test.
+     * Test incomplete for value amount value is empty string.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_planned_disbursement_sub_element_empty_period_start(): void
+    public function test_planned_disbursement_is_incomplete_when_value_amount_is_empty_string()
     {
         $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":"","period_end":[{"date":"2022-07-27"}],"value":[{"amount":"1111","currency":"AOA","value_date":"2022-07-30"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
+            '[{"planned_disbursement_type":"1","period_start":[{"date":"2023-11-12"}],"period_end":[{"date":"2023-11-13"}],"value":[{"amount":"","currency":"AED","value_date":"2024-11-12"}],"provider_org":[{"ref":"provider ref val","provider_activity_id":"provider-activity-123","type":"10","narrative":[{"narrative":"narr","language":"ng"}]}],"receiver_org":[{"ref":"receiver ref val","receiver_activity_id":"receiver-activity-123","type":"21","narrative":[{"narrative":"narr","language":"ng"}]}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
     }
 
     /**
-     * Sub element period_start empty arary test.
+     * Test complete for value currency value is zero.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_planned_disbursement_sub_element_empty_period_start_array(): void
+    public function test_planned_disbursement_is_complete_when_value_amount_is_zero()
     {
         $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":[],"period_end":[{"date":"2022-07-27"}],"value":[{"amount":"1111","currency":"AOA","value_date":"2022-07-30"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
+            '[{"planned_disbursement_type":"1","period_start":[{"date":"2023-11-12"}],"period_end":[{"date":"2023-11-13"}],"value":[{"amount":"0","currency":"AED","value_date":"2024-11-12"}],"provider_org":[{"ref":"provider ref val","provider_activity_id":"provider-activity-123","type":"10","narrative":[{"narrative":"narr","language":"ng"}]}],"receiver_org":[{"ref":"receiver ref val","receiver_activity_id":"receiver-activity-123","type":"21","narrative":[{"narrative":"narr","language":"ng"}]}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
+
+        $this->assertTrue($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
     }
 
     /**
-     * Sub element period_start empty json array test.
+     * Test incomplete for value currency value null.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_planned_disbursement_sub_element_empty_period_start_json_array(): void
+    public function test_planned_disbursement_is_incomplete_when_value_currency_is_null()
     {
         $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":[{}],"period_end":[{"date":"2022-07-27"}],"value":[{"amount":"1111","currency":"AOA","value_date":"2022-07-30"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
+            '[{"planned_disbursement_type":"1","period_start":[{"date":"2023-11-12"}],"period_end":[{"date":"2023-11-13"}],"value":[{"amount":"12345","currency":null,"value_date":"2024-11-12"}],"provider_org":[{"ref":"provider ref val","provider_activity_id":"provider-activity-123","type":"10","narrative":[{"narrative":"narr","language":"ng"}]}],"receiver_org":[{"ref":"receiver ref val","receiver_activity_id":"receiver-activity-123","type":"21","narrative":[{"narrative":"narr","language":"ng"}]}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
     }
 
     /**
-     * Sub element period_start empty date test.
+     * Test incomplete for value currency value is empty string.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_planned_disbursement_sub_element_period_start_attribute_empty_date(): void
+    public function test_planned_disbursement_is_incomplete_when_value_currency_is_empty_string()
     {
         $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":[{"date":""}],"period_end":[{"date":"2022-07-27"}],"value":[{"amount":"1111","currency":"AOA","value_date":"2022-07-30"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
+            '[{"planned_disbursement_type":"1","period_start":[{"date":"2023-11-12"}],"period_end":[{"date":"2023-11-13"}],"value":[{"amount":"12345","currency":"","value_date":"2024-11-12"}],"provider_org":[{"ref":"provider ref val","provider_activity_id":"provider-activity-123","type":"10","narrative":[{"narrative":"narr","language":"ng"}]}],"receiver_org":[{"ref":"receiver ref val","receiver_activity_id":"receiver-activity-123","type":"21","narrative":[{"narrative":"narr","language":"ng"}]}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
     }
 
     /**
-     * Sub element period_end empty test.
+     * Test incomplete for value date value null.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_planned_disbursement_sub_element_empty_period_end(): void
+    public function test_planned_disbursement_is_incomplete_when_value_value_date_is_null()
     {
         $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-27"}],"period_end":"","value":[{"amount":"1111","currency":"AOA","value_date":"2022-07-30"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
+            '[{"planned_disbursement_type":"1","period_start":[{"date":"2023-11-12"}],"period_end":[{"date":"2023-11-13"}],"value":[{"amount":"12345","currency":"AED","value_date":null}],"provider_org":[{"ref":"provider ref val","provider_activity_id":"provider-activity-123","type":"10","narrative":[{"narrative":"narr","language":"ng"}]}],"receiver_org":[{"ref":"receiver ref val","receiver_activity_id":"receiver-activity-123","type":"21","narrative":[{"narrative":"narr","language":"ng"}]}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
     }
 
     /**
-     * Sub element period_end empty array test.
+     * Test incomplete for value date value empty string.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_planned_disbursement_sub_element_empty_period_end_array(): void
+    public function test_planned_disbursement_is_incomplete_when_value_value_date_is_empty_string()
     {
         $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-27"}],"period_end":[],"value":[{"amount":"1111","currency":"AOA","value_date":"2022-07-30"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
+            '[{"planned_disbursement_type":"1","period_start":[{"date":"2023-11-12"}],"period_end":[{"date":"2023-11-13"}],"value":[{"amount":"12345","currency":"AED","value_date":""}],"provider_org":[{"ref":"provider ref val","provider_activity_id":"provider-activity-123","type":"10","narrative":[{"narrative":"narr","language":"ng"}]}],"receiver_org":[{"ref":"receiver ref val","receiver_activity_id":"receiver-activity-123","type":"21","narrative":[{"narrative":"narr","language":"ng"}]}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
+
+        $this->assertFalse($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
     }
 
     /**
-     * Sub element period_end empty json array test.
+     *  Test incomplete for single.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_planned_disbursement_sub_element_empty_period_end_json_array(): void
+    public function test_planned_disbursement_is_complete_when_all_fields_are_filled()
     {
         $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-27"}],"period_end":[{}],"value":[{"amount":"1111","currency":"AOA","value_date":"2022-07-30"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
+            '[{"planned_disbursement_type":"1","period_start":[{"date":"2023-11-12"}],"period_end":[{"date":"2023-11-13"}],"value":[{"amount":"12345","currency":"AED","value_date":"2024-12-13"}],"provider_org":[{"ref":"provider ref val","provider_activity_id":"provider-activity-123","type":"10","narrative":[{"narrative":"narr","language":"ng"}]}],"receiver_org":[{"ref":"receiver ref val","receiver_activity_id":"receiver-activity-123","type":"21","narrative":[{"narrative":"narr","language":"ng"}]}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
+
+        $this->assertTrue($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
     }
 
     /**
-     * Sub element period_end empty date test.
+     * Test complete for multiple.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_planned_disbursement_sub_element_period_end_attribute_empty_date(): void
+    public function test_planned_disbursement_is_complete_when_all_fields_for_multiple_disbursement_are_filled()
     {
         $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-27"}],"period_end":[{"date":""}],"value":[{"amount":"1111","currency":"AOA","value_date":"2022-07-30"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
+            '[{"planned_disbursement_type":"1","period_start":[{"date":"2023-11-12"}],"period_end":[{"date":"2023-11-13"}],"value":[{"amount":"12345","currency":"AED","value_date":"2024-12-13"}],"provider_org":[{"ref":"provider ref val","provider_activity_id":"provider-activity-123","type":"10","narrative":[{"narrative":"narr","language":"ng"}]}],"receiver_org":[{"ref":"receiver ref val","receiver_activity_id":"receiver-activity-123","type":"21","narrative":[{"narrative":"narr","language":"ng"}]}]},{"planned_disbursement_type":"1","period_start":[{"date":"2023-11-12"}],"period_end":[{"date":"2023-11-13"}],"value":[{"amount":"12345","currency":"AED","value_date":"2024-12-13"}],"provider_org":[{"ref":"provider ref val","provider_activity_id":"provider-activity-123","type":"10","narrative":[{"narrative":"narr","language":"ng"}]}],"receiver_org":[{"ref":"receiver ref val","receiver_activity_id":"receiver-activity-123","type":"21","narrative":[{"narrative":"narr","language":"ng"}]}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
+
+        $this->assertTrue($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
     }
 
     /**
-     * Sub element value empty test.
+     * Test incomplete for multiple.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_planned_disbursement_sub_element_empty_value(): void
-    {
+    public function test_planned_disbursement_is_incomplete_when_some_required_fields_are_not_field_for_multiple_disbursement(
+    ) {
         $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-19"}],"period_end":[{"date":"2022-07-27"}],"value":"","provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
+            '[{"planned_disbursement_type":"1","period_start":[{"date":null}],"period_end":[{"date":"2023-11-13"}],"value":[{"amount":"12345","currency":"AED","value_date":"2024-12-13"}],"provider_org":[{"ref":"provider ref val","provider_activity_id":"provider-activity-123","type":"10","narrative":[{"narrative":"narr","language":"ng"}]}],"receiver_org":[{"ref":"receiver ref val","receiver_activity_id":"receiver-activity-123","type":"21","narrative":[{"narrative":"narr","language":"ng"}]}]},{"planned_disbursement_type":"1","period_start":[{"date":"2023-11-12"}],"period_end":[{"date":"2023-11-13"}],"value":[{"amount":"12345","currency":"AED","value_date":"2024-12-13"}],"provider_org":[{"ref":"provider ref val","provider_activity_id":"provider-activity-123","type":"10","narrative":[{"narrative":"narr","language":"ng"}]}],"receiver_org":[{"ref":"receiver ref val","receiver_activity_id":"receiver-activity-123","type":"21","narrative":[{"narrative":"narr","language":"ng"}]}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
+        $activity = new Activity();
+        $activity->{$this->element} = $actualData;
 
-    /**
-     * Sub element value empty array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_planned_disbursement_sub_element_empty_value_array(): void
-    {
-        $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-19"}],"period_end":[{"date":"2022-07-27"}],"value":[],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element value empty json array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_planned_disbursement_sub_element_empty_value_json_array(): void
-    {
-        $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-19"}],"period_end":[{"date":"2022-07-27"}],"value":[{}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element value attributes empty test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_planned_disbursement_sub_element_value_attribute_empty_amount_and_currency_and_value_date(): void
-    {
-        $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-19"}],"period_end":[{"date":"2022-07-27"}],"value":[{"amount":"","currency":"","value_date":""}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element value attribute amount empty test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_planned_disbursement_sub_element_value_attribute_empty_amount(): void
-    {
-        $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-19"}],"period_end":[{"date":"2022-07-27"}],"value":[{"amount":"","currency":"AOA","value_date":"2022-07-30"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element value attribute currency empty test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_planned_disbursement_sub_element_value_attribute_empty_currency(): void
-    {
-        $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-19"}],"period_end":[{"date":"2022-07-27"}],"value":[{"amount":"1111","currency":"","value_date":"2022-07-30"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element value attribute value_date empty test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_planned_disbursement_sub_element_value_attribute_empty_value_date(): void
-    {
-        $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-19"}],"period_end":[{"date":"2022-07-27"}],"value":[{"amount":"1111","currency":"AOA","value_date":""}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Planned Disbursement element complete test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_planned_disbursement_element_complete(): void
-    {
-        $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-19"}],"period_end":[{"date":"2022-07-27"}],"value":[{"amount":"1111","currency":"AOA","value_date":"2022-07-30"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
+        $this->assertFalse($this->elementCompleteService->isPlannedDisbursementElementCompleted($activity));
     }
 }
