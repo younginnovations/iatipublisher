@@ -224,7 +224,11 @@
       v-if="activeTab === 1 && Object.keys(validActivities).length > 0"
       class="w-[100px] pt-3"
     >
-      <label for="selectAll" class="checkbox_container !flex">
+      <label
+        for="selectAll"
+        class="checkbox_container !flex"
+        :class="{ disabled: isAllCriticalErrors }"
+      >
         <span
           class="inline-block pl-3 pt-1 text-xs font-bold uppercase leading-[18px]"
           >Select all</span
@@ -235,6 +239,7 @@
           :checked="
             newSelectedActivities.length === Object.keys(validActivities).length
           "
+          :disabled="isAllCriticalErrors"
           @change="(e) => selectAllActivities(e)"
         />
         <span class="checkmark"></span>
@@ -289,6 +294,15 @@ const activeTab = ref(1);
 const handleActiveTab = (value) => {
   activeTab.value = value;
 };
+const isAllCriticalErrors = computed(() => {
+  return (
+    Object.keys(validActivities.value)
+      .map(Number)
+      .filter((id) => {
+        return validActivities.value[id].top_level_error === 'critical';
+      }).length === Object.keys(validActivities.value).length
+  );
+});
 
 //setting data from local storage to vuex ,to preserve state when window is reloaded
 onMounted(() => {

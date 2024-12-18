@@ -3,6 +3,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=19eed7d34b7abea8bbea0ef35dee13d6",
     "/js/script.js": "/js/script.js?id=573e5816f1296bbce2c2c0084e92e523",
     "/js/webportal-script.js": "/js/webportal-script.js?id=06d4c518a25c033e1989b9db84a1dd01",
@@ -62,10 +63,14 @@
 =======
     "/js/app.js": "/js/app.js?id=a46b81a433219d0f7a717437c110a2cc",
 >>>>>>> 0aa69885 (- [x] Fix not writing in db)
+=======
+    "/js/app.js": "/js/app.js?id=85714d6650b946583f9be73dac99a557",
+>>>>>>> 19530ca2 (-[x] Disabled Select All)
     "/js/script.js": "/js/script.js?id=5664c41472ea07b11e7b9e7ad4007a4c",
     "/js/webportal-script.js": "/js/webportal-script.js?id=ec424584e8e86829641c324d807c42b5",
     "/js/formbuilder.js": "/js/formbuilder.js?id=0da9ac4d5b4cf5740657fde41069a985",
     "/manifest.js": "/manifest.js?id=3ed1124c8f4dcb98acc36de67cb80349",
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -73,65 +78,9 @@
     "/css/webportal-app.css": "/css/webportal-app.css?id=748c68cfdd3038df623a0f7018f87a2d",
     "/css/app.css": "/css/app.css?id=f749d1220687f1c434814561b27c0420",
 >>>>>>> a92eba6f (-[x] New Tab Popup Close Fix, Flow Change Bulk Publish)
+=======
+    "/css/webportal-app.css": "/css/webportal-app.css?id=989345e94a6e377028c325f720bba2e8",
+    "/css/app.css": "/css/app.css?id=e4962952551361112942c4055c4608c8",
+>>>>>>> 19530ca2 (-[x] Disabled Select All)
     "/js/vendor.js": "/js/vendor.js?id=1d9dc84f31934bcf90e4083803feee6b"
-=======
-=======
->>>>>>> dfa5ec96 (-[x] Disabled Checkbox for Critical Errored Activitities)
-=======
->>>>>>> b83d0831 (- [x] Added skipping critical error activities on publish)
-<<<<<<< HEAD
-    "/css/webportal-app.css": "/css/webportal-app.css?id=48a13c761549a94d368d78ff0d883e80",
-    "/css/app.css": "/css/app.css?id=13a0e760a5bb911b9a0f2ca0fb556038",
-    "/js/vendor.js": "/js/vendor.js?id=b96ff904c65416fa7e99073fcdfc268a"
-=======
-=======
->>>>>>> 971c6045 (-[x] Disabled Checkbox for Critical Errored Activitities)
-<<<<<<< HEAD
-    "/css/webportal-app.css": "/css/webportal-app.css?id=b16001ccbc67c449eb71cab6c22b49ea",
-    "/css/app.css": "/css/app.css?id=a74597b729c45066ec62ad809784cfa7",
-=======
-    "/css/webportal-app.css": "/css/webportal-app.css?id=dfbd1cf43a1f659dfe73981284a00931",
-    "/css/app.css": "/css/app.css?id=749fb3e3babcc3e69d0367ab12fab709",
-=======
-    "/js/app.js": "/js/app.js?id=83b70c8eb4bdb9bd777601b97831dc7d",
-=======
-    "/js/app.js": "/js/app.js?id=535ca75d4d34621240b7c806418c99ff",
->>>>>>> 51d10629 (-[x] WIP Bulk Publish Progress)
-=======
-    "/js/app.js": "/js/app.js?id=dc442b7910c17b0ad1ead5ce362400e8",
->>>>>>> 1429b96e (- Added top_level_error in validator status check response)
-=======
-    "/js/app.js": "/js/app.js?id=be7ae7e98bfc1f0a1245e3d156c6a5a2",
->>>>>>> 975178e9 (-[x] Added Critical Error Check)
-    "/js/script.js": "/js/script.js?id=5664c41472ea07b11e7b9e7ad4007a4c",
-    "/js/webportal-script.js": "/js/webportal-script.js?id=ec424584e8e86829641c324d807c42b5",
-    "/js/formbuilder.js": "/js/formbuilder.js?id=0da9ac4d5b4cf5740657fde41069a985",
-    "/manifest.js": "/manifest.js?id=3ed1124c8f4dcb98acc36de67cb80349",
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "/css/webportal-app.css": "/css/webportal-app.css?id=e8d5cb26784514194f176211b481d5b3",
-    "/css/app.css": "/css/app.css?id=c28f0bdc64a98698367f4d567593d1ab",
->>>>>>> 7b532c76 (-[x] New Tab Popup Close Fix, Flow Change Bulk Publish)
-=======
-    "/css/webportal-app.css": "/css/webportal-app.css?id=a1ca4ba6a136d22be34aeee3bca3f077",
-    "/css/app.css": "/css/app.css?id=0a5978696814f3f75d9669363474cd73",
->>>>>>> 51d10629 (-[x] WIP Bulk Publish Progress)
-=======
-    "/css/webportal-app.css": "/css/webportal-app.css?id=09b9016909d38c9ef696da01efd9d69e",
-    "/css/app.css": "/css/app.css?id=23a5335c536392fbf6e7a7abf4980665",
->>>>>>> 975178e9 (-[x] Added Critical Error Check)
->>>>>>> 04aa4a9b (-[x] New Tab Popup Close Fix, Flow Change Bulk Publish)
-=======
-=======
->>>>>>> a8e12173 (- [x] Added skipping critical error activities on publish)
-    "/css/webportal-app.css": "/css/webportal-app.css?id=1621513e488183c4f3f7d48c8e71fe3e",
-    "/css/app.css": "/css/app.css?id=deb09ddfdcf1f43142ef9e8b2b247960",
-    "/js/vendor.js": "/js/vendor.js?id=1d9dc84f31934bcf90e4083803feee6b"
->>>>>>> 7f0feeea (-[x] New Tab Popup Close Fix, Flow Change Bulk Publish)
->>>>>>> 58d3f8f6 (-[x] New Tab Popup Close Fix, Flow Change Bulk Publish)
-=======
-    "/css/webportal-app.css": "/css/webportal-app.css?id=171849acc63707174ca59ee4df1b368e",
-    "/css/app.css": "/css/app.css?id=138454467e0f964d25752c29b2620e71",
-    "/js/vendor.js": "/js/vendor.js?id=1d9dc84f31934bcf90e4083803feee6b"
->>>>>>> 0aa69885 (- [x] Fix not writing in db)
 }
