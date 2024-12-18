@@ -49,7 +49,7 @@ class TransactionObserver
         $isSectorCompletedInActivityLevel = Arr::get($elementStatus, 'sector', false);
         $transactionService = app()->make(TransactionService::class);
         $isSectorFilledInTransactionLevel = $transactionService->checkIfTransactionHasElementDefined($activityObj, 'sector');
-        $isSectorCompleteInTransactionLevel = $this->elementCompleteService->isSectorElementCompleted(new Activity(['sector' => $transaction->transaction['sector']]));
+        $isSectorCompleteInTransactionLevel = $this->elementCompleteService->isSectorElementCompleted(new Activity(['sector' => Arr::get($transaction, 'transaction.sector')]));
 
         switch([
             $isSectorFilledInActivityLevel,
