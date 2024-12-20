@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
@@ -131,60 +132,67 @@ class WebController extends Controller
     /**
      * Returns the translated data for the given folder.
      *
-     * @param $folder
+     * @param  Request  $request
      *
      * @return JsonResponse
      */
-    public function getTranslatedData($folder): JsonResponse
+    public function getTranslatedData(Request $request): JsonResponse
     {
         try {
-            $lang = App::getLocale();
-            $path = base_path("lang/{$lang}/{$folder}");
+            $folders = $request->get('folders');
 
-            if (!File::isDirectory($path) && $folder !== 'general') {
-                return response()->json(['success' => false, 'message' => 'Directory not found.']);
+            if (!$folders) {
+                return response()->json(['success' => false, 'message' => 'No folders provided.']);
             }
 
-            $cacheData = Cache::get("translated_data_{$lang}");
+            $lang = App::getLocale();
+            $cacheData = null;
+//            $cacheData = Cache::get("translated_data_{$lang}");
+            $folders = explode(',', $folders);
 
-//            if ($cacheData) {
-//                return response()->json(['success' => true, 'data' => Arr::get($cacheData, $folder, [])]);
-//            }
+            if (!$cacheData) {
+                // Working for all folders
+                $folderPaths = File::directories(base_path("lang/{$lang}"));
 
-            $folders = File::directories(base_path("lang/{$lang}"));
+                foreach ($folderPaths as $fl) {
+                    $folderName = basename($fl);
+                    $files = File::allFiles($fl);
+                    $translations = [];
 
-            foreach ($folders as $fl) {
-                $folderName = basename($fl);
-                $files = File::allFiles($fl);
-                $translations = [];
+                    foreach ($files as $file) {
+                        $fileName = pathinfo($file->getRealPath(), PATHINFO_FILENAME);
+                        $fileTranslations = require $file->getRealPath();
+                        $translations[$fileName] = $fileTranslations;
+                    }
 
-                foreach ($files as $file) {
-                    $fileName = pathinfo($file->getRealPath(), PATHINFO_FILENAME);
-                    $fileTranslations = require $file->getRealPath();
-                    $translations[$fileName] = $fileTranslations;
+                    $cacheData[$folderName] = $translations;
                 }
 
-                $cacheData[$folderName] = $translations;
+                // Working for outer files
+                $outerFiles = File::allFiles(base_path("lang/{$lang}"));
+                $outerFiletranslations = [];
+
+                foreach ($outerFiles as $outerFile) {
+                    $outerFileName = pathinfo($outerFile->getRealPath(), PATHINFO_FILENAME);
+                    $obtainedData = require $outerFile->getRealPath();
+                    $outerFiletranslations[$outerFileName] = $obtainedData;
+                }
+
+                $cacheData['general'] = $outerFiletranslations;
+
+                // Writing to cache
+                Cache::put("translated_data_{$lang}", $cacheData, now()->addHours(24));
             }
 
-            $outerFiles = File::allFiles(base_path("lang/{$lang}"));
-            $outerFiletranslations = [];
+            $requiredTranslations = [];
 
-            foreach ($outerFiles as $outerFile) {
-                $outerFileName = pathinfo($outerFile->getRealPath(), PATHINFO_FILENAME);
-                $obtainedData = require $outerFile->getRealPath();
-                $outerFiletranslations[$outerFileName] = $obtainedData;
+            foreach ($folders as $folder) {
+                if (array_key_exists($folder, $cacheData)) {
+                    $requiredTranslations[$folder] = Arr::get($cacheData, $folder, []);
+                }
             }
 
-            $cacheData['general'] = $outerFiletranslations;
-
-            Cache::put("translated_data_{$lang}", $cacheData, now()->addHours(24));
-
-            if ($folder !== 'general') {
-                return response()->json(['success' => true, 'data' => Arr::dot($cacheData[$folder])]);
-            }
-
-            return response()->json(['success' => true, 'data' => Arr::dot($outerFiletranslations)]);
+            return response()->json(['success' => true, 'data' => Arr::dot($requiredTranslations)]);
         } catch (\Exception $e) {
             logger()->error($e);
 
