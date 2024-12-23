@@ -4,16 +4,18 @@
       <section class="rounded bg-white py-4 shadow-textbox sm:py-8">
         <article class="px-6 py-4 sm:px-12 sm:py-6">
           <p class="text-base">
-            {{ translatedData['iati_standard.description'] }}
+            {{ translatedData['public.iati_standard.description'] }}
           </p>
         </article>
         <article class="px-6 py-4 sm:px-12 sm:py-6">
           <h3 class="my-2 text-2xl font-bold text-bluecoral">
-            {{ translatedData['iati_standard.point_one.heading'] }}
+            {{ translatedData['public.iati_standard.point_one.heading'] }}
           </h3>
           <p class="text-base">
             {{
-              translatedData['iati_standard.point_one.paragraph_one.heading']
+              translatedData[
+                'public.iati_standard.point_one.paragraph_one.heading'
+              ]
             }}
           </p>
           <ul class="ml-4 mt-4 list-disc text-base text-bluecoral">
@@ -21,7 +23,7 @@
               <span class="text-black"
                 >{{
                   translatedData[
-                    'iati_standard.point_one.paragraph_one.point_one'
+                    'public.iati_standard.point_one.paragraph_one.point_one'
                   ]
                 }}
               </span>
@@ -29,21 +31,21 @@
             <li class="text-base">
               <span class="text-black">{{
                 translatedData[
-                  'iati_standard.point_one.paragraph_one.point_two'
+                  'public.iati_standard.point_one.paragraph_one.point_two'
                 ]
               }}</span>
             </li>
             <li class="text-base">
               <span class="text-black">{{
                 translatedData[
-                  'iati_standard.point_one.paragraph_one.point_three'
+                  'public.iati_standard.point_one.paragraph_one.point_three'
                 ]
               }}</span>
             </li>
             <li class="text-base">
               <span class="text-black">{{
                 translatedData[
-                  'iati_standard.point_one.paragraph_one.point_four'
+                  'public.iati_standard.point_one.paragraph_one.point_four'
                 ]
               }}</span>
             </li>
@@ -51,7 +53,7 @@
               <span class="text-black"
                 >{{
                   translatedData[
-                    'iati_standard.point_one.paragraph_one.point_five'
+                    'public.iati_standard.point_one.paragraph_one.point_five'
                   ]
                 }}
               </span>
@@ -59,17 +61,19 @@
           </ul>
           <p class="mt-4 text-base">
             <a target="_blank" rel="noopener noreferrer" href="/organisation">{{
-              translatedData['iati_standard.point_one.ending']
+              translatedData['public.iati_standard.point_one.ending']
             }}</a>
           </p>
         </article>
         <article class="px-6 py-4 sm:px-12 sm:py-6">
           <h3 class="my-2 text-2xl font-bold text-bluecoral">
-            {{ translatedData['iati_standard.point_two.heading'] }}
+            {{ translatedData['public.iati_standard.point_two.heading'] }}
           </h3>
           <p class="text-base">
             {{
-              translatedData['iati_standard.point_two.paragraph_one.heading']
+              translatedData[
+                'public.iati_standard.point_two.paragraph_one.heading'
+              ]
             }}
           </p>
           <ul class="my-4 ml-4 list-disc text-base text-bluecoral">
@@ -78,7 +82,7 @@
                 class="text-black"
                 v-html="
                   translatedData[
-                    'iati_standard.point_two.paragraph_one.point_one'
+                    'public.iati_standard.point_two.paragraph_one.point_one'
                   ]
                 "
               >
@@ -89,7 +93,7 @@
                 class="text-black"
                 v-html="
                   translatedData[
-                    'iati_standard.point_two.paragraph_one.point_two'
+                    'public.iati_standard.point_two.paragraph_one.point_two'
                   ]
                 "
               >
@@ -100,7 +104,7 @@
                 class="text-black"
                 v-html="
                   translatedData[
-                    'iati_standard.point_two.paragraph_one.point_three'
+                    'public.iati_standard.point_two.paragraph_one.point_three'
                   ]
                 "
               >
@@ -111,7 +115,7 @@
                 class="text-black"
                 v-html="
                   translatedData[
-                    'iati_standard.point_two.paragraph_one.point_four'
+                    'public.iati_standard.point_two.paragraph_one.point_four'
                   ]
                 "
               >
@@ -122,7 +126,7 @@
                 class="text-black"
                 v-html="
                   translatedData[
-                    'iati_standard.point_two.paragraph_one.point_five'
+                    'public.iati_standard.point_two.paragraph_one.point_five'
                   ]
                 "
               >
@@ -133,7 +137,7 @@
                 class="text-black"
                 v-html="
                   translatedData[
-                    'iati_standard.point_two.paragraph_one.point_six'
+                    'public.iati_standard.point_two.paragraph_one.point_six'
                   ]
                 "
               >
@@ -141,30 +145,38 @@
             </li>
           </ul>
           <h6 class="text-lg font-bold text-bluecoral">
-            {{ translatedData['iati_standard.point_three.heading'] }}
+            {{ translatedData['public.iati_standard.point_three.heading'] }}
           </h6>
 
           <p class="my-4 text-base">
-            {{ translatedData['iati_standard.point_three.paragraph_one'] }}
+            {{
+              translatedData['public.iati_standard.point_three.paragraph_one']
+            }}
           </p>
           <p class="my-4 text-base">
-            {{ translatedData['iati_standard.point_three.paragraph_two'] }}
+            {{
+              translatedData['public.iati_standard.point_three.paragraph_two']
+            }}
           </p>
           <p class="my-4 text-base">
-            {{ translatedData['iati_standard.point_three.paragraph_three'] }}
+            {{
+              translatedData['public.iati_standard.point_three.paragraph_three']
+            }}
           </p>
           <p class="my-4 text-base">
             <a target="_blank" rel="noopener noreferrer" href="/organisation"
-              >{{ translatedData['iati_standard.point_one.ending'] }}
+              >{{ translatedData['public.iati_standard.point_one.ending'] }}
             </a>
           </p>
         </article>
         <article class="px-6 py-4 sm:px-12 sm:py-6">
           <h3 class="my-2 text-2xl font-bold text-bluecoral">
-            {{ translatedData['iati_standard.point_four.heading'] }}
+            {{ translatedData['public.iati_standard.point_four.heading'] }}
           </h3>
           <p class="text-base">
-            {{ translatedData['iati_standard.point_four.paragraph_one'] }}
+            {{
+              translatedData['public.iati_standard.point_four.paragraph_one']
+            }}
           </p>
           <a
             target="_blank"
@@ -172,7 +184,9 @@
             class="my-2 cursor-pointer"
             @click="downloadManual('organization')"
           >
-            {{ translatedData['iati_standard.point_four.organisation_pdf'] }}
+            {{
+              translatedData['public.iati_standard.point_four.organisation_pdf']
+            }}
           </a>
           <br />
           <a
@@ -181,15 +195,17 @@
             class="my-2 cursor-pointer"
             @click="downloadManual('activity')"
           >
-            {{ translatedData['iati_standard.point_four.activity_pdf'] }}
+            {{ translatedData['public.iati_standard.point_four.activity_pdf'] }}
           </a>
         </article>
         <article class="px-6 py-4 sm:px-12 sm:py-6">
           <h3 class="my-2 text-2xl font-bold text-bluecoral">
-            {{ translatedData['iati_standard.point_five.heading'] }}
+            {{ translatedData['public.iati_standard.point_five.heading'] }}
           </h3>
           <p class="text-base">
-            {{ translatedData['iati_standard.point_five.paragraph_one'] }}
+            {{
+              translatedData['public.iati_standard.point_five.paragraph_one']
+            }}
           </p>
           <a
             target="_blank"
@@ -198,7 +214,9 @@
             class="my-2"
           >
             <u>{{
-              translatedData['iati_standard.point_five.activity_standard']
+              translatedData[
+                'public.iati_standard.point_five.activity_standard'
+              ]
             }}</u> </a
           ><br />
           <a
@@ -208,7 +226,9 @@
             class="my-2"
           >
             <u>{{
-              translatedData['iati_standard.point_five.organisation_standard']
+              translatedData[
+                'public.iati_standard.point_five.organisation_standard'
+              ]
             }}</u>
           </a>
         </article>

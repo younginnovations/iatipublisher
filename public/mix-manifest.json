@@ -5,6 +5,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=7c44e4d9cf743e3a5ffc3277abd3feba",
 =======
 =======
@@ -20,10 +21,14 @@
 <<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=f371f64bf38e6cd75a1ebfb2373ac0ac",
 >>>>>>> 4e9f68d8 (-[x] WIP FE)
+=======
+    "/js/app.js": "/js/app.js?id=451f51dd1f17cb4407bd4d9dc7847d53",
+>>>>>>> 472c2716 (-[x] Added Folders to Query For Translation)
     "/js/script.js": "/js/script.js?id=5664c41472ea07b11e7b9e7ad4007a4c",
     "/js/webportal-script.js": "/js/webportal-script.js?id=ec424584e8e86829641c324d807c42b5",
     "/js/formbuilder.js": "/js/formbuilder.js?id=0da9ac4d5b4cf5740657fde41069a985",
     "/manifest.js": "/manifest.js?id=3ed1124c8f4dcb98acc36de67cb80349",
+<<<<<<< HEAD
 <<<<<<< HEAD
     "/css/webportal-app.css": "/css/webportal-app.css?id=748c68cfdd3038df623a0f7018f87a2d",
     "/css/app.css": "/css/app.css?id=f749d1220687f1c434814561b27c0420",
@@ -55,5 +60,9 @@
     "/css/app.css": "/css/app.css?id=005d31811b3346627c6d0bc4b93c694f",
 >>>>>>> 637d900e (-[x] WIP FE)
 >>>>>>> 4e9f68d8 (-[x] WIP FE)
+=======
+    "/css/webportal-app.css": "/css/webportal-app.css?id=e486042bc930688caf6d9546f31e8368",
+    "/css/app.css": "/css/app.css?id=b007757e9adbcf9f5144cae1eea5f9a6",
+>>>>>>> 472c2716 (-[x] Added Folders to Query For Translation)
     "/js/vendor.js": "/js/vendor.js?id=1d9dc84f31934bcf90e4083803feee6b"
 }

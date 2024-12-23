@@ -4,48 +4,48 @@
       <section class="rounded bg-white py-4 shadow-textbox sm:py-8">
         <article class="px-6 py-4 sm:px-12 sm:py-6">
           <h3 class="my-2 text-2xl font-bold text-bluecoral">
-            {{ translatedData['about.what_is_iati_publisher'] }}
+            {{ translatedData['public.about.what_is_iati_publisher'] }}
           </h3>
           <p class="mt-4 text-base">
-            {{ translatedData['about.iati_introduction'] }}
+            {{ translatedData['public.about.iati_introduction'] }}
           </p>
         </article>
         <article class="px-6 py-4 sm:px-12 sm:py-6">
           <h3 class="my-2 text-2xl font-bold text-bluecoral">
-            {{ translatedData['about.use_iati.title'] }}:
+            {{ translatedData['public.about.use_iati.title'] }}:
           </h3>
           <ul class="ml-4 mt-4 list-disc text-base text-bluecoral">
             <li class="text-base">
               <span class="text-black">{{
-                translatedData['about.use_iati.list_item_one']
+                translatedData['public.about.use_iati.list_item_one']
               }}</span>
             </li>
             <li class="text-base">
               <span class="text-black">{{
-                translatedData['about.use_iati.list_item_two']
+                translatedData['public.about.use_iati.list_item_two']
               }}</span>
             </li>
             <li class="text-base">
               <span class="text-black">{{
-                translatedData['about.use_iati.list_item_three']
+                translatedData['public.about.use_iati.list_item_three']
               }}</span>
             </li>
             <li class="text-base">
               <span class="text-black">{{
-                translatedData['about.use_iati.list_item_four']
+                translatedData['public.about.use_iati.list_item_four']
               }}</span>
             </li>
             <li class="text-base">
               <span class="text-black">{{
-                translatedData['about.use_iati.list_item_five']
+                translatedData['public.about.use_iati.list_item_five']
               }}</span>
             </li>
           </ul>
           <p class="mt-4 text-base">
-            {{ translatedData['about.use_iati.paragraph_one'] }}
+            {{ translatedData['public.about.use_iati.paragraph_one'] }}
           </p>
           <p class="mt-4 text-base">
-            {{ translatedData['about.use_iati.paragraph_two'] }}:
+            {{ translatedData['public.about.use_iati.paragraph_two'] }}:
             <a
               target="_blank"
               rel="noopener noreferrer"
@@ -57,11 +57,13 @@
         </article>
         <article class="ounded px-6 py-4 sm:px-12 sm:py-6">
           <h3 class="my-2 text-2xl font-bold text-bluecoral">
-            {{ translatedData['about.development_of_iati.title'] }}
+            {{ translatedData['public.about.development_of_iati.title'] }}
           </h3>
           <p
             class="mt-4 text-base"
-            v-html="translatedData['about.development_of_iati.paragraph_one']"
+            v-html="
+              translatedData['public.about.development_of_iati.paragraph_one']
+            "
           ></p>
         </article>
       </section>
@@ -77,7 +79,7 @@ export default defineComponent({
     const translatedData = ref({});
 
     onMounted(() => {
-      LanguageService.getTranslatedData('public')
+      LanguageService.getTranslatedData('public,common')
         .then((response) => {
           translatedData.value = response.data;
         })

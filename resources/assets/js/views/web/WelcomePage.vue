@@ -10,13 +10,15 @@
           <span class="left__title font-bold">IATI Publisher</span>
           <p class="pt-2 sm:pb-8 sm:pt-6">
             {{
-              translatedData['login.iati_publishing_tool_section.welcome_text']
+              translatedData[
+                'public.login.iati_publishing_tool_section.welcome_text'
+              ]
             }}
             <br />
             <span v-if="pageContent !== 'Join Now'">
               {{
                 translatedData[
-                  'login.iati_publishing_tool_section.page_to_register'
+                  'public.login.iati_publishing_tool_section.page_to_register'
                 ]
               }}.
             </span>
@@ -26,10 +28,10 @@
               {{
                 pageContent === 'Join Now'
                   ? translatedData[
-                      'login.iati_publishing_tool_section.havent_registered_label'
+                      'public.login.iati_publishing_tool_section.havent_registered_label'
                     ]
                   : translatedData[
-                      'login.iati_publishing_tool_section.already_have_account_label'
+                      'public.login.iati_publishing_tool_section.already_have_account_label'
                     ]
               }}
               <button
@@ -39,10 +41,10 @@
                 {{
                   pageContent === 'Join Now'
                     ? translatedData[
-                        'login.iati_publishing_tool_section.join_now'
+                        'public.login.iati_publishing_tool_section.join_now'
                       ]
                     : translatedData[
-                        'login.iati_publishing_tool_section.sign_in'
+                        'public.login.iati_publishing_tool_section.sign_in'
                       ]
                 }}
               </button>

@@ -4,11 +4,11 @@
       <section class="rounded bg-white py-4 shadow-textbox sm:py-8">
         <article class="px-6 py-4 sm:px-12 sm:py-6">
           <h3 class="text-2xl font-bold text-bluecoral">
-            {{ translatedData['support.support'] }}
+            {{ translatedData['public.support.support'] }}
           </h3>
 
           <p class="mt-4 text-base">
-            {{ translatedData['support.paragraph_one'] }}
+            {{ translatedData['public.support.paragraph_one'] }}
             <a
               target="_blank"
               rel="noopener noreferrer"
@@ -18,7 +18,7 @@
           </p>
           <p
             class="mt-4 text-base"
-            v-html="translatedData['support.paragraph_two']"
+            v-html="translatedData['public.support.paragraph_two']"
           ></p>
         </article>
       </section>
