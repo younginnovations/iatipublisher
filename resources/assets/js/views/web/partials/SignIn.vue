@@ -7,10 +7,12 @@
 
     <div class="right__container flex w-full flex-col" @keyup.enter="login">
       <h2 class="mb-2 hidden sm:block">
-        {{ translatedData['login.iati_publishing_tool_section.sign_in'] }}
+        {{
+          translatedData['public.login.iati_publishing_tool_section.sign_in']
+        }}
       </h2>
       <span class="text-n-40">{{
-        translatedData['login.sign_in_section.welcome_back_label']
+        translatedData['public.login.sign_in_section.welcome_back_label']
       }}</span>
       <div
         v-if="
@@ -31,17 +33,21 @@
           <svg-vue class="text-spring-50" icon="tick" />
           <span class="flex flex-col space-y-2">
             <span class="text-sm font-bold text-n-50">{{
-              translatedData['login.password_changed_section.password_updated']
+              translatedData[
+                'public.login.password_changed_section.password_updated'
+              ]
             }}</span>
             <span class="text-sm text-n-50">{{
-              translatedData['login.password_changed_section.use_new_password']
+              translatedData[
+                'public.login.password_changed_section.use_new_password'
+              ]
             }}</span>
           </span>
         </div>
       </div>
       <div class="relative mb-4 mt-6 flex flex-col text-sm text-bluecoral">
         <label for="username">{{
-          translatedData['login.sign_in_section.username_label']
+          translatedData['public.login.sign_in_section.username_label']
         }}</label>
         <input
           id="username"
@@ -52,7 +58,7 @@
           }"
           type="text"
           :placeholder="
-            translatedData['login.sign_in_section.username_placeholder']
+            translatedData['public.login.sign_in_section.username_placeholder']
           "
         />
         <svg-vue class="absolute left-5 top-12 text-xl sm:left-6" icon="user" />
@@ -66,7 +72,7 @@
       </div>
       <div class="relative mb-4 flex flex-col text-sm text-bluecoral">
         <label for="Password">{{
-          translatedData['login.sign_in_section.password_label']
+          translatedData['public.login.sign_in_section.password_label']
         }}</label>
         <input
           id="password"
@@ -77,7 +83,7 @@
           }"
           type="password"
           :placeholder="
-            translatedData['login.sign_in_section.password_placeholder']
+            translatedData['public.login.sign_in_section.password_placeholder']
           "
         />
         <svg-vue
@@ -89,17 +95,19 @@
         }}</span>
       </div>
       <p class="mb-6 text-sm text-n-40">
-        {{ translatedData['login.sign_in_section.forgot_password_label'] }}
+        {{
+          translatedData['public.login.sign_in_section.forgot_password_label']
+        }}
         <span
           ><a
             class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
             href="/password/email"
-            >{{ translatedData['login.sign_in_section.reset'] }}</a
+            >{{ translatedData['public.login.sign_in_section.reset'] }}</a
           ></span
         >
       </p>
       <button id="btn" type="submit" class="btn" @click="login">
-        {{ translatedData['login.sign_in_section.sign_in_button'] }}
+        {{ translatedData['public.login.sign_in_section.sign_in_button'] }}
         <svg-vue class="" icon="right-arrow" />
       </button>
     </div>

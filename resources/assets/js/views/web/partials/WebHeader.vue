@@ -15,47 +15,53 @@
             >
               <li class="nav__links active dropdown">
                 <a href="/about">{{
-                  translatedData['header.about.heading']
+                  translatedData['public.header.about.heading']
                 }}</a>
                 <NavDropdown
-                  :name="translatedData['header.about.name']"
-                  :text="translatedData['header.about.description']"
-                  :btn-text="translatedData['header.learn_more']"
+                  :name="translatedData['public.header.about.name']"
+                  :text="translatedData['public.header.about.description']"
+                  :btn-text="translatedData['public.header.learn_more']"
                   btn-link="/about"
                 />
               </li>
               <li class="nav__links active dropdown">
                 <a href="/publishing-checklist">{{
-                  translatedData['header.publishing_checklist.heading']
+                  translatedData['public.header.publishing_checklist.heading']
                 }}</a>
                 <NavDropdown
-                  :name="translatedData['header.publishing_checklist.name']"
-                  :text="
-                    translatedData['header.publishing_checklist.description']
+                  :name="
+                    translatedData['public.header.publishing_checklist.name']
                   "
-                  :btn-text="translatedData['header.read_more']"
+                  :text="
+                    translatedData[
+                      'public.header.publishing_checklist.description'
+                    ]
+                  "
+                  :btn-text="translatedData['public.header.read_more']"
                   btn-link="/publishing-checklist"
                 />
               </li>
               <li class="nav__links active dropdown relative">
                 <a href="/iati-standard">{{
-                  translatedData['header.iati_standard.heading']
+                  translatedData['public.header.iati_standard.heading']
                 }}</a>
                 <NavDropdown
-                  :name="translatedData['header.iati_standard.name']"
-                  :text="translatedData['header.iati_standard.description']"
-                  :btn-text="translatedData['header.see_fields']"
+                  :name="translatedData['public.header.iati_standard.name']"
+                  :text="
+                    translatedData['public.header.iati_standard.description']
+                  "
+                  :btn-text="translatedData['public.header.see_fields']"
                   btn-link="/iati-standard"
                 />
               </li>
               <li class="nav__links active dropdown">
                 <a href="/support">{{
-                  translatedData['header.support.heading']
+                  translatedData['public.header.support.heading']
                 }}</a>
                 <NavDropdown
-                  :name="translatedData['header.support.name']"
-                  :text="translatedData['header.support.description']"
-                  :btn-text="translatedData['header.read_more']"
+                  :name="translatedData['public.header.support.name']"
+                  :text="translatedData['public.header.support.description']"
+                  :btn-text="translatedData['public.header.read_more']"
                   btn-link="/support"
                 />
               </li>
@@ -88,7 +94,7 @@
 
             <div class="flex">
               <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0"
-                >{{ translatedData['header.language'] }}:</span
+                >{{ translatedData['public.header.language'] }}:</span
               >
               <ul class="flex items-center justify-center">
                 <li class="nav__links">

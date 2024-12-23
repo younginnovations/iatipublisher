@@ -5,20 +5,20 @@
         <p class="text-center text-xl font-bold text-n-50 sm:text-2xl">
           {{
             translatedData[
-              'register.not_registered_page.verification_email.please_verify_your_account'
+              'public.register.not_registered_page.verification_email.please_verify_your_account'
             ]
           }}
         </p>
         <p class="text-sm text-n-40 sm:text-base">
           {{
             translatedData[
-              'register.not_registered_page.verification_email.verification_email_sent_to'
+              'public.register.not_registered_page.verification_email.verification_email_sent_to'
             ]
           }}
           <span class="font-bold text-n-50"> {{ props.email }}. </span>
           {{
             translatedData[
-              'register.not_registered_page.verification_email.please_click_link_to_verify'
+              'public.register.not_registered_page.verification_email.please_click_link_to_verify'
             ]
           }}
         </p>
@@ -27,7 +27,7 @@
       <a href="/activities" class="btn btn-next get-started-btn">
         {{
           translatedData[
-            'register.not_registered_page.verification_email.get_started'
+            'public.register.not_registered_page.verification_email.get_started'
           ]
         }}
         <svg-vue class="text-2xl" icon="right-arrow" />

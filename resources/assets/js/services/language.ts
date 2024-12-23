@@ -28,9 +28,11 @@ class LanguageService {
     }
   }
 
-  static async getTranslatedData(folderName: string) {
+  static async getTranslatedData(queries: string) {
     try {
-      const response = await apiClient.get(`/translated-data/${folderName}`);
+      const response = await apiClient.get(`/translated-data`, {
+        params: { folders: queries },
+      });
       return response.data;
     } catch (error) {
       this.handleError(error);
