@@ -8,7 +8,7 @@
           </th>
           <th id="title" scope="col">
             <span>{{
-              translatedData['activity.table_layout.activity_title']
+              translatedData['activity_index.table_layout.activity_title']
             }}</span>
           </th>
           <th id="publishing-progress" scope="col" class="progress-bar-header">
@@ -20,7 +20,9 @@
                 <svg-vue :icon="`${sortingDirection()}-arrow`" />
               </span>
               <span class="">{{
-                translatedData['activity.table_layout.publishing_progress']
+                translatedData[
+                  'activity_index.table_layout.publishing_progress'
+                ]
               }}</span>
             </a>
           </th>
@@ -93,7 +95,7 @@
                     datum['default_title_narrative'] &&
                     datum['default_title_narrative'] !== ''
                       ? datum['default_title_narrative']
-                      : translatedData['activity.table_layout.untitled']
+                      : translatedData['activity_index.table_layout.untitled']
                   }}</a
                 >
                 <div class="w-52">
@@ -101,7 +103,7 @@
                     datum['default_title_narrative'] &&
                     datum['default_title_narrative'] !== ''
                       ? datum['default_title_narrative']
-                      : translatedData['activity.table_layout.untitled']
+                      : translatedData['activity_index.table_layout.untitled']
                   }}</span>
                 </div>
               </div>
@@ -196,7 +198,9 @@
           <div colspan="5" class="spin"></div>
         </td>
         <td v-else colspan="5" class="text-center">
-          {{ translatedData['activity.table_layout.activities_not_found'] }}
+          {{
+            translatedData['activity_index.table_layout.activities_not_found']
+          }}
         </td>
       </tbody>
     </table>
