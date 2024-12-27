@@ -107,7 +107,11 @@
                         class="cursor-pointer"
                         :class="liClass"
                         @click="modalValue = true"
-                        >Add activity manually</a
+                        >{{
+                          translatedData[
+                            'adminHeader.admin_header.add_activity_manually'
+                          ]
+                        }}</a
                       >
                     </li>
                     <li>
@@ -115,7 +119,11 @@
                         id="header-import-activity"
                         href="/import"
                         :class="liClass"
-                        >Import activities from .csv/.xml</a
+                        >{{
+                          translatedData[
+                            'adminHeader.admin_header.import_activities_from_csv_xml'
+                          ]
+                        }}</a
                       >
                     </li>
                     <li>
@@ -123,7 +131,11 @@
                         id="header-import-xls"
                         href="/import/xls"
                         :class="liClass"
-                        >Import activities from .XLS</a
+                        >{{
+                          translatedData[
+                            'adminHeader.admin_header.import_activities_from_xls'
+                          ]
+                        }}</a
                       >
                     </li>
                   </ul>
@@ -137,16 +149,24 @@
             >
               <ul class="flex-col">
                 <li>
-                  <a href="#" :class="liClass">User Logs</a>
+                  <a href="#" :class="liClass">{{
+                    translatedData['adminHeader.admin_header.user_logs']
+                  }}</a>
                 </li>
                 <li>
-                  <a href="#" :class="liClass">API Logs</a>
+                  <a href="#" :class="liClass">{{
+                    translatedData['adminHeader.admin_header.api_logs']
+                  }}</a>
                 </li>
                 <li>
-                  <a href="/log-viewer" :class="liClass">Error Logs</a>
+                  <a href="/log-viewer" :class="liClass">{{
+                    translatedData['adminHeader.admin_header.error_logs']
+                  }}</a>
                 </li>
                 <li>
-                  <a href="/import" :class="liClass">System Details</a>
+                  <a href="/import" :class="liClass">{{
+                    translatedData['adminHeader.admin_header.system_details']
+                  }}</a>
                 </li>
               </ul>
             </div>
@@ -166,20 +186,26 @@
                 >
                   <ul class="flex-col">
                     <li>
-                      <a href="#" class="cursor-pointer" :class="liClass"
-                        >User Logs</a
-                      >
+                      <a href="#" class="cursor-pointer" :class="liClass">{{
+                        translatedData['adminHeader.admin_header.user_logs']
+                      }}</a>
                     </li>
                     <li>
-                      <a href="#" :class="liClass">API Logs</a>
+                      <a href="#" :class="liClass">{{
+                        translatedData['adminHeader.admin_header.api_logs']
+                      }}</a>
                     </li>
                     <li>
-                      <a href="/log-viewer" :class="liClass">Error Logs</a>
+                      <a href="/log-viewer" :class="liClass">{{
+                        translatedData['adminHeader.admin_header.error_logs']
+                      }}</a>
                     </li>
                     <li>
-                      <a href="/system-version" :class="liClass"
-                        >System Details</a
-                      >
+                      <a href="/system-version" :class="liClass">{{
+                        translatedData[
+                          'adminHeader.admin_header.system_details'
+                        ]
+                      }}</a>
                     </li>
                   </ul>
                 </div>
@@ -192,19 +218,27 @@
             >
               <ul class="flex-col">
                 <li>
-                  <a :class="liClass" @click="modalValue = true"
-                    >Add activity manually</a
-                  >
+                  <a :class="liClass" @click="modalValue = true">{{
+                    translatedData[
+                      'adminHeader.admin_header.add_activity_manually'
+                    ]
+                  }}</a>
                 </li>
                 <li>
-                  <a href="/import" :class="liClass"
-                    >Import activities from .csv/.xml</a
-                  >
+                  <a href="/import" :class="liClass">{{
+                    translatedData[
+                      'adminHeader.admin_header.import_activities_from_csv_xml'
+                    ]
+                  }}</a>
                 </li>
                 <li>
-                  <a id="header-import-xls" href="/import/xls" :class="liClass"
-                    >Import activities from .XLS</a
-                  >
+                  <a id="header-import-xls" href="/import/xls" :class="liClass">
+                    {{
+                      translatedData[
+                        'adminHeader.admin_header.import_activities_from_xls'
+                      ]
+                    }}
+                  </a>
                 </li>
               </ul>
             </div>
@@ -272,7 +306,9 @@
               >
                 <a class="flex w-full space-x-4" href="/profile"
                   ><svg-vue class="mx-1 text-base" icon="user" />
-                  <span>Your Profile</span></a
+                  <span>{{
+                    translatedData['adminHeader.admin_header.your_profile']
+                  }}</span></a
                 >
               </li>
               <li
@@ -282,12 +318,16 @@
               >
                 <a class="flex w-full space-x-4">
                   <svg-vue icon="rocket-icon" class="mx-1 mt-0.5 scale-[1.2]" />
-                  <span>Get Started</span></a
+                  <span>{{
+                    translatedData['adminHeader.admin_header.get_started']
+                  }}</span></a
                 >
               </li>
               <li class="dropdown__list flex" @click="logout">
                 <svg-vue class="ml-1 mr-3" icon="logout"></svg-vue>
-                <button class="text-sm">Logout</button>
+                <button class="text-sm">
+                  {{ translatedData['adminHeader.admin_header.logout'] }}
+                </button>
               </li>
             </ul>
           </div>
@@ -320,7 +360,9 @@
               >
                 <a class="flex w-full space-x-4" href="/profile"
                   ><svg-vue class="mx-1 text-base" icon="user" />
-                  <span>Your Profile</span></a
+                  <span>{{
+                    translatedData['adminHeader.admin_header.your_profile']
+                  }}</span></a
                 >
               </li>
               <li
@@ -330,12 +372,15 @@
               >
                 <a class="flex w-full space-x-4">
                   <svg-vue icon="rocket-icon" class="mx-1 mt-0.5 scale-[1.2]" />
-                  <span>Get Started</span></a
+                  <span>{{
+                    translatedData['adminHeader.admin_header.get_started']
+                  }}</span></a
                 >
               </li>
               <li class="dropdown__list flex" @click="logout">
-                <svg-vue class="ml-1 mr-3" icon="logout"></svg-vue>
-                <button class="text-sm">Logout</button>
+                <button class="text-sm">
+                  {{ translatedData['adminHeader.admin_header.logout'] }}
+                </button>
               </li>
             </ul>
           </div>
@@ -364,12 +409,15 @@ import {
   onUnmounted,
   provide,
   Ref,
+  watchEffect,
 } from 'vue';
 import { detailStore } from 'Store/activities/show';
 import axios from 'axios';
 import { useToggle, useStorage } from '@vueuse/core';
 import CreateModal from '../views/activity/CreateModal.vue';
 import Toast from './ToastMessage.vue';
+import LanguageService from 'Services/language';
+
 const store = detailStore();
 
 const props = defineProps({
@@ -401,6 +449,7 @@ const toastType = ref(false);
 const errorToastVisibility = ref(false);
 const errorToastMessage = ref('');
 const errorToastType = ref(false);
+const translatedData = ref({});
 
 const data = reactive({
   languageNavLiClasses: 'flex',
@@ -428,53 +477,47 @@ const data = reactive({
   ],
   org_menus: [
     {
-      name: 'Activity DATA',
+      name: '',
       permalink: '/activities',
       active: true,
     },
     {
-      name: 'Organisation DATA',
+      name: '',
       permalink: '/organisation',
       active: false,
     },
     {
-      name: 'Settings',
+      name: '',
       permalink: '/setting',
       active: false,
     },
     {
-      name: 'Add / Import Activity',
+      name: '',
       permalink: '#',
       active: false,
     },
     {
-      name: 'Users',
+      name: '',
       permalink: '/users',
       active: false,
     },
   ],
   superadmin_menus: [
     {
-      name: 'Dashboard',
+      name: '',
       permalink: '/dashboard',
       active: false,
     },
     {
-      name: 'Organisation List',
+      name: '',
       permalink: '/list-organisations',
       active: false,
     },
-
     {
-      name: 'Users',
+      name: '',
       permalink: '/users',
       active: false,
     },
-    // {
-    //   name: 'Logs',
-    //   permalink: '/system-version',
-    //   active: false,
-    // },
   ],
 });
 watch(
@@ -483,6 +526,28 @@ watch(
     isLoading.value = value;
   }
 );
+
+watchEffect(() => {
+  if (translatedData.value) {
+    data.org_menus[0].name =
+      translatedData.value['adminHeader.admin_header.activity_data'];
+    data.org_menus[1].name =
+      translatedData.value['adminHeader.admin_header.organisation_data'];
+    data.org_menus[2].name =
+      translatedData.value['adminHeader.admin_header.settings'];
+    data.org_menus[3].name =
+      translatedData.value['adminHeader.admin_header.add_import_activity'];
+    data.org_menus[4].name =
+      translatedData.value['adminHeader.admin_header.users'];
+
+    data.superadmin_menus[0].name =
+      translatedData.value['adminHeader.admin_header.dashboard'];
+    data.superadmin_menus[1].name =
+      translatedData.value['adminHeader.admin_header.organisation_list'];
+    data.superadmin_menus[2].name =
+      translatedData.value['adminHeader.admin_header.users'];
+  }
+});
 
 const liClass =
   'block p-2.5 text-n-40 text-tiny uppercase leading-[1.5] font-bold hover:!text-n-50 hover:bg-n-10';
@@ -633,6 +698,15 @@ const redirectProfile = () => {
 
 onUnmounted(() => {
   localStorage.removeItem('openAddModel');
+});
+
+onMounted(() => {
+  LanguageService.getTranslatedData('adminHeader')
+    .then((response) => {
+      translatedData.value = response.data;
+      console.log(translatedData.value);
+    })
+    .catch((error) => console.log(error));
 });
 
 provide('defaultLanguage', props.defaultLanguage);
