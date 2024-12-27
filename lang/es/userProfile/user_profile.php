@@ -1,0 +1,23 @@
+<?php
+return [
+    'edit_your_profile'                          => 'es_ Edit your profile',
+    'current_password'                           => 'es_ Current Password',
+    'change_password'                            => 'es_ Change Password',
+    'new_password'                               => 'es_ New Password ',
+    'confirm_password'                           => 'es_ Confirm Password',
+    'full_name'                                  => 'es_ Full Name',
+    'username'                                   => 'es_ Username',
+    'email'                                      => 'es_ Email',
+    'language_preference'                        => 'es_ Language Preference',
+    'select_language'                            => 'es_ Select language',
+    'your_information'                           => 'es_ Your Information',
+    'name'                                       => 'es_ Name',
+    'organization'                               => 'es_ Organization',
+    'role'                                       => 'es_ Role',
+    'you_havent_verified_your_email_address_yet' => 'es_ You haven\'t verified your email address yet . Please check for verification email sent to you and verify your account,',
+    'resend_verification_email'                  => 'es_ resend verification email',
+    'if_you_havent_received_such_and_email'      => 'es_ if you haven\'t received such and email.',
+    'cancel'                                     => 'es_ Cancel',
+    'save'                                       => 'es_ Save',
+    'change_your_password'                       => 'es_ Change your password',
+];
