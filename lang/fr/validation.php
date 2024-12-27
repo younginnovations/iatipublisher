@@ -247,6 +247,8 @@ return [
         'contact_email'         => 'fr_ contact email',
         'website'               => 'fr_ website',
         'source'                => 'fr_ source',
+        'language_preference'   => 'fr_ language preference',
+        'current_password'      => 'fr_ current password',
     ],
     'within_a_year'     => 'fr_ The :attribute must be within a year after :date.',
     'required_if_any'   => 'fr_ The :field is required if any of the fields of :element are filled.',
