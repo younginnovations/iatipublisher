@@ -6,7 +6,9 @@
       @click="toggle"
     >
       <svg-vue icon="plus" />
-      <span>Add Activity</span>
+      <span>{{
+        translatedData['activity_index.add_activity_button.add_activity']
+      }}</span>
       <div
         v-if="state.isVisible"
         class="button__dropdown absolute right-0 top-full z-10 w-56 bg-white p-2 text-left shadow-dropdown"
@@ -18,18 +20,26 @@
               href="#"
               :class="liClass"
               @click="modalValue = true"
-              >Add activity manually</a
+              >{{
+                translatedData[
+                  'activity_index.add_activity_button.add_activity_manually'
+                ]
+              }}</a
             >
           </li>
           <li>
-            <a id="import-activity" href="/import" :class="liClass"
-              >Import activities from .csv/.xml</a
-            >
+            <a id="import-activity" href="/import" :class="liClass">{{
+              translatedData[
+                'activity_index.add_activity_button.import_activities_from_csv_xml'
+              ]
+            }}</a>
           </li>
           <li>
-            <a id="import-xls" href="/import/xls" :class="liClass"
-              >Import activities from .XLS</a
-            >
+            <a id="import-xls" href="/import/xls" :class="liClass">{{
+              translatedData[
+                'activity_index.add_activity_button.import_activities_from_xls'
+              ]
+            }}</a>
           </li>
         </ul>
       </div>
@@ -43,7 +53,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, defineComponent, ref, onMounted } from 'vue';
+import { reactive, defineComponent, ref, onMounted, inject, Ref } from 'vue';
 import CreateModal from '../CreateModal.vue';
 import { useToggle } from '@vueuse/core';
 
@@ -53,6 +63,8 @@ export default defineComponent({
     CreateModal,
   },
   setup() {
+    const translatedData = inject('translatedData') as Ref;
+
     const state = reactive({
       isVisible: false,
     });
@@ -90,6 +102,7 @@ export default defineComponent({
       modalToggle,
       toggleModel,
       dropdownBtn,
+      translatedData,
     };
   },
 });
