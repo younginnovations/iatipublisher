@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'publishing_settings'                                                  => 'fr_ publishing settings',
+    'default_values'                                                       => 'fr_ default values',
+    'organization_data'                                                    => 'fr_ organization data',
+    'activity'                                                             => 'fr_ activity',
     'verification_required'                                                => 'fr_ Verification Required',
     'you_can_skip_this_step_for_now'                                       => 'fr_ You can skip this step for now and come back to it once your account has been verified.',
     'publish_organisation_data'                                            => 'fr_ Publish Organisation Data',

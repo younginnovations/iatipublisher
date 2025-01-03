@@ -1,0 +1,26 @@
+<?php
+return [
+    'delete_element'                                              => 'Delete element',
+    'are_you_sure_you_want_to_delete_this_element'                => 'Are you sure you want to delete this element?',
+    'go_back'                                                     => 'Go Back',
+    'delete'                                                      => 'Delete',
+    'completed'                                                   => 'completed',
+    'not_completed'                                               => 'not completed',
+    'organisation_identifier'                                     => 'Organisation Identifier',
+    'name'                                                        => 'Name',
+    'reporting_organisation'                                      => 'Reporting Organisation',
+    'recipient_organisation_budget'                               => 'Recipient Organisation Budget',
+    'recipient_region_budget'                                     => 'Recipient Region Budget',
+    'recipient_country_budget'                                    => 'Recipient Country Budget',
+    'total_budget'                                                => 'Total Budget',
+    'total_expenditure'                                           => 'Total Expenditure',
+    'document_link'                                               => 'Document Link',
+    'title_missing'                                               => 'Title Missing',
+    'language'                                                    => 'Language',
+    'language_missing'                                            => 'Language Missing',
+    'narrative_missing'                                           => 'Narrative Missing',
+    'deprecation_code_usage'                                      => 'Deprecation Code Usage',
+    'edit'                                                        => 'Edit',
+    'core'                                                        => 'core',
+    'couldnt_delete_the_organisation_element_due_to_system_error' => 'Couldn\'t delete the organisation element due to system error.'
+];

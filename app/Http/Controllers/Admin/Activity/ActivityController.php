@@ -132,7 +132,7 @@ class ActivityController extends Controller
                 DB::commit();
             }
 
-            $organizationOnboarding = $organizationOnboarding->toArray();
+            $organizationOnboarding = $this->organizationOnboardingService->translateOrganisationOnboardingTitles($organizationOnboarding);
 
             // Data for user onboarding
             $currencies = getCodeList('Currency', 'Organization', filterDeprecated: true);
