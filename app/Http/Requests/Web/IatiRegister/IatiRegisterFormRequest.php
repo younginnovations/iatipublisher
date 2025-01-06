@@ -21,6 +21,36 @@ class IatiRegisterFormRequest extends FormRequest
     }
 
     /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes(): array
+    {
+        return [
+            'publisher_id'          => trans('register/iati_register_form_request.publisher_id'),
+            'publisher_name'        => trans('register/iati_register_form_request.publisher_name'),
+            'identifier'            => trans('register/iati_register_form_request.identifier'),
+            'registration_agency'   => trans('register/iati_register_form_request.registration_agency'),
+            'country'               => trans('register/iati_register_form_request.country'),
+            'registration_number'   => trans('register/iati_register_form_request.registration_number'),
+            'publisher_type'        => trans('register/iati_register_form_request.publisher_type'),
+            'license_id'            => trans('register/iati_register_form_request.license_id'),
+            'description'           => trans('register/iati_register_form_request.description'),
+            'image_url'             => trans('register/iati_register_form_request.image_url'),
+            'contact_email'         => trans('register/iati_register_form_request.contact_email'),
+            'website'               => trans('register/iati_register_form_request.website'),
+            'source'                => trans('register/iati_register_form_request.source'),
+            'default_language'      => trans('register/iati_register_form_request.default_language'),
+            'username'              => trans('register/iati_register_form_request.username'),
+            'full_name'             => trans('register/iati_register_form_request.full_name'),
+            'email'                 => trans('register/iati_register_form_request.email'),
+            'password'              => trans('register/iati_register_form_request.password'),
+            'password_confirmation' => trans('register/iati_register_form_request.password_confirmation'),
+        ];
+    }
+
+    /**
      * Get all of the input and files for the request.
      *
      * @return array

@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'refresh' => 'FR__ Refresh',
+    'refresh' => 'fr_ Refresh',
 ];
 

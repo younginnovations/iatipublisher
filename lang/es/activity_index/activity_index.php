@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'all'                                                             => 'ES__ All',
-    'published'                                                       => 'ES__ Published',
-    'ready_for_republishing'                                          => 'ES__ Ready for republishing',
-    'draft'                                                           => 'ES__ Draft',
-    'activity_has_been_published_successfully_refresh_to_see_changes' => 'ES__ Activity has been published successfully, refresh to see changes',
+    'all'                                                             => 'es_ All',
+    'published'                                                       => 'es_ Published',
+    'ready_for_republishing'                                          => 'es_ Ready for republishing',
+    'draft'                                                           => 'es_ Draft',
+    'activity_has_been_published_successfully_refresh_to_see_changes' => 'es_ Activity has been published successfully, refresh to see changes',
 ];
 

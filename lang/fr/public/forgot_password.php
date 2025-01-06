@@ -2,30 +2,30 @@
 
 return [
     'reset_page'          => [
-        'heading'           => 'FR__ Password Recovery',
-        'subheading'        => 'FR__ Please enter your email, we will send you a link to reset your password.',
-        'email'             => 'FR__ Email',
-        'email_placeholder' => 'FR__ Enter your email address',
-        'button'            => 'FR__ Send password reset link',
+        'heading'           => 'fr_ Password Recovery',
+        'subheading'        => 'fr_ Please enter your email, we will send you a link to reset your password.',
+        'email'             => 'fr_ Email',
+        'email_placeholder' => 'fr_ Enter your email address',
+        'button'            => 'fr_ Send password reset link',
     ],
     'confirm_page'        => [
-        'heading'    => 'FR__ Password Recovery',
-        'subheading' => 'FR__ An email has been sent with further instructions, please check it out when you get it.',
+        'heading'    => 'fr_ Password Recovery',
+        'subheading' => 'fr_ An email has been sent with further instructions, please check it out when you get it.',
     ],
     'reset_password_page' => [
-        'heading'         => 'FR__ Reset Password',
-        'subheading'      => 'FR__ Please enter your new password',
-        'token'           => 'FR__ token',
-        'email'           => 'FR__ email',
+        'heading'         => 'fr_ Reset Password',
+        'subheading'      => 'fr_ Please enter your new password',
+        'token'           => 'fr_ token',
+        'email'           => 'fr_ email',
         'new_password'    => [
-            'title'       => 'FR__ New Password',
-            'placeholder' => 'FR__ Enter a new password',
-            'password'    => 'FR__ password',
+            'title'       => 'fr_ New Password',
+            'placeholder' => 'fr_ Enter a new password',
+            'password'    => 'fr_ password',
         ],
         'repeat_password' => [
-            'title'                 => 'FR__ Repeat Password',
-            'placeholder'           => 'FR__ Re-enter your password',
-            'password_confirmation' => 'FR__ password confirmation',
+            'title'                 => 'fr_ Repeat Password',
+            'placeholder'           => 'fr_ Re-enter your password',
+            'password_confirmation' => 'fr_ password confirmation',
         ],
     ],
 ];

@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'previously_published_on_iati' => 'FR__ Previously Published on IATI',
+    'previously_published_on_iati' => 'fr_ Previously Published on IATI',
 ];

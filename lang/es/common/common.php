@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'refresh' => 'ES__ Refresh',
+    'refresh' => 'es_ Refresh',
 ];
 
