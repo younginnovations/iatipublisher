@@ -13,9 +13,9 @@ return [
     |
     */
 
-    'reset'     => 'FR_Language Your password has been reset!',
-    'sent'      => 'FR_Language We have emailed your password reset link!',
-    'throttled' => 'FR_Language Please wait before retrying.',
-    'token'     => 'FR_Language This password reset token is invalid.',
-    'user'      => 'FR_Language We can\'t find a user with that email address.',
+    'reset'     => 'fr_ Your password has been reset!',
+    'sent'      => 'fr_ We have emailed your password reset link!',
+    'throttled' => 'fr_ Please wait before retrying.',
+    'token'     => 'fr_ This password reset token is invalid.',
+    'user'      => 'fr_ We can\'t find a user with that email address.',
 ];

@@ -21,6 +21,36 @@ class IatiRegisterFormRequest extends FormRequest
     }
 
     /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes(): array
+    {
+        return [
+            'publisher_id'          => trans('register/iati_register_form_request.publisher_id'),
+            'publisher_name'        => trans('register/iati_register_form_request.publisher_name'),
+            'identifier'            => trans('register/iati_register_form_request.identifier'),
+            'registration_agency'   => trans('register/iati_register_form_request.registration_agency'),
+            'country'               => trans('register/iati_register_form_request.country'),
+            'registration_number'   => trans('register/iati_register_form_request.registration_number'),
+            'publisher_type'        => trans('register/iati_register_form_request.publisher_type'),
+            'license_id'            => trans('register/iati_register_form_request.license_id'),
+            'description'           => trans('register/iati_register_form_request.description'),
+            'image_url'             => trans('register/iati_register_form_request.image_url'),
+            'contact_email'         => trans('register/iati_register_form_request.contact_email'),
+            'website'               => trans('register/iati_register_form_request.website'),
+            'source'                => trans('register/iati_register_form_request.source'),
+            'default_language'      => trans('register/iati_register_form_request.default_language'),
+            'username'              => trans('register/iati_register_form_request.username'),
+            'full_name'             => trans('register/iati_register_form_request.full_name'),
+            'email'                 => trans('register/iati_register_form_request.email'),
+            'password'              => trans('register/iati_register_form_request.password'),
+            'password_confirmation' => trans('register/iati_register_form_request.password_confirmation'),
+        ];
+    }
+
+    /**
      * Get all of the input and files for the request.
      *
      * @return array
@@ -83,12 +113,12 @@ class IatiRegisterFormRequest extends FormRequest
 
         switch ($step) {
             case '1':
-                $messages['publisher_id.regex'] = 'The publisher id is invalid. The publisher id must be at least two characters long and lower case. It can include letters, numbers and also - (dash) and _ (underscore).';
-                $messages['registration_number.regex'] = 'The registration number is invalid. Valid registration number includes letter, number, . and _, - (dash).';
+                $messages['publisher_id.regex'] = trans('register/iati_register_form_request.the_publisher_id_is_invalid');
+                $messages['registration_number.regex'] = trans('register/iati_register_form_request.the_registration_number_is_invalid');
                 break;
             case '4':
-                $messages['username.regex'] = 'The username is invalid. Username must be purely lowercase alphabets followed by alphanumeric(ascii) characters and these symbols:-_';
-                $messages['email.unique'] = 'Email is already in use in IATI Publisher.';
+                $messages['username.regex'] = trans('register/iati_register_form_request.the_username_is_invalid');
+                $messages['email.unique'] = trans('register/iati_register_form_request.email_is_already_in_use_in_iati_publisher');
                 break;
         }
 

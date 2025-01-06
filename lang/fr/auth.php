@@ -13,8 +13,8 @@ return [
     |
     */
 
-    'failed'   => 'FR_Language These credentials do not match our records.',
-    'inactive_user' => 'FR_Language Your account is inactive. Please contact your admin or superadmin for further information.',
-    'password' => 'FR_Language The provided password is incorrect.',
-    'throttle' => 'FR_Language Too many login attempts. Please try again in :seconds seconds.',
+    'failed'        => 'fr_ These credentials do not match our records.',
+    'inactive_user' => 'fr_ Your account is inactive. Please contact your admin or superadmin for further information.',
+    'password'      => 'fr_ The provided password is incorrect.',
+    'throttle'      => 'fr_ Too many login attempts. Please try again in :seconds seconds.',
 ];

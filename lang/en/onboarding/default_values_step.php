@@ -2,7 +2,7 @@
 
 return [
     'set_default_values'                                                                            => 'Set Default Values',
-    'default_for_all_data'=>'Default for all data',
+    'default_for_all_data'                                                                          => 'Default for all data',
     'these_commonly_occurring_values_can_be_populated_here'                                         => 'These commonly occurring values can be populated here and IATI Publisher will automatically apply them to all of your activities.',
     'the_currency_in_which_you_report_your_financial_transactions'                                  => 'The currency in which you report your financial transactions. You can later manually change the currency on individual transactions and budgets if required.',
     'select_from_dropdown'                                                                          => 'Select from dropdown',
@@ -11,7 +11,7 @@ return [
     'select_language_from_dropdown'                                                                 => 'Select language from dropdown',
     'the_language_in_which_you_normally_report'                                                     => 'The language in which you normally report. Select from dropdown.',
     'default_for_activity_data'                                                                     => 'Default for activity data',
-    'if_you_are_reporting_both_programmes_parent_activities__and_projects_child_activities'        => 'If you are reporting both programmes (parent activities) and projects (child activities), choose the hierarchical level that most of your activities are at. e.g. parent activity = 1; child activity = 2. <br>If all your activities are at the same level i.e. you have no child activities, then choose 1.',
+    'if_you_are_reporting_both_programmes_parent_activities__and_projects_child_activities'         => 'If you are reporting both programmes (parent activities) and projects (child activities), choose the hierarchical level that most of your activities are at. e.g. parent activity = 1; child activity = 2. <br>If all your activities are at the same level i.e. you have no child activities, then choose 1.',
     'type_default_hierarchy_here'                                                                   => 'Type default hierarchy here',
     'if_hierarchy_is_not_reported_then_1_is_assumed'                                                => 'If hierarchy is not reported then 1 is assumed. If multiple levels are reported then, to avoid double counting, financial transactions should only be reported at the lowest hierarchical level.',
     'add_a_humanitarian_flag_to_every_activity'                                                     => 'Add a \'Humanitarian Flag\' to every activity that your organisation publishes data on. This means that your organisation identifies all their activities as wholly or partially addressing a humanitarian crisis or multiple crises. You can later manually add or remove a Humanitarian Flag on individual activities if required.',

@@ -6,5 +6,5 @@ return [
     'the_selected_items_exceed_the_allowed_size_for_publishing_at_once'  => 'The selected items exceed the allowed size for publishing at once. Please try publishing a smaller batch.',
     'your_organisation_data_not_published'                               => 'Your Organisation data is not published.',
     'go_to_organisation'                                                 => 'Go to Organisation',
-    'close'                                                              => '"Close",'
+    'close'                                                              => '"Close",',
 ];
