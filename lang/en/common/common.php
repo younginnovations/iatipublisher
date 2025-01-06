@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'refresh'               => 'Refresh',
+    'refresh' => 'Refresh',
 ];
 

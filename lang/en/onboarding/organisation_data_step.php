@@ -6,7 +6,7 @@ return [
     'publish_organisation_data'                                            => 'Publish Organisation Data',
     'review_the_basic_information'                                         => 'Review the basic information on your organisation and publish it.',
     'help'                                                                 => 'Help',
-    'the_organisation_issuing_the_report'                                 => 'The organisation issuing the report. May be a primary source (reporting on its own activity as donor, implementing agency, etc) or a secondary source (reporting on the activities of another organisation).',
+    'the_organisation_issuing_the_report'                                  => 'The organisation issuing the report. May be a primary source (reporting on its own activity as donor, implementing agency, etc) or a secondary source (reporting on the activities of another organisation).',
     'machine_readable_identification_string_for_the_organisation'          => 'Machine-readable identification string for the organisation issuing the report. Must be in the format {RegistrationAgency}-{RegistrationNumber}.',
     'type_reference'                                                       => 'Type reference',
     'the_type_of_organisation_issuing_the_report'                          => 'The type of organisation issuing the report.',
