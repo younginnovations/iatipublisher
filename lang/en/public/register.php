@@ -78,7 +78,7 @@ return [
             'full_name_placeholder'                        => 'Type your full name here',
             'email'                                        => 'Email Address',
             'email_placeholder'                            => 'Type valid email here',
-            'username'                                     => "Username",
+            'username'                                     => 'Username',
             'username_placeholder'                         => 'Type username here',
             'username_hover_text'                          => 'You will need this later to login into IATI Publisher.',
             'password'                                     => 'Password',

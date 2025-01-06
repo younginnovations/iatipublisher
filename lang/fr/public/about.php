@@ -1,22 +1,22 @@
 <?php
 
 return [
-  'about_iati_publisher'   => 'FR__ About IATI Publisher',
-  'what_is_iati_publisher' => 'FR__ What is IATI Publisher?',
-  'iati_introduction'      => 'FR__ IATI Publisher enables organisations to publish data on activities and resource flows according to the IATI Standard. The IATI Standard is a set of rules and guidance on how to publish useful development and humanitarian data.',
+  'about_iati_publisher'   => 'fr_ About IATI Publisher',
+  'what_is_iati_publisher' => 'fr_ What is IATI Publisher?',
+  'iati_introduction'      => 'fr_ IATI Publisher enables organisations to publish data on activities and resource flows according to the IATI Standard. The IATI Standard is a set of rules and guidance on how to publish useful development and humanitarian data.',
   'use_iati'               => [
-    'title'           => 'FR__ Use IATI Publisher to',
-    'list_item_one'   => 'FR__ Register your organisation with an IATI Publisher account',
-    'list_item_two'   => 'FR__ Understand the data fields in the IATI Standard (with IATI Standard Reference definitions, helpful explanations and links to guidance)',
-    'list_item_three' => 'FR__ Provide your organisation’s data easily by completing online forms. Or upload data on multiple activities on a CSV or .xml file with the Bulk Upload feature',
-    'list_item_four'  => 'FR__ Run automatic checks (via the IATI Validator) for errors before publishing your data',
-    'list_item_five'  => 'FR__ Publish your data. IATI Publisher will add your data to the IATI Registry (where links to all IATI data is found)',
-    'paragraph_one'   => 'FR__ IATI Publisher has been built to support organisations that publish a limited number of development and humanitarian activities. An ‘activity’ is an individual project or another unit of development and humanitarian work, which is determined by the organisation that is publishing the data. Organisations who publish a limited number of activities tend to represent small and medium sized organisations.',
-    'paragraph_two'   => 'FR__ Large organisations, such as donor governments or UN agencies delivering 100+ activities are advised not to use IATI Publisher. Instead these organisations likely need to use an alternative technical solution that enables the publication of large volumes of data. Please email the IATI Helpdesk for more information',
+    'title'           => 'fr_ Use IATI Publisher to',
+    'list_item_one'   => 'fr_ Register your organisation with an IATI Publisher account',
+    'list_item_two'   => 'fr_ Understand the data fields in the IATI Standard (with IATI Standard Reference definitions, helpful explanations and links to guidance)',
+    'list_item_three' => 'fr_ Provide your organisation’s data easily by completing online forms. Or upload data on multiple activities on a CSV or .xml file with the Bulk Upload feature',
+    'list_item_four'  => 'fr_ Run automatic checks (via the IATI Validator) for errors before publishing your data',
+    'list_item_five'  => 'fr_ Publish your data. IATI Publisher will add your data to the IATI Registry (where links to all IATI data is found)',
+    'paragraph_one'   => 'fr_ IATI Publisher has been built to support organisations that publish a limited number of development and humanitarian activities. An ‘activity’ is an individual project or another unit of development and humanitarian work, which is determined by the organisation that is publishing the data. Organisations who publish a limited number of activities tend to represent small and medium sized organisations.',
+    'paragraph_two'   => 'fr_ Large organisations, such as donor governments or UN agencies delivering 100+ activities are advised not to use IATI Publisher. Instead these organisations likely need to use an alternative technical solution that enables the publication of large volumes of data. Please email the IATI Helpdesk for more information',
   ],
   'development_of_iati'    => [
-    'title'         => 'FR__ Development of IATI Publisher',
-    'paragraph_one' => 'FR__ IATI Publisher was first launched in December 2022 by the IATI Secretariat and has been developed by
+    'title'         => 'fr_ Development of IATI Publisher',
+    'paragraph_one' => 'fr_ IATI Publisher was first launched in December 2022 by the IATI Secretariat and has been developed by
             <a
               target="_blank"
               rel="noopener noreferrer"

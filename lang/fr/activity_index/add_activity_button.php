@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'add_activity'                   => 'FR__ Add Activity',
-    'add_activity_manually'          => 'FR__ Add activity manually',
-    'import_activities_from_csv_xml' => 'FR__ Import activities from .csv/.xml',
-    'import_activities_from_xls'     => 'FR__ Import activities from .XLS',
+    'add_activity'                   => 'fr_ Add Activity',
+    'add_activity_manually'          => 'fr_ Add activity manually',
+    'import_activities_from_csv_xml' => 'fr_ Import activities from .csv/.xml',
+    'import_activities_from_xls'     => 'fr_ Import activities from .XLS',
 ];

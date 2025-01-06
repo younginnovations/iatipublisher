@@ -1,12 +1,12 @@
 <?php
 
 return [
-    's_n'                  => 'ES__ S.N',
-    'activity_title'       => 'ES__ Activity Title',
-    'publishing_progress'  => 'ES__ Publishing Progress',
-    'updated_on'           => 'ES__ Updated On',
-    'status'               => 'ES__ Status',
-    'publish'              => 'ES__ Publish',
-    'untitled'             => 'ES__ Untitled',
-    'activities_not_found' => 'ES__ Activities not found',
+    's_n'                  => 'es_ S.N',
+    'activity_title'       => 'es_ Activity Title',
+    'publishing_progress'  => 'es_ Publishing Progress',
+    'updated_on'           => 'es_ Updated On',
+    'status'               => 'es_ Status',
+    'publish'              => 'es_ Publish',
+    'untitled'             => 'es_ Untitled',
+    'activities_not_found' => 'es_ Activities not found',
 ];
