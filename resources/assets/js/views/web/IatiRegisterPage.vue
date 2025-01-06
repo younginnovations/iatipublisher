@@ -19,19 +19,9 @@
         <EmailVerification v-if="checkStep('5')" :email="formData['email']" />
         <div v-else class="form input__field" @keyup.enter="goToNextForm">
           <aside class="mb-4 block border-b border-b-n-10 pb-4 xl:hidden">
-            <span class="text-base font-bold"
-              >{{
-                translatedData[
-                  'public.register.not_registered_page.step_section.step'
-                ]
-              }}
-              {{ getCurrentStep() }}
-              {{
-                translatedData[
-                  'public.register.not_registered_page.step_section.total_step'
-                ]
-              }}</span
-            >
+            <span class="text-base font-bold">
+              {{ translatedStepXOutOf5 }}
+            </span>
             <ul class="relative mt-3 text-sm text-n-40">
               <li
                 v-for="(form, key, i) in registerForm"
@@ -241,19 +231,9 @@
         </div>
 
         <aside class="register__sidebar hidden xl:block">
-          <span class="text-base font-bold"
-            >{{
-              translatedData[
-                'public.register.not_registered_page.step_section.step'
-              ]
-            }}
-            {{ getCurrentStep() }}
-            {{
-              translatedData[
-                'public.register.not_registered_page.step_section.total_step'
-              ]
-            }}</span
-          >
+          <span class="text-base font-bold">
+            {{ translatedStepXOutOf5 }}
+          </span>
           <ul class="relative mt-6 text-sm text-n-40">
             <li
               v-for="(form, key, i) in registerForm"
@@ -453,6 +433,15 @@ export default defineComponent({
       };
     });
 
+    /**
+     * For translated : Step 1 out of 5 and stuff.
+     */
+    const translatedStepXOutOf5 = ref('');
+
+    /**
+     * For translation
+     * Since actual texts are inside a reactive objects, we need a watch effect.
+     * */
     watchEffect(() => {
       if (translatedData.value && registerForm) {
         // Form 1
@@ -754,6 +743,10 @@ export default defineComponent({
           translatedData.value[
             'public.register.not_registered_page.register_section.email_verification_description'
           ];
+
+        translatedStepXOutOf5.value = translatedData.value[
+          'public.register.not_registered_page.step_count_out_of_5'
+        ].replace(':count', getCurrentStep());
       }
     });
 
@@ -1316,6 +1309,7 @@ export default defineComponent({
       resize,
       textarea,
       translatedData,
+      translatedStepXOutOf5,
     };
   },
 });

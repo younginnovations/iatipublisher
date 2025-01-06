@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'humanitarian_types' => [
-      '1' => 'Yes',
-      '0' => 'No',
-    ],
+  'humanitarian_types' => [
+    '1' => 'FR__ Yes',
+    '0' => 'FR__ No',
+  ],
 ];

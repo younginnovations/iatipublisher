@@ -2,30 +2,30 @@
 
 return [
     'reset_page'          => [
-        'heading'           => 'ES_Language Password Recovery',
-        'subheading'        => 'ES_Language Please enter your email, we will send you a link to reset your password.',
-        'email'             => 'ES_Language Email',
-        'email_placeholder' => 'ES_Language Enter your email address',
-        'button'            => 'ES_Language Send password reset link',
+        'heading'           => 'ES__ Password Recovery',
+        'subheading'        => 'ES__ Please enter your email, we will send you a link to reset your password.',
+        'email'             => 'ES__ Email',
+        'email_placeholder' => 'ES__ Enter your email address',
+        'button'            => 'ES__ Send password reset link',
     ],
     'confirm_page'        => [
-        'heading'    => 'ES_Language Password Recovery',
-        'subheading' => 'ES_Language An email has been sent with further instructions, please check it out when you get it.'
+        'heading'    => 'ES__ Password Recovery',
+        'subheading' => 'ES__ An email has been sent with further instructions, please check it out when you get it.',
     ],
     'reset_password_page' => [
-        'heading'         => 'ES_Language Reset Password',
-        'subheading'      => 'ES_Language Please enter your new password',
-        'token'           => 'ES_Language token',
-        'email'           => 'ES_Language email',
+        'heading'         => 'ES__ Reset Password',
+        'subheading'      => 'ES__ Please enter your new password',
+        'token'           => 'ES__ token',
+        'email'           => 'ES__ email',
         'new_password'    => [
-            'title'       => 'ES_Language New Password',
-            'placeholder' => 'ES_Language Enter a new password',
-            'password'    => 'ES_Language password'
+            'title'       => 'ES__ New Password',
+            'placeholder' => 'ES__ Enter a new password',
+            'password'    => 'ES__ password',
         ],
         'repeat_password' => [
-            'title'                 => 'ES_Language Repeat Password',
-            'placeholder'           => 'ES_Language Re-enter your password',
-            'password_confirmation' => 'ES_Language password confirmation'
+            'title'                 => 'ES__ Repeat Password',
+            'placeholder'           => 'ES__ Re-enter your password',
+            'password_confirmation' => 'ES__ password confirmation',
         ],
     ],
 ];

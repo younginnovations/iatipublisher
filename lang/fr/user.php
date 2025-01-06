@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'user_roles' => [
-        'superadmin' => 'SuperAdmin',
-        'iati_admin' => 'IATI Admin',
-        'admin' => 'Admin',
-        'general_user' => 'General User',
-    ]
+  'user_roles' => [
+    'superadmin'   => 'FR__ SuperAdmin',
+    'iati_admin'   => 'FR__ IATI Admin',
+    'admin'        => 'FR__ Admin',
+    'general_user' => 'FR__ General User',
+  ],
 ];

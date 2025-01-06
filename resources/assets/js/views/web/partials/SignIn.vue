@@ -107,7 +107,7 @@
         >
       </p>
       <button id="btn" type="submit" class="btn" @click="login">
-        {{ translatedData['public.login.sign_in_section.sign_in_button'] }}
+        {{ translatedData['public.login.sign_in_section.sign_in'] }}
         <svg-vue class="" icon="right-arrow" />
       </button>
     </div>
