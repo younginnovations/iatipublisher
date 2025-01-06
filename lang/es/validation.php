@@ -31,7 +31,7 @@ return [
         'array'   => 'The :attribute must have between :min and :max items.',
     ],
     'boolean'              => 'The :attribute field must be true or false.',
-    'confirmed'            => 'The :attribute confirmation does not match.',
+    'confirmed'            => 'ES_Language The :attribute confirmation does not match.',
     'current_password'     => 'The password is incorrect.',
     'date'                 => 'The :attribute is not a valid date.',
     'date_equals'          => 'The :attribute must be a date equal to :date.',
@@ -43,7 +43,7 @@ return [
     'digits_between'       => 'The :attribute must be between :min and :max digits.',
     'dimensions'           => 'The :attribute has invalid image dimensions.',
     'distinct'             => 'The :attribute field has a duplicate value.',
-    'email'                => 'The :attribute must be a valid email address.',
+    'email'                => 'ES_Language The :attribute must be a valid email address.',
     'ends_with'            => 'The :attribute must end with one of the following: :values.',
     'enum'                 => 'The selected :attribute is invalid.',
     'exists'               => 'The selected :attribute is invalid.',
@@ -85,7 +85,7 @@ return [
     'max'                  => [
         'numeric' => 'The :attribute must not be greater than :max.',
         'file'    => 'The :attribute must not be greater than :max kilobytes.',
-        'string'  => 'The :attribute must not be greater than :max characters.',
+        'string'  => 'ES_Language The :attribute must not be greater than :max characters.',
         'array'   => 'The :attribute must not have more than :max items.',
     ],
     'mimes'                => 'The :attribute must be a file of type: :values.',
@@ -93,7 +93,7 @@ return [
     'min'                  => [
         'numeric' => 'The :attribute must be at least :min.',
         'file'    => 'The :attribute must be at least :min kilobytes.',
-        'string'  => 'The :attribute must be at least :min characters.',
+        'string'  => 'ES_Language The :attribute must be at least :min characters.',
         'array'   => 'The :attribute must have at least :min items.',
     ],
     'multiple_of'          => 'The :attribute must be a multiple of :value.',
@@ -107,7 +107,7 @@ return [
     'prohibited_unless'    => 'The :attribute field is prohibited unless :other is in :values.',
     'prohibits'            => 'The :attribute field prohibits :other from being present.',
     'regex'                => 'The :attribute format is invalid.',
-    'required'             => 'The :attribute field is required.',
+    'required'             => 'ES_language The :attribute field is required.',
     'required_array_keys'  => 'The :attribute field must contain entries for: :values.',
     'required_if'          => 'The :attribute field is required when :other is :value.',
     'required_unless'      => 'The :attribute field is required unless :other is in :values.',
@@ -123,7 +123,7 @@ return [
         'array'   => 'The :attribute must contain :size items.',
     ],
     'starts_with'          => 'The :attribute must start with one of the following: :values.',
-    'string'               => 'The :attribute must be a string.',
+    'string'               => 'ES_Language The :attribute must be a string.',
     'timezone'             => 'The :attribute must be a valid timezone.',
     'unique'               => 'The :attribute has already been taken.',
     'uploaded'             => 'The :attribute failed to upload.',
@@ -199,7 +199,7 @@ return [
     'validation_before_completed'               => 'Please make sure you enter the following fields before changing to completed state.',
     'reporting_org_identifier_unique'           => 'This reporting organization identifier is being used by :orgName. This identifier has to be unique. Please contact us at support@aidstream.org',
     'code_list'                                 => ':attribute is not valid.',
-    'string'                                    => ':attribute should be string',
+    'string'                                    => 'ES_Language :attribute should be string',
     'negative'                                  => ':attribute cannot be negative',
     'actual_date'                               => 'Actual Start Date And Actual End Date must not exceed present date',
     'multiple_activity_date'                    => 'Multiple Activity dates are not allowed.',
@@ -228,7 +228,7 @@ return [
             'rule-name' => 'custom-message',
         ],
     ],
-    'not_in_spam_emails' => 'This email has been flagged as spam and cannot be used.',
+    'not_in_spam_emails' => 'ES_Language This email has been flagged as spam and cannot be used.',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes
@@ -246,4 +246,5 @@ return [
     'amount' => 'Please enter amount in the format xx.xx',
     'greater' => 'The :attribute must be greater than or equal to :value',
     'date_greater_than' => 'The date must be greater than :value',
+    'logged_in_verify' => 'ES_Language User must be logged in to verify email.',
 ];

@@ -31,9 +31,7 @@
             <button @click="filterByPublishStatus('published')">
               <svg-vue icon="approved-cloud" />
               <span>
-                {{
-                  translatedData['activity_index.activity_index.published']
-                }}
+                {{ translatedData['activity_index.activity_index.published'] }}
                 ({{ allPublishStatusCountMap.published }})
               </span>
             </button>
@@ -441,7 +439,7 @@ export default defineComponent({
 
     onMounted(async () => {
       translatedData.value = (
-        await Language.getTranslatedData('activity,onboarding,elements')
+        await Language.getTranslatedData('activity_index,onboarding,elements')
       ).data;
 
       fetchActivitiesCountByPublishStatus();
