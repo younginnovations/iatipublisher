@@ -704,7 +704,6 @@ onMounted(() => {
   LanguageService.getTranslatedData('adminHeader')
     .then((response) => {
       translatedData.value = response.data;
-      console.log(translatedData.value);
     })
     .catch((error) => console.log(error));
 });

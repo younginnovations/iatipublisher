@@ -48,7 +48,7 @@ class WebController extends Controller
         $intent = '';
 
         if (Str::contains(Redirect::intended()->getTargetUrl(), '/email/verify/')) {
-            $message = 'User must be logged in to verify email.';
+            $message = trans('validation.logged_in_verify');
             $intent = 'verify';
         }
 

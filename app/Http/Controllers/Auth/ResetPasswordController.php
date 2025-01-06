@@ -45,7 +45,7 @@ class ResetPasswordController extends Controller
      *
      * If no token is present, display the link request form.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -61,8 +61,8 @@ class ResetPasswordController extends Controller
     /**
      * Get the response for a successful password reset.
      *
-     * @param Request $request
-     * @param string                   $response
+     * @param  Request  $request
+     * @param  string  $response
      *
      * @return \Illuminate\Http\RedirectResponse|JsonResponse
      */
@@ -86,7 +86,14 @@ class ResetPasswordController extends Controller
         return [
             'token'                 => 'required',
             'email'                 => 'required|email',
-            'password'              => ['required', 'confirmed', 'string', 'min:8', 'max:255', Rules\Password::defaults()],
+            'password'              => [
+                'required',
+                'confirmed',
+                'string',
+                'min:8',
+                'max:255',
+                Rules\Password::defaults(),
+            ],
             'password_confirmation' => ['required', 'string', 'min:8', 'max:255'],
         ];
     }
@@ -139,5 +146,74 @@ class ResetPasswordController extends Controller
         }
 
         event(new PasswordReset($user));
+    }
+
+    /**
+     * Get the password reset validation messages.
+     *
+     * @return array
+     */
+    protected function validationErrorMessages(): array
+    {
+        return [
+            'token.required'                 => trans(
+                'validation.required',
+                ['attribute' => trans('public/forgot_password.reset_password_page.token')]
+            ),
+            'email.required'                 => trans(
+                'validation.required',
+                ['attribute' => trans('public/forgot_password.reset_password_page.email')]
+            ),
+            'email.email'                    => trans(
+                'validation.email',
+                ['attribute' => trans('public/forgot_password.reset_password_page.email')]
+            ),
+            'password.required'              => trans(
+                'validation.required',
+                ['attribute' => trans('public/forgot_password.reset_password_page.new_password.password')]
+            ),
+            'password.confirmed'             => trans(
+                'validation.confirmed',
+                ['attribute' => trans('public/forgot_password.reset_password_page.new_password.password')]
+            ),
+            'password.string'                => trans(
+                'validation.string',
+                ['attribute' => trans('public/forgot_password.reset_password_page.new_password.password')]
+            ),
+            'password.min'                   => trans(
+                'validation.min',
+                ['attribute' => trans('public/forgot_password.reset_password_page.new_password.password'), 'min' => 8]
+            ),
+            'password.max'                   => trans(
+                'validation.max',
+                ['attribute' => trans('public/forgot_password.reset_password_page.new_password.password'), 'max' => 255]
+            ),
+            'password_confirmation.required' => trans(
+                'validation.required',
+                [
+                    'attribute' => trans(
+                        'public/forgot_password.reset_password_page.repeat_password.password_confirmation'
+                    ),
+                ]
+            ),
+            'password_confirmation.min'      => trans(
+                'validation.min',
+                [
+                    'attribute' => trans(
+                        'public/forgot_password.reset_password_page.repeat_password.password_confirmation'
+                    ),
+                    'min'       => 8,
+                ]
+            ),
+            'password_confirmation.max'      => trans(
+                'validation.max',
+                [
+                    'attribute' => trans(
+                        'public/forgot_password.reset_password_page.repeat_password.password_confirmation'
+                    ),
+                    'max'       => 255,
+                ]
+            ),
+        ];
     }
 }
