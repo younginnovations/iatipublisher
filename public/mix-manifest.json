@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=19eed7d34b7abea8bbea0ef35dee13d6",
     "/js/script.js": "/js/script.js?id=573e5816f1296bbce2c2c0084e92e523",
     "/js/webportal-script.js": "/js/webportal-script.js?id=06d4c518a25c033e1989b9db84a1dd01",
@@ -66,10 +67,14 @@
 =======
     "/js/app.js": "/js/app.js?id=85714d6650b946583f9be73dac99a557",
 >>>>>>> 19530ca2 (-[x] Disabled Select All)
+=======
+    "/js/app.js": "/js/app.js?id=37026507dadadd47c189ecfd2f649331",
+>>>>>>> dace24de (-[x] Added Open in new Tab Text)
     "/js/script.js": "/js/script.js?id=5664c41472ea07b11e7b9e7ad4007a4c",
     "/js/webportal-script.js": "/js/webportal-script.js?id=ec424584e8e86829641c324d807c42b5",
     "/js/formbuilder.js": "/js/formbuilder.js?id=0da9ac4d5b4cf5740657fde41069a985",
     "/manifest.js": "/manifest.js?id=3ed1124c8f4dcb98acc36de67cb80349",
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -82,5 +87,9 @@
     "/css/webportal-app.css": "/css/webportal-app.css?id=989345e94a6e377028c325f720bba2e8",
     "/css/app.css": "/css/app.css?id=e4962952551361112942c4055c4608c8",
 >>>>>>> 19530ca2 (-[x] Disabled Select All)
+=======
+    "/css/webportal-app.css": "/css/webportal-app.css?id=05438cd51d1dbe0d66a98473b73aa735",
+    "/css/app.css": "/css/app.css?id=bd3e6af98c3540e2d23d41a79c2f542e",
+>>>>>>> dace24de (-[x] Added Open in new Tab Text)
     "/js/vendor.js": "/js/vendor.js?id=1d9dc84f31934bcf90e4083803feee6b"
 }

@@ -205,8 +205,13 @@
                     class="text-xl"
                     icon="warning-activity"
                   />
-                  <a :href="`${permalink}${key}`" target="_blank" class="">
-                    <svg-vue class="text-sm" icon="open-link" />
+                  <a
+                    :href="`${permalink}${key}`"
+                    target="_blank"
+                    class="flex items-center gap-[2px]"
+                  >
+                    Open in new tab
+                    <svg-vue class="text-base" icon="open-link-small" />
                   </a>
                 </div>
               </div>
