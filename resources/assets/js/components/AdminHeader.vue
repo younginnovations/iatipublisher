@@ -53,15 +53,18 @@
             :key="index"
             :class="data.languageNavLiClasses"
           >
-            <a
+            <button
+              type="button"
               :class="[
-                { nav__pointer: language.active },
+                language.language.toLowerCase() == currentLanguage.toLowerCase()
+                  ? 'nav__pointer'
+                  : '',
                 data.languageNavAnchorClasses,
               ]"
-              :href="language.permalink"
+              @click="changeLanguage(language.language.toLowerCase())"
             >
               <span>{{ language.language }}</span>
-            </a>
+            </button>
           </li>
         </ul>
       </nav>
@@ -417,6 +420,7 @@ import { useToggle, useStorage } from '@vueuse/core';
 import CreateModal from '../views/activity/CreateModal.vue';
 import Toast from './ToastMessage.vue';
 import LanguageService from 'Services/language';
+import language from 'Services/language';
 
 const store = detailStore();
 
@@ -450,6 +454,8 @@ const errorToastVisibility = ref(false);
 const errorToastMessage = ref('');
 const errorToastType = ref(false);
 const translatedData = ref({});
+const currentLanguage = ref('en');
+console.log(currentLanguage.value);
 
 const data = reactive({
   languageNavLiClasses: 'flex',
@@ -462,17 +468,17 @@ const data = reactive({
     {
       language: 'EN',
       permalink: '#',
-      active: true,
+      active: currentLanguage.value == 'en',
     },
     {
       language: 'FR',
       permalink: '#',
-      active: false,
+      active: currentLanguage.value == 'fr',
     },
     {
       language: 'ES',
       permalink: '#',
-      active: false,
+      active: currentLanguage.value == 'es',
     },
   ],
   org_menus: [
@@ -520,6 +526,18 @@ const data = reactive({
     },
   ],
 });
+
+const changeLanguage = (lang: string) => {
+  LanguageService.changeLanguage(lang)
+    .then(() => {
+      currentLanguage.value = lang;
+      window.location.reload();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 watch(
   () => store.state.isLoading,
   (value) => {
@@ -700,7 +718,9 @@ onUnmounted(() => {
   localStorage.removeItem('openAddModel');
 });
 
-onMounted(() => {
+onMounted(async () => {
+  currentLanguage.value = await LanguageService.getLanguage();
+  console.log(currentLanguage.value);
   LanguageService.getTranslatedData('adminHeader')
     .then((response) => {
       translatedData.value = response.data;
