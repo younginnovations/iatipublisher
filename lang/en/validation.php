@@ -149,19 +149,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Custom Validation Attributes
-    |--------------------------------------------------------------------------
-    |
-    | The following language lines are used to swap our attribute placeholder
-    | with something more reader friendly such as "E-Mail Address" instead
-    | of "email". This simply helps us make our message more expressive.
-    |
-    */
-
-    'attributes'                                       => [],
-
-    /*
-    |--------------------------------------------------------------------------
     | Custom Validation Language Lines
     |--------------------------------------------------------------------------
     |
@@ -240,7 +227,27 @@ return [
     |
     */
 
-    'attributes'        => [],
+    'attributes' => [
+        'username'              => 'username',
+        'full_name'             => 'full name',
+        'email'                 => 'email',
+        'publisher_id'          => 'publisher id',
+        'publisher_name'        => 'publisher name',
+        'identifier'            => 'identifier',
+        'password'              => 'password',
+        'password_confirmation' => 'password confirmation',
+        'registration_agency'   => 'registration agency',
+        'registration_number'   => 'registration number',
+        'country'               => 'country',
+        'default_language'      => 'default language',
+        'publisher_type'        => 'publisher type',
+        'license_id'            => 'license id',
+        'description'           => 'description',
+        'image_url'             => 'image url',
+        'contact_email'         => 'contact email',
+        'website'               => 'website',
+        'source'                => 'source',
+    ],
     'within_a_year'     => 'The :attribute must be within a year after :date.',
     'required_if_any'   => 'The :field is required if any of the fields of :element are filled.',
     'amount'            => 'Please enter amount in the format xx.xx',

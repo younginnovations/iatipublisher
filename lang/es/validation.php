@@ -149,19 +149,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Custom Validation Attributes
-    |--------------------------------------------------------------------------
-    |
-    | The following language lines are used to swap our attribute placeholder
-    | with something more reader friendly such as "E-Mail Address" instead
-    | of "email". This simply helps us make our message more expressive.
-    |
-    */
-
-    'attributes'                                       => [],
-
-    /*
-    |--------------------------------------------------------------------------
     | Custom Validation Language Lines
     |--------------------------------------------------------------------------
     |
@@ -240,7 +227,27 @@ return [
     |
     */
 
-    'attributes'        => [],
+    'attributes' => [
+        'username'              => 'es_ username',
+        'full_name'             => 'es_ full name',
+        'email'                 => 'es_ email',
+        'publisher_id'          => 'es_ publisher id',
+        'publisher_name'        => 'es_ publisher name',
+        'identifier'            => 'es_ identifier',
+        'password'              => 'es_ password',
+        'password_confirmation' => 'es_ password confirmation',
+        'registration_agency'   => 'es_ registration agency',
+        'registration_number'   => 'es_ registration number',
+        'country'               => 'es_ country',
+        'default_language'      => 'es_ default language',
+        'publisher_type'        => 'es_ publisher type',
+        'license_id'            => 'es_ license id',
+        'description'           => 'es_ description',
+        'image_url'             => 'es_ image url',
+        'contact_email'         => 'es_ contact email',
+        'website'               => 'es_ website',
+        'source'                => 'es_ source',
+    ],
     'within_a_year'     => 'es_ The :attribute must be within a year after :date.',
     'required_if_any'   => 'es_ The :field is required if any of the fields of :element are filled.',
     'amount'            => 'es_ Please enter amount in the format xx.xx',
