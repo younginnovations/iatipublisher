@@ -16,19 +16,9 @@
         <EmailVerification v-if="checkStep('3')" :email="formData['email']" />
         <div v-else class="form input__field" @keyup.enter="goToNextForm">
           <aside class="mb-4 block border-b border-b-n-10 pb-4 xl:hidden">
-            <span class="text-base font-bold"
-              >{{
-                translatedData[
-                  'public.register.registered_page.step_section.step'
-                ]
-              }}
-              {{ getCurrentStep() }}
-              {{
-                translatedData[
-                  'public.register.registered_page.step_section.total_step'
-                ]
-              }}</span
-            >
+            <span class="text-base font-bold">
+              {{ translatedStepXOutOf3 }}
+            </span>
             <ul class="relative mt-3 text-sm text-n-40">
               <li
                 v-for="(form, key, i) in registerForm"
@@ -227,19 +217,9 @@
         </div>
 
         <aside class="register__sidebar hidden xl:block">
-          <span class="text-base font-bold"
-            >{{
-              translatedData[
-                'public.register.registered_page.step_section.step'
-              ]
-            }}
-            {{ getCurrentStep() }}
-            {{
-              translatedData[
-                'public.register.registered_page.step_section.total_step'
-              ]
-            }}</span
-          >
+          <span class="text-base font-bold">
+            {{ translatedStepXOutOf3 }}
+          </span>
           <ul class="relative mt-6 text-sm text-n-40">
             <li
               v-for="(form, key, i) in registerForm"
@@ -334,6 +314,7 @@ export default defineComponent({
     const step = ref(1);
     const publisherExists = ref(true);
     const isLoaderVisible = ref(false);
+    const translatedStepXOutOf3 = ref('');
 
     let { agency } = toRefs(props);
 
@@ -597,6 +578,16 @@ export default defineComponent({
           translatedData.value[
             'public.register.registered_page.register_section.email_verification_description'
           ];
+
+        console.log(
+          translatedData.value[
+            'public.register.registered_page.step_count_out_of_3'
+          ]
+        );
+        translatedStepXOutOf3.value = translatedData.value[
+          'public.register.registered_page.step_count_out_of_3'
+        ].replace(':count', getCurrentStep());
+        console.log(translatedStepXOutOf3.value);
       }
     });
 
@@ -898,6 +889,7 @@ export default defineComponent({
       isTextField,
       props,
       translatedData,
+      translatedStepXOutOf3,
     };
   },
 });

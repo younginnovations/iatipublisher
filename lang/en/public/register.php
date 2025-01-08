@@ -101,13 +101,10 @@ return [
         ],
     ],
     'registered_page'     => [
-        'heading'          => 'Create IATI Publisher Account',
-        'start_journey'    => 'Start your IATI publishing journey by creating an account in IATI Publisher',
-        'step_section'     => [
-            'step'       => 'Step',
-            'total_step' => 'out of 3',
-        ],
-        'register_section' => [
+        'heading'             => 'Create IATI Publisher Account',
+        'start_journey'       => 'Start your IATI publishing journey by creating an account in IATI Publisher',
+        'step_count_out_of_3' => 'Step :count out of 3',
+        'register_section'    => [
             // Form 1
             'heading_one'                                  => 'Publisher Information',
             'mandatory_fields'                             => 'Mandatory fields',
