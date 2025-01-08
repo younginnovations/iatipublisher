@@ -20,7 +20,8 @@
       </div>
       <div class="">
         <p class="text-[10px] leading-[15px] tracking-[-2%]">
-          Step {{ step.step }}
+          {{ translatedData['activity_index.step_bar.step'] ?? 'Step' }}
+          {{ step.step }}
         </p>
         <p class="text-sm font-bold tracking-[-2%]">{{ step.title }}</p>
       </div>
