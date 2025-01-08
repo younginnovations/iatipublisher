@@ -110,7 +110,7 @@
                 :message="errorData.message"
                 :title="
                   translatedData[
-                    'activity.activity_detail.activity_couldnt_be_published_because'
+                    'activity_detail.activity_detail.activity_couldnt_be_published_because'
                   ]
                 "
                 @close-popup="
@@ -170,14 +170,14 @@
                 <span class="mr-2">
                   {{
                     translatedData[
-                      'activity.activity_detail.publishing_progress'
+                      'activity_detail.activity_detail.publishing_progress'
                     ]
                   }}
                 </span>
                 <HoverText
                   :hover-text="
                     translatedData[
-                      'activity.activity_detail.the_iati_standard_contains_a_wide_range_of_data_elements_and_your_organisation_is_encouraged'
+                      'activity_detail.activity_detail.the_iati_standard_contains_a_wide_range_of_data_elements_and_your_organisation_is_encouraged'
                     ]
                   "
                   name=""
@@ -188,7 +188,7 @@
               <ProgressBar :percent="progress" class="mb-3" />
               <span>{{
                 translatedData[
-                  'activity.activity_detail.complete_all_core_elements_to_get_100_score'
+                  'activity_detail.activity_detail.complete_all_core_elements_to_get_100_score'
                 ]
               }}</span>
             </div>
@@ -202,7 +202,7 @@
                 <HoverText
                   :hover-text="
                     translatedData[
-                      'activity.activity_detail.element_represents_a_basic_unit_of_information_in_the_iati_standard'
+                      'activity_detail.activity_detail.element_represents_a_basic_unit_of_information_in_the_iati_standard'
                     ]
                   "
                   name=""
@@ -219,7 +219,7 @@
                 <HoverText
                   :hover-text="
                     translatedData[
-                      'activity.activity_detail.core_elements_include_the_iati_standards_mandatory_and_recommended_elements'
+                      'activity_detail.activity_detail.core_elements_include_the_iati_standards_mandatory_and_recommended_elements'
                     ]
                   "
                   name=""
@@ -240,7 +240,7 @@
                 <HoverText
                   :hover-text="
                     translatedData[
-                      'activity.activity_detail.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                      'activity_detail.activity_detail.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
                     ]
                   "
                   name=""
@@ -621,7 +621,7 @@ export default defineComponent({
       refreshMessageType: true,
       refreshMessage:
         translatedData.value[
-          'activity.activity_detail.activity_has_been_published_successfully_refresh_to_see_changes'
+          'activity_detail.activity_detail.activity_has_been_published_successfully_refresh_to_see_changes'
         ],
     });
 
@@ -682,7 +682,7 @@ export default defineComponent({
           toastData.visibility = true;
           toastData.message =
             translatedData.value[
-              'activity.activity_detail.removed_successfully'
+              'activity_detail.activity_detail.removed_successfully'
             ];
           sessionStorage.clear();
         }

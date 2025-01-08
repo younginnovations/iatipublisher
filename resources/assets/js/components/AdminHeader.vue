@@ -78,9 +78,7 @@
             :class="data.menuNavLiClasses"
           >
             <a
-              v-if="
-                menu.name !== 'Add / Import Activity' && menu.name !== 'Logs'
-              "
+              v-if="menu.identifier !== 'add-import-activity'"
               :class="[
                 { nav__pointer: menu.active },
                 data.menuNavAnchorClasses,
@@ -90,7 +88,7 @@
               <span class="">{{ menu.name }}</span>
             </a>
             <span
-              v-if="menu.name === 'Add / Import Activity'"
+              v-if="menu.identifier === 'add-import-activity'"
               :class="[
                 { nav__pointer: menu.active },
                 data.menuNavAnchorClasses,
@@ -99,7 +97,7 @@
               <span class="add-import"
                 >{{ menu.name }}
                 <div
-                  v-if="menu.name === 'Add / Import Activity'"
+                  v-if="menu.identifier === 'add-import-activity'"
                   style="visibility: hidden"
                   class="button__dropdown add-import-dropdown absolute top-full z-50 w-56 -translate-y-3 bg-white p-2 text-left shadow-dropdown duration-300"
                 >
@@ -420,7 +418,6 @@ import { useToggle, useStorage } from '@vueuse/core';
 import CreateModal from '../views/activity/CreateModal.vue';
 import Toast from './ToastMessage.vue';
 import LanguageService from 'Services/language';
-import language from 'Services/language';
 
 const store = detailStore();
 
@@ -483,44 +480,53 @@ const data = reactive({
   ],
   org_menus: [
     {
-      name: '',
+      name: 'Activity DATA',
+      identifier: 'activity-data',
       permalink: '/activities',
       active: true,
     },
     {
-      name: '',
+      name: 'Organisation DATA',
+      identifier: 'organisation-data',
       permalink: '/organisation',
       active: false,
     },
     {
-      name: '',
+      name: 'Settings',
+      identifier: 'settings',
       permalink: '/setting',
       active: false,
     },
     {
-      name: '',
+      name: 'Add / Import Activity',
+      identifier: 'add-import-activity',
       permalink: '#',
       active: false,
     },
     {
-      name: '',
+      name: 'Users',
+      identifier: 'users',
       permalink: '/users',
       active: false,
     },
   ],
   superadmin_menus: [
     {
-      name: '',
+      name: 'Dashboard',
+      identifier: 'dashboard',
       permalink: '/dashboard',
       active: false,
     },
     {
-      name: '',
+      name: 'Organisation List',
+      identifier: 'organisation-list',
       permalink: '/list-organisations',
       active: false,
     },
+
     {
-      name: '',
+      name: 'Users',
+      identifier: 'users',
       permalink: '/users',
       active: false,
     },
@@ -720,8 +726,8 @@ onUnmounted(() => {
 
 onMounted(async () => {
   currentLanguage.value = await LanguageService.getLanguage();
-  console.log(currentLanguage.value);
-  LanguageService.getTranslatedData('adminHeader')
+
+  LanguageService.getTranslatedData('adminHeader,activity_index,elements')
     .then((response) => {
       translatedData.value = response.data;
     })
@@ -729,6 +735,7 @@ onMounted(async () => {
 });
 
 provide('defaultLanguage', props.defaultLanguage);
+provide('translatedData', translatedData);
 </script>
 
 <style src="@vueform/multiselect/themes/default.css"></style>

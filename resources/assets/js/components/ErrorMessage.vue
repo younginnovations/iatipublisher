@@ -67,7 +67,9 @@
             <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
             <span class="text-sm font-bold text-n-50">
               {{
-                translatedData['activity.error_message.publisher_is_inactive']
+                translatedData[
+                  'activity_index.error_message.publisher_is_inactive'
+                ]
               }}
             </span>
           </div>
@@ -79,8 +81,8 @@
           >
             {{
               show
-                ? translatedData['activity.error_message.show_more']
-                : translatedData['activity.error_message.show_less']
+                ? translatedData['activity_index.error_message.show_more']
+                : translatedData['activity_index.error_message.show_less']
             }}
           </button>
         </div>
@@ -107,7 +109,9 @@
             <div class="alert__content">
               <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
               <span>{{
-                translatedData['activity.error_message.email_not_verified']
+                translatedData[
+                  'activity_index.error_message.email_not_verified'
+                ]
               }}</span>
             </div>
 
@@ -115,7 +119,7 @@
               <p
                 v-html="
                   translatedData[
-                    'activity.error_message.please_check_for_the_verification_email_sent_to_you'
+                    'activity_index.error_message.please_check_for_the_verification_email_sent_to_you'
                   ]
                 "
               ></p>
@@ -144,14 +148,16 @@
             <div class="alert__content">
               <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
               <span>{{
-                translatedData['activity.error_message.complete_your_setup']
+                translatedData[
+                  'activity_index.error_message.complete_your_setup'
+                ]
               }}</span>
             </div>
             <div class="ml-5">
               <p
                 v-html="
                   translatedData[
-                    'activity.error_message.we_recommend_that_you_complete_default_values'
+                    'activity_index.error_message.we_recommend_that_you_complete_default_values'
                   ]
                 "
               ></p>
@@ -160,13 +166,13 @@
                 <p>
                   {{
                     translatedData[
-                      'activity.error_message.update_registry_information_api_key_and_publisher_id'
+                      'activity_index.error_message.update_registry_information_api_key_and_publisher_id'
                     ]
                   }}
                   <span v-if="!errorData.token_status">
                     {{
                       translatedData[
-                        'activity.error_message.please_enter_correct_api_token'
+                        'activity_index.error_message.please_enter_correct_api_token'
                       ]
                     }}
                   </span>
@@ -194,7 +200,7 @@
               <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
               <span>{{
                 translatedData[
-                  'activity.error_message.iati_registry_account_is_inactive'
+                  'activity_index.error_message.iati_registry_account_is_inactive'
                 ]
               }}</span>
             </div>
@@ -203,7 +209,7 @@
               <p>
                 {{
                   translatedData[
-                    'activity.error_message.your_account_is_pending_approval_by_the_iati_team'
+                    'activity_index.error_message.your_account_is_pending_approval_by_the_iati_team'
                   ]
                 }}
               </p>

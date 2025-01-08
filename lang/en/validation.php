@@ -141,7 +141,7 @@ return [
     |
     */
 
-    'custom'                                           => [
+    'custom' => [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
@@ -227,7 +227,7 @@ return [
     |
     */
 
-    'attributes' => [
+    'attributes'        => [
         'username'              => 'username',
         'full_name'             => 'full name',
         'email'                 => 'email',
@@ -249,6 +249,11 @@ return [
         'source'                => 'source',
         'language_preference'   => 'language preference',
         'current_password'      => 'current password',
+        'default_currency'      => 'default currency',
+        'hierarchy'             => 'hierarchy',
+        'budget_not_provided'   => 'budget not provided',
+        'humanitarian'          => 'humanitarian',
+        'api_token'             => 'api token',
     ],
     'within_a_year'     => 'The :attribute must be within a year after :date.',
     'required_if_any'   => 'The :field is required if any of the fields of :element are filled.',

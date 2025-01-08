@@ -8,7 +8,7 @@
     <h5 class="title mb-5 flex text-xl font-bold text-bluecoral sm:text-2xl">
       {{
         translatedData[
-          'activity.create_modal.add_a_title_and_identifier_for_the_activity'
+          'activity_index.create_modal.add_a_title_and_identifier_for_the_activity'
         ]
       }}
     </h5>
@@ -20,7 +20,7 @@
               :name="translatedData['elements.name.title']"
               :hover-text="
                 translatedData[
-                  'activity.create_modal.a_short_human_readable_title'
+                  'activity._index.create_modal.a_short_human_readable_title'
                 ]
               "
               position="right"
@@ -46,7 +46,7 @@
                     "
                     :hover-text="
                       translatedData[
-                        'activity.create_modal.the_free_text_name_or_description_of_the_item_being_described'
+                        'activity_index.create_modal.the_free_text_name_or_description_of_the_item_being_described'
                       ]
                     "
                     :show-iati-reference="true"
@@ -85,7 +85,7 @@
                     "
                     :hover-text="
                       translatedData[
-                        'activity.create_modal.a_code_specifying_the_language_of_text_in_this_element'
+                        'activity_index.create_modal.a_code_specifying_the_language_of_text_in_this_element'
                       ]
                     "
                     :show-iati-reference="true"
