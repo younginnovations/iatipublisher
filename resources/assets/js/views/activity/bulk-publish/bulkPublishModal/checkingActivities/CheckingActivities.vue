@@ -9,12 +9,13 @@
     </div>
     <div class="mt-[10px] rounded-lg bg-paper p-4">
       <p class="text-sm text-n-50">
-        The incomplete activities are marked with icon
-        <span class="inline-block">
-          <svg-vue icon="warning-activity" />
-        </span>
-        in your activities list. We recommend completing them to ensure better
-        data quality.
+        Review the Core Completeness percentage under the '<b
+          >Core Completeness</b
+        >' column in your activity list to ensure optimal data quality. A higher
+        percentage indicates better completeness.
+      </p>
+      <p>
+        <svg-vue class="h-full w-full" icon="core-completeness" />
       </p>
     </div>
   </div>
