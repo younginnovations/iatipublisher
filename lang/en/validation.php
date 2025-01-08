@@ -141,7 +141,7 @@ return [
     |
     */
 
-    'custom' => [
+    'custom'                                           => [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
@@ -247,6 +247,8 @@ return [
         'contact_email'         => 'contact email',
         'website'               => 'website',
         'source'                => 'source',
+        'language_preference'   => 'language preference',
+        'current_password'      => 'current password',
     ],
     'within_a_year'     => 'The :attribute must be within a year after :date.',
     'required_if_any'   => 'The :field is required if any of the fields of :element are filled.',

@@ -30,7 +30,9 @@
             "
           >
             <svg-vue icon="edit" class="mr-1 text-base"></svg-vue
-            ><span class="text-xs uppercase">Edit your profile</span>
+            ><span class="text-xs uppercase">
+              {{ translatedData['userProfile.user_profile.edit_your_profile'] }}
+            </span>
           </button>
         </div>
       </div>
@@ -47,12 +49,13 @@
       >
         <div class="popup-model h-auto" @keyup.enter="updatePassword">
           <div class="mb-4 text-2xl font-bold text-bluecoral">
-            Change Password
+            {{ translatedData['userProfile.user_profile.change_password'] }}
           </div>
           <div>
             <div class="mb-5 flex flex-col gap-2">
               <label class="text-sm text-n-50"
-                >Current Password <span class="text-[red]"> * </span>
+                >{{ translatedData['userProfile.user_profile.current_password']
+                }}<span class="text-[red]"> * </span>
               </label>
               <span class="relative max-w-[calc(50%_-_12px)]">
                 <svg-vue
@@ -87,7 +90,8 @@
           <div class="mb-5 flex space-x-6">
             <div class="flex w-full flex-col gap-2">
               <label class="text-sm text-n-50"
-                >New Password <span class="text-[red]"> * </span>
+                >{{ translatedData['userProfile.user_profile.new_password'] }}
+                <span class="text-[red]"> * </span>
               </label>
               <span class="relative">
                 <svg-vue
@@ -119,7 +123,8 @@
             </div>
             <div class="flex w-full flex-col gap-2">
               <label class="text-sm text-n-50"
-                >Confirm Password <span class="text-[red]"> * </span>
+                >{{ translatedData['userProfile.user_profile.confirm_password']
+                }}<span class="text-[red]"> * </span>
               </label>
               <span class="relative">
                 <svg-vue
@@ -159,10 +164,10 @@
                 }
               "
             >
-              Cancel
+              {{ translatedData['userProfile.user_profile.cancel'] }}
             </button>
             <button class="primary-btn !px-10" @click="updatePassword">
-              Save
+              {{ translatedData['userProfile.user_profile.save'] }}
             </button>
           </div>
         </div>
@@ -178,12 +183,13 @@
       >
         <div class="popup-model" @keyup.enter="updateProfile">
           <div class="mb-4 text-2xl font-bold text-bluecoral">
-            Edit your profile
+            {{ translatedData['userProfile.user_profile.edit_your_profile'] }}
           </div>
           <div class="grid grid-cols-2 gap-6">
             <div class="col-span-2 flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
-                >Full Name<span class="text-[red]"> * </span></label
+                >{{ translatedData['userProfile.user_profile.full_name']
+                }}<span class="text-[red]"> * </span></label
               >
               <input
                 v-model="formData.full_name"
@@ -228,7 +234,8 @@
 
             <div class="flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
-                >Email<span class="text-[red]"> * </span></label
+                >{{ translatedData['userProfile.user_profile.email']
+                }}<span class="text-[red]"> * </span></label
               >
               <input
                 v-model="formData.email"
@@ -255,12 +262,18 @@
               class="flex flex-col items-start gap-2"
             >
               <label class="text-sm text-n-50"
-                >Language Preference<span class="text-[red]">*</span></label
+                >{{
+                  translatedData[
+                    'userProfile.user_profile.language_preference'
+                  ]
+                }}<span class="text-[red]">*</span></label
               >
               <Multiselect
                 v-model="formData.language_preference"
                 :options="languagePreference"
-                placeholder="Select language"
+                :placeholder="
+                  translatedData['userProfile.user_profile.select_language']
+                "
                 :searchable="true"
               />
               <span
@@ -292,7 +305,9 @@
       <div class="flex justify-between border-b border-n-30 py-6">
         <span class="inline-flex items-center space-x-2">
           <span><svg-vue icon="user-profile" class="text-base"></svg-vue></span>
-          <h6 class="text-sm font-bold">Your Information</h6></span
+          <h6 class="text-sm font-bold">
+            {{ translatedData['userProfile.user_profile.your_information'] }}
+          </h6></span
         >
         <div class="inline-flex">
           <div class="inline-flex cursor-pointer space-x-1">
@@ -307,44 +322,61 @@
             >
               <!-- <svg-vue icon=""></svg-vue> -->
 
-              Change your password
+              {{
+                translatedData['userProfile.user_profile.change_your_password']
+              }}
             </a>
           </div>
         </div>
       </div>
 
       <div class="flex space-x-2 border-b border-n-20 py-6">
-        <div class="text-base font-bold text-n-40">Name</div>
+        <div class="text-base font-bold text-n-40">
+          {{ translatedData['userProfile.user_profile.name'] }}
+        </div>
         <div class="max-w-[60vw] overflow-x-hidden text-ellipsis text-base">
           {{ userData['full_name'] }}
         </div>
       </div>
       <div class="flex space-x-2 border-b border-n-20 py-6">
-        <div class="text-base font-bold text-n-40">Username</div>
+        <div class="text-base font-bold text-n-40">
+          {{ translatedData['userProfile.user_profile.username'] }}
+        </div>
         <div class="text-base">{{ userData['username'] }}</div>
       </div>
       <div class="flex space-x-2 border-b border-n-20 py-6">
-        <div class="text-base font-bold text-n-40">Language Preference</div>
+        <div class="text-base font-bold text-n-40">
+          {{ translatedData['userProfile.user_profile.language_preference'] }}
+        </div>
         <div class="text-base">
           {{ languagePreference[userData['language_preference']] }}
         </div>
       </div>
       <div class="flex space-x-2 py-6">
-        <div class="text-base font-bold text-n-40">Email</div>
+        <div class="text-base font-bold text-n-40">
+          {{ translatedData['userProfile.user_profile.email'] }}
+        </div>
         <div>
           <a>{{ userData['email'] }}</a>
           <div
             v-if="!userData['email_verified_at']"
             class="mt-1 max-w-[550px] text-n-40"
           >
-            You haven't verified your email address yet. Please check for
-            verification email sent to you and verify your account,
+            {{
+              translatedData[
+                'userProfile.user_profile.you_havent_verified_your_email_address_yet'
+              ]
+            }}
             <a
               class="cursor-pointer font-bold underline"
               @click="resendVerificationEmail()"
-              >resend verification email</a
+              >{{
+                translatedData[
+                  'userProfile.user_profile.resend_verification_email'
+                ]
+              }}</a
             >
-            if you haven't received such and email.
+            {{ translatedData['if_you_havent_received_such_and_email'] }}
           </div>
         </div>
       </div>
@@ -352,7 +384,9 @@
         v-if="userData['organization']"
         class="flex space-x-2 border-b border-n-20 py-6"
       >
-        <div class="text-base font-bold text-n-40">Organisation</div>
+        <div class="text-base font-bold text-n-40">
+          {{ translatedData['userProfile.user_profile.organization'] }}
+        </div>
         <div class="text-base">
           {{ userData['organization_name'] }}
         </div>
@@ -361,7 +395,9 @@
         v-if="userData['organization']"
         class="flex space-x-2 border-b border-n-20 py-6"
       >
-        <div class="text-base font-bold text-n-40">Role</div>
+        <div class="text-base font-bold text-n-40">
+          {{ translatedData['userProfile.user_profile.role'] }}
+        </div>
         <div class="text-base">
           {{ userData['user_role'] }}
         </div>
@@ -378,6 +414,7 @@ import PopupModal from 'Components/PopupModal.vue';
 
 import Multiselect from '@vueform/multiselect';
 import { watchIgnorable } from '@vueuse/core';
+import LanguageService from 'Services/language';
 
 const props = defineProps({
   user: { type: Object, required: true },
@@ -542,4 +579,13 @@ const updateProfile = () => {
       isLoaderVisible.value = false;
     });
 };
+const translatedData = ref({});
+
+onMounted(() => {
+  LanguageService.getTranslatedData('userProfile')
+    .then((response) => {
+      translatedData.value = response.data;
+    })
+    .catch((error) => console.log(error));
+});
 </script>
