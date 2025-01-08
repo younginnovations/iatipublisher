@@ -16,23 +16,6 @@ return [
   ],
   'development_of_iati'    => [
     'title'         => 'fr_ Development of IATI Publisher',
-    'paragraph_one' => 'fr_ IATI Publisher was first launched in December 2022 by the IATI Secretariat and has been developed by
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://younginnovations.com.np/"
-              >Young Innovations </a
-            >, a software development firm based in Nepal. IATI Publisher is
-            fully aligned with the IATI Standard XML
-            <a href="https://iatistandard.org/en/iati-standard/203/schema/">
-              schema</a
-            >
-            and
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://iatistandard.org/en/iati-standard/203/rulesets/"
-              >rulesets </a
-            >.',
+    'paragraph_one' => 'fr_ IATI Publisher was first launched in December 2022 by the IATI Secretariat and has been developed by <a   target="_blank"   rel="noopener noreferrer"   href="https://younginnovations.com.np/"   >Young Innovations </a >, a software development firm based in Nepal. IATI Publisher is fully aligned with the IATI Standard XML <a href="https://iatistandard.org/en/iati-standard/203/schema/">   schema</a > and <a   target="_blank"   rel="noopener noreferrer"   href="https://iatistandard.org/en/iati-standard/203/rulesets/"   >rulesets </a >.',
   ],
 ];
