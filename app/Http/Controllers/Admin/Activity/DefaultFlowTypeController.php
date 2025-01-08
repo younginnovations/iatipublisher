@@ -74,9 +74,11 @@ class DefaultFlowTypeController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
+            $translatedData = trans('activity_detail/default_flow_type_controller.error_has_occurred_while_rendering_default_flow_type_form');
+
             return redirect()->route('admin.activity.show', $id)->with(
                 'error',
-                'Error has occurred while rendering default-flow-type form.'
+                $translatedData
             );
         }
     }
@@ -95,14 +97,18 @@ class DefaultFlowTypeController extends Controller
             $activityDefaultFlowType = $request->get('default_flow_type') !== null ? (int) $request->get('default_flow_type') : null;
 
             if (!$this->defaultFlowTypeService->update($id, ['code' => $activityDefaultFlowType])) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default-flow-type.');
-            }
+                $translatedData = trans('activity_detail/default_flow_type_controller.error_has_occurred_while_updating_default_flow_type');
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Default-flow-type updated successfully.');
+                return redirect()->route('admin.activity.show', $id)->with('error', $translatedData);
+            }
+            $translatedData = trans('activity_detail/default_flow_type_controller.default_flow_type_updated_successfully');
+
+            return redirect()->route('admin.activity.show', $id)->with('success', $translatedData);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/default_flow_type_controller.error_has_occurred_while_updating_default_flow_type');
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default-flow-type.');
+            return redirect()->route('admin.activity.show', $id)->with('error', $translatedData);
         }
     }
 }

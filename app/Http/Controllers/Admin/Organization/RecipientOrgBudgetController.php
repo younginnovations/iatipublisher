@@ -45,10 +45,12 @@ class RecipientOrgBudgetController extends Controller
             $organization = $this->recipientOrgBudgetService->getOrganizationData($id);
             $form = $this->recipientOrgBudgetService->formGenerator($id, Arr::get($organization->deprecation_status_map, 'recipient_org_budget', []));
             $data = ['title' => $element['recipient_org_budget']['label'], 'name' => 'recipient_org_budget'];
+            $translatedData = trans('organisationDetail/recipient_org_budget_controller.error_has_occurred_while_opening_organization_recipient_org_budget_form');
 
             return view('admin.organisation.forms.recipientOrgBudget.recipientOrgBudget', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('organisationDetail/recipient_org_budget_controller.error_has_occurred_while_opening_organization_recipient_org_budget_form');
 
             return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while opening organization recipient-org-budget form.');
         }
@@ -65,14 +67,18 @@ class RecipientOrgBudgetController extends Controller
     {
         try {
             if (!$this->recipientOrgBudgetService->update(Auth::user()->organization_id, $request->all())) {
-                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization recipient-org-budget.');
-            }
+                $translatedData = trans('organisationDetail/recipient_org_budget_controller.error_has_occurred_while_updating_organization_recipient_org_budget');
 
-            return redirect()->route('admin.organisation.index')->with('success', 'Organization recipient-org-budget updated successfully.');
+                return redirect()->route('admin.organisation.index')->with('error', $translatedData);
+            }
+            $translatedData = trans('organisationDetail/recipient_org_budget_controller.organization_recipient_org_budget_updated_successfully');
+
+            return redirect()->route('admin.organisation.index')->with('success', $translatedData);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('organisationDetail/recipient_org_budget_controller.error_has_occurred_while_updating_organization_recipient_org_budget');
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization recipient-org-budget.');
+            return redirect()->route('admin.organisation.index')->with('error', $translatedData);
         }
     }
 }

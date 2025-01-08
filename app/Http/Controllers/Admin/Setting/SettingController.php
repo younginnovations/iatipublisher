@@ -61,7 +61,7 @@ class SettingController extends Controller
         try {
             $currencies = getCodeList('Currency', 'Organization', filterDeprecated: true);
             $languages = getCodeList('Language', 'Organization', filterDeprecated: true);
-            $humanitarian = trans('setting.humanitarian_types');
+            $humanitarian = trans('setting/setting_controller.setting.humanitarian_types');
             $budgetNotProvided = getCodeList('BudgetNotProvided', 'Activity', filterDeprecated: true);
             $defaultCollaborationType = getCodeList('CollaborationType', 'Activity', filterDeprecated: true);
             $defaultFlowType = getCodeList('FlowType', 'Activity', filterDeprecated: true);
@@ -74,7 +74,7 @@ class SettingController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.index')->with('error', trans('settings/setting_controller.error_while_rendering_setting_page'));
+            return redirect()->route('admin.activities.index')->with('error', 'Error while rendering setting page');
         }
     }
 
@@ -105,22 +105,22 @@ class SettingController extends Controller
             $setting->publishing_info = $publishing_info;
             $setting->save();
 
-            return response()->json(['success' => true, 'message' => trans('settings/setting_controller.settings_fetched_successfully'), 'data' => $setting]);
+            return response()->json(['success' => true, 'message' => 'Settings fetched successfully', 'data' => $setting]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             if ($e instanceof GuzzleException && $e->getCode() === 404) {
                 return response()->json([
                     'success' => false,
-                    'message' => trans('settings/setting_controller.publisher_does_not_exist_in_registry'),
+                    'message' => 'Publisher does not exist in registry.',
                     'errors' => [
-                        'publisher_id' => trans('settings/setting_controller.publisher_does_not_exist_in_registry'),
+                        'publisher_id' => 'Publisher does not exist in registry.',
                     ],
                     'data' => $setting,
                 ]);
             }
 
-            return response()->json(['success' => false, 'message' => trans('settings/setting_controller.error_occurred_while_fetching_the_data')]);
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
         }
     }
 
@@ -155,17 +155,17 @@ class SettingController extends Controller
             if ($e instanceof GuzzleException && $e->getCode() === 404) {
                 return response()->json([
                     'success' => false,
-                    'message' => trans('settings/setting_controller.publisher_does_not_exist_in_registry'),
+                    'message' => 'Publisher does not exist in registry.',
                     'data' => $publisherData,
                      'errors' => [
-                        'publisher_id' => trans('settings/setting_controller.publisher_does_not_exist_in_registry'),
+                        'publisher_id' => 'Publisher does not exist in registry.',
                      ],
                 ]);
             }
 
             return response()->json([
                 'success' => false,
-                'message' => trans('settings/setting_controller.error_occurred_while_verify_publisher'),
+                'message' => 'Error occurred while verify publisher',
                 'data' => $publisherData,
             ]);
         }
@@ -198,7 +198,7 @@ class SettingController extends Controller
                 if ($tokenStatus === Enums::TOKEN_INCORRECT) {
                     return response()->json([
                         'success' => false,
-                        'message' => trans('settings/setting_controller.your_api_token_is_invalid'),
+                        'message' => 'Your API token is invalid',
                         'data'    => $settingData,
                         'error'   => ['token' => $verifyApiInfo, 'publisher_verification' => $verifyPublisherInfo],
                     ]);
@@ -218,14 +218,14 @@ class SettingController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'message' => trans('settings/setting_controller.publisher_setting_stored_successfully'),
+                    'message' => 'Publisher setting stored successfully',
                     'data'    => $settingData,
                 ]);
             }
 
             return response()->json([
                 'success' => false,
-                'message' => trans('settings/setting_controller.error_occurred_while_verifying_data'),
+                'message' => 'Error occurred while verifying data',
                 'data'    => $settingData,
                 'error'   => ['token' => $verifyApiInfo, 'publisher_verification' => $verifyPublisherInfo],
             ]);
@@ -238,14 +238,14 @@ class SettingController extends Controller
             $settingData['token_verification'] = false;
 
             if ($e instanceof PublisherIdChangeByIatiAdminException) {
-                return response()->json(['success' => false, 'message' => trans('settings/setting_controller.publisher_id_or_api_token_incorrect'), 'data' => $settingData]);
+                return response()->json(['success' => false, 'message' => 'Publisher Id or API Token incorrect.', 'data' => $settingData]);
             }
 
             if ($e instanceof GuzzleException && $e->getCode() === 404) {
-                return response()->json(['success' => false, 'message' => trans('settings/setting_controller.publisher_does_not_exist_in_registry'), 'data' => $settingData]);
+                return response()->json(['success' => false, 'message' => 'Publisher does not exist in registry.', 'data' => $settingData]);
             }
 
-            return response()->json(['success' => false, 'message' => trans('settings/setting_controller.error_occurred_while_verify_publisher'), 'data' => $settingData]);
+            return response()->json(['success' => false, 'message' => 'Error occurred while verify publisher', 'data' => $settingData]);
         }
     }
 
@@ -269,12 +269,12 @@ class SettingController extends Controller
 
             $this->db->commit();
 
-            return response()->json(['success' => true, 'message' => trans('settings/setting_controller.default_setting_stored_successfully'), 'data' => $setting]);
+            return response()->json(['success' => true, 'message' => 'Default setting stored successfully', 'data' => $setting]);
         } catch (Exception $e) {
             $this->db->rollBack();
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => trans('settings/setting_controller.error_occurred_while_storing_setting')]);
+            return response()->json(['success' => false, 'message' => 'Error occurred while storing setting']);
         }
     }
 
@@ -327,7 +327,7 @@ class SettingController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => trans('settings/setting_controller.setting_status_successfully_retrieved'),
+                'message' => 'Setting status successfully retrieved.',
                 'data' => $status,
             ]);
         } catch (Exception $e) {
@@ -350,15 +350,15 @@ class SettingController extends Controller
      */
     private function getTokenStatusAndMessage(array $verifyPublisherInfo, array $verifyApiInfo): array
     {
-        $message = trans('settings/setting_controller.api_token_incorrect');
+        $message = 'API token incorrect. Please enter valid API token.';
         $tokenStatus = Enums::TOKEN_INCORRECT;
 
         if ($verifyPublisherInfo['success'] && $verifyPublisherInfo['validation']) {
             if ($verifyApiInfo['success'] && $verifyApiInfo['validation']) {
-                $message = trans('settings/setting_controller.api_token_verified_successfully');
+                $message = 'API token verified successfully.';
                 $tokenStatus = Enums::TOKEN_CORRECT;
             } elseif ($verifyPublisherInfo['state'] === 'approval_needed') {
-                $message = trans('settings/setting_controller.your_account_is_pending_approval');
+                $message = 'Your account is pending approval by the IATI team - someone should be in touch within two working days.';
                 $tokenStatus = Enums::TOKEN_PENDING;
             }
         }

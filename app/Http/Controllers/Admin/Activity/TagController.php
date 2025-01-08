@@ -73,10 +73,11 @@ class TagController extends Controller
             return view('admin.activity.tag.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/tag_controller.error_has_occurred_while_opening_tag_form');
 
             return redirect()->route('admin.activity.show', $id)->with(
                 'error',
-                'Error has occurred while opening tag form.'
+                $translatedData
             );
         }
     }
@@ -93,14 +94,18 @@ class TagController extends Controller
     {
         try {
             if (!$this->tagService->update($id, $request->all())) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating tag.');
-            }
+                $translatedData = trans('activity_detail/tag_controller.error_has_occurred_while_updating_tag');
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Tag updated successfully.');
+                return redirect()->route('admin.activity.show', $id)->with('error', $translatedData);
+            }
+            $translatedData = trans('activity_detail/tag_controller.tag_updated_successfully');
+
+            return redirect()->route('admin.activity.show', $id)->with('success', $translatedData);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/tag_controller.error_has_occurred_while_updating_tag');
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating tag.');
+            return redirect()->route('admin.activity.show', $id)->with('error', $translatedData);
         }
     }
 }

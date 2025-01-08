@@ -79,16 +79,18 @@ class PeriodController extends Controller
     {
         try {
             $period = $this->periodService->getPaginatedPeriod($indicatorId, $page);
+            $translatedData = trans('activity_detail/period_controller.period_fetched_successfully');
 
             return response()->json([
                 'success' => true,
-                'message' => 'Period fetched successfully',
+                'message' => $translatedData,
                 'data'    => $period,
             ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/period_controller.error_occurred_while_fetching_the_data');
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+            return response()->json(['success' => false, 'message' => $translatedData]);
         }
     }
 
@@ -123,8 +125,9 @@ class PeriodController extends Controller
             return view('admin.activity.period.period', compact('activity', 'parentData', 'period', 'types', 'toast'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/period.error_has_occurred_while_rendering_activity_transactions_listing');
 
-            return redirect()->route('admin.indicator.period.index', $indicatorId)->with('error', 'Error has occurred while rendering activity transactions listing.');
+            return redirect()->route('admin.indicator.period.index', $indicatorId)->with('error', $translatedData);
         }
     }
 
@@ -165,10 +168,11 @@ class PeriodController extends Controller
             return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/period_controller.error_has_occurred_while_rendering_indicator_period_form');
 
             return redirect()->route('admin.indicator.period.index', $indicatorId)->with(
                 'error',
-                'Error has occurred while rendering indicator period form.'
+                $translatedData
             );
         }
     }
@@ -190,17 +194,19 @@ class PeriodController extends Controller
                 'indicator_id' => $indicatorId,
                 'period'       => $periodData,
             ]);
+            $translatedData = trans('activity_detail/period_controller.indicator_period_created_successfully');
 
             return redirect()->route('admin.indicator.period.show', [$indicatorId, $period['id']])->with(
                 'success',
-                'Indicator period created successfully.'
+                $translatedData
             );
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/period_controller.error_has_occurred_while_creating_indicator_period');
 
             return redirect()->route('admin.indicator.period.index', $indicatorId)->with(
                 'error',
-                'Error has occurred while creating indicator period.'
+                $translatedData
             );
         }
     }
@@ -238,10 +244,11 @@ class PeriodController extends Controller
             return view('admin.activity.period.detail', compact('activity', 'parentData', 'period', 'types', 'toast', 'element'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/period_controller.error_has_occurred_while_rending_result_detail_page');
 
             return redirect()->route('admin.indicator.period.index', [$indicatorId])->with(
                 'error',
-                'Error has occurred while rending result detail page.'
+                $translatedData
             );
         }
     }
@@ -275,8 +282,9 @@ class PeriodController extends Controller
             return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/period_controller.error_has_occurred_while_rendering_period_form');
 
-            return redirect()->route('admin.indicator.period.index', $indicatorId)->with('error', 'Error has occurred while rendering period form.');
+            return redirect()->route('admin.indicator.period.index', $indicatorId)->with('error', $translatedData);
         }
     }
 
@@ -296,22 +304,26 @@ class PeriodController extends Controller
             $period = $this->periodService->getPeriod($periodId);
 
             if (!$this->periodService->update($periodId, ['indicator_id' => $indicatorId, 'period' => $periodData])) {
+                $translatedData = trans('activity_detail/period_controller.error_has_occurred_while_updating_indicator_period');
+
                 return redirect()->route('admin.indicator.period.index', [$indicatorId])->with(
                     'error',
-                    'Error has occurred while updating indicator period.'
+                    $translatedData
                 );
             }
+            $translatedData = trans('activity_detail/period_controller.indicator_period_updated_successfully');
 
             return redirect()->route('admin.indicator.period.show', [$indicatorId, $period['id']])->with(
                 'success',
-                'Indicator period updated successfully.'
+                $translatedData
             );
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/period_controller.error_has_occurred_while_updating_indicator_period');
 
             return redirect()->route('admin.indicator.period.show', [$indicatorId, $periodId])->with(
                 'error',
-                'Error has occurred while updating indicator period.'
+                $translatedData
             );
         }
     }
@@ -328,20 +340,24 @@ class PeriodController extends Controller
     {
         try {
             $this->periodService->deletePeriod($periodId);
-            Session::flash('success', 'Period Deleted Successfully');
+            $translatedData = trans('activity_detail/period_controller.period_deleted_successfully');
+
+            Session::flash('success', $translatedData);
 
             return response()->json([
                 'status'       => true,
-                'msg'          => 'Period Deleted Successfully',
+                'msg'          => $translatedData,
                 'indicator_id' => $id,
             ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            Session::flash('error', 'Period Delete Error');
+            $translatedData = trans('activity_detail/period_controller.period_delete_error');
+
+            Session::flash('error', $translatedData);
 
             return response()->json([
                 'status'       => true,
-                'msg'          => 'Period Delete Error',
+                'msg'          => $translatedData,
                 'indicator_id' => $id,
             ], 400);
         }

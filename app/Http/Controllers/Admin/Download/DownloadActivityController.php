@@ -94,7 +94,9 @@ class DownloadActivityController extends Controller
             }
 
             if (!isset($activities) || !count($activities)) {
-                return response()->json(['success' => false, 'message' => 'No activities selected.']);
+                $translatedData = trans('download/download_activity_controller.no_activities_selected');
+
+                return response()->json(['success' => false, 'message' => $translatedData]);
             }
 
             $csvData = $this->downloadActivityService->getCsvData($activities);
@@ -110,8 +112,9 @@ class DownloadActivityController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
             $this->auditService->auditEvent(null, 'download', 'csv');
+            $translatedData = trans('download/download_activity_controller.error_has_occurred_while_downloading_activity_csv');
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity csv.']);
+            return response()->json(['success' => false, 'message' => $translatedData]);
         }
     }
 
@@ -132,7 +135,9 @@ class DownloadActivityController extends Controller
             $status = $this->downloadXlsService->getDownloadStatusByUserId($userId)?->toArray();
 
             if (!empty($status)) {
-                return response()->json(['success' => false, 'message' => 'Previous Download on process']);
+                $translatedData = trans('download/download_activity_controller.previous_download_on_process');
+
+                return response()->json(['success' => false, 'message' => $translatedData]);
             }
 
             $activityIds = ($request->get('activities') && $request->get('activities') !== 'all')
@@ -146,20 +151,24 @@ class DownloadActivityController extends Controller
             }
 
             if (!isset($activities) || !$activities->count()) {
-                return response()->json(['success' => false, 'message' => 'No activities selected.']);
+                $translatedData = trans('download/download_activity_controller.no_activities_selected');
+
+                return response()->json(['success' => false, 'message' => $translatedData]);
             }
 
             $status = $this->downloadXlsService->storeStatus($userId, $activityIds);
-            awsUploadFile("Xls/$userId/" . $status['id'] . '/status.json', json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
+            awsUploadFile("Xls/$userId/" . $status['id'] . '/status.json', json_encode(['success' => true, 'message' => trans('download/download_activity_controller.processing')], JSON_THROW_ON_ERROR));
             $this->downloadXlsService->processXlsExportJobs($request, $status['id']);
+            $translatedData = trans('download/download_activity_controller.xls_export_on_process');
 
-            return response()->json(['success' => true, 'message' => 'Xls Export on process.']);
+            return response()->json(['success' => true, 'message' => $translatedData]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
             $this->downloadXlsService->deleteDownloadStatus(auth()->user()->id);
             $this->cancelXlsDownload();
+            $translatedData = trans('download/download_activity_controller.error_has_occurred_while_downloading_activity_xls');
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity Xls.']);
+            return response()->json(['success' => false, 'message' => $translatedData]);
         }
     }
 
@@ -194,12 +203,14 @@ class DownloadActivityController extends Controller
     {
         try {
             [$status, $fileCount, $url] = $this->downloadXlsService->getDownloadStatus();
+            $translatedData = trans('download/download_activity_controller.download_status_accessed_successfully');
 
-            return response()->json(['success' => true, 'message' => 'Download status accessed successfully', 'status' => $status, 'file_count' => $fileCount, 'url' => $url ?? null]);
+            return response()->json(['success' => true, 'message' => $translatedData, 'status' => $status, 'file_count' => $fileCount, 'url' => $url ?? null]);
         } catch (\Exception $e) {
             logger()->error($e);
+            $translatedData = trans('download/download_activity_controller.error_has_occurred_while_trying_to_check_download_status');
 
-            return response()->json(['success' => false, 'message' => 'Error has occured while trying to check download status']);
+            return response()->json(['success' => false, 'message' => $translatedData]);
         }
     }
 
@@ -225,8 +236,9 @@ class DownloadActivityController extends Controller
             }
         } catch (\Exception $e) {
             logger()->error($e);
+            $translatedData = trans('download/download_activity_controller.error_has_occurred_while_trying_to_retry_download');
 
-            return response()->json(['success' => false, 'message' => 'Error has occured while trying to retry download']);
+            return response()->json(['success' => false, 'message' => $translatedData]);
         }
     }
 
@@ -242,14 +254,16 @@ class DownloadActivityController extends Controller
             $userId = auth()->user()->id;
             $status = $this->downloadXlsService->getDownloadStatusByUserId($userId)?->toArray();
             $this->downloadXlsService->clearPreviousXlsFilesOnS3($userId, $status['id']);
-            awsUploadFile("Xls/$userId/" . $status['id'] . '/cancelStatus.json', json_encode(['success' => true, 'message' => 'Cancelled'], JSON_THROW_ON_ERROR));
+            awsUploadFile("Xls/$userId/" . $status['id'] . '/cancelStatus.json', json_encode(['success' => true, 'message' => trans('download/download_activity_controller.cancelled')], JSON_THROW_ON_ERROR));
             $this->downloadXlsService->deleteDownloadStatus($userId, $status['id']);
+            $translatedData = trans('download/download_activity_controller.cancelled_successfully');
 
-            return response()->json(['success' => true, 'message' => 'Cancelled Successfully']);
+            return response()->json(['success' => true, 'message' => $translatedData]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('download/download_activity_controller.error_has_occurred_while_trying_to_cancel_download');
 
-            return response()->json(['success' => false, 'message' => 'Error has occured while trying to cancel download']);
+            return response()->json(['success' => false, 'message' => $translatedData]);
         }
     }
 
@@ -275,7 +289,9 @@ class DownloadActivityController extends Controller
             }
 
             if (!isset($activities) || !count($activities)) {
-                return response()->json(['success' => false, 'message' => 'No activities selected.']);
+                $translatedData = trans('download/download_activity_controller.no_activities_selected');
+
+                return response()->json(['success' => false, 'message' => $translatedData]);
             }
 
             $mergedContent = $this->downloadActivityService->getCombinedXmlFile($activities);
@@ -297,8 +313,9 @@ class DownloadActivityController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
             $this->auditService->auditEvent(null, 'download', 'xml');
+            $translatedData = trans('download/download_activity_controller.error_has_occurred_while_downloading_activity_csv');
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity csv.']);
+            return response()->json(['success' => false, 'message' => $translatedData]);
         }
     }
 

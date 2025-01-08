@@ -44,7 +44,7 @@ class ActivityDefaultController extends Controller
         try {
             $currencies = getCodeList('Currency', 'Organization', filterDeprecated: true);
             $languages = getCodeList('Language', 'Organization', filterDeprecated: true);
-            $humanitarian = trans('setting.humanitarian_types');
+            $humanitarian = trans('activity_detail/activity_default_controller.setting.humanitarian_types');
             $budgetNotProvided = getCodeList('BudgetNotProvided', 'Activity', filterDeprecated: true);
 
             return view(
@@ -53,10 +53,11 @@ class ActivityDefaultController extends Controller
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/activity_default_controller.error_has_occurred_while_rendering_default_values_form');
 
             return redirect()->route('admin.activity.show', $activityId)->with(
                 'error',
-                'Error has occurred while rendering default values form.'
+                $translatedData
             );
         }
     }
@@ -72,12 +73,14 @@ class ActivityDefaultController extends Controller
     {
         try {
             $setting = $this->activityDefaultService->getActivityDefaultValues($activityId);
+            $translatedData = trans('activity_detail/activity_default_controller.default_values_fetched_successfully');
 
-            return response()->json(['success' => true, 'message' => 'Default values fetched successfully', 'data' => $setting]);
+            return response()->json(['success' => true, 'message' => $translatedData, 'data' => $setting]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/activity_default_controller.error_occurred_while_fetching_the_data');
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+            return response()->json(['success' => false, 'message' => $translatedData]);
         }
     }
 
@@ -98,12 +101,16 @@ class ActivityDefaultController extends Controller
 
             DB::commit();
 
-            return response()->json(['success' => true, 'message' => 'Activity default values updated successfully']);
+            $translatedData = trans('activity_detail/activity_default_controller.activity_default_values_updated_successfully');
+
+            return response()->json(['success' => true, 'message' => $translatedData]);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while updating data']);
+            $translatedData = trans('activity_detail/activity_default_controller.error_occurred_while_updating_data');
+
+            return response()->json(['success' => false, 'message' => $translatedData]);
         }
     }
 }

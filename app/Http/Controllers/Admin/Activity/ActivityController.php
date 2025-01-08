@@ -27,6 +27,8 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use JsonException;
+use Throwable;
 
 /**
  * Class ActivityController.
@@ -62,29 +64,27 @@ class ActivityController extends Controller
      * @var ImportActivityErrorService
      */
     protected ImportActivityErrorService $importActivityErrorService;
-
+    /**
+     * @var SettingService
+     */
+    protected SettingService $settingService;
     /**
      * @var OrganizationService
      */
     private OrganizationService $organizationService;
 
     /**
-     * @var SettingService
-     */
-    protected SettingService $settingService;
-
-    /**
      * ActivityController Constructor.
      *
-     * @param  ActivityService  $activityService
-     * @param  DatabaseManager  $db
-     * @param  ResultService  $resultService
-     * @param  TransactionService  $transactionService
-     * @param  ActivityValidatorResponseService  $activityValidatorResponseService
-     * @param  ImportActivityErrorService  $importActivityErrorService
-     * @param  OrganizationService  $organizationService
-     * @param  SettingService  $settingService
-     * @param  OrganizationOnboardingService  $organizationOnboardingService
+     * @param ActivityService $activityService
+     * @param DatabaseManager $db
+     * @param ResultService $resultService
+     * @param TransactionService $transactionService
+     * @param ActivityValidatorResponseService $activityValidatorResponseService
+     * @param ImportActivityErrorService $importActivityErrorService
+     * @param OrganizationService $organizationService
+     * @param SettingService $settingService
+     * @param OrganizationOnboardingService $organizationOnboardingService
      */
     public function __construct(
         ActivityService $activityService,
@@ -112,7 +112,8 @@ class ActivityController extends Controller
      *
      * @return View|JsonResponse
      */
-    public function index(): View|JsonResponse
+    public function index()
+    : View|JsonResponse
     {
         try {
             DB::beginTransaction();
@@ -136,7 +137,7 @@ class ActivityController extends Controller
 
             // Data for user onboarding
             $currencies = getCodeList('Currency', 'Organization', filterDeprecated: true);
-            $humanitarian = trans('setting.humanitarian_types');
+            $humanitarian = trans('activity_detail/activity_controller.setting.humanitarian_types');
             $defaultFlowType = getCodeList('FlowType', 'Activity', filterDeprecated: true);
             $defaultFinanceType = getCodeList('FinanceType', 'Activity', filterDeprecated: true);
             $defaultAidType = getCodeList('AidType', 'Activity', filterDeprecated: true);
@@ -164,8 +165,9 @@ class ActivityController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/activity_controller.error_has_occurred_while_fetching_activities');
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while fetching activities.']);
+            return response()->json(['success' => false, 'error' => $translatedData]);
         }
     }
 
@@ -174,7 +176,8 @@ class ActivityController extends Controller
      *
      * @return void
      */
-    public function create(): void
+    public function create()
+    : void
     {
         //
     }
@@ -185,9 +188,10 @@ class ActivityController extends Controller
      * @param ActivityCreateRequest $request
      *
      * @return JsonResponse
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function store(ActivityCreateRequest $request): JsonResponse
+    public function store(ActivityCreateRequest $request)
+    : JsonResponse
     {
         try {
             $input = $request->all();
@@ -195,17 +199,20 @@ class ActivityController extends Controller
             $this->db->beginTransaction();
             $activity = $this->activityService->store($input);
             $this->db->commit();
-            Session::put('success', 'Activity has been created successfully.');
+            Session::put('success', trans('activity_detail/activity_controller.activity_has_been_created_successfully'));
+
+            $translatedData = trans('activity_detail/activity_controller.activity_created_successfully');
 
             return response()->json([
                 'success' => true,
-                'message' => 'Activity created successfully.',
-                'data' => $activity,
+                'message' => $translatedData,
+                'data'    => $activity,
             ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/activity_controller.error_has_occurred_while_saving_activity');
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while saving activity.', 'data' => []]);
+            return response()->json(['success' => false, 'message' => $translatedData, 'data' => []]);
         }
     }
 
@@ -216,7 +223,8 @@ class ActivityController extends Controller
      *
      * @return View|JsonResponse|RedirectResponse
      */
-    public function show($id): View|JsonResponse|RedirectResponse
+    public function show($id)
+    : View|JsonResponse|RedirectResponse
     {
         try {
             $toast = generateToastData();
@@ -263,8 +271,9 @@ class ActivityController extends Controller
             );
         } catch (Exception $e) {
             logger()->error($e);
+            $translatedData = trans('activity_detail/activity_controller.error_has_occurred_while_opening_activity_detail_page');
 
-            return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while opening activity detail page.');
+            return redirect()->route('admin.activities.index')->with('error', $translatedData);
         }
     }
 
@@ -275,9 +284,10 @@ class ActivityController extends Controller
      *
      * @return array
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
-    public function getElementJsonSchema($activity): array
+    public function getElementJsonSchema($activity)
+    : array
     {
         $element = readElementJsonSchema();
         $hasDefinedInTransaction = $this->transactionService->hasRecipientRegionOrCountryDefinedInTransaction($activity->id);
@@ -303,166 +313,22 @@ class ActivityController extends Controller
         }
 
         $element['transactions']['warning_info_text'] = match (true) {
-            $emptyRecipientRegionOrCountryTransactionCount > 0 && $emptySectorTransactionCount > 0 => 'Recipient Region , Recipient Country and Sector are declared at transaction level. Some of the transactions are missing these values.',
-            $emptyRecipientRegionOrCountryTransactionCount > 0 && $emptySectorTransactionCount === 0 => 'Recipient Region and Recipient Country is declared at transaction level. Some of the transactions are missing these values.',
-            $emptySectorTransactionCount > 0 && $emptyRecipientRegionOrCountryTransactionCount === 0  => 'Sector is declared at transaction level. Some of the transactions are missing this value.',
-            default => ''
+            $emptyRecipientRegionOrCountryTransactionCount > 0 && $emptySectorTransactionCount > 0 => trans('activity_detail/activity_controller.recipient_region_recipient_country_and_sector_are_declared_at_transaction_level'),
+            $emptyRecipientRegionOrCountryTransactionCount > 0 && $emptySectorTransactionCount === 0 => trans('activity_detail/activity_controller.recipient_region_and_recipient_country_is_declared_at_transaction_level'),
+            $emptySectorTransactionCount > 0 && $emptyRecipientRegionOrCountryTransactionCount === 0 => trans('activity_detail/activity_controller.sector_is_declared_at_transaction_level'),
         };
 
         return $element;
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     *
-     * @param Activity $activity
-     *
-     * @return void
-     */
-    public function edit(Activity $activity): void
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request  $request
-     * @param Activity $activity
-     *
-     * @return void
-     */
-    public function update(Request $request, Activity $activity): void
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param $activityId
-     *
-     * @return JsonResponse
-     */
-    public function destroy($activityId): JsonResponse
-    {
-        try {
-            $activity = $this->activityService->getActivity($activityId);
-
-            if ($activity->linked_to_iati) {
-                Session::put('error', 'Activity must be un-published before deleting.');
-
-                return response()->json(['success' => false, 'message' => 'Activity must be un-published before deleting.']);
-            }
-
-            if ($this->activityService->deleteActivity($activity)) {
-                Session::put('success', 'Activity has been deleted successfully.');
-
-                return response()->json(['success' => true, 'message' => 'Activity has been deleted successfully.']);
-            }
-
-            return response()->json(['success' => false, 'message' => 'Activity delete failed.']);
-        } catch (Exception $e) {
-            logger()->error($e->getMessage());
-
-            return response()->json(['success' => false, 'message' => $e->getMessage()]);
-        }
-    }
-
-    /**
-     * Sanitizes the request for removing code injections.
-     *
-     * @param $request
-     *
-     * @return array
-     */
-    public function sanitizeRequest($request): array
-    {
-        $tableConfig = getTableConfig('activity');
-        $queryParams = [];
-
-        if (!empty($request->get('q')) || $request->get('q') === '0') {
-            $queryParams['query'] = $request->get('q');
-        }
-
-        if (!empty($request->get('limit'))) {
-            $queryParams['limit'] = $request->get('limit');
-        }
-
-        if (in_array($request->get('orderBy'), $tableConfig['orderBy'], true)) {
-            $queryParams['orderBy'] = $request->get('orderBy');
-
-            if (in_array($request->get('direction'), $tableConfig['direction'], true)) {
-                $queryParams['direction'] = $request->get('direction');
-            }
-        }
-
-        if (in_array($request->get('filterBy'), $tableConfig['filterBy'], true)) {
-            $queryParams['filterBy'] = $request->get('filterBy');
-        }
-
-        return $queryParams;
-    }
-
-    /**
-     * Returns paginated activities for vue component.
-     *
-     * @param Request $request
-     * @param int     $page
-     *
-     * @return JsonResponse
-     */
-    public function getPaginatedActivities(Request $request, int $page = 1): JsonResponse
-    {
-        try {
-            $activities = $this->activityService->getPaginatedActivities($page, $this->sanitizeRequest($request));
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Activities fetched successfully',
-                'data' => $activities,
-            ]);
-        } catch (Exception $e) {
-            logger()->error($e->getMessage());
-
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
-        }
-    }
-
-    /*
-     * Get languages
-     *
-     * @return JsonResponse
-     */
-    public function getLanguagesOrganization(): JsonResponse
-    {
-        try {
-            $languages = getCodeList('Language', 'Activity', filterDeprecated: false);
-            $organization = Auth::user()->organization;
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Languages fetched successfully',
-                'data' => [
-                    'languages' => $languages,
-                    'organization' => $organization,
-                ],
-            ]);
-        } catch (Exception $e) {
-            logger()->error($e->getMessage());
-
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
-        }
-    }
-
-    /**
      * Get activity detail data type.
      *
      * @return array
-     * @throws \JsonException
+     * @throws JsonException
      */
-    public function getActivityDetailDataType(): array
+    public function getActivityDetailDataType()
+    : array
     {
         return [
             'languages'                   => getCodeList('Language', 'Activity', code: false),
@@ -517,26 +383,193 @@ class ActivityController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     *
+     *
+     * @param Activity $activity
+     *
+     * @return void
+     */
+    public function edit(Activity $activity)
+    : void
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @param Activity $activity
+     *
+     * @return void
+     */
+    public function update(Request $request, Activity $activity)
+    : void
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param $activityId
+     *
      * @return JsonResponse
      */
-    public function getActivitiesCountByPublishedStatus(): JsonResponse
+    public function destroy($activityId)
+    : JsonResponse
     {
         try {
+            $activity = $this->activityService->getActivity($activityId);
+
+            if ($activity->linked_to_iati) {
+                $translatedData = trans('activity_detail/activity_controller.activity_must_be_un_published_before_deleting');
+                Session::put('error', $translatedData);
+
+                return response()->json(['success' => false, 'message' => $translatedData]);
+            }
+
+            if ($this->activityService->deleteActivity($activity)) {
+                $translatedData = trans('activity_detail/activity_controller.activity_has_been_deleted_successfully');
+                Session::put('success', $translatedData);
+
+                return response()->json(['success' => true, 'message' => $translatedData]);
+            }
+
+            $translatedData = trans('activity_detail/activity_controller.activity_delete_failed');
+
+            return response()->json(['success' => false, 'message' => $translatedData]);
+        } catch (Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Returns paginated activities for vue component.
+     *
+     * @param Request $request
+     * @param int $page
+     *
+     * @return JsonResponse
+     */
+    public function getPaginatedActivities(Request $request, int $page = 1)
+    : JsonResponse
+    {
+        try {
+            $activities = $this->activityService->getPaginatedActivities($page, $this->sanitizeRequest($request));
+
+            $translatedData = trans('activity_detail/activity_controller.activities_fetched_successfully');
+
+            return response()->json([
+                'success' => true,
+                'message' => $translatedData,
+                'data'    => $activities,
+            ]);
+        } catch (Exception $e) {
+            logger()->error($e->getMessage());
+
+            $translatedData = trans('activity_detail/activity_controller.error_occurred_while_fetching_the_data');
+
+            return response()->json(['success' => false, 'message' => $translatedData]);
+        }
+    }
+
+    /*
+     * Get languages
+     *
+     * @return JsonResponse
+     */
+
+    /**
+     * Sanitizes the request for removing code injections.
+     *
+     * @param $request
+     *
+     * @return array
+     */
+    public function sanitizeRequest($request)
+    : array
+    {
+        $tableConfig = getTableConfig('activity');
+        $queryParams = [];
+
+        if (!empty($request->get('q')) || $request->get('q') === '0') {
+            $queryParams['query'] = $request->get('q');
+        }
+
+        if (!empty($request->get('limit'))) {
+            $queryParams['limit'] = $request->get('limit');
+        }
+
+        if (in_array($request->get('orderBy'), $tableConfig['orderBy'], true)) {
+            $queryParams['orderBy'] = $request->get('orderBy');
+
+            if (in_array($request->get('direction'), $tableConfig['direction'], true)) {
+                $queryParams['direction'] = $request->get('direction');
+            }
+        }
+
+        if (in_array($request->get('filterBy'), $tableConfig['filterBy'], true)) {
+            $queryParams['filterBy'] = $request->get('filterBy');
+        }
+
+        return $queryParams;
+    }
+
+    public function getLanguagesOrganization()
+    : JsonResponse
+    {
+        try {
+            $languages = getCodeList('Language', 'Activity', filterDeprecated: false);
+            $organization = Auth::user()->organization;
+
+            $translatedData = trans('activity_detail/activity_controller.languages_fetched_successfully');
+
+            return response()->json([
+                'success' => true,
+                'message' => $translatedData,
+                'data'    => [
+                    'languages'    => $languages,
+                    'organization' => $organization,
+                ],
+            ]);
+        } catch (Exception $e) {
+            logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/activity_controller.error_occurred_while_fetching_the_data');
+
+            return response()->json(['success' => false, 'message' => $translatedData]);
+        }
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function getActivitiesCountByPublishedStatus()
+    : JsonResponse
+    {
+        try {
+            $translatedData = trans('activity_detail/activity_controller.fetched_activities_count_by_published_status');
+
             return response()->json(
                 [
                     'success' => true,
-                    'message' => 'Fetched activities count by published status',
+                    'message' => $translatedData,
                     'data'    => $this->activityService->getActivitiesCountByPublishedStatus((int) Auth::user()->organization_id),
                 ]
             );
         } catch (Exception $e) {
             logger()->error($e);
 
+            $translatedData = trans('activity_detail/activity_controller.failed_to_fetch_activities_count_error');
+
             return response()->json(
                 [
                     'success' => false,
-                    'message' => 'Failed to fetch activities count. Error: ' . $e->getMessage(),
-                    'data' => [],
+                    'message' => $translatedData . $e->getMessage(),
+                    'data'    => [],
                 ],
                 500
             );
@@ -551,10 +584,13 @@ class ActivityController extends Controller
      * @return JsonResponse
      * @throws Exception
      */
-    public function duplicateActivity(Request $request): JsonResponse
+    public function duplicateActivity(Request $request)
+    : JsonResponse
     {
         if (env('APP_ENV') === 'production') {
-            abort(403, 'This operation is not allowed in the production environment.');
+            $translatedData = trans('activity_detail/activity_controller.this_operation_is_not_allowed_in_the_production_environment');
+
+            abort(403, $translatedData);
         }
 
         $validated = $request->validate([
@@ -567,8 +603,10 @@ class ActivityController extends Controller
             'no_of_iterations' => $validated['no_of_iterations'],
         ]);
 
+        $translatedData = trans('activity_detail/activity_controller.activity_duplication_completed_successfully');
+
         return response()->json([
-            'message' => 'Activity duplication completed successfully.',
+            'message' => $translatedData,
         ]);
     }
 }

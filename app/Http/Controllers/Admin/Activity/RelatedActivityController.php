@@ -70,10 +70,11 @@ class RelatedActivityController extends Controller
             return view('admin.activity.relatedActivity.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/related_activity_controller.error_has_occurred_while_opening_related_activity_form');
 
             return redirect()->route('admin.activity.show', $id)->with(
                 'error',
-                'Error has occurred while opening related-activity form.'
+                $translatedData
             );
         }
     }
@@ -90,14 +91,18 @@ class RelatedActivityController extends Controller
     {
         try {
             if (!$this->relatedActivityService->update($id, $request->all())) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating related-activity.');
-            }
+                $translatedData = trans('activity_detail/related_activity_controller.error_has_occurred_while_updating_related_activity');
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Related-activity updated successfully.');
+                return redirect()->route('admin.activity.show', $id)->with('error', $translatedData);
+            }
+            $translatedData = trans('activity_detail/related_activity_controller.related_activity_updated_successfully');
+
+            return redirect()->route('admin.activity.show', $id)->with('success', $translatedData);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/related_activity_controller.error_has_occurred_while_updating_related_activity');
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating related-activity.');
+            return redirect()->route('admin.activity.show', $id)->with('error', $translatedData);
         }
     }
 }

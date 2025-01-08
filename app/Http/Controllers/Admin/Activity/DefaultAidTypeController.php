@@ -73,10 +73,11 @@ class DefaultAidTypeController extends Controller
             return view('admin.activity.defaultAidType.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {
             logger()->error($e);
+            $translatedData = trans('activity_detail/default_aid_type_controller.error_has_occurred_while_rendering_default_aid_type_form');
 
             return redirect()->route('admin.activity.show', $id)->with(
                 'error',
-                'Error has occurred while rendering default-aid-type form.'
+                $translatedData
             );
         }
     }
@@ -94,14 +95,18 @@ class DefaultAidTypeController extends Controller
             $activityDefaultAidType = $request->all();
 
             if (!$this->defaultAidTypeService->update($id, $activityDefaultAidType)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default-aid-type.');
-            }
+                $translatedData = trans('activity_detail/default_aid_type_controller.error_has_occurred_while_updating_default_aid_type_level');
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Default-aid-type updated successfully.');
+                return redirect()->route('admin.activity.show', $id)->with('error', $translatedData);
+            }
+            $translatedData = trans('activity_detail/default_aid_type_controller.default_aid_type_updated_successfully');
+
+            return redirect()->route('admin.activity.show', $id)->with('success', $translatedData);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/default_aid_type_controller.error_has_occurred_while_updating_default_aid_type');
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default aid type.');
+            return redirect()->route('admin.activity.show', $id)->with('error', $translatedData);
         }
     }
 }

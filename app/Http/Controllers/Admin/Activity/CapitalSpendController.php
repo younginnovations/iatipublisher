@@ -71,10 +71,11 @@ class CapitalSpendController extends Controller
             return view('admin.activity.capitalSpend.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/capital_spend_controller.error_has_occurred_while_rendering_activity_capital_spend_form');
 
             return redirect()->route('admin.activity.show', $id)->with(
                 'error',
-                'Error has occurred while rendering activity capital-spend form.'
+                $translatedData
             );
         }
     }
@@ -93,14 +94,18 @@ class CapitalSpendController extends Controller
             $activityCapitalSpend = $request->get('capital_spend') !== null ? (float) $request->get('capital_spend') : null;
 
             if (!$this->capitalSpendService->update($id, $activityCapitalSpend)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity capital-spend.');
-            }
+                $translatedData = trans('activity_detail/capital_spend_controller.error_has_occurred_while_updating_activity_capital_spend');
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Activity capital-spend updated successfully.');
+                return redirect()->route('admin.activity.show', $id)->with('error', $translatedData);
+            }
+            $translatedData = trans('activity_detail/capital_spend_controller.activity_capital_spend_updated_successfully');
+
+            return redirect()->route('admin.activity.show', $id)->with('success', $translatedData);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/capital_spend_controller.error_has_occurred_while_updating_activity_capital_spend');
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity capital-spend.');
+            return redirect()->route('admin.activity.show', $id)->with('error', $translatedData);
         }
     }
 }

@@ -73,10 +73,11 @@ class HumanitarianScopeController extends Controller
             return view('admin.activity.humanitarianScope.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/humanitarian_scope_controller.error_has_occurred_while_rendering_humanitarian_scope_form');
 
             return redirect()->route('admin.activity.show', $id)->with(
                 'error',
-                'Error has occurred while rendering humanitarian-scope form.'
+                $translatedData
             );
         }
     }
@@ -93,14 +94,19 @@ class HumanitarianScopeController extends Controller
     {
         try {
             if ($this->humanitarianScopeService->update($id, $request->except(['_token', '_method']))) {
-                return redirect()->route('admin.activity.show', $id)->with('success', 'Humanitarian-scope updated successfully.');
+                $translatedData = trans('activity_detail/humanitarian_scope_controller.humanitarian_scope_updated_successfully');
+
+                return redirect()->route('admin.activity.show', $id)->with('success', $translatedData);
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating humanitarian-scope.');
+            $translatedData = trans('activity_detail/humanitarian_scope_controller.error_has_occurred_while_updating_humanitarian_scope');
+
+            return redirect()->route('admin.activity.show', $id)->with('error', $translatedData);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedData = trans('activity_detail/humanitarian_scope_controller.humanitarian_scope_updated_successfully');
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating humanitarian-scope.');
+            return redirect()->route('admin.activity.show', $id)->with('error', $translatedData);
         }
     }
 }
