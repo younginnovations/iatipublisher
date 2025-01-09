@@ -368,6 +368,19 @@ watchEffect(() => {
   }
 });
 
+watchEffect(() => {
+  const validationPercent = localStorage.getItem('validationPercent');
+  const activityValidating = localStorage.getItem('activityValidating');
+  const validatingActivities = store.state.validatingActivities;
+
+  if (
+    (validationPercent === '100' && activityValidating === 'false') ||
+    (validatingActivities !== '' && activityValidating === 'true')
+  ) {
+    isChecking.value = false;
+  }
+});
+
 onMounted(() => {
   const publishingStatus = localStorage.getItem('vue-use-local-storage');
 
@@ -385,13 +398,6 @@ onMounted(() => {
     if (publishingActivities && Object.keys(publishingActivities).length > 0) {
       isChecking.value = false;
     }
-  }
-
-  if (
-    localStorage.getItem('validationPercent') === '100' &&
-    localStorage.getItem('activityValidating')
-  ) {
-    isChecking.value = false;
   }
 });
 </script>

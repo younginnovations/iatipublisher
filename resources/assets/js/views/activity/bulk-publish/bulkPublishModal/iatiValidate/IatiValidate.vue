@@ -316,6 +316,7 @@ onMounted(() => {
   if (showPopup) {
     store.dispatch('updateStartValidation', true);
   }
+  removeCheckFromCritical();
 });
 
 const hasError = computed(() => {
@@ -346,10 +347,20 @@ watch(
   { deep: true }
 );
 
-watchEffect(() => {
-  newSelectedActivities.value = Object.keys(props.activitiesList)
+const removeCheckFromCritical = () => {
+  newSelectedActivities.value = Object.keys(
+    store.state.bulkActivityPublishStatus.importedActivitiesList
+  )
     .map(Number)
-    .filter((id) => props.activitiesList[id].top_level_error !== 'critical');
+    .filter(
+      (id) =>
+        store.state.bulkActivityPublishStatus.importedActivitiesList[id]
+          .top_level_error !== 'critical'
+    );
+};
+
+watchEffect(() => {
+  removeCheckFromCritical();
 });
 
 const validActivities = computed(() => {

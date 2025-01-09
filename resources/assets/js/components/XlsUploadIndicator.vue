@@ -558,6 +558,7 @@ const hideBulkpublishLoader = () => {
 };
 
 const handleActivityPublishedData = (data) => {
+  console.log('Data', data);
   activityPublishedData.value = data;
 };
 
