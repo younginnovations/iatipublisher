@@ -221,8 +221,6 @@ class ImportXlsService
             $organizationId = Auth::user()->organization->id;
             $existingId = Arr::get($activity, 'existing', false);
 
-            logger('$activityData');
-            logger($activityData);
             if ($existingId || $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'))) {
                 $oldActivity = $this->activityRepository->find($existingId);
                 $activityData = $this->fillActivityData($activityData);

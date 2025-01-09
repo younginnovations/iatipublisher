@@ -121,11 +121,11 @@ class PolicyMarkerService
                 $vocabulary = Arr::get($policyMarker, 'policy_marker_vocabulary', null);
 
                 switch ($vocabulary) {
-                    case '99':
-                        $code = Arr::get($policyMarker, 'policy_marker_text', null);
+                    case '1':
+                        $code = Arr::get($policyMarker, 'policy_marker', null);
                         break;
                     default:
-                        $code = Arr::get($policyMarker, 'policy_marker', null);
+                        $code = Arr::get($policyMarker, 'policy_marker_text', null);
                         break;
                 }
 

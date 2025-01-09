@@ -213,7 +213,7 @@ class ImportXmlService
                 $this->resultRepository->deleteResult($oldActivity->id);
                 $this->saveTransactions(Arr::get($activityData, 'transactions'), $oldActivity->id, $defaultFieldValues);
                 $this->saveResults(Arr::get($activityData, 'result'), $oldActivity->id, $defaultFieldValues);
-                $this->refreshActivityElementStatusForResult($oldActivity);
+                $this->refreshActivityElementStatusForResultAndTransaction($oldActivity);
 
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $activity['errors']);
@@ -229,7 +229,7 @@ class ImportXmlService
 
                 $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id, $defaultFieldValues);
                 $this->saveResults(Arr::get($activityData, 'result'), $storeActivity->id, $defaultFieldValues);
-                $this->refreshActivityElementStatusForResult($storeActivity);
+                $this->refreshActivityElementStatusForResultAndTransaction($storeActivity);
 
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($storeActivity->id, $activity['errors']);
@@ -413,15 +413,18 @@ class ImportXmlService
     }
 
     /**
-     * Since we are doing upsert on results for both creation and update, need to manually check if result is complete.
+     * Since we are doing upsert on results and transaction for both creation and update,
+     * We need to manually check if result and transaction is complete.
      *
      * @throws \JsonException
      */
-    private function refreshActivityElementStatusForResult(Activity $activity): void
+    private function refreshActivityElementStatusForResultAndTransaction(Activity $activity): void
     {
         $elementStatus = $activity->element_status;
         $resultStatus = $this->elementCompleteService->isResultElementCompleted($activity);
+        $transactionsStatus = $this->elementCompleteService->isTransactionsElementCompleted($activity);
         $elementStatus['result'] = $resultStatus;
+        $elementStatus['transactions'] = $transactionsStatus;
 
         $this->activityRepository->update($activity->id, ['element_status' => $elementStatus]);
     }
