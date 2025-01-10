@@ -209,7 +209,7 @@ return [
     'narrative_required'                               => 'fr_ :attribute Narrative is required.',
     'no_more_than_once'                                => 'fr_ :attribute should occur once and no more than once within :values.',
     'budget_period_end_date'                           => 'fr_ Budget Period End Date',
-    'spaces_not_allowed'                               => 'fr_ You cannot enter spaces in organization name abbreviation.',
+    'spacfr_not_allowed'                               => 'fr_ You cannot enter spaces in organization name abbreviation.',
     'custom'                                           => [
         'attribute-name' => [
             'rule-name' => 'fr_ custom-message',
@@ -227,7 +227,7 @@ return [
     |
     */
 
-    'attributes' => [
+    'attributes'        => [
         'username'              => 'fr_ username',
         'full_name'             => 'fr_ full name',
         'email'                 => 'fr_ email',
@@ -249,6 +249,14 @@ return [
         'source'                => 'fr_ source',
         'language_preference'   => 'fr_ language preference',
         'current_password'      => 'fr_ current password',
+        'default_currency'      => 'fr_ default currency',
+        'hierarchy'             => 'fr_ hierarchy',
+        'budget_not_provided'   => 'fr_ budget not provided',
+        'humanitarian'          => 'fr_ humanitarian',
+        'api_token'             => 'fr_ api token',
+        'narrative'             => 'fr_ narrative',
+        'activity_identifier'   => 'fr_ activity identifier',
+        'iati_identifier_text'  => 'fr_ iati identifier text',
     ],
     'within_a_year'     => 'fr_ The :attribute must be within a year after :date.',
     'required_if_any'   => 'fr_ The :field is required if any of the fields of :element are filled.',
@@ -256,4 +264,5 @@ return [
     'greater'           => 'fr_ The :attribute must be greater than or equal to :value',
     'date_greater_than' => 'fr_ The date must be greater than :value',
     'logged_in_verify'  => 'fr_ User must be logged in to verify email.',
+    'attribute_exists'  => 'fr_ The :attribute already exists.',
 ];

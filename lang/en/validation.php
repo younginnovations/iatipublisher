@@ -141,7 +141,7 @@ return [
     |
     */
 
-    'custom' => [
+    'custom'                                           => [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
@@ -254,6 +254,9 @@ return [
         'budget_not_provided'   => 'budget not provided',
         'humanitarian'          => 'humanitarian',
         'api_token'             => 'api token',
+        'narrative'             => 'narrative',
+        'activity_identifier'   => 'activity identifier',
+        'iati_identifier_text'  => 'iati identifier text',
     ],
     'within_a_year'     => 'The :attribute must be within a year after :date.',
     'required_if_any'   => 'The :field is required if any of the fields of :element are filled.',
@@ -261,4 +264,5 @@ return [
     'greater'           => 'The :attribute must be greater than or equal to :value',
     'date_greater_than' => 'The date must be greater than :value',
     'logged_in_verify'  => 'User must be logged in to verify email.',
+    'attribute_exists'  => 'The :attribute already exists.',
 ];
