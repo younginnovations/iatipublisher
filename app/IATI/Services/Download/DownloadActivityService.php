@@ -193,6 +193,11 @@ class DownloadActivityService
     /**
      * Returns activity description narrative for particular description type.
      *
+     * UNDERSTANDING THE : || $type === '1'
+     *  That is to handle data where description narrative is present but no type is specified.
+     *  That type of description will be default-ed to type 1 in the downloaded file.
+     *
+     *
      * @param $descriptions
      * @param $language
      * @param $type
@@ -203,7 +208,7 @@ class DownloadActivityService
     {
         if (!empty($descriptions) && is_array($descriptions) && count($descriptions)) {
             foreach ($descriptions as $description) {
-                if (Arr::get($description, 'type', $type) === $type) {
+                if (Arr::get($description, 'type', $type) === $type || $type === '1') {
                     return (string) $this->getNarrativeText(Arr::get($description, 'narrative', []), $language);
                 }
             }
@@ -290,11 +295,11 @@ class DownloadActivityService
      */
     public function getPolicyMarkerCodeFromVocabulary($policyMarkerVocabulary, $policyMarker): ?string
     {
-        if (!empty($policyMarkerVocabulary) && $policyMarkerVocabulary !== '1') {
-            return (string) Arr::get($policyMarker, 'policy_marker_text', '');
+        if ($policyMarkerVocabulary === '1') {
+            return (string) Arr::get($policyMarker, 'policy_marker', '');
         }
 
-        return (string) Arr::get($policyMarker, 'policy_marker', '');
+        return Arr::get($policyMarker, 'policy_marker_text', '');
     }
 
     /**

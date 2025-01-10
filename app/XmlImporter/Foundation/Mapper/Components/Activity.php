@@ -883,17 +883,17 @@ class Activity
         switch ($vocabulary) {
             case '2':
                 $currentDefaultAidType['earmarking_category'] = $code;
-                $currentDefaultAidType = Arr::only($currentDefaultAidType, ['default_aid_type_vocabulary', 'earmarking_category']);
+                $fields = ['default_aid_type_vocabulary', 'earmarking_category'];
                 break;
 
             case '3':
                 $currentDefaultAidType['earmarking_modality'] = strtoupper($code);
-                $currentDefaultAidType = Arr::only($currentDefaultAidType, ['default_aid_type_vocabulary', 'earmarking_modality']);
+                $fields = ['default_aid_type_vocabulary', 'earmarking_modality'];
                 break;
 
             case '4':
                 $currentDefaultAidType['cash_and_voucher_modalities'] = $code;
-                $currentDefaultAidType = Arr::only($currentDefaultAidType, ['default_aid_type_vocabulary', 'cash_and_voucher_modalities']);
+                $fields = ['default_aid_type_vocabulary', 'cash_and_voucher_modalities'];
                 break;
 
             default:
@@ -904,10 +904,11 @@ class Activity
                     $currentDefaultAidType['default_aid_type'] = $code;
                 }
 
-                $currentDefaultAidType = Arr::only($currentDefaultAidType, ['default_aid_type_vocabulary', 'default_aid_type']);
+                $fields = ['default_aid_type_vocabulary', 'default_aid_type'];
                 break;
         }
 
+        $currentDefaultAidType = Arr::only($currentDefaultAidType, $fields);
         $this->defaultAidType[$this->index] = $currentDefaultAidType;
 
         $this->index++;
@@ -951,35 +952,28 @@ class Activity
         switch ($tagVocabulary) {
             case '2':
                 $this->tagVariable[$this->index]['goals_tag_code'] = $this->attributes($element, 'code');
-                $this->tagVariable[$this->index] = Arr::only(
-                    $this->tagVariable[$this->index],
-                    ['tag_vocabulary', 'goals_tag_code', 'narrative']
-                );
+                $fields = ['tag_vocabulary', 'goals_tag_code', 'narrative'];
+
                 break;
             case '3':
                 $this->tagVariable[$this->index]['targets_tag_code'] = strtolower($this->attributes($element, 'code'));
-                $this->tagVariable[$this->index] = Arr::only(
-                    $this->tagVariable[$this->index],
-                    ['tag_vocabulary', 'targets_tag_code', 'narrative']
-                );
+                $fields = ['tag_vocabulary', 'targets_tag_code', 'narrative'];
+
                 break;
             case '1':
             case '4':
                 $this->tagVariable[$this->index]['tag_text'] = $this->attributes($element, 'code');
-                $this->tagVariable[$this->index] = Arr::only(
-                    $this->tagVariable[$this->index],
-                    ['tag_vocabulary', 'tag_text', 'narrative']
-                );
+                $fields = ['tag_vocabulary', 'tag_text', 'narrative'];
+
                 break;
             default:
                 $this->tagVariable[$this->index]['tag_text'] = $this->attributes($element, 'code');
-                $this->tagVariable[$this->index] = Arr::only(
-                    $this->tagVariable[$this->index],
-                    ['tag_vocabulary', 'tag_text', 'narrative', 'vocabulary_uri']
-                );
+                $fields = ['tag_vocabulary', 'tag_text', 'narrative', 'vocabulary_uri'];
+
                 break;
         }
 
+        $this->tagVariable[$this->index] = Arr::only($this->tagVariable[$this->index], $fields);
         $this->index++;
 
         return $this->tagVariable;

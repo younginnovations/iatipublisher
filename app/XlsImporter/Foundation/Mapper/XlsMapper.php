@@ -42,9 +42,9 @@ class XlsMapper
     public function process(array $xlsData, string $xlsType, $userId, $orgId, $reportingOrg, $dbIatiIdentifiers): static
     {
         $xlsMapperTypes = [
-            'activity' => Activity::class,
-            'result' => Result::class,
-            'period' => Period::class,
+            'activity'  => Activity::class,
+            'result'    => Result::class,
+            'period'    => Period::class,
             'indicator' => Indicator::class,
         ];
         $mapper = $xlsMapperTypes[$xlsType];
@@ -56,10 +56,14 @@ class XlsMapper
 
         /**
          * $mapper will be an instance of either one of these:
+         *
          *  \App\XlsImporter\Foundation\Mapper\Activity
+         *
          *  \App\XlsImporter\Foundation\Mapper\Result
-         *  \App\XlsImporter\Foundation\Mapper\Period
-         *  \App\XlsImporter\Foundation\Mapper\Indicator
+         *
+         * \App\XlsImporter\Foundation\Mapper\Period
+         *
+         * \App\XlsImporter\Foundation\Mapper\Indicator
          */
         $xlsMapper = new $mapper();
         $xlsMapper->initMapper($validatedDataFilePath, $statusFilePath, $globalErrorFilePath, $dbIatiIdentifiers);

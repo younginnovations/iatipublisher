@@ -249,15 +249,33 @@ class ImportXlsService
                 $organizationIdentifier = Auth::user()->organization->identifier;
                 $defaultValues = $activityService->getDefaultValues();
 
-                logger('$defaultValues');
-                logger($defaultValues);
-
                 $activityData['org_id'] = $organizationId;
                 $activityData['upload_medium'] = 'xls';
-                $activityData['collaboration_type'] = (int) Arr::get($defaultValues, 'default_collaboration_type') ?: null;
-                $activityData['flow_type'] = (int) Arr::get($defaultValues, 'default_flow_type') ?: null;
-                $activityData['finance_type'] = (int) Arr::get($defaultValues, 'default_finance_type') ?: null;
-                $activityData['tied_status'] = (int) Arr::get($defaultValues, 'default_tied_status') ?: null;
+
+                $activityData['collaboration_type'] = $this->getIntOrNullFromActivityDataOrDefaultValues(
+                    activityData         : $activityData,
+                    activityDataAccessKey: 'collaboration_type',
+                    defaultValues        : $defaultValues,
+                    defaultDataKey       : 'default_collaboration_type'
+                );
+                $activityData['flow_type'] = $this->getIntOrNullFromActivityDataOrDefaultValues(
+                    activityData         : $activityData,
+                    activityDataAccessKey: 'flow_type',
+                    defaultValues        : $defaultValues,
+                    defaultDataKey       : 'default_flow_type'
+                );
+                $activityData['finance_type'] = $this->getIntOrNullFromActivityDataOrDefaultValues(
+                    activityData         : $activityData,
+                    activityDataAccessKey: 'finance_type',
+                    defaultValues        : $defaultValues,
+                    defaultDataKey       : 'default_finance_type'
+                );
+                $activityData['tied_status'] = $this->getIntOrNullFromActivityDataOrDefaultValues(
+                    activityData         : $activityData,
+                    activityDataAccessKey: 'tied_status',
+                    defaultValues        : $defaultValues,
+                    defaultDataKey       : 'default_tied_status'
+                );
 
                 $activityData['iati_identifier']['iati_identifier_text'] = $organizationIdentifier . '-' . $activityData['iati_identifier']['activity_identifier'];
                 $activityData['iati_identifier']['present_organization_identifier'] = $organizationIdentifier;
@@ -282,6 +300,23 @@ class ImportXlsService
 
             $this->elementCompleteService->refreshElementStatus($storeActivity);
         }
+    }
+
+    public function getIntOrNullFromActivityDataOrDefaultValues(
+        array $activityData,
+        string $activityDataAccessKey,
+        array $defaultValues,
+        string $defaultDataKey
+    ): ?int {
+        $value = Arr::get($activityData, $activityDataAccessKey);
+
+        if (!empty($value)) {
+            return (int) $value;
+        }
+
+        $defaultValue = Arr::get($defaultValues, $defaultDataKey);
+
+        return !empty($defaultValue) ? (int) $defaultValue : null;
     }
 
     /**

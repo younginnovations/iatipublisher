@@ -138,7 +138,13 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getActivityDescriptionGeneral($activityArray, $rowIndex): ?string
     {
-        return ($rowIndex === 0) ? $this->getDescriptionText(Arr::get($activityArray, 'description', []), Arr::get($activityArray, 'default_field_values.default_language', ''), '1') : '';
+        return ($rowIndex === 0)
+            ? $this->getDescriptionText(
+                Arr::get($activityArray, 'description', []),
+                Arr::get($activityArray, 'default_field_values.default_language', ''),
+                '1'
+            )
+            : '';
     }
 
     /**
@@ -482,6 +488,10 @@ trait DownloadActivitySimpleElementTrait
     /**
      * Get activity policy marker vocabulary.
      *
+     * UNDERSTANDING THE RETURN STATEMENTS:
+     *  Since vocabulary is an  optional field in the forms, there can be data where there is no vocab but has code.
+     *  So we need to check if code exists, if exists then set vocab = 99 in the downloaded file.
+     *
      * @param $activityArray
      * @param $rowIndex
      *
@@ -489,7 +499,20 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getPolicyMarkerVocabulary($activityArray, $rowIndex): ?string
     {
-        return (string) (Arr::get($activityArray, 'policy_marker.' . $rowIndex . '.policy_marker_vocabulary', ''));
+        $policyMarkerVocabulary = Arr::get($activityArray, 'policy_marker.' . $rowIndex . '.policy_marker_vocabulary');
+        $hasCode = Arr::get($activityArray, 'policy_marker.' . $rowIndex . '.policy_marker', false)
+            || Arr::get($activityArray, 'policy_marker.' . $rowIndex . '.policy_marker_text', false);
+        $hasVocab = !empty($policyMarkerVocabulary);
+
+        if ($hasVocab) {
+            return $policyMarkerVocabulary;
+        }
+
+        if ($hasCode) {
+            return '99';
+        }
+
+        return null;
     }
 
     /**
@@ -502,7 +525,12 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getPolicyMarkerCode($activityArray, $rowIndex): ?string
     {
-        return (string) ($this->getPolicyMarkerCodeFromVocabulary(Arr::get($activityArray, 'policy_marker.' . $rowIndex . '.policy_marker_vocabulary', ''), Arr::get($activityArray, 'policy_marker.' . $rowIndex, [])));
+        return (string) (
+            $this->getPolicyMarkerCodeFromVocabulary(
+            Arr::get($activityArray, 'policy_marker.' . $rowIndex . '.policy_marker_vocabulary', ''),
+            Arr::get($activityArray, 'policy_marker.' . $rowIndex, [])
+        )
+        );
     }
 
     /**
@@ -541,7 +569,10 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getPolicyMarkerNarrative($activityArray, $rowIndex): ?string
     {
-        return $this->getNarrativeText(Arr::get($activityArray, 'policy_marker.' . $rowIndex . '.narrative', []), Arr::get($activityArray, 'default_field_values.default_language', ''));
+        return $this->getNarrativeText(
+            Arr::get($activityArray, 'policy_marker.' . $rowIndex . '.narrative', []),
+            Arr::get($activityArray, 'default_field_values.default_language', '')
+        );
     }
 
     /**

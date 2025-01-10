@@ -45,10 +45,10 @@ class RefreshActivityElementCompleteness extends Command
                 foreach ($activities as $activity) {
                     $this->info("Started for activity: $activity->id");
 
-                    $activityElementNames = $activity->getAttributes();
+                    $activityElementNames = getActivityAttributes();
                     $elementStatus = [];
 
-                    foreach ($activityElementNames as $element => $value) {
+                    foreach ($activityElementNames as $element) {
                         $methodName = dashesToCamelCase('is_' . $element . '_element_completed');
 
                         if (method_exists($elementCompleteService, $methodName)) {

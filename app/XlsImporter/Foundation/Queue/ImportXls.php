@@ -100,6 +100,7 @@ class ImportXls extends Job implements ShouldQueue
     public function handle(): void
     {
         try {
+            /** @var XlsQueueProcessor $xlsImportQueue */
             $xlsImportQueue = app()->make(XlsQueueProcessor::class);
             $xlsImportQueue->import($this->filename, $this->organizationId, $this->reportingOrg, $this->userId, $this->iatiIdentifiers, $this->xlsType);
 

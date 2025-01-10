@@ -1152,47 +1152,14 @@ class ElementCompleteService
      */
     public function refreshElementStatus($activity): void
     {
-        $skippablesFields = [
-            'id',
-            'org_id',
-            'status',
-            'created_at',
-            'updated_at',
-            'created_by',
-            'updated_by',
-            'upload_medium',
-            'linked_to_iati',
-            'element_status',
-            'default_field_values',
-            'migrated_from_aidstream',
-            'complete_percentage',
-            'deprecation_status_map',
-        ];
-
-        $skippableRelations = [
-            'documentLinks',
-            'importError',
-            'organization',
-            'audits',
-        ];
-
         $elementStatus = [];
-        $attributes = $activity->getAttributes();
-        $relations = $this->getRelationNames($activity);
+        $attributes = getActivityAttributes();
 
-        foreach ($attributes as $attribute => $value) {
+        foreach ($attributes as $attribute) {
             $methodName = dashesToCamelCase('is_' . $attribute . '_element_completed');
 
-            if (!in_array($attribute, $skippablesFields) && is_callable([$this, $methodName])) {
+            if (is_callable([$this, $methodName])) {
                 $elementStatus[$attribute] = call_user_func([$this, $methodName], $activity);
-            }
-        }
-
-        foreach ($relations as $relation) {
-            $methodName = dashesToCamelCase('is_' . $relation . '_element_completed');
-
-            if (!in_array($relation, $skippableRelations) && is_callable([$this, $methodName])) {
-                $elementStatus[$relation] = call_user_func([$this, $methodName], $activity);
             }
         }
 
@@ -1276,12 +1243,12 @@ class ElementCompleteService
             'complete_percentage',
         ];
         $deprecationMap = [];
-        $attributes = $activity->getAttributes();
+        $attributes = getActivityAttributes();
 
-        foreach ($attributes as $attribute => $value) {
+        foreach ($attributes as $attribute) {
             $attributeMethod = dashesToCamelCase('does_' . $attribute . '_have_deprecated_code');
 
-            if (!in_array($attribute, $skippables) && is_callable([$this, $attributeMethod])) {
+            if (is_callable([$this, $attributeMethod])) {
                 $deprecationMap[$attribute] = call_user_func([$this, $attributeMethod], $activity);
             }
         }

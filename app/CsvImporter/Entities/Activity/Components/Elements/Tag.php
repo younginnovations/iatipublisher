@@ -144,36 +144,55 @@ class Tag extends Element
             $tagVocabulary = $this->data['tag'][$index]['tag_vocabulary'] ?? '';
             $value = (!$value) ? '' : trim((string) $value);
 
-            if ($tagVocabulary === '2') {
-                $validTagCode = $this->loadCodeList('UNSDG-Goals');
+            switch ($tagVocabulary) {
+                case '2':
+                    $validTagCode = $this->loadCodeList('UNSDG-Goals');
 
-                if ($value) {
-                    foreach ($validTagCode as $code => $name) {
-                        if (strcasecmp($value, $name) === 0) {
-                            $value = (string) $code;
-                            break;
+                    if ($value) {
+                        foreach ($validTagCode as $code => $name) {
+                            if (strcasecmp($value, $name) === 0) {
+                                $value = (string) $code;
+                                break;
+                            }
                         }
                     }
-                }
 
-                $this->data['tag'][$index]['goals_tag_code'] = $value;
-            } elseif ($tagVocabulary === '3') {
-                $validTagCode = $this->loadCodeList('UNSDG-Targets');
+                    $this->data['tag'][$index]['goals_tag_code'] = $value;
+                    $fields = ['tag_vocabulary', 'goals_tag_code', 'narrative'];
 
-                if (!is_float($value)) {
-                    foreach ($validTagCode as $code => $name) {
-                        if (strcasecmp($value, $name) === 0) {
-                            $value = is_float($code) ? (float) $code : $code;
-                            break;
+                    break;
+                case '3':
+                    $validTagCode = $this->loadCodeList('UNSDG-Targets');
+
+                    if (!is_float($value)) {
+                        foreach ($validTagCode as $code => $name) {
+                            if (strcasecmp($value, $name) === 0) {
+                                $value = is_float($code) ? (float) $code : $code;
+                                break;
+                            }
                         }
                     }
-                }
 
-                $this->data['tag'][$index]['targets_tag_code'] = $value;
-            } else {
-                $this->data['tag'][$index]['tag_text'] = $value;
-                $this->data['tag'][$index]['tag_vocabulary'] = $tagVocabulary;
+                    $this->data['tag'][$index]['targets_tag_code'] = $value;
+                    $fields = ['tag_vocabulary', 'targets_tag_code', 'narrative'];
+
+                    break;
+                case '1':
+                case '4':
+                    $this->data['tag'][$index]['tag_text'] = $value;
+                    $this->data['tag'][$index]['tag_vocabulary'] = $tagVocabulary;
+                    $fields = ['tag_vocabulary', 'tag_text', 'narrative'];
+
+                    break;
+                default:
+                    $this->data['tag'][$index]['tag_text'] = $value;
+                    $this->data['tag'][$index]['tag_vocabulary'] = $tagVocabulary;
+                    $fields = ['tag_vocabulary', 'tag_text', 'narrative', 'vocabulary_uri'];
+
+                    break;
             }
+
+            $this->data['tag'][$index] = Arr::only($this->data['tag'][$index], $fields);
         }
     }
 

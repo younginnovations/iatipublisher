@@ -100,7 +100,6 @@ class TransactionObserver
      */
     public function created(Transaction $transaction): void
     {
-        logger('observer call jula');
         $changeUpdatedAt = !$transaction->migrated_from_aidstream;
 
         $this->setTransactionDefaultValues($transaction, $changeUpdatedAt);
