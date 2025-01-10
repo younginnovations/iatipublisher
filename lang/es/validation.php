@@ -227,7 +227,7 @@ return [
     |
     */
 
-    'attributes' => [
+    'attributes'        => [
         'username'              => 'es_ username',
         'full_name'             => 'es_ full name',
         'email'                 => 'es_ email',
@@ -249,6 +249,14 @@ return [
         'source'                => 'es_ source',
         'language_preference'   => 'es_ language preference',
         'current_password'      => 'es_ current password',
+        'default_currency'      => 'es_ default currency',
+        'hierarchy'             => 'es_ hierarchy',
+        'budget_not_provided'   => 'es_ budget not provided',
+        'humanitarian'          => 'es_ humanitarian',
+        'api_token'             => 'es_ api token',
+        'narrative'             => 'es_ narrative',
+        'activity_identifier'   => 'es_ activity identifier',
+        'iati_identifier_text'  => 'es_ iati identifier text',
     ],
     'within_a_year'     => 'es_ The :attribute must be within a year after :date.',
     'required_if_any'   => 'es_ The :field is required if any of the fields of :element are filled.',
@@ -256,4 +264,5 @@ return [
     'greater'           => 'es_ The :attribute must be greater than or equal to :value',
     'date_greater_than' => 'es_ The date must be greater than :value',
     'logged_in_verify'  => 'es_ User must be logged in to verify email.',
+    'attribute_exists'  => 'es_ The :attribute already exists.',
 ];
