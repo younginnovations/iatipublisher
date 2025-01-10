@@ -33,8 +33,20 @@
               <svg-vue icon="help"></svg-vue>
             </button>
             <div class="help__text right-0 w-60">
+              <span
+                class="close-help absolute top-5 right-2 z-[50] scale-[2] cursor-pointer"
+                ><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 12 14"
+                  fill="none"
+                >
+                  <path
+                    fill="#2A2F30"
+                    d="M4.588 3.5 7.212.88a.418.418 0 0 0-.591-.592L4 2.913 1.38.288a.418.418 0 1 0-.593.591L3.413 3.5.787 6.12a.417.417 0 0 0 .136.684.417.417 0 0 0 .456-.091L4 4.088l2.62 2.625a.417.417 0 0 0 .684-.136.417.417 0 0 0-.092-.456L4.588 3.5Z"
+                  /></svg
+              ></span>
               <span class="font-bold text-bluecoral"></span>
-              <p :v-html="toolTip"></p>
+              <p class="!text-black" :v-html="toolTip"></p>
             </div>
           </div>
         </div>

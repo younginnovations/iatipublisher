@@ -28,10 +28,11 @@
     <div class="flex flex-wrap  mb-4">
         <div class="flex  items-center  title grow">
             <span class="text-bluecoral  text-xl mr-1.5">
-                @if ($data['name'] === 'reporting_org' ||
-                    $data['name'] === 'default_tied_status' ||
-                    $data['name'] === 'crs_add' ||
-                    $data['name'] === 'fss')
+                @if (
+                    $data['name'] === 'reporting_org' ||
+                        $data['name'] === 'default_tied_status' ||
+                        $data['name'] === 'crs_add' ||
+                        $data['name'] === 'fss')
                     <svg-vue icon="activity-elements/building"></svg-vue>
                 @else
                     <svg-vue icon="activity-elements/{{ $data['name'] }}"></svg-vue>
@@ -70,9 +71,13 @@
                                 fill="#68797E" stroke="#68797E" stroke-width=".667"></path>
                         </svg>
                         <div class="left-0 help__text w-72">
-                            <p class="text-bluecoral mb-2 italic">IATI standard reference</p>
+                            <span class="absolute top-5 right-2 cursor-pointer close-help z-[50] scale-[2]"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 14" fill="none">
+                                    <path fill="#2A2F30"
+                                        d="M4.588 3.5 7.212.88a.418.418 0 0 0-.591-.592L4 2.913 1.38.288a.418.418 0 1 0-.593.591L3.413 3.5.787 6.12a.417.417 0 0 0 .136.684.417.417 0 0 0 .456-.091L4 4.088l2.62 2.625a.417.417 0 0 0 .684-.136.417.417 0 0 0-.092-.456L4.588 3.5Z" />
+                                </svg></span>
                             <span class="font-bold text-bluecoral">{{ $data['name'] }}</span>
-                            <p>{!! Arr::get(getElementSchema($data['name']), 'hover_text', false) !!} </p>
+                            <p class="!text-black">{!! Arr::get(getElementSchema($data['name']), 'hover_text', false) !!} </p>
                         </div>
                     </div>
                 @endif
