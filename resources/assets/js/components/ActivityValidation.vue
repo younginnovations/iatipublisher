@@ -203,8 +203,6 @@ watchEffect(() => {
           .top_level_error !== 'critical'
     );
 
-  console.log('Activities', activities);
-
   if (activities.length < 1) {
     isAllCriticalErrors.value = true;
   } else {

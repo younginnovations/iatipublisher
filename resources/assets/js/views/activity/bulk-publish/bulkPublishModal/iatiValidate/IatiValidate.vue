@@ -190,10 +190,16 @@
                     <span class="checkmark"></span>
                   </label>
                   <div
-                    class="ellipsis__title max-w-[60ch] overflow-hidden pl-6"
+                    class="bulk_publish_activity_title max-w-[60ch] pl-6"
+                    :title="value?.title"
                   >
-                    {{ value.title ?? '' }}
+                    {{
+                      value?.title?.length > 100
+                        ? value?.title.slice(0, 100) + '...'
+                        : value?.title ?? ''
+                    }}
                   </div>
+
                   <div v-if="value.top_level_error === 'critical'">
                     <span class="text-xs italic text-crimson-50">
                       (The activity contains critical errors and thus cannot be
@@ -361,10 +367,6 @@ const removeCheckFromCritical = () => {
     );
 };
 
-watchEffect(() => {
-  removeCheckFromCritical();
-});
-
 const validActivities = computed(() => {
   return Object.fromEntries(
     Object.entries(props.activitiesList).filter(
@@ -383,6 +385,12 @@ const inValidedActivities = computed(() => {
 const totalValidationFailedActivities = computed(() => {
   return Object.values(props.activitiesList).filter((item) => !item.is_valid)
     .length;
+});
+
+watchEffect(() => {
+  if (validActivities.value) {
+    removeCheckFromCritical();
+  }
 });
 
 watch(
