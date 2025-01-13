@@ -7,6 +7,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=19eed7d34b7abea8bbea0ef35dee13d6",
     "/js/script.js": "/js/script.js?id=573e5816f1296bbce2c2c0084e92e523",
     "/js/webportal-script.js": "/js/webportal-script.js?id=06d4c518a25c033e1989b9db84a1dd01",
@@ -78,10 +79,14 @@
 =======
     "/js/app.js": "/js/app.js?id=848d90733660a1206029bfdbeaae196c",
 >>>>>>> 72f5e6ed (-[x] Minimize While Bulk Publish Fixes)
+=======
+    "/js/app.js": "/js/app.js?id=5098636ebfb0e3b47154a11cd1490384",
+>>>>>>> 5fc689ab (-[x] Added Title Ellipsis When Longer Title)
     "/js/script.js": "/js/script.js?id=5664c41472ea07b11e7b9e7ad4007a4c",
     "/js/webportal-script.js": "/js/webportal-script.js?id=ec424584e8e86829641c324d807c42b5",
     "/js/formbuilder.js": "/js/formbuilder.js?id=0da9ac4d5b4cf5740657fde41069a985",
     "/manifest.js": "/manifest.js?id=3ed1124c8f4dcb98acc36de67cb80349",
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -109,5 +114,9 @@
     "/css/webportal-app.css": "/css/webportal-app.css?id=ae2159754768db20a62c5e824de61180",
     "/css/app.css": "/css/app.css?id=c0855be247ad127f4908a9189353fff7",
 >>>>>>> 72f5e6ed (-[x] Minimize While Bulk Publish Fixes)
+=======
+    "/css/webportal-app.css": "/css/webportal-app.css?id=c79b8d60eab92aef1a0c41c01f60d167",
+    "/css/app.css": "/css/app.css?id=d094d5798c988289b12632cd19bf7274",
+>>>>>>> 5fc689ab (-[x] Added Title Ellipsis When Longer Title)
     "/js/vendor.js": "/js/vendor.js?id=1d9dc84f31934bcf90e4083803feee6b"
 }

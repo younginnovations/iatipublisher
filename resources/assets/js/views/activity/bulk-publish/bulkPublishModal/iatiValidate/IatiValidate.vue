@@ -189,7 +189,9 @@
                     />
                     <span class="checkmark"></span>
                   </label>
-                  <div class="pl-6">
+                  <div
+                    class="ellipsis__title max-w-[60ch] overflow-hidden pl-6"
+                  >
                     {{ value.title ?? '' }}
                   </div>
                   <div v-if="value.top_level_error === 'critical'">
@@ -199,7 +201,7 @@
                     </span>
                   </div>
                 </div>
-                <div class="flex items-center gap-6">
+                <div class="flex shrink-0 items-center gap-6">
                   <svg-vue
                     v-if="value?.is_valid === false"
                     class="text-xl"

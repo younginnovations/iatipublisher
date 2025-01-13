@@ -71,7 +71,7 @@
             />
             {{ (currentPage - 1) * 25 + Number(index) + 1 }}
           </td>
-          <td class="title">
+          <td class="title max-w-[450px]">
             <div
               class="flex items-start transition duration-500 hover:text-spring-50"
             >
