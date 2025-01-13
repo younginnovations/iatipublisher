@@ -26,3 +26,4 @@ github-credentials.yaml
 /public/css
 /public/js
 /storage/test.xml
+/public/js/*.js
