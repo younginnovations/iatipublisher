@@ -360,4 +360,23 @@ return [
         'in'   => 'The collaboration type does not exist.',
         'size' => 'The collaboration type cannot have more than one value.',
     ],
+    'activity_default_flow_type'       => [
+        'in'   => 'The default flow type does not exist.',
+        'size' => 'The default flow type cannot have more than one value.',
+    ],
+    'activity_default_finance_type'    => [
+        'in'   => 'The default finance type does not exist.',
+        'size' => 'The default finance type cannot have more than one value.',
+    ],
+    'activity_default_aid_type'        => [
+        'invalid_vocabulary'                  => 'The default aid type vocabulary is invalid.',
+        'invalid'                             => 'The default aid type is invalid.',
+        'invalid_earmarking_category'         => 'The default aid type earmarking category is invalid.',
+        'invalid_earmarking_modality'         => 'The default aid type earmarking modality is invalid.',
+        'invalid_cash_and_voucher_modalities' => 'The default aid type cash and voucher modalities is invalid.',
+    ],
+    'activity_default_tied_status'     => [
+        'in'   => 'The default tied status does not exist.',
+        'size' => 'The default tied status cannot have more than one value.',
+    ],
 ];
