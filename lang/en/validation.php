@@ -356,4 +356,8 @@ return [
         'invalid_code'         => 'The policy marker code is invalid.',
         'narrative_required'   => 'The narrative field is required when vocabulary is reporting organisation.'
     ],
+    'activity_collaboration_type'      => [
+        'in'   => 'The collaboration type does not exist.',
+        'size' => 'The collaboration type cannot have more than one value.',
+    ],
 ];
