@@ -286,4 +286,11 @@ return [
     'iso_proper_date'                  => 'es_ The @iso-date field must be a proper date.',
     'iso_gt_1900'                      => 'es_ The @iso-date field must be a greater than 1900.',
     'description_type_invalid'         => 'es_ The selected description type is invalid.',
+    'other_identifier'                 => [
+        'regex'        => 'es_ The other identifier reference field shouldn\'t contain the symbols /, &, | or ?.',
+        'type_invalid' => 'es_ The other identifier type is not valid.',
+        'owner_org'    => [
+            'reference_regex' => 'es_ The owner org reference field shouldn\'t contain the symbols /, &, | or ?.',
+        ]
+    ],
 ];
