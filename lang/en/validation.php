@@ -286,6 +286,7 @@ return [
     'iso_proper_date'                  => 'The @iso-date field must be a proper date.',
     'iso_gt_1900'                      => 'The @iso-date field must be a greater than 1900.',
     'description_type_invalid'         => 'The selected description type is invalid.',
+    'vocabulary_uri_url'               => 'The @vocabulary-uri field must be a valid url.',
     'other_identifier'                 => [
         'regex'        => 'The other identifier reference field shouldn\'t contain the symbols /, &, | or ?.',
         'type_invalid' => 'The other identifier type is not valid.',
@@ -349,6 +350,10 @@ return [
         'invalid_vocabulary'       => 'The tag vocabulary is invalid.',
         'invalid_sdg_code'         => 'The tag SDG code is invalid',
         'invalid_sdg_targets_code' => 'The tag SDG targets code is invalid.',
-        'vocabulary_uri_url'       => 'The @vocabulary-uri field must be a valid url.',
+    ],
+    'activity_policy_marker'           => [
+        'invalid_significance' => 'The policy marker significance is invalid.',
+        'invalid_code'         => 'The policy marker code is invalid.',
+        'narrative_required'   => 'The narrative field is required when vocabulary is reporting organisation.'
     ],
 ];
