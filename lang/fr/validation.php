@@ -320,4 +320,29 @@ return [
             'allocated_country_percent'  => 'fr_ The sum of percentages of Recipient Region(s) and Recipient country must be 100%',
         ],
     ],
+    'activity_recipient_region'        => [
+        'already_in_transaction' => 'fr_ Recipient Region is already added at transaction level. You can add a Recipient Region either at activity level or at transaction level but not at both.',
+        'invalid_vocabulary'     => 'fr_ The recipient region vocabulary is invalid.',
+        'invalid_code'           => 'fr_ The recipient region code is invalid.',
+        'vocabulary_uri_url'     => 'fr_ The recipient region vocabulary uri must be a valid url.',
+        'percentage'             => [
+            'numeric'                                => 'fr_ The recipient region percentage field must be a number.',
+            'country_percentage_complete'            => 'fr_ Recipient Country’s percentage is already 100%. The sum of the percentages of Recipient Country and Recipient Region must be 100%',
+            'in'                                     => 'fr_ The sum of the percentages of Recipient Country(ies) and Recipient Region(s) must always be 100%',
+            'allocated_region_total_mismatch'        => 'fr_ The sum of recipient country and recipient region of a specific vocabulary must be 100%',
+            'sum_greater_than'                       => 'fr_ Sum of percentage within vocabulary cannot be greater than 100',
+            'percentage_within_vocabulary'           => 'fr_ The sum of percentage of Recipient Country and Recipient Regions (within the same Region Vocabulary) must be equal to 100%',
+            'min'                                    => 'fr_ The recipient country percentage must be at least 0.',
+            'single_allocated_region_total_mismatch' => 'fr_ The sum of the percentages of Recipient Country(ies) and Recipient Region(s) must always be 100%',
+        ],
+    ],
+    'activity_sector'                  => [
+        'already_in_transactions' => 'fr_ Sector has already been declared at transaction level. You can’t declare a sector at the activity level.',
+        'invalid_vocabulary'      => 'fr_ The sector vocabulary is invalid.',
+        'invalid_code'            => 'fr_ The sector code is invalid.',
+        'percentage'              => [
+            'numeric'              => 'fr_ The percentage must be 100% or left empty, which is assumed as 100%.',
+            'sector_total_percent' => 'fr_ The sum of percentages of same vocabulary must be equal to 100%',
+        ],
+    ],
 ];

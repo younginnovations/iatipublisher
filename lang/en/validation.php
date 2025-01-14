@@ -336,4 +336,13 @@ return [
             'single_allocated_region_total_mismatch' => 'The sum of the percentages of Recipient Country(ies) and Recipient Region(s) must always be 100%',
         ],
     ],
+    'activity_sector'                  => [
+        'already_in_transactions' => 'Sector has already been declared at transaction level. You can’t declare a sector at the activity level.',
+        'invalid_vocabulary'      => 'The sector vocabulary is invalid.',
+        'invalid_code'            => 'The sector code is invalid.',
+        'percentage'              => [
+            'numeric'              => 'The percentage must be 100% or left empty, which is assumed as 100%.',
+            'sector_total_percent' => 'The sum of percentages of same vocabulary must be equal to 100%',
+        ],
+    ],
 ];
