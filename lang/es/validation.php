@@ -297,4 +297,10 @@ return [
         'in'   => 'es_ The activity status does not exist.',
         'size' => 'es_ The activity status cannot have more than one value.',
     ],
+    'activity_date'                    => [
+        'invalid'              => 'es_ Date is invalid.',
+        'date_before'          => 'es_ Actual start and end dates may not be in the future.',
+        'end_later_than_start' => 'es_ End date must be later than the start date.',
+        'invalid_type'         => 'es_ The selected type is invalid.',
+    ],
 ];
