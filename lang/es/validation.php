@@ -141,7 +141,7 @@ return [
     |
     */
 
-    'custom' => [
+    'custom'                                           => [
         'attribute-name' => [
             'rule-name' => 'es_ custom-message',
         ],
@@ -227,7 +227,7 @@ return [
     |
     */
 
-    'attributes'        => [
+    'attributes'                       => [
         'username'              => 'es_ username',
         'full_name'             => 'es_ full name',
         'email'                 => 'es_ email',
@@ -258,11 +258,31 @@ return [
         'activity_identifier'   => 'es_ activity identifier',
         'iati_identifier_text'  => 'es_ iati identifier text',
     ],
-    'within_a_year'     => 'es_ The :attribute must be within a year after :date.',
-    'required_if_any'   => 'es_ The :field is required if any of the fields of :element are filled.',
-    'amount'            => 'es_ Please enter amount in the format xx.xx',
-    'greater'           => 'es_ The :attribute must be greater than or equal to :value',
-    'date_greater_than' => 'es_ The date must be greater than :value',
-    'logged_in_verify'  => 'es_ User must be logged in to verify email.',
-    'attribute_exists'  => 'es_ The :attribute already exists.',
+    'within_a_year'                    => 'es_ The :attribute must be within a year after :date.',
+    'required_if_any'                  => 'es_ The :field is required if any of the fields of :element are filled.',
+    'amount'                           => 'es_ Please enter amount in the format xx.xx',
+    'greater'                          => 'es_ The :attribute must be greater than or equal to :value',
+    'date_greater_than'                => 'es_ The date must be greater than :value',
+    'logged_in_verify'                 => 'es_ User must be logged in to verify email.',
+    'attribute_exists'                 => 'es_ The :attribute already exists.',
+    'narrative_required_with_lang'     => 'es_ The narrative is required when language is specified.',
+    'narrative_required_with_xml_lang' => 'es_ The narrative field is required with @xml:lang field.',
+    'title_unique_lang'                => 'es_ The title language field must be unique.',
+    'first_title_required'             => 'es_ The first title is required.',
+    'xml_lang_unique'                  => 'es_ The @xml:lang field must be unique.',
+    'narrative_language_unique'        => 'es_ The narrative language field must be unique.',
+    'xml_lang_invalid'                 => 'es_ The @xml:lang field is invalid.',
+    'narrative_is_required'            => 'es_ The Narrative field is required.',
+    'period_end_date'                  => 'es_ Period end must be a date.',
+    'period_end_gt_1900'               => 'es_ Period end date must be date greater than year 1900.',
+    'period_end_required'              => 'es_ Period end is a required field',
+    'period_end_after'                 => 'es_ Period end must be a date after period',
+    'document_link_format_invalid'     => 'es_ The document link format is invalid',
+    'url_valid'                        => 'es_ The @url field must be a valid url.',
+    'document_link_category_unique'    => 'es_ The document link category code field must be a unique.',
+    'document_link_category_invalid'   => 'es_ The document link category code is invalid.',
+    'document_link_language_unique'    => 'es_ The document link language code field must be a unique.',
+    'document_link_language_invalid'   => 'es_ The document link language code is invalid.',
+    'iso_proper_date'                  => 'es_ The @iso-date field must be a proper date.',
+    'iso_gt_1900'                      => 'es_ The @iso-date field must be a greater than 1900.',
 ];

@@ -141,7 +141,7 @@ return [
     |
     */
 
-    'custom' => [
+    'custom'                                           => [
         'attribute-name' => [
             'rule-name' => 'fr_ custom-message',
         ],
@@ -209,7 +209,7 @@ return [
     'narrative_required'                               => 'fr_ :attribute Narrative is required.',
     'no_more_than_once'                                => 'fr_ :attribute should occur once and no more than once within :values.',
     'budget_period_end_date'                           => 'fr_ Budget Period End Date',
-    'spacfr_not_allowed'                               => 'fr_ You cannot enter spaces in organization name abbreviation.',
+    'spaces_not_allowed'                               => 'fr_ You cannot enter spaces in organization name abbreviation.',
     'custom'                                           => [
         'attribute-name' => [
             'rule-name' => 'fr_ custom-message',
@@ -227,7 +227,7 @@ return [
     |
     */
 
-    'attributes'        => [
+    'attributes'                       => [
         'username'              => 'fr_ username',
         'full_name'             => 'fr_ full name',
         'email'                 => 'fr_ email',
@@ -258,11 +258,31 @@ return [
         'activity_identifier'   => 'fr_ activity identifier',
         'iati_identifier_text'  => 'fr_ iati identifier text',
     ],
-    'within_a_year'     => 'fr_ The :attribute must be within a year after :date.',
-    'required_if_any'   => 'fr_ The :field is required if any of the fields of :element are filled.',
-    'amount'            => 'fr_ Please enter amount in the format xx.xx',
-    'greater'           => 'fr_ The :attribute must be greater than or equal to :value',
-    'date_greater_than' => 'fr_ The date must be greater than :value',
-    'logged_in_verify'  => 'fr_ User must be logged in to verify email.',
-    'attribute_exists'  => 'fr_ The :attribute already exists.',
+    'within_a_year'                    => 'fr_ The :attribute must be within a year after :date.',
+    'required_if_any'                  => 'fr_ The :field is required if any of the fields of :element are filled.',
+    'amount'                           => 'fr_ Please enter amount in the format xx.xx',
+    'greater'                          => 'fr_ The :attribute must be greater than or equal to :value',
+    'date_greater_than'                => 'fr_ The date must be greater than :value',
+    'logged_in_verify'                 => 'fr_ User must be logged in to verify email.',
+    'attribute_exists'                 => 'fr_ The :attribute already exists.',
+    'narrative_required_with_lang'     => 'fr_ The narrative is required when language is specified.',
+    'narrative_required_with_xml_lang' => 'fr_ The narrative field is required with @xml:lang field.',
+    'title_unique_lang'                => 'fr_ The title language field must be unique.',
+    'first_title_required'             => 'fr_ The first title is required.',
+    'xml_lang_unique'                  => 'fr_ The @xml:lang field must be unique.',
+    'narrative_language_unique'        => 'fr_ The narrative language field must be unique.',
+    'xml_lang_invalid'                 => 'fr_ The @xml:lang field is invalid.',
+    'narrative_is_required'            => 'fr_ The Narrative field is required.',
+    'period_end_date'                  => 'fr_ Period end must be a date.',
+    'period_end_gt_1900'               => 'fr_ Period end date must be date greater than year 1900.',
+    'period_end_required'              => 'fr_ Period end is a required field',
+    'period_end_after'                 => 'fr_ Period end must be a date after period',
+    'document_link_format_invalid'     => 'fr_ The document link format is invalid',
+    'url_valid'                        => 'fr_ The @url field must be a valid url.',
+    'document_link_category_unique'    => 'fr_ The document link category code field must be a unique.',
+    'document_link_category_invalid'   => 'fr_ The document link category code is invalid.',
+    'document_link_language_unique'    => 'fr_ The document link language code field must be a unique.',
+    'document_link_language_invalid'   => 'fr_ The document link language code is invalid.',
+    'iso_proper_date'                  => 'fr_ The @iso-date field must be a proper date.',
+    'iso_gt_1900'                      => 'fr_ The @iso-date field must be a greater than 1900.',
 ];
