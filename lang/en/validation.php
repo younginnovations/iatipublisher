@@ -285,4 +285,5 @@ return [
     'document_link_language_invalid'   => 'The document link language code is invalid.',
     'iso_proper_date'                  => 'The @iso-date field must be a proper date.',
     'iso_gt_1900'                      => 'The @iso-date field must be a greater than 1900.',
+    'description_type_invalid'         => 'The selected description type is invalid.',
 ];
