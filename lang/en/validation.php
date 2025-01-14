@@ -345,4 +345,10 @@ return [
             'sector_total_percent' => 'The sum of percentages of same vocabulary must be equal to 100%',
         ],
     ],
+    'activity_tag'                     => [
+        'invalid_vocabulary'       => 'The tag vocabulary is invalid.',
+        'invalid_sdg_code'         => 'The tag SDG code is invalid',
+        'invalid_sdg_targets_code' => 'The tag SDG targets code is invalid.',
+        'vocabulary_uri_url'       => 'The @vocabulary-uri field must be a valid url.',
+    ],
 ];
