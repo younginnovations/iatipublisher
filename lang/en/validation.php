@@ -320,4 +320,20 @@ return [
             'allocated_country_percent'  => 'The sum of percentages of Recipient Region(s) and Recipient country must be 100%',
         ],
     ],
+    'activity_recipient_region'        => [
+        'already_in_transaction' => 'Recipient Region is already added at transaction level. You can add a Recipient Region either at activity level or at transaction level but not at both.',
+        'invalid_vocabulary'     => 'The recipient region vocabulary is invalid.',
+        'invalid_code'           => 'The recipient region code is invalid.',
+        'vocabulary_uri_url'     => 'The recipient region vocabulary uri must be a valid url.',
+        'percentage'             => [
+            'numeric'                                => 'The recipient region percentage field must be a number.',
+            'country_percentage_complete'            => 'Recipient Country’s percentage is already 100%. The sum of the percentages of Recipient Country and Recipient Region must be 100%',
+            'in'                                     => 'The sum of the percentages of Recipient Country(ies) and Recipient Region(s) must always be 100%',
+            'allocated_region_total_mismatch'        => 'The sum of recipient country and recipient region of a specific vocabulary must be 100%',
+            'sum_greater_than'                       => 'Sum of percentage within vocabulary cannot be greater than 100',
+            'percentage_within_vocabulary'           => 'The sum of percentage of Recipient Country and Recipient Regions (within the same Region Vocabulary) must be equal to 100%',
+            'min'                                    => 'The recipient country percentage must be at least 0.',
+            'single_allocated_region_total_mismatch' => 'The sum of the percentages of Recipient Country(ies) and Recipient Region(s) must always be 100%',
+        ],
+    ],
 ];
