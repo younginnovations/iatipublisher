@@ -303,4 +303,8 @@ return [
         'end_later_than_start' => 'End date must be later than the start date.',
         'invalid_type'         => 'The selected type is invalid.',
     ],
+    'activity_scope'                   => [
+        'in'   => 'The activity scope does not exist.',
+        'size' => 'The activity scope cannot have more than one value.',
+    ],
 ];
