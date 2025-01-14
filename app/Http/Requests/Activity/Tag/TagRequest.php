@@ -130,7 +130,7 @@ class TagRequest extends ActivityBaseRequest
                 'validation.activity_tag.invalid_sdg_targets_code'
             );
             $messages[sprintf('%s.vocabulary_uri.url', $tagForm)] = trans(
-                'validation.activity_tag.vocabulary_uri_url'
+                'validation.vocabulary_uri_url'
             );
 
             foreach (
