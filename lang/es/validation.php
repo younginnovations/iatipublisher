@@ -293,4 +293,8 @@ return [
             'reference_regex' => 'es_ The owner org reference field shouldn\'t contain the symbols /, &, | or ?.',
         ]
     ],
+    'activity_status'                  => [
+        'in'   => 'es_ The activity status does not exist.',
+        'size' => 'es_ The activity status cannot have more than one value.',
+    ],
 ];
