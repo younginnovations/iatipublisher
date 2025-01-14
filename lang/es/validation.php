@@ -307,4 +307,17 @@ return [
         'in'   => 'es_ The activity scope does not exist.',
         'size' => 'es_ The activity scope cannot have more than one value.',
     ],
+    'activity_recipient_country'       => [
+        'already_in_transaction' => 'es_ Recipient Country is already added at transaction level. You can add a Recipient Country either at activity level or at transaction level but not at both.',
+        'invalid_code'           => 'es_ The recipient country code is invalid.',
+        'duplicate_country_code' => 'es_ The Country Code cannot be redundant.',
+        'percentage'             => [
+            'numeric'                    => 'es_ The recipient country percentage must be a number.',
+            'max'                        => 'es_ The recipient country percentage cannot be greater than 100',
+            'sum_exceeded'               => 'es_ The sum of recipient country percentage cannot be greater than 100',
+            'min'                        => 'es_ The recipient country percentage must be at least 0.',
+            'region_percentage_complete' => 'es_ Recipient Region’s percentage is already 100%. The sum of the percentages of Recipient Country and Recipient Region must be 100%.',
+            'allocated_country_percent'  => 'es_ The sum of percentages of Recipient Region(s) and Recipient country must be 100%',
+        ],
+    ],
 ];
