@@ -558,4 +558,51 @@ return [
             'invalid_code' => 'The transaction recipient country code is invalid.',
         ],
     ],
+    'activity_results'                 => [
+        'result_id' => [
+            'same_activity' => 'All results must belong to the same activity.',
+            'no_match'      => 'Results IDs do not match the specified activity.',
+            'unpublish'     => 'Please unpublish activity before deleting results.',
+        ],
+        'reference' => [
+            'vocabulary_uri_url' => 'The @vocabulary-uri field must be a valid url.',
+            'code_present'       => 'The code is already defined in its indicators',
+            'vocabulary_present' => 'The vocabulary is already defined in its indicators',
+        ],
+    ],
+    'activity_indicators'              => [
+        'invalid_measure'            => 'The indicator measure is invalid.',
+        'invalid_aggregation_status' => 'The indicator aggregation status is invalid.',
+        'invalid_ascending'          => 'The indicator ascending is invalid.',
+        'reference'                  => [
+            'uri_url'                       => 'The @indicator-uri field must be a valid url.',
+            'result_ref_code_present'       => 'The code is already defined in its result',
+            'result_ref_vocabulary_present' => 'The vocabulary is already defined in its result',
+        ],
+        'baseline'                   => [
+            'year'  => [
+                'invalid_year' => 'The @year field is not valid.',
+                'in'           => 'The @year field should be the year of baseline date',
+                'digits'       => 'The @year field must have 4 digits.',
+            ],
+            'value' => [
+                'numeric' => 'The @value field must be a number.',
+                'gte'     => 'The @value field must be greater or equal to 0.',
+            ],
+        ],
+    ],
+    'activity_periods'                 => [
+        'date'  => [
+            'date'             => 'The @date field must be a proper date.',
+            'after'            => 'The @iso-date field of period end must be a date after @iso-field of period start',
+            'gte_1900'         => 'The @iso-date must be greater than 1900',
+            'period_start_end' => 'The @iso-date field of period end and @iso-date of period start must not have difference of more than a year',
+        ],
+        'value' => [
+            'numeric'           => 'The @value field must be numeric.',
+            'qualitative_empty' => 'Value must be omitted when the indicator measure is qualitative.',
+            'target_required'   => 'Target value is required if actual value is not provided.',
+            'actual_required'   => 'Actual value is required if target value is not provided.',
+        ],
+    ],
 ];
