@@ -271,7 +271,7 @@ return [
     'first_title_required'             => 'The first title is required.',
     'xml_lang_unique'                  => 'The @xml:lang field must be unique.',
     'narrative_language_unique'        => 'The narrative language field must be unique.',
-    'narrative_with_language'         => 'The narrative field is required with language field.',
+    'narrative_with_language'          => 'The narrative field is required with language field.',
     'xml_lang_invalid'                 => 'The @xml:lang field is invalid.',
     'narrative_is_required'            => 'The Narrative field is required.',
     'period_end_date'                  => 'Period end must be a date.',
@@ -303,6 +303,8 @@ return [
     'amount_with_value'                => 'The amount field is required with value.',
     'amount_number'                    => 'The amount field must be a number.',
     'amount_negative'                  => 'The amount field must not be in negative.',
+    'username_regex'                   => 'The username is invalid. Username must be purely lowercase alphabets followed by alphanumeric(ascii) characters and these symbols:-_',
+    'email_unique'                     => 'Email is already in use in IATI Publisher.',
     'other_identifier'                 => [
         'regex'        => 'The other identifier reference field shouldn\'t contain the symbols /, &, | or ?.',
         'type_invalid' => 'The other identifier type is not valid.',
