@@ -395,4 +395,9 @@ return [
         'code_string'        => 'The humanitarian scope code must be a string.',
         'vocabulary_uri_url' => 'The humanitarian scope vocabulary-uri must be a proper url.',
     ],
+    'activity_capital_spend'           => [
+        'numeric' => 'The capital spend must be a number',
+        'between' => 'The capital spend must be a number between 0 and 100',
+        'size'    => 'The capital spend cannot have more than one value.',
+    ],
 ];
