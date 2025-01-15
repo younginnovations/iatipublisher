@@ -395,4 +395,12 @@ return [
         'code_string'        => 'fr_ The humanitarian scope code must be a string.',
         'vocabulary_uri_url' => 'fr_ The humanitarian scope vocabulary-uri must be a proper url.',
     ],
+    'activity_capital_spend'           => [
+        'numeric' => 'fr_ The capital spend must be a number',
+        'between' => 'fr_ The capital spend must be a number between 0 and 100',
+        'size'    => 'fr_ The capital spend cannot have more than one value.',
+    ],
+    'activity_related_activity'        => [
+        'invalid_relationship_type' => 'fr_ The relationship type in related activity is invalid.',
+    ],
 ];

@@ -400,4 +400,7 @@ return [
         'between' => 'The capital spend must be a number between 0 and 100',
         'size'    => 'The capital spend cannot have more than one value.',
     ],
+    'activity_related_activity'        => [
+        'invalid_relationship_type' => 'The relationship type in related activity is invalid.',
+    ],
 ];
