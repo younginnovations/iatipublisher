@@ -424,7 +424,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
                 'validation.activity_planned_disbursement.value.amount.min'
             );
             $messages[sprintf('%s.currency.in', $valueForm)] = trans(
-                'validation.activity_planned_disbursement.value.currency.invalid_currency'
+                'validation.invalid_currency'
             );
             $messages[sprintf('%s.value_date.required', $valueForm)] = trans(
                 'validation.activity_planned_disbursement.value.date.required'

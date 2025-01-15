@@ -271,6 +271,7 @@ return [
     'first_title_required'             => 'The first title is required.',
     'xml_lang_unique'                  => 'The @xml:lang field must be unique.',
     'narrative_language_unique'        => 'The narrative language field must be unique.',
+    'narrative_with_language'         => 'The narrative field is required with language field.',
     'xml_lang_invalid'                 => 'The @xml:lang field is invalid.',
     'narrative_is_required'            => 'The Narrative field is required.',
     'period_end_date'                  => 'Period end must be a date.',
@@ -285,8 +286,23 @@ return [
     'document_link_language_invalid'   => 'The document link language code is invalid.',
     'iso_proper_date'                  => 'The @iso-date field must be a proper date.',
     'iso_gt_1900'                      => 'The @iso-date field must be a greater than 1900.',
+    'iso_date_required'                => 'The @iso-date field is required.',
+    'iso_date_after'                   => 'The @iso-date field must be a date after period-start date.',
+    'period_longer'                    => 'The period must not be longer than one year.',
     'description_type_invalid'         => 'The selected description type is invalid.',
     'vocabulary_uri_url'               => 'The @vocabulary-uri field must be a valid url.',
+    'name_narrative_required'          => 'The narrative is required.',
+    'registration_number_regex'        => 'The registration_number format is invalid.',
+    'invalid_currency'                 => 'The value currency is invalid.',
+    'invalid_ref'                      => 'The @ref format is invalid.',
+    'reporting_org_ref_must_match'     => 'The @ref of reporting-org must match the organisation-identifier.',
+    'language_required_with_narrative' => 'The language field is required when narrative field is present.',
+    'amount_required'                  => 'The amount field is required.',
+    'amount_numeric'                   => 'The amount must be numeric.',
+    'amount_min'                       => 'The amount must not be in negative.',
+    'amount_with_value'                => 'The amount field is required with value.',
+    'amount_number'                    => 'The amount field must be a number.',
+    'amount_negative'                  => 'The amount field must not be in negative.',
     'other_identifier'                 => [
         'regex'        => 'The other identifier reference field shouldn\'t contain the symbols /, &, | or ?.',
         'type_invalid' => 'The other identifier type is not valid.',
@@ -449,15 +465,12 @@ return [
             'regex'        => 'The planned disbursement receiver org ref shouldn\'t contain the symbols /, &, | or ?.',
         ],
         'value'        => [
-            'amount'   => [
+            'amount' => [
                 'required' => 'Amount field is required',
                 'numeric'  => 'Amount field must be a number',
                 'min'      => 'Amount field must not be in negative.'
             ],
-            'currency' => [
-                'invalid_currency' => 'The value currency is invalid.'
-            ],
-            'date'     => [
+            'date'   => [
                 'required'     => 'Value date is a required field',
                 'invalid_date' => 'The Value Date must be a valid Date',
             ],
@@ -498,13 +511,8 @@ return [
             'gt_1900'          => 'The iso-date field must be date after year 1900.',
             'after'            => 'The Period End iso-date must be a date after Period Start iso-date',
         ],
-        'amount'     => [
-            'numeric' => 'The amount field must be a number.',
-            'min'     => 'The amount field must not be in negative.',
-        ],
         'value'      => [
-            'date'             => 'The value-date field must be a valid date.',
-            'invalid_currency' => 'The value currency is invalid.',
+            'date' => 'The value-date field must be a valid date.',
         ],
     ],
     'activity_transactions'            => [
@@ -529,12 +537,11 @@ return [
             'date'   => 'The @iso-date field must be a valid date.',
         ],
         'value'                      => [
-            'numeric_amount'   => 'The @amount field must be a number.',
-            'date'             => [
+            'numeric_amount' => 'The @amount field must be a number.',
+            'date'           => [
                 'before' => 'The @value-date must not be in future.',
                 'date'   => 'The @value-date field must be a valid date.',
             ],
-            'invalid_currency' => 'The value currency is invalid.',
         ],
         'sector'                     => [
             'required'           => 'You have declared sector at transaction level so you must declare sector for all the transactions.',
@@ -612,4 +619,18 @@ return [
         'xls_required'      => 'The xls file must be uploaded',
         'xls_activity_file' => 'The file must be of xls format.',
     ],
+    'organization_document_link'       => [
+        'category_code' => [
+            'unique'   => 'The category @code field must be unique.',
+            'required' => 'The @code field is required.',
+        ],
+        'language'      => [
+            'unique' => 'The language @code field must be unique.',
+        ],
+    ],
+    'value_date_required'              => 'The @value-date field is required.',
+    'value_date_date'                  => 'The @value-date must be a date.',
+    'value_date_after_or_equal'        => 'The value date field must be a date between period start and period end',
+    'value_date_with_value'            => 'The @value-date is required with value.',
+    'value_date_after_equal'           => 'The @value-date field must be a date between period start and period end',
 ];
