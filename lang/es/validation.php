@@ -379,4 +379,20 @@ return [
         'in'   => 'es_ The default tied status does not exist.',
         'size' => 'es_ The default tied status cannot have more than one value.',
     ],
+    'activity_country_budget_items'    => [
+        'invalid_vocabulary' => 'es_ The country budget item vocabulary is invalid.',
+        'invalid_code'       => 'es_ The budget item code in invalid.',
+        'percentage'         => [
+            'numeric' => 'es_ The budget item percentage field must be a number.',
+            'max'     => 'es_ The budget item percentage field cannot be greater than 100.',
+            'sum'     => 'es_ The sum of percentage with budget items must add up to 100.',
+            'total'   => 'es_ The budget item percentage field should be 100 when there is only one budget item.'
+        ],
+    ],
+    'activity_humanitarian_scope'      => [
+        'invalid_code'       => 'es_ The humanitarian scope type is invalid.',
+        'invalid_vocabulary' => 'es_ The humanitarian scope vocabulary is invalid.',
+        'code_string'        => 'es_ The humanitarian scope code must be a string.',
+        'vocabulary_uri_url' => 'es_ The humanitarian scope vocabulary-uri must be a proper url.',
+    ],
 ];

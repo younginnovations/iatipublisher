@@ -389,4 +389,10 @@ return [
             'total'   => 'The budget item percentage field should be 100 when there is only one budget item.'
         ],
     ],
+    'activity_humanitarian_scope'      => [
+        'invalid_code'       => 'The humanitarian scope type is invalid.',
+        'invalid_vocabulary' => 'The humanitarian scope vocabulary is invalid.',
+        'code_string'        => 'The humanitarian scope code must be a string.',
+        'vocabulary_uri_url' => 'The humanitarian scope vocabulary-uri must be a proper url.',
+    ],
 ];
