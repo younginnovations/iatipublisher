@@ -605,4 +605,11 @@ return [
             'actual_required'   => 'Actual value is required if target value is not provided.',
         ],
     ],
+    'activity_upload'                  => [
+        'required'          => 'The activity file must be uploaded',
+        'activity_file'     => 'The file must be of either xml or csv format.',
+        'max'               => 'The file shouldn\'t be greater than 10MB.',
+        'xls_required'      => 'The xls file must be uploaded',
+        'xls_activity_file' => 'The file must be of xls format.',
+    ],
 ];
