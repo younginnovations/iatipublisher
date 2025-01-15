@@ -88,6 +88,7 @@ const state = {
       title: any;
       status: any;
       is_valid: any;
+      top_level_error: string;
     }[],
     showValidationError: false,
     completedSteps: [] as number[],

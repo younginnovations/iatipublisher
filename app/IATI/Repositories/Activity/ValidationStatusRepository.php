@@ -112,6 +112,7 @@ class ValidationStatusRepository extends Repository
         $response['complete_count'] = 0;
         $response['failed_count'] = 0;
         $response['activities'] = [];
+        $response['activity_error_stats'] = [];
 
         $validatorStatuses = $this->model->with('activity')->whereIn('activity_id', $activityIds)->get();
 
@@ -142,7 +143,11 @@ class ValidationStatusRepository extends Repository
 
                 if ($validatorStatus->status === 'completed') {
                     $response['complete_count']++;
-                    $result[$validatorStatus->activity_id]['is_valid'] = json_decode($validatorStatus->response, true)['response']['valid'];
+                    $activityId = $validatorStatus->activity_id;
+                    $responsePropertyOfValidatorResponse = Arr::get(json_decode($validatorStatus->response, true), 'response');
+                    $result[$activityId]['is_valid'] = Arr::get($responsePropertyOfValidatorResponse, 'valid');
+                    $responseSummary = Arr::get($responsePropertyOfValidatorResponse, 'summary', []);
+                    $result[$activityId]['top_level_error'] = $this->getHighestSeverityErrorFromResponse($responseSummary);
                 }
             }
 
@@ -249,5 +254,34 @@ class ValidationStatusRepository extends Repository
         }, $activityIds);
 
         $this->model->insert($insertableValidationStatus);
+    }
+
+    /**
+     * @param array $responseSummary
+     *
+     * @return string|null
+     */
+    private function getHighestSeverityErrorFromResponse(array $responseSummary): ?string
+    {
+        $severityLevels = collect(['critical', 'error', 'warning', 'advisory']);
+
+        return $severityLevels->first(function ($level) use ($responseSummary) {
+            return Arr::get($responseSummary, $level, 0) > 0;
+        });
+    }
+
+    /**
+     * Returns array of activity_id of the activities that do not contain critical error.
+     *
+     * @param array $activityIds
+     *
+     * @return array
+     */
+    public function getActivitiesWithNoCriticalErrors(array $activityIds): array
+    {
+        return $this->model->whereIn('activity_id', $activityIds)
+            ->where('status', 'completed')
+            ->whereRaw("(response->'response'->'summary'->>'critical')::integer = 0")
+            ->pluck('activity_id')->toArray();
     }
 }

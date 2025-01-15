@@ -14,7 +14,7 @@
             icon="warning-fill"
           ></svg-vue>
           <div class="font-bold">
-            {{ errorData.length + importErrorlength }} Issues found
+            {{ errorCount(errorData) + importErrorlength }} Issues found
           </div>
         </div>
         <button class="validation__toggle" @click="errorToggle()">Show</button>
@@ -207,6 +207,12 @@ const deleteErrors = () => {
       location.reload();
     }
   });
+};
+
+const errorCount = (errorData) => {
+  return errorData.filter(
+    (error: { severity: string }) => error.severity !== 'advisory'
+  )?.length;
 };
 </script>
 

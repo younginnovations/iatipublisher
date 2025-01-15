@@ -5,7 +5,7 @@
       store.state.bulkActivityPublishStatus.iatiValidatorLoader
     "
   >
-    <RollingLoader header="Checking your data before publication" />
+    <RollingLoader header="Validating your data before publication" />
     <p
       class="mt-2.5 rounded-lg bg-paper p-4 text-sm leading-[22px] tracking-normal text-n-50"
     >
@@ -157,43 +157,69 @@
           <svg-vue class="text-xl" icon="warning-activity" />
           <span class="text-xs font-bold">
             There may be data quality issues with
-            {{ totalValidationFailedActivities }}/{{
-              store.state.bulkActivityPublishStatus.validationStats.total
-            }}
+            <span class="text-[18px] font-bold text-bluecoral">
+              {{ totalValidationFailedActivities }}/{{
+                store.state.bulkActivityPublishStatus.validationStats.total
+              }}
+            </span>
             activities. You can still continue to publish
           </span>
         </div>
         <ul
-          class="max-h-[50vh] space-y-2 divide-y divide-n-20 overflow-auto px-4 pb-4 duration-200"
+          class="max-h-[50vh] divide-y divide-n-20 overflow-auto duration-200"
         >
           <template v-if="Object.keys(validActivities).length > 0">
             <li
               v-for="(value, key) in validActivities"
               :key="Number(key)"
-              class="pt-4 text-sm leading-[22px] tracking-normal text-n-50"
+              class="px-4 pt-4 pb-4 text-sm leading-[22px] tracking-normal text-n-50"
+              :class="{ 'bg-[#f6f0ff]': value.top_level_error === 'critical' }"
             >
               <div class="flex items-center justify-between">
                 <div>
-                  <label class="checkbox_container">
+                  <label
+                    class="checkbox_container"
+                    :class="{ disabled: value.top_level_error === 'critical' }"
+                  >
                     <input
                       v-model="newSelectedActivities"
                       type="checkbox"
                       :value="key"
+                      :disabled="value.top_level_error === 'critical'"
                     />
                     <span class="checkmark"></span>
                   </label>
-                  <div class="pl-6">
-                    {{ value.title ?? '' }}
+                  <div
+                    class="bulk_publish_activity_title max-w-[60ch] pl-6"
+                    :title="value?.title"
+                  >
+                    {{
+                      value?.title?.length > 100
+                        ? value?.title.slice(0, 100) + '...'
+                        : value?.title ?? ''
+                    }}
+                  </div>
+
+                  <div v-if="value.top_level_error === 'critical'">
+                    <span class="text-xs italic text-crimson-50">
+                      (The activity contains critical errors and thus cannot be
+                      published.)
+                    </span>
                   </div>
                 </div>
-                <div class="flex items-center gap-6">
+                <div class="flex shrink-0 items-center gap-6">
                   <svg-vue
                     v-if="value?.is_valid === false"
                     class="text-xl"
                     icon="warning-activity"
                   />
-                  <a :href="`${permalink}${key}`" target="_blank" class="">
-                    <svg-vue class="text-sm" icon="open-link" />
+                  <a
+                    :href="`${permalink}${key}`"
+                    target="_blank"
+                    class="flex items-center gap-[2px]"
+                  >
+                    Open in new tab
+                    <svg-vue class="text-base" icon="open-link-small" />
                   </a>
                 </div>
               </div>
@@ -211,7 +237,11 @@
       v-if="activeTab === 1 && Object.keys(validActivities).length > 0"
       class="w-[100px] pt-3"
     >
-      <label for="selectAll" class="checkbox_container !flex">
+      <label
+        for="selectAll"
+        class="checkbox_container !flex"
+        :class="{ disabled: isAllCriticalErrors }"
+      >
         <span
           class="inline-block pl-3 pt-1 text-xs font-bold uppercase leading-[18px]"
           >Select all</span
@@ -222,6 +252,7 @@
           :checked="
             newSelectedActivities.length === Object.keys(validActivities).length
           "
+          :disabled="isAllCriticalErrors"
           @change="(e) => selectAllActivities(e)"
         />
         <span class="checkmark"></span>
@@ -230,7 +261,16 @@
   </div>
 </template>
 <script setup lang="ts">
-import { watch, defineProps, ref, onMounted, inject, Ref, computed } from 'vue';
+import {
+  watch,
+  defineProps,
+  ref,
+  onMounted,
+  inject,
+  Ref,
+  computed,
+  watchEffect,
+} from 'vue';
 
 import { useStore } from 'Store/activities/index';
 import RollingLoader from '../RollingLoaderComponent.vue';
@@ -267,6 +307,15 @@ const activeTab = ref(1);
 const handleActiveTab = (value) => {
   activeTab.value = value;
 };
+const isAllCriticalErrors = computed(() => {
+  return (
+    Object.keys(validActivities.value)
+      .map(Number)
+      .filter((id) => {
+        return validActivities.value[id].top_level_error === 'critical';
+      }).length === Object.keys(validActivities.value).length
+  );
+});
 
 //setting data from local storage to vuex ,to preserve state when window is reloaded
 onMounted(() => {
@@ -275,6 +324,7 @@ onMounted(() => {
   if (showPopup) {
     store.dispatch('updateStartValidation', true);
   }
+  removeCheckFromCritical();
 });
 
 const hasError = computed(() => {
@@ -283,9 +333,9 @@ const hasError = computed(() => {
 
 const selectAllActivities = (event) => {
   if (event.target.checked) {
-    newSelectedActivities.value = Object.keys(validActivities.value).map(
-      (key) => parseInt(key)
-    );
+    newSelectedActivities.value = Object.keys(validActivities.value)
+      .map(Number)
+      .filter((id) => props.activitiesList[id].top_level_error !== 'critical');
   } else {
     newSelectedActivities.value = [];
   }
@@ -305,17 +355,29 @@ watch(
   { deep: true }
 );
 
+const removeCheckFromCritical = () => {
+  newSelectedActivities.value = Object.keys(
+    store.state.bulkActivityPublishStatus.importedActivitiesList
+  )
+    .map(Number)
+    .filter(
+      (id) =>
+        store.state.bulkActivityPublishStatus.importedActivitiesList[id]
+          .top_level_error !== 'critical'
+    );
+};
+
 const validActivities = computed(() => {
   return Object.fromEntries(
     Object.entries(props.activitiesList).filter(
-      ([key, value]) => value.status !== 'failed'
+      ([, value]) => value.status !== 'failed'
     )
   );
 });
 const inValidedActivities = computed(() => {
   return Object.fromEntries(
     Object.entries(props.activitiesList).filter(
-      ([key, value]) => value.status == 'failed'
+      ([, value]) => value.status === 'failed'
     )
   );
 });
@@ -325,11 +387,17 @@ const totalValidationFailedActivities = computed(() => {
     .length;
 });
 
+watchEffect(() => {
+  if (validActivities.value) {
+    removeCheckFromCritical();
+  }
+});
+
 watch(
   () =>
     Object.fromEntries(
       Object.entries(props.activitiesList).filter(
-        ([key, value]) => value.status !== 'failed'
+        ([, value]) => value.status !== 'failed'
       )
     ),
   (value) => {
@@ -374,6 +442,15 @@ watch(
   width: 17px;
   border-radius: 2px;
   @apply border-2 border-n-20;
+}
+
+.checkbox_container.disabled input ~ .checkmark {
+  cursor: not-allowed;
+  @apply bg-n-20;
+}
+
+.checkbox_container:hover.disabled input ~ .checkmark {
+  @apply border-n-20;
 }
 
 /* On mouse-over, add a grey background color */

@@ -104,7 +104,8 @@
           </div>
           <button
             v-if="!hasError && percentageWidth == 100"
-            class="flex flex-1 justify-center rounded border border-bluecoral bg-bluecoral px-3 py-2 text-xs font-bold uppercase text-white"
+            class="flex flex-1 justify-center rounded border border-bluecoral bg-bluecoral px-3 py-2 text-xs font-bold uppercase text-white disabled:cursor-not-allowed disabled:border-0 disabled:bg-n-30 disabled:text-white"
+            :disabled="isAllCriticalErrors"
             @click="startBulkPublish"
           >
             <span>Continue</span>
@@ -141,6 +142,7 @@ import {
   onMounted,
   defineEmits,
   defineExpose,
+  watchEffect,
 } from 'vue';
 
 import { useStore } from 'Store/activities/index';
@@ -164,6 +166,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['stopValidation', 'proceed']);
+const isAllCriticalErrors = ref(false);
 
 //setting percentage of validation progressbar , to maintain consistency when page is reloaded or navigated
 const hasError = ref(false);
@@ -188,6 +191,24 @@ watch(
     hasError.value = value;
   }
 );
+
+watchEffect(() => {
+  const activities = Object.keys(
+    store.state.bulkActivityPublishStatus.importedActivitiesList
+  )
+    .map(Number)
+    .filter(
+      (id) =>
+        store.state.bulkActivityPublishStatus.importedActivitiesList[id]
+          .top_level_error !== 'critical'
+    );
+
+  if (activities.length < 1) {
+    isAllCriticalErrors.value = true;
+  } else {
+    isAllCriticalErrors.value = false;
+  }
+});
 
 const validationCancelHandler = async () => {
   emit('stopValidation');
@@ -230,6 +251,22 @@ const percentageWidth = computed(() => {
       store.state.bulkActivityPublishStatus.validationStats.total) *
     100
   );
+});
+
+watchEffect(() => {
+  localStorage.setItem(
+    'validationPercent',
+    (
+      ((store.state.bulkActivityPublishStatus.validationStats.complete +
+        store.state.bulkActivityPublishStatus.validationStats.failed) /
+        store.state.bulkActivityPublishStatus.validationStats.total) *
+      100
+    ).toString()
+  );
+
+  if (percentageWidth.value === 100) {
+    localStorage.setItem('activityValidating', 'false');
+  }
 });
 
 const handleMinimize = () => {

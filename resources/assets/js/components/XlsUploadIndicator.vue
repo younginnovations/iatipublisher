@@ -190,11 +190,14 @@ onMounted(async () => {
       '#launcher'
     ) as HTMLElement;
 
+    console.log('Minimize', minimize?.value);
+
     if (parentElementRef?.value) {
       if (supportButton !== null) {
         minimize?.value
           ? (supportButton.style.transform = 'translatey(-20px)')
-          : (supportButton.style.transform = 'translatex(-450px)');
+          : // : (supportButton.style.transform = 'translatex(-450px)');
+            '';
 
         clearInterval(checkSupportButton);
       }
@@ -558,6 +561,7 @@ const hideBulkpublishLoader = () => {
 };
 
 const handleActivityPublishedData = (data) => {
+  console.log('Data', data);
   activityPublishedData.value = data;
 };
 

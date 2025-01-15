@@ -17,7 +17,7 @@
               <span class="sorting-indicator" :class="sortingDirection()">
                 <svg-vue :icon="`${sortingDirection()}-arrow`" />
               </span>
-              <span class="">Publishing Progress</span>
+              <span class="">Core Completeness</span>
             </a>
           </th>
           <th id="date" scope="col">
@@ -71,7 +71,7 @@
             />
             {{ (currentPage - 1) * 25 + Number(index) + 1 }}
           </td>
-          <td class="title">
+          <td class="title max-w-[450px]">
             <div
               class="flex items-start transition duration-500 hover:text-spring-50"
             >
@@ -98,7 +98,7 @@
             </div>
           </td>
 
-          <td class="text-n-40">
+          <td class="flex items-center justify-end gap-2 text-n-40">
             <div class="progress-bar-parent">
               <div class="progress-bar-wrapper">
                 <div class="progress-bar-container bg-spring-10">

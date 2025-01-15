@@ -113,7 +113,7 @@
             </div>
 
             <Errors
-              v-if="store.state.publishErrors.length > 0 || importActivityError"
+              v-if="errorsWithoutAdvisory.length > 0 || importActivityError"
               :error-data="store.state.publishErrors"
               class="absolute bottom-[calc(100%-52px)] right-0"
             />
@@ -751,6 +751,12 @@ export default defineComponent({
       has_ever_been_published: activityProps.has_ever_been_published,
     });
 
+    const errorsWithoutAdvisory = computed(() => {
+      return store.state.publishErrors.filter(
+        (error: { severity: string }) => error.severity !== 'advisory'
+      );
+    });
+
     // vue provides
     provide('types', types.value);
     provide('coreCompleted', coreCompleted.value);
@@ -831,6 +837,7 @@ export default defineComponent({
       width,
       indexStore,
       pa,
+      errorsWithoutAdvisory,
     };
   },
   methods: { onlyDeprecatedStatusMap },
