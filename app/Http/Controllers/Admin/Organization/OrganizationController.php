@@ -97,8 +97,9 @@ class OrganizationController extends Controller
             return view('admin.organisation.index', compact('elements', 'elementGroups', 'progress', 'organization', 'toast', 'types', 'mandatoryCompleted', 'status', 'userRole'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            $translatedMessage = trans('organisationDetail/organization_controller.error_has_occurred_while_opening_organization_detail_page');
 
-            return redirect()->route('admin.activities.index')->with('error', trans('organisationDetail/organization_controller.error_has_occurred_while_opening_organization_detail_page'));
+            return redirect()->route('admin.activities.index')->with('error', $translatedMessage);
         }
     }
 
@@ -179,14 +180,16 @@ class OrganizationController extends Controller
             $organization->delete();
 
             DB::commit();
+            $translatedMessage = trans('organisationDetail/organization_controller.organization_deleted_successfully');
 
-            return ['success' => true, 'message' =>trans('organisationDetail/organization_controller.organization_deleted_successfully')];
+            return ['success' => true, 'message' => $translatedMessage];
         } catch (Exception $e) {
             DB::rollBack();
 
             logger()->error($e->getMessage());
+            $translatedMessage = trans('organisationDetail/organization_controller.error_occurred_while_deleting_organisation');
 
-            return ['success' => false, 'message' => trans('organisationDetail/organization_controller.error_occurred_while_deleting_organisation')];
+            return ['success' => false, 'message' => $translatedMessage];
         }
     }
 
@@ -247,7 +250,9 @@ class OrganizationController extends Controller
         $filtered_agency = [];
 
         if (!$country_code) {
-            return ['message' => trans('organisationDetail/organization_controller.filtered_agency_successfully_fetched'), 'data' => $registration_agency];
+            $translatedMessage = trans('organisationDetail/organization_controller.filtered_agency_successfully_fetched');
+
+            return ['message' => $translatedMessage, 'data' => $registration_agency];
         }
 
         $validOrganisationRegistrationAgency = array_merge([$country_code], Enums::UNCATEGORIZED_ORGANISATION_AGENCY_PREFIX);
@@ -257,8 +262,9 @@ class OrganizationController extends Controller
                 $filtered_agency[$key] = $value;
             }
         }
+        $translatedMessage = trans('organisationDetail/organization_controller.filtered_agency_successfully_fetched');
 
-        return ['message' => trans('organisationDetail/organization_controller.filtered_agency_successfully_fetched'), 'data' => $filtered_agency];
+        return ['message' => $translatedMessage, 'data' => $filtered_agency];
     }
 
     /**
@@ -271,18 +277,20 @@ class OrganizationController extends Controller
         try {
             $publisher_id = Auth::user()->organization->publisher_id;
             $status = $this->organizationService->isPublisherStateActive($publisher_id);
+            $translatedMessage = trans('organisationDetail/organization_controller.publisher_status_successfully_retrieved');
 
             return response()->json([
                 'success' => true,
-                'message' => trans('organisationDetail/organization_controller.publisher_status_successfully_retrieved'),
+                'message' => $translatedMessage,
                 'data' => ['publisher_active' => $status],
             ]);
         } catch (Exception $e) {
             logger()->error($e);
+            $translatedMessage = trans('organisationDetail/organization_controller.encountered_issue_when_checking_publisher_state_on_registry');
 
             return response()->json([
                 'success' => false,
-                'message' => trans('organisationDetail/organization_controller.encountered_issue_when_checking_publisher_state_on_registry'),
+                'message' => $translatedMessage,
                 'data' => ['publisher_active' => false],
             ]);
         }
@@ -312,7 +320,9 @@ class OrganizationController extends Controller
             DB::beginTransaction();
 
             if (!$this->organizationService->deleteElement(auth()->user()?->organization_id, $element)) {
-                return response(['status' => false, 'message' => trans('organisationDetail/organization_controller.error_has_occurred_while_deleting_organisation_element')]);
+                $translatedMessage = trans('organisationDetail/organization_controller.error_has_occurred_while_deleting_organisation_element');
+
+                return response(['status' => false, 'message' => $translatedMessage]);
             }
 
             DB::commit();
@@ -329,8 +339,9 @@ class OrganizationController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
+            $translatedMessage = trans('organisationDetail/organization_controller.error_has_occurred_while_deleting_organisation_element');
 
-            return response(['status' => false, 'message' => trans('organisationDetail/organization_controller.error_has_occurred_while_deleting_organisation_element')]);
+            return response(['status' => false, 'message' => $translatedMessage]);
         }
     }
 }

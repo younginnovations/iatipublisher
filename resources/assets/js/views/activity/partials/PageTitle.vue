@@ -144,13 +144,12 @@ interface RefreshToastMsgTypeface {
   refreshMessage: string;
 }
 
+const translatedData = inject('translatedData') as Ref;
 const refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
 const toastMessage = inject('toastData') as ToastInterface;
 const errorData = inject('errorData') as ErrorInterface;
 const store = useStore();
 const publishRef: Ref<typeof PublishSelected | null> = ref(null);
-
-const translatedData = inject('translatedData') as Ref;
 
 defineProps({
   isDisabledPublish: {
