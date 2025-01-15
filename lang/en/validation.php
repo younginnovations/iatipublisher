@@ -379,4 +379,14 @@ return [
         'in'   => 'The default tied status does not exist.',
         'size' => 'The default tied status cannot have more than one value.',
     ],
+    'activity_country_budget_items'    => [
+        'invalid_vocabulary' => 'The country budget item vocabulary is invalid.',
+        'invalid_code'       => 'The budget item code in invalid.',
+        'percentage'         => [
+            'numeric' => 'The budget item percentage field must be a number.',
+            'max'     => 'The budget item percentage field cannot be greater than 100.',
+            'sum'     => 'The sum of percentage with budget items must add up to 100.',
+            'total'   => 'The budget item percentage field should be 100 when there is only one budget item.'
+        ],
+    ],
 ];
