@@ -635,4 +635,10 @@ return [
     'value_date_after_or_equal'        => 'The value date field must be a date between period start and period end',
     'value_date_with_value'            => 'The @value-date is required with value.',
     'value_date_after_equal'           => 'The @value-date field must be a date between period start and period end',
+    'activity_not_exist'               => 'Activity does not exist',
+    'result_not_exist'                 => 'Result does not exist',
+    'transaction_not_exist'            => 'Transaction does not exist',
+    'indicator_not_exist'              => 'Indicator does not exist',
+    'period_not_exist'                 => 'Period does not exist',
+    'must_be_superadmin'               => 'You need to be superadmin to use this route.',
 ];
