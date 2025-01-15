@@ -464,7 +464,7 @@ class TransactionRequest extends ActivityBaseRequest
                 'validation.activity_transactions.value.date.date'
             );
             $messages[sprintf('%s.currency.in', $valueForm)] = trans(
-                'validation.activity_transactions.value.invalid_currency'
+                'validation.invalid_currency'
             );
         }
 

@@ -423,16 +423,16 @@ class BudgetRequest extends ActivityBaseRequest
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('%s.budget_value.%s', $formBase, $valueIndex);
             $messages[sprintf('%s.amount.numeric', $valueForm)] = trans(
-                'validation.activity_budget.amount.numeric'
+                'validation.amount_number'
             );
             $messages[sprintf('%s.amount.min', $valueForm)] = trans(
-                'validation.activity_budget.amount.min'
+                'validation.amount_negative'
             );
             $messages[sprintf('%s.value_date.date', $valueForm)] = trans(
                 'validation.activity_budget.value.date'
             );
             $messages[sprintf('%s.currency.in', $valueForm)] = trans(
-                'validation.activity_budget.value.invalid_currency'
+                'validation.invalid_currency'
             );
         }
 
