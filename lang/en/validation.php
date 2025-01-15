@@ -403,4 +403,108 @@ return [
     'activity_related_activity'        => [
         'invalid_relationship_type' => 'The relationship type in related activity is invalid.',
     ],
+    'activity_conditions'              => [
+        'invalid_type' => 'The condition type is invalid.',
+    ],
+    'activity_contact_info'            => [
+        'telephone' => [
+            'numeric' => 'The contact info telephone number must be valid numeric value.',
+            'regex'   => 'The contact info telephone number is invalid.',
+            'min'     => 'The contact info telephone number must have atleast 7 digits.',
+            'max'     => 'The contact info telephone number must not have more than 20 digits.',
+        ],
+        'email'     => [
+            'valid'          => 'The contact info email must be valid.',
+            'invalid_format' => 'The contact info email format is invalid.',
+        ],
+        'website'   => [
+            'invalid_url' => 'The contact info website url must be valid url.',
+        ],
+    ],
+    'activity_location'                => [
+        'invalid_reach_code'          => 'The location reach code is invalid.',
+        'invalid_location_exactness'  => 'The location exactness is invalid.',
+        'invalid_location_class'      => 'The location class is invalid.',
+        'invalid_feature_designation' => 'The location feature designation is invalid.',
+        'invalid_vocabulary'          => 'The location id vocabulary is invalid.',
+        'administrative'              => [
+            'invalid_vocabulary' => 'The location administrative vocabulary is invalid.',
+            'invalid_code'       => 'The location administrative code is invalid.',
+            'level_min'          => 'The location administrative level must not have negative value.',
+            'level_int'          => 'The location administrative level must be an integer.',
+        ],
+        'point'                       => [
+            'latitude_numeric'  => 'The pos latitude must be numeric',
+            'longitude_numeric' => 'The pos longitude must be numeric',
+        ],
+    ],
+    'activity_planned_disbursement'    => [
+        'invalid_type' => 'The planned disbursement type is invalid.',
+        'provider_org' => [
+            'invalid_type' => 'The planned disbursement provider org type is invalid.',
+            'regex'        => 'The planned disbursement provider org ref shouldn\'t contain the symbols /, &, | or ?.',
+        ],
+        'receiver_org' => [
+            'invalid_type' => 'The planned disbursement receiver org type is invalid.',
+            'regex'        => 'The planned disbursement receiver org ref shouldn\'t contain the symbols /, &, | or ?.',
+        ],
+        'value'        => [
+            'amount'   => [
+                'required' => 'Amount field is required',
+                'numeric'  => 'Amount field must be a number',
+                'min'      => 'Amount field must not be in negative.'
+            ],
+            'currency' => [
+                'invalid_currency' => 'The value currency is invalid.'
+            ],
+            'date'     => [
+                'required'     => 'Value date is a required field',
+                'invalid_date' => 'The Value Date must be a valid Date',
+            ],
+        ],
+        'period_end'   => [
+            'date'           => 'Period end must be a date field.',
+            'gt_1900'        => 'Period end date must be date greater than year 1900.',
+            'required'       => 'Period end is a required field',
+            'after_or_equal' => 'Period end must be a date after period',
+        ],
+        'period_start' => [
+            'date' => 'Period Start must be a date field.',
+        ],
+        'date'         => [
+            'period_start_end' => 'The Planned Disbursement Period must not be longer than three months',
+        ],
+    ],
+    'activity_participating_org'       => [
+        'invalid_identifier'       => 'The identifier must not contain symbols or blank space',
+        'invalid_role'             => 'The participating organisation role is invalid.',
+        'invalid_type'             => 'The participating organisation type is invalid.',
+        'reference_required'       => 'The reference field is required when name is empty.',
+        'invalid_crs_channel_code' => 'The Crs Channel Code is invalid.',
+        'name_required'            => 'The name field is required when participating org reference is empty.',
+    ],
+    'activity_budget'                  => [
+        'budget'     => [
+            'budgets_identical' => 'The periods of multiple budgets with the same type should not be the same',
+            'invalid_type'      => 'The budget type is invalid.',
+            'invalid_status'    => 'The budget status is invalid.',
+        ],
+        'period_end' => [
+            'before' => 'The Period End iso-date must be within a year after Period Start iso-date.',
+        ],
+        'date'       => [
+            'date'             => 'The iso-date field must be a valid date.',
+            'period_start_end' => 'The Budget Period must not be longer than one year',
+            'gt_1900'          => 'The iso-date field must be date after year 1900.',
+            'after'            => 'The Period End iso-date must be a date after Period Start iso-date',
+        ],
+        'amount'     => [
+            'numeric' => 'The amount field must be a number.',
+            'min'     => 'The amount field must not be in negative.',
+        ],
+        'value'      => [
+            'date'             => 'The value-date field must be a valid date.',
+            'invalid_currency' => 'The value currency is invalid.',
+        ],
+    ],
 ];
