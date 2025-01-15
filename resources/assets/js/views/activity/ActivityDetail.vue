@@ -610,7 +610,7 @@ export default defineComponent({
     }
 
     const translatedData = ref({});
-    LanguageService.getTranslatedData('activity_detail')
+    LanguageService.getTranslatedData('activity_detail,activity_index')
       .then((response) => {
         translatedData.value = response.data;
       })
@@ -888,6 +888,7 @@ export default defineComponent({
     provide('elements', props.elements);
     provide('activities', publishingActivities as Ref);
     provide('refreshToastMsg', refreshToastMsg);
+    provide('translatedData', translatedData);
 
     indexStore.dispatch('updateSelectedActivities', [activity.value.id]);
 

@@ -108,7 +108,6 @@ import {
   inject,
   Ref,
 } from 'vue';
-import LanguageService from 'Services/language';
 
 const emit = defineEmits(['close-popup']);
 const props = defineProps({
