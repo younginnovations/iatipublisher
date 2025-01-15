@@ -112,6 +112,17 @@
               </div>
             </div>
 
+            <!-- TODO: REMOVE THIS -->
+            <!-- !! REMOVE THIS BEFORE 1567 DEPLOYMENT TO MAIN -->
+            <div>
+              Store:<br />
+              {{ store.state.publishErrors }}
+              <hr />
+              Import Error:<br />
+              {{ importActivityError }}
+            </div>
+            <!-- TODO: REMOVE THIS END -->
+
             <Errors
               v-if="store.state.publishErrors.length > 0 || importActivityError"
               :error-data="store.state.publishErrors"
