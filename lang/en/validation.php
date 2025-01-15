@@ -507,4 +507,55 @@ return [
             'invalid_currency' => 'The value currency is invalid.',
         ],
     ],
+    'activity_transactions'            => [
+        'transaction_id'             => [
+            'same_activity' => 'All transactions must belong to the same activity.',
+            'mismatch'      => 'Transaction IDs do not match the specified activity.',
+            'unpublish'     => 'Please unpublish activity before deleting transactions.',
+        ],
+        'invalid_type'               => 'The transaction type is invalid.',
+        'invalid_flow_type'          => 'The transaction flow type code is invalid.',
+        'invalid_finance_type'       => 'The transaction finance type code is invalid.',
+        'country_or_region'          => 'You must add either recipient country or recipient region.',
+        'country_region_in_activity' => 'Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.',
+        'sector_in_activity'         => 'Sector has already been declared at activity level. You can’t declare a sector at the transaction level. To declare at transaction level, you need to remove sector at activity level.',
+        'aid_type'                   => [
+            'invalid_vocabulary'  => 'The transaction aid type vocabulary is invalid.',
+            'invalid_code'        => 'The transaction aid type code is invalid.',
+            'invalid_status_code' => 'The transaction tied status code is invalid.',
+        ],
+        'date'                       => [
+            'before' => 'The @iso-date must not be in future.',
+            'date'   => 'The @iso-date field must be a valid date.',
+        ],
+        'value'                      => [
+            'numeric_amount'   => 'The @amount field must be a number.',
+            'date'             => [
+                'before' => 'The @value-date must not be in future.',
+                'date'   => 'The @value-date field must be a valid date.',
+            ],
+            'invalid_currency' => 'The value currency is invalid.',
+        ],
+        'sector'                     => [
+            'required'           => 'You have declared sector at transaction level so you must declare sector for all the transactions.',
+            'invalid_code'       => 'The transaction sector code is invalid.',
+            'vocabulary_uri_url' => 'The transaction sector vocabulary-uri field must be a valid url.',
+        ],
+        'provider_org'               => [
+            'invalid' => 'The transaction provider org type is invalid.',
+        ],
+        'receiver_org'               => [
+            'exclude_operators' => 'The transaction receiver-activity-id field is not valid.',
+            'invalid_type'      => 'The transaction receiver org type is invalid.',
+        ],
+        'recipient_region'           => [
+            'invalid_vocabulary'        => 'The transaction recipient region vocabulary is invalid.',
+            'invalid_region_code'       => 'The transaction recipient region code is invalid.',
+            'vocabulary_uri_url'        => 'The transaction recipient region vocabulary uri must be a valid url.',
+            'region_vocabulary_uri_url' => 'The @vocabulary-uri field must be a valid url.',
+        ],
+        'recipient_country'          => [
+            'invalid_code' => 'The transaction recipient country code is invalid.',
+        ],
+    ],
 ];
