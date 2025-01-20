@@ -9,7 +9,6 @@ return [
         'list_item_one'   => 'Register your organisation with an IATI Publisher account',
         'list_item_two'   => 'Understand the data fields in the IATI Standard (with IATI Standard Reference definitions, helpful explanations and links to guidance)',
         'list_item_three' => 'Provide your organisation’s data easily by completing online forms. Or upload data on multiple activities on a CSV or .xml file with the Bulk Upload feature',
-        'list_item_four'  => 'Run automatic checks (via the IATI Validator) for errors before publishing your data',
         'list_item_five'  => 'Publish your data. IATI Publisher will add your data to the IATI Registry (where links to all IATI data is found)',
         'paragraph_one'   => 'IATI Publisher has been built to support organisations that publish a limited number of development and humanitarian activities. An ‘activity’ is an individual project or another unit of development and humanitarian work, which is determined by the organisation that is publishing the data. Organisations who publish a limited number of activities tend to represent small and medium sized organisations.',
         'paragraph_two'   => 'Large organisations, such as donor governments or UN agencies delivering 100+ activities are advised not to use IATI Publisher. Instead these organisations likely need to use an alternative technical solution that enables the publication of large volumes of data. Please email the IATI Helpdesk for more information',

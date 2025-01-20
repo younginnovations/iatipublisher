@@ -11,7 +11,6 @@ return [
     'reference'                => 'reference',
     'reporting_organisation'   => 'reporting-organisation',
     'type'                     => 'type',
-    'name'                     => 'name',
     'organisation_identifier'  => 'organisation-identifier',
     'total_budget'             => 'total-budget',
     'recipient_org_budget'     => 'recipient-org-budget',
@@ -19,4 +18,6 @@ return [
     'recipient_country_budget' => 'recipient-country-budget',
     'total_expenditure'        => 'total-expenditure',
     'document_link'            => 'document-link',
+    'default_flow_type'        => 'default-flow-type',
+    'collaboration_type'       => 'collaboration-type',
 ];

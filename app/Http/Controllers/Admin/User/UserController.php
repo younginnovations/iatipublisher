@@ -258,7 +258,7 @@ class UserController extends Controller
             return view('admin.user.profile', compact('user', 'languagePreference'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('userProfile/user_controller.error_while_rendering_setting_page');
+            $translatedMessage = trans('common/common.error_while_rendering_setting_page');
 
             return redirect()->route('admin.activities.index')->with('error', $translatedMessage);
         }
@@ -277,7 +277,7 @@ class UserController extends Controller
         try {
             $queryParams = $this->getQueryParams($request);
             $users = $this->userService->getPaginatedUsers($page, $queryParams);
-            $translatedMessage = trans('userProfile/user_controller.paginated_users_fetched_successfully');
+            $translatedMessage = 'Paginated users fetched successfully.';
 
             return response()->json([
                 'success' => true,
@@ -286,7 +286,7 @@ class UserController extends Controller
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('userProfile/user_controller.error_occurred_while_trying_to_get_paginated_user');
+            $translatedMessage = 'Error occurred while trying to get paginated user.';
 
             return response()->json([
                 'success' => false,

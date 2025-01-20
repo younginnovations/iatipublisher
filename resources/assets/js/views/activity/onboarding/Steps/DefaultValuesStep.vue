@@ -20,11 +20,7 @@
           <!-- All Values Default Start -->
           <div>
             <p class="text-sm font-bold">
-              {{
-                translatedData[
-                  'onboarding.default_values_step.default_for_all_data'
-                ]
-              }}
+              {{ translatedData['common.common.default_for_all_data'] }}
             </p>
             <div class="grid grid-cols-2 gap-[22px] pt-4">
               <!-- Default Currency Start -->
@@ -38,7 +34,7 @@
                       :name="translatedData['elements.label.default_currency']"
                       :hover-text="
                         translatedData[
-                          'onboarding.default_values_step.the_currency_in_which_you_report_your_financial_transactions'
+                          'common.common.the_currency_in_which_you_report_your_financial_transactions'
                         ]
                       "
                       :show-iati-reference="true"
@@ -49,9 +45,7 @@
                   id="default-currency"
                   class="vue__select"
                   :placeholder="
-                    translatedData[
-                      'onboarding.default_values_step.select_from_dropdown'
-                    ]
+                    translatedData['common.common.select_from_dropdown']
                   "
                   :searchable="true"
                   :options="props.currencies"
@@ -81,7 +75,7 @@
                       :name="translatedData['elements.label.default_currency']"
                       :hover-text="
                         translatedData[
-                          'onboarding.default_values_step.the_language_in_which_you_provide_data_on_your_activities'
+                          'common.common.the_language_in_which_you_provide_data_on_your_activities'
                         ]
                       "
                       :show-iati-reference="true"
@@ -93,7 +87,7 @@
                   class="vue__select"
                   :placeholder="
                     translatedData[
-                      'onboarding.default_values_step.select_language_from_dropdown'
+                      'common.common.select_language_from_dropdown'
                     ]
                   "
                   :searchable="true"
@@ -166,7 +160,7 @@
                 <p v-else class="pt-2 text-xs text-n-40">
                   {{
                     translatedData[
-                      'onboarding.default_values_step.if_hierarchy_is_not_reported_then_1_is_assumed'
+                      'common.common.if_hierarchy_is_not_reported_then_1_is_assumed'
                     ]
                   }}
                 </p>
@@ -195,9 +189,7 @@
                   id="humanitarian"
                   class="vue__select"
                   :placeholder="
-                    translatedData[
-                      'onboarding.default_values_step.select_humanitarian_here'
-                    ]
+                    translatedData['common.common.select_humanitarian_here']
                   "
                   :searchable="true"
                   :options="props.humanitarian"
@@ -232,7 +224,7 @@
                   class="vue__select"
                   :placeholder="
                     translatedData[
-                      'onboarding.default_values_step.select_default_flow_type_here'
+                      'common.common.select_default_flow_type_here'
                     ]
                   "
                   :searchable="true"
@@ -245,7 +237,7 @@
                 <p class="pt-2 text-xs text-n-40">
                   {{
                     translatedData[
-                      'onboarding.default_values_step.if_selected_then_default_flow_type_will_be_automatically_populated'
+                      'common.common.if_selected_then_default_flow_type_will_be_automatically_populated'
                     ]
                   }}
                 </p>
@@ -265,7 +257,7 @@
                       "
                       :hover-text="
                         translatedData[
-                          'onboarding.default_values_step.the_type_of_finance_eg_grant_loan_debt_relief_etc'
+                          'common.common.the_type_of_finance_eg_grant_loan'
                         ]
                       "
                       :show-iati-reference="true"
@@ -277,7 +269,7 @@
                   class="vue__select"
                   :placeholder="
                     translatedData[
-                      'onboarding.default_values_step.select_default_finance_type_here'
+                      'common.common.select_default_finance_type_here'
                     ]
                   "
                   :searchable="true"
@@ -291,7 +283,7 @@
                   class="pt-2 text-xs text-n-40"
                   v-html="
                     translatedData[
-                      'onboarding.default_values_step.the_type_of_aid_being_supplied_project_type_intervention_budget_support_debt_relief_etc'
+                      'common.common.the_type_of_aid_being_supplied_project_type_intervention'
                     ]
                   "
                 ></p>
@@ -312,7 +304,7 @@
                       "
                       :hover-text="
                         translatedData[
-                          'onboarding.default_values_step.select_default_aid_type_here'
+                          'common.common.select_default_aid_type_here'
                         ]
                       "
                       :show-iati-reference="true"
@@ -323,9 +315,7 @@
                   id="default-aid-type"
                   class="vue__select"
                   :placeholder="
-                    translatedData[
-                      'onboarding.default_values_step.select_default_aid_type_here'
-                    ]
+                    translatedData['common.common.select_default_aid_type_here']
                   "
                   :searchable="true"
                   :options="props.defaultAidType"
@@ -337,7 +327,7 @@
                 <p class="pt-2 text-xs text-n-40">
                   {{
                     translatedData[
-                      'onboarding.default_values_step.if_selected_then_default_aid_type_will_be_automatically_populated'
+                      'common.common.if_selected_then_default_aid_type_will_be_automatically_populated'
                     ]
                   }}
                 </p>
@@ -368,7 +358,7 @@
                   class="vue__select"
                   :placeholder="
                     translatedData[
-                      'onboarding.default_values_step.select_default_tied_status_here'
+                      'common.common.select_default_tied_status_here'
                     ]
                   "
                   :searchable="true"
@@ -381,7 +371,7 @@
                 <p class="pt-2 text-xs text-n-40">
                   {{
                     translatedData[
-                      'onboarding.default_values_step.if_selected_then_default_tied_status_will_be_automatically_populated_in_activity_when_created'
+                      'common.common.if_selected_then_default_tied_status_will_be_automatically_populated'
                     ]
                   }}
                 </p>
@@ -404,19 +394,17 @@
       </div>
       <div class="mt-3 flex w-full items-center justify-between">
         <button class="text-xs font-bold text-n-40" @click="previousStep">
-          {{ translatedData['onboarding.default_values_step.previous'] }}
+          {{ translatedData['common.common.previous'] }}
         </button>
         <div class="flex items-center gap-4">
           <button
             class="text-xs font-bold text-n-40"
             @click="emit(`proceedStep`)"
           >
-            {{
-              translatedData['onboarding.default_values_step.skip_to_next_step']
-            }}
+            {{ translatedData['common.common.skip_to_next_step'] }}
           </button>
           <button class="button primary-btn text-xs" @click="proceedStep">
-            {{ translatedData['onboarding.default_values_step.save_and_next'] }}
+            {{ translatedData['common.common.save_and_next'] }}
           </button>
         </div>
       </div>
@@ -475,7 +463,7 @@
       </div>
       <div class="mb-[30px] self-end">
         <button class="button primary-btn text-xs" @click="emit(`proceedStep`)">
-          {{ translatedData['onboarding.default_values_step.next'] }}
+          {{ translatedData['common.common.next'] }}
         </button>
       </div>
     </div>

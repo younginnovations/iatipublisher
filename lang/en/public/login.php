@@ -5,9 +5,6 @@ return [
         'welcome_text'               => 'Welcome to IATI Publisher. This lets you publish IATI data on your organisation\'s development and humanitarian activities.',
         'page_to_register'           => 'Use this page to create a new account for your organisation.',
         'havent_registered_label'    => 'Haven\'t registered yet?',
-        'already_have_account_label' => 'Already have an account?',
-        'join_now'                   => 'Join Now',
-        'sign_in'                    => 'Sign In',
     ],
     'join_now_section'             => [
         'to_begin_text'                        => 'To begin, your organisation needs to be registered as an IATI publisher. Select an option and we’ll guide you through this process.',
@@ -22,11 +19,9 @@ return [
         'welcome_back_label'    => 'Welcome back! Please enter your details.',
         'username_label'        => 'Email / Username',
         'username_placeholder'  => 'Enter a registered email or username',
-        'password_label'        => 'Password',
         'password_placeholder'  => 'Enter a correct password',
         'forgot_password_label' => 'Forgot your password?',
         'reset'                 => 'Reset.',
-        'sign_in'               => 'SIGN IN',
     ],
     'password_changed_section'     => [
         'password_updated' => 'Password Updated!',

@@ -4,7 +4,7 @@
     <div class="reset" @keyup.enter="reset">
       <div class="mb-4 flex flex-col sm:mb-8">
         <h2>
-          {{ translatedData['public.forgot_password.reset_page.heading'] }}
+          {{ translatedData['common.common.password_recovery'] }}
         </h2>
         <p>
           {{ translatedData['public.forgot_password.reset_page.subheading'] }}
@@ -13,17 +13,13 @@
 
       <div class="reset__content">
         <label class="text-sm font-bold text-bluecoral" for="email">{{
-          translatedData['public.forgot_password.reset_page.email']
+          translatedData['common.common.email']
         }}</label>
         <input
           id="email"
           v-model="formData.email"
           type="email"
-          :placeholder="
-            translatedData[
-              'public.forgot_password.reset_page.email_placeholder'
-            ]
-          "
+          :placeholder="translatedData['common.common.type_valid_email_here']"
           class="input"
           :class="{
             error__input: emailError != '',

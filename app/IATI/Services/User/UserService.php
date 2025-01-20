@@ -235,7 +235,7 @@ class UserService
 
         if ($res->getStatusCode() === 404) {
             if ($exists) {
-                $errors['publisher_id'] = trans('user/user_service.publisher_id_doesnt_exist_in_iati_registry');
+                $errors['publisher_id'] = trans('common/common.publisher_id_doesnt_exist_in_iati_registry');
             }
 
             return $errors;

@@ -3,13 +3,13 @@
     <Loader v-if="loaderVisibility" />
     <div class="setting input__field">
       <span class="text-xs font-bold text-n-40">
-        {{ translatedData['settings.setting.settings'] }}</span
+        {{ translatedData['common.common.settings'] }}</span
       >
       <div class="flex items-center justify-between">
         <div class="my-2 flex items-center sm:mb-6 sm:mt-4">
           <a href="/activities"><svg-vue icon="left-arrow" /></a>
           <h2 class="ml-3 text-heading-5 font-bold text-n-50 sm:text-heading-4">
-            {{ translatedData['settings.setting.settings'] }}
+            {{ translatedData['common.common.settings'] }}
           </h2>
         </div>
         <div>

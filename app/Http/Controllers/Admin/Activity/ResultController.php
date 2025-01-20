@@ -70,7 +70,7 @@ class ResultController extends Controller
             return view('admin.activity.result.index', compact('activity', 'results', 'types', 'toast'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('activity_detail/result_controller.error_has_occurred_while_rendering_activity_transactions_listing');
+            $translatedMessage = trans('common/common.error_has_occurred_while_rendering_activity_transactions_listing');
 
             return redirect()->route('admin.activity.result.index', $activityId)->with(
                 'error',
@@ -104,7 +104,7 @@ class ResultController extends Controller
             ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('activity_detail/result_controller.error_occurred_while_fetching_the_data');
+            $translatedMessage = 'Error occurred while fetching the data.';
 
             return response()->json(['success' => false, 'message' => $translatedMessage]);
         }
@@ -243,7 +243,7 @@ class ResultController extends Controller
             return view('admin.activity.result.detail', compact('activity', 'result', 'types', 'toast', 'element'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('activity_detail/result_controller.error_has_occurred_while_rending_result_detail_page');
+            $translatedMessage = trans('common/common.error_has_occurred_while_rending_result_detail_page');
 
             return redirect()->route('admin.activity.result.index', $activityId)->with(
                 'error',

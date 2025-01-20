@@ -14,11 +14,9 @@
               class="nav__list flex pt-10 leading-5 xl:space-x-3"
             >
               <li class="nav__links active dropdown">
-                <a href="/about">{{
-                  translatedData['public.header.about.heading']
-                }}</a>
+                <a href="/about">{{ translatedData['common.common.about'] }}</a>
                 <NavDropdown
-                  :name="translatedData['public.header.about.name']"
+                  :name="translatedData['common.common.about']"
                   :text="translatedData['public.header.about.description']"
                   :btn-text="translatedData['public.header.learn_more']"
                   btn-link="/about"
@@ -26,12 +24,10 @@
               </li>
               <li class="nav__links active dropdown">
                 <a href="/publishing-checklist">{{
-                  translatedData['public.header.publishing_checklist.heading']
+                  translatedData['common.common.publishing_checklist']
                 }}</a>
                 <NavDropdown
-                  :name="
-                    translatedData['public.header.publishing_checklist.name']
-                  "
+                  :name="translatedData['common.common.publishing_checklist']"
                   :text="
                     translatedData[
                       'public.header.publishing_checklist.description'
@@ -43,10 +39,10 @@
               </li>
               <li class="nav__links active dropdown relative">
                 <a href="/iati-standard">{{
-                  translatedData['public.header.iati_standard.heading']
+                  translatedData['common.common.iati_standard']
                 }}</a>
                 <NavDropdown
-                  :name="translatedData['public.header.iati_standard.name']"
+                  :name="translatedData['common.common.iati_standard']"
                   :text="
                     translatedData['public.header.iati_standard.description']
                   "
@@ -56,10 +52,10 @@
               </li>
               <li class="nav__links active dropdown">
                 <a href="/support">{{
-                  translatedData['public.header.support.heading']
+                  translatedData['common.common.support']
                 }}</a>
                 <NavDropdown
-                  :name="translatedData['public.header.support.name']"
+                  :name="translatedData['common.common.support']"
                   :text="translatedData['public.header.support.description']"
                   :btn-text="translatedData['public.header.read_more']"
                   btn-link="/support"
@@ -94,7 +90,7 @@
 
             <div class="flex">
               <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0"
-                >{{ translatedData['public.header.language'] }}:</span
+                >{{ translatedData['common.common.language'] }}:</span
               >
               <ul class="flex items-center justify-center">
                 <li class="nav__links">

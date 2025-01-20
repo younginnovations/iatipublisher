@@ -55,20 +55,14 @@
               @click="dropdownFilter('core')"
             >
               <svg-vue class="mr-1 text-lg" icon="core"></svg-vue>
-              <span>{{
-                translatedData['organisationDetail.organisation_elements.core']
-              }}</span>
+              <span>{{ translatedData['common.common.core'] }}</span>
             </li>
             <li
               class="flex px-3.5 py-1.5 hover:bg-white"
               @click="dropdownFilter('completed')"
             >
               <svg-vue class="mr-1 text-lg" icon="double-tick"></svg-vue>
-              <span>{{
-                translatedData[
-                  'organisationDetail.organisation_elements.completed'
-                ]
-              }}</span>
+              <span>{{ translatedData['common.common.completed'] }}</span>
             </li>
             <li
               class="flex px-3.5 py-1.5 hover:bg-white"
@@ -145,7 +139,6 @@ import {
 } from 'vue';
 import { useToggle } from '@vueuse/core';
 import { orgMandatoryElements } from 'Composable/coreElements';
-import LanguageService from 'Services/language';
 
 const props = defineProps({
   data: {

@@ -26,13 +26,13 @@
                 <a :href="superAdmin ? '/list-organisations' : '/activities'">
                   {{
                     superAdmin
-                      ? translatedData['footer.footer.organisation_list']
-                      : translatedData['footer.footer.your_activities']
+                      ? translatedData['common.common.organisation_list']
+                      : translatedData['common.common.your_activities']
                   }}
                 </a>
               </li>
               <li>
-                <a href="/about">{{ translatedData['footer.footer.about'] }}</a>
+                <a href="/about">{{ translatedData['common.common.about'] }}</a>
               </li>
               <li>
                 <a
@@ -47,22 +47,22 @@
           </div>
           <div class="footer__links">
             <span class="font-bold text-n-10">{{
-              translatedData['footer.footer.iati_standard']
+              translatedData['common.common.iati_standard']
             }}</span>
             <ul class="mt-2 flex flex-col">
               <li>
                 <a href="/iati-standard">{{
-                  translatedData['footer.footer.iati_standard']
+                  translatedData['common.common.iati_standard']
                 }}</a>
               </li>
               <li>
                 <a href="/publishing-checklist">{{
-                  translatedData['footer.footer.publishing_checklist']
+                  translatedData['common.common.publishing_checklist']
                 }}</a>
               </li>
               <li>
                 <a href="/support">{{
-                  translatedData['footer.footer.support']
+                  translatedData['common.common.support']
                 }}</a>
               </li>
               <li>

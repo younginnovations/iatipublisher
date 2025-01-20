@@ -25,11 +25,7 @@
       </div>
       <svg-vue class="verification" icon="ic-verification" />
       <a href="/activities" class="btn btn-next get-started-btn">
-        {{
-          translatedData[
-            'public.register.not_registered_page.verification_email.get_started'
-          ]
-        }}
+        {{ translatedData['common.common.get_started'] }}
         <svg-vue class="text-2xl" icon="right-arrow" />
       </a>
     </div>

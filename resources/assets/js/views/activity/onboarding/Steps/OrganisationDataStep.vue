@@ -243,18 +243,14 @@
       </div>
       <div class="mt-3 flex w-full items-center justify-between">
         <button class="text-xs font-bold text-n-40" @click="previousStep">
-          {{ translatedData['onboarding.organisation_data_step.previous'] }}
+          {{ translatedData['common.common.previous'] }}
         </button>
         <div class="flex items-center gap-4">
           <button
             class="text-xs font-bold text-n-40"
             @click="emit('proceedStep')"
           >
-            {{
-              translatedData[
-                'onboarding.organisation_data_step.skip_to_next_step'
-              ]
-            }}
+            {{ translatedData['common.common.skip_to_next_step'] }}
           </button>
           <button class="button primary-btn text-xs" @click="proceedStep">
             {{
@@ -328,7 +324,7 @@
       </div>
       <div class="mb-[30px] self-end">
         <button class="button primary-btn text-xs" @click="emit(`proceedStep`)">
-          {{ translatedData['onboarding.organisation_data_step.next'] }}
+          {{ translatedData['common.common.next'] }}
         </button>
       </div>
     </div>
@@ -463,17 +459,25 @@ document.addEventListener('click', (e) => {
 const transformMessages = (messages: string[]): string[] => {
   return messages.map((message) => {
     switch (message) {
-      case translatedData[
+      case translatedData.value[
         'onboarding.organisation_data_step.you_have_not_verified_your_email_address'
-      ]:
-        return translatedData[
-          'onboarding.organisation_data_step.your_email_address_has_not_been_verified'
-        ];
+      ]: {
+        const text_p1 =
+          translatedData.value[
+            'onboarding.organisation_data_step.your_email_address_has_not_been_verified'
+          ];
+        const text_p2 =
+          '<span class="resend-verification text-bluecoral cursor-pointer hover:text-spring-50 underline transition-all duration-[400ms]">';
+        const text_p3 =
+          translatedData.value['common.common.resend_verification_email'];
+        const text_p4 = '</span>';
 
-      case translatedData[
+        return `${text_p1} ${text_p2} ${text_p3} ${text_p4}`;
+      }
+      case translatedData.value[
         'onboarding.organisation_data_step.the_publisher_id_is_not_verified_in_iati_registry'
       ]:
-        return translatedData[
+        return translatedData.value[
           'onboarding.organisation_data_step.your_iati_registry_account_is_pending_approval'
         ];
 

@@ -109,9 +109,7 @@
                         :class="liClass"
                         @click="modalValue = true"
                         >{{
-                          translatedData[
-                            'adminHeader.admin_header.add_activity_manually'
-                          ]
+                          translatedData['common.common.add_activity_manually']
                         }}</a
                       >
                     </li>
@@ -122,7 +120,7 @@
                         :class="liClass"
                         >{{
                           translatedData[
-                            'adminHeader.admin_header.import_activities_from_csv_xml'
+                            'common.common.import_activities_from_csv_xml'
                           ]
                         }}</a
                       >
@@ -134,7 +132,7 @@
                         :class="liClass"
                         >{{
                           translatedData[
-                            'adminHeader.admin_header.import_activities_from_xls'
+                            'common.common.import_activities_from_xls'
                           ]
                         }}</a
                       >
@@ -150,24 +148,16 @@
             >
               <ul class="flex-col">
                 <li>
-                  <a href="#" :class="liClass">{{
-                    translatedData['adminHeader.admin_header.user_logs']
-                  }}</a>
+                  <a href="#" :class="liClass">User Logs</a>
                 </li>
                 <li>
-                  <a href="#" :class="liClass">{{
-                    translatedData['adminHeader.admin_header.api_logs']
-                  }}</a>
+                  <a href="#" :class="liClass">API Logs</a>
                 </li>
                 <li>
-                  <a href="/log-viewer" :class="liClass">{{
-                    translatedData['adminHeader.admin_header.error_logs']
-                  }}</a>
+                  <a href="/log-viewer" :class="liClass">Error Logs</a>
                 </li>
                 <li>
-                  <a href="/import" :class="liClass">{{
-                    translatedData['adminHeader.admin_header.system_details']
-                  }}</a>
+                  <a href="/import" :class="liClass">System Details</a>
                 </li>
               </ul>
             </div>
@@ -220,24 +210,20 @@
               <ul class="flex-col">
                 <li>
                   <a :class="liClass" @click="modalValue = true">{{
-                    translatedData[
-                      'adminHeader.admin_header.add_activity_manually'
-                    ]
+                    translatedData['common.common.add_activity_manually']
                   }}</a>
                 </li>
                 <li>
                   <a href="/import" :class="liClass">{{
                     translatedData[
-                      'adminHeader.admin_header.import_activities_from_csv_xml'
+                      'common.common.import_activities_from_csv_xml'
                     ]
                   }}</a>
                 </li>
                 <li>
                   <a id="header-import-xls" href="/import/xls" :class="liClass">
                     {{
-                      translatedData[
-                        'adminHeader.admin_header.import_activities_from_xls'
-                      ]
+                      translatedData['common.common.import_activities_from_xls']
                     }}
                   </a>
                 </li>
@@ -320,7 +306,7 @@
                 <a class="flex w-full space-x-4">
                   <svg-vue icon="rocket-icon" class="mx-1 mt-0.5 scale-[1.2]" />
                   <span>{{
-                    translatedData['adminHeader.admin_header.get_started']
+                    translatedData['common.common.get_started']
                   }}</span></a
                 >
               </li>
@@ -374,7 +360,7 @@
                 <a class="flex w-full space-x-4">
                   <svg-vue icon="rocket-icon" class="mx-1 mt-0.5 scale-[1.2]" />
                   <span>{{
-                    translatedData['adminHeader.admin_header.get_started']
+                    translatedData['common.common.get_started']
                   }}</span></a
                 >
               </li>
@@ -557,17 +543,11 @@ watchEffect(() => {
       translatedData.value['adminHeader.admin_header.activity_data'];
     data.org_menus[1].name =
       translatedData.value['adminHeader.admin_header.organisation_data'];
-    data.org_menus[2].name =
-      translatedData.value['adminHeader.admin_header.settings'];
+    data.org_menus[2].name = translatedData.value['common.common.settings'];
     data.org_menus[3].name =
       translatedData.value['adminHeader.admin_header.add_import_activity'];
     data.org_menus[4].name =
       translatedData.value['adminHeader.admin_header.users'];
-
-    data.superadmin_menus[0].name =
-      translatedData.value['adminHeader.admin_header.dashboard'];
-    data.superadmin_menus[1].name =
-      translatedData.value['adminHeader.admin_header.organisation_list'];
     data.superadmin_menus[2].name =
       translatedData.value['adminHeader.admin_header.users'];
   }

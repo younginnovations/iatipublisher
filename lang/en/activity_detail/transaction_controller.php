@@ -1,9 +1,7 @@
 <?php
 
 return [
-    'error_has_occurred_while_rendering_activity_transactions_listing' => 'Error has occurred while rendering activity transactions listing.',
     'transactions_fetched_successfully'                                => 'Transactions fetched successfully',
-    'error_occurred_while_fetching_the_data'                           => 'Error occurred while fetching the data',
     'error_has_occurred_while_rendering_activity_transaction_form'     => 'Error has occurred while rendering activity transaction form.',
     'activity_transaction_created_successfully'                        => 'Activity transaction created successfully.',
     'error_has_occurred_while_creating_activity_transaction'           => 'Error has occurred while creating activity transaction.',

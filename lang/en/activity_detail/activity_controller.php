@@ -9,7 +9,6 @@ return [
     'activity_has_been_deleted_successfully'                                          => 'Activity has been deleted successfully.',
     'activity_delete_failed'                                                          => 'Activity delete failed.',
     'activities_fetched_successfully'                                                 => 'Activities fetched successfully',
-    'error_occurred_while_fetching_the_data'                                          => 'Error occurred while fetching the data',
     'languages_fetched_successfully'                                                  => 'Languages fetched successfully',
     'fetched_activities_count_by_published_status'                                    => 'Fetched activities count by published status',
     'failed_to_fetch_activities_count_error'                                          => 'Failed to fetch activities count. Error: ',

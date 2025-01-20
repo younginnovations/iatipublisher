@@ -35,10 +35,7 @@
                   <span
                     class="breadcrumb__title last w-[200px] overflow-hidden text-ellipsis text-n-30"
                   >
-                    {{
-                      pageTitle ??
-                      translatedData['activity_detail.activity_detail.untitled']
-                    }}
+                    {{ pageTitle ?? translatedData['common.common.untitled'] }}
                   </span>
                   <span class="ellipsis__title--hover">
                     {{
@@ -110,7 +107,7 @@
                 :message="errorData.message"
                 :title="
                   translatedData[
-                    'activity_detail.activity_detail.activity_couldnt_be_published_because'
+                    'common.common.activity_couldnt_be_published_because'
                   ]
                 "
                 @close-popup="
@@ -168,11 +165,7 @@
             <div class="activities__card progress mr-1">
               <div class="mb-2 flex items-center justify-between">
                 <span class="mr-2">
-                  {{
-                    translatedData[
-                      'activity_detail.activity_detail.publishing_progress'
-                    ]
-                  }}
+                  {{ translatedData['common.common.publishing_progress'] }}
                 </span>
                 <HoverText
                   :hover-text="
@@ -195,14 +188,12 @@
             <div class="activities__card elements">
               <div class="mb-7 flex items-center justify-between">
                 <span>
-                  {{
-                    translatedData['activity_detail.activity_detail.elements']
-                  }}
+                  {{ translatedData['common.common.elements'] }}
                 </span>
                 <HoverText
                   :hover-text="
                     translatedData[
-                      'activity_detail.activity_detail.element_represents_a_basic_unit_of_information_in_the_iati_standard'
+                      'common.common.each_element_represents_a_basic_unit_of_information_in_the_iati_standard'
                     ]
                   "
                   name=""
@@ -213,7 +204,7 @@
                 <div class="flex items-center space-x-1">
                   <svg-vue icon="core" />
                   <span>
-                    {{ translatedData['activity_detail.activity_detail.core'] }}
+                    {{ translatedData['common.common.core'] }}
                   </span>
                 </div>
                 <HoverText
@@ -230,17 +221,13 @@
                 <div class="flex items-center space-x-1">
                   <svg-vue class="text-spring-50" icon="double-tick" />
                   <span>
-                    {{
-                      translatedData[
-                        'activity_detail.activity_detail.completed'
-                      ]
-                    }}
+                    {{ translatedData['common.common.completed'] }}
                   </span>
                 </div>
                 <HoverText
                   :hover-text="
                     translatedData[
-                      'activity_detail.activity_detail.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                      'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
                     ]
                   "
                   name=""
@@ -283,11 +270,7 @@
               <div class="activities__card progress mr-1">
                 <div class="mb-2 flex items-center justify-between">
                   <span class="mr-2">
-                    {{
-                      translatedData[
-                        'activity_detail.activity_detail.publishing_progress'
-                      ]
-                    }}
+                    {{ translatedData['common.common.publishing_progress'] }}
                   </span>
                   <HoverText
                     :hover-text="
@@ -315,7 +298,7 @@
                   <HoverText
                     :hover-text="
                       translatedData[
-                        'activity_detail.activity_detail.each_element_represents_a_basic_unit_of_information_in_the_iati_standard'
+                        'common.common.each_element_represents_a_basic_unit_of_information_in_the_iati_standard'
                       ]
                     "
                     name=""
@@ -326,9 +309,7 @@
                   <div class="flex items-center space-x-1">
                     <svg-vue icon="core" />
                     <span>
-                      {{
-                        translatedData['activity_detail.activity_detail.core']
-                      }}
+                      {{ translatedData['common.common.core'] }}
                     </span>
                   </div>
                   <HoverText
@@ -345,17 +326,13 @@
                   <div class="flex items-center space-x-1">
                     <svg-vue class="text-spring-50" icon="double-tick" />
                     <span>
-                      {{
-                        translatedData[
-                          'activity_detail.activity_detail.completed'
-                        ]
-                      }}
+                      {{ translatedData['common.common.completed'] }}
                     </span>
                   </div>
                   <HoverText
                     :hover-text="
                       translatedData[
-                        'activity_detail.activity_detail.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                        'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
                       ]
                     "
                     name=""
@@ -405,7 +382,7 @@
                     :name="post.label"
                     :hover-text="
                       translatedData[
-                        'activity_detail.activity_detail.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                        'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
                       ]
                     "
                     icon_size="text-tiny"
@@ -496,7 +473,6 @@ import {
   ref,
   Ref,
   watch,
-  inject,
 } from 'vue';
 import { useToggle, watchIgnorable } from '@vueuse/core';
 
@@ -624,7 +600,7 @@ export default defineComponent({
       refreshMessageType: true,
       refreshMessage:
         translatedData.value[
-          'activity_detail.activity_detail.activity_has_been_published_successfully_refresh_to_see_changes'
+          'common.common.activity_has_been_published_successfully_refresh_to_see_changes'
         ],
     });
 

@@ -52,11 +52,11 @@
     </div>
     <div class="mt-3 flex w-full items-center justify-between">
       <button class="text-xs font-bold text-n-40" @click="previousStep">
-        {{ translatedData['onboarding.activity_step.previous'] }}
+        {{ translatedData['common.common.previous'] }}
       </button>
       <div class="flex items-center gap-4">
         <button class="button primary-btn text-xs" @click="proceedStep">
-          {{ translatedData['onboarding.activity_step.get_started'] }}
+          {{ translatedData['common.common.get_started'] }}
         </button>
       </div>
     </div>

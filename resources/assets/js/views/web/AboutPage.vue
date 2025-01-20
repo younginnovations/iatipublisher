@@ -32,7 +32,7 @@
             </li>
             <li class="text-base">
               <span class="text-black">{{
-                translatedData['public.about.use_iati.list_item_four']
+                translatedData['common.common.run_automatic_checks']
               }}</span>
             </li>
             <li class="text-base">

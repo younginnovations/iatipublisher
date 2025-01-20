@@ -271,6 +271,7 @@ return [
     'first_title_required'             => 'es_ The first title is required.',
     'xml_lang_unique'                  => 'es_ The @xml:lang field must be unique.',
     'narrative_language_unique'        => 'es_ The narrative language field must be unique.',
+    'narrative_with_language'          => 'es_ The narrative field is required with language field.',
     'xml_lang_invalid'                 => 'es_ The @xml:lang field is invalid.',
     'narrative_is_required'            => 'es_ The Narrative field is required.',
     'period_end_date'                  => 'es_ Period end must be a date.',
@@ -285,8 +286,25 @@ return [
     'document_link_language_invalid'   => 'es_ The document link language code is invalid.',
     'iso_proper_date'                  => 'es_ The @iso-date field must be a proper date.',
     'iso_gt_1900'                      => 'es_ The @iso-date field must be a greater than 1900.',
+    'iso_date_required'                => 'es_ The @iso-date field is required.',
+    'iso_date_after'                   => 'es_ The @iso-date field must be a date after period-start date.',
+    'period_longer'                    => 'es_ The period must not be longer than one year.',
     'description_type_invalid'         => 'es_ The selected description type is invalid.',
     'vocabulary_uri_url'               => 'es_ The @vocabulary-uri field must be a valid url.',
+    'name_narrative_required'          => 'es_ The narrative is required.',
+    'registration_number_regex'        => 'es_ The registration_number format is invalid.',
+    'invalid_currency'                 => 'es_ The value currency is invalid.',
+    'invalid_ref'                      => 'es_ The @ref format is invalid.',
+    'reporting_org_ref_must_match'     => 'es_ The @ref of reporting-org must match the organisation-identifier.',
+    'language_required_with_narrative' => 'es_ The language field is required when narrative field is present.',
+    'amount_required'                  => 'es_ The amount field is required.',
+    'amount_numeric'                   => 'es_ The amount must be numeric.',
+    'amount_min'                       => 'es_ The amount must not be in negative.',
+    'amount_with_value'                => 'es_ The amount field is required with value.',
+    'amount_number'                    => 'es_ The amount field must be a number.',
+    'amount_negative'                  => 'es_ The amount field must not be in negative.',
+    'username_regex'                   => 'es_ The username is invalid. Username must be purely lowercase alphabets followed by alphanumeric(ascii) characters and these symbols:-_',
+    'email_unique'                     => 'es_ Email is already in use in IATI Publisher.',
     'other_identifier'                 => [
         'regex'        => 'es_ The other identifier reference field shouldn\'t contain the symbols /, &, | or ?.',
         'type_invalid' => 'es_ The other identifier type is not valid.',
@@ -449,15 +467,12 @@ return [
             'regex'        => 'es_ The planned disbursement receiver org ref shouldn\'t contain the symbols /, &, | or ?.',
         ],
         'value'        => [
-            'amount'   => [
+            'amount' => [
                 'required' => 'es_ Amount field is required',
                 'numeric'  => 'es_ Amount field must be a number',
                 'min'      => 'es_ Amount field must not be in negative.'
             ],
-            'currency' => [
-                'invalid_currency' => 'es_ The value currency is invalid.'
-            ],
-            'date'     => [
+            'date'   => [
                 'required'     => 'es_ Value date is a required field',
                 'invalid_date' => 'es_ The Value Date must be a valid Date',
             ],
@@ -498,13 +513,132 @@ return [
             'gt_1900'          => 'es_ The iso-date field must be date after year 1900.',
             'after'            => 'es_ The Period End iso-date must be a date after Period Start iso-date',
         ],
-        'amount'     => [
-            'numeric' => 'es_ The amount field must be a number.',
-            'min'     => 'es_ The amount field must not be in negative.',
-        ],
         'value'      => [
-            'date'             => 'es_ The value-date field must be a valid date.',
-            'invalid_currency' => 'es_ The value currency is invalid.',
+            'date' => 'es_ The value-date field must be a valid date.',
         ],
     ],
+    'activity_transactions'            => [
+        'transaction_id'             => [
+            'same_activity' => 'es_ All transactions must belong to the same activity.',
+            'mismatch'      => 'es_ Transaction IDs do not match the specified activity.',
+            'unpublish'     => 'es_ Please unpublish activity before deleting transactions.',
+        ],
+        'invalid_type'               => 'es_ The transaction type is invalid.',
+        'invalid_flow_type'          => 'es_ The transaction flow type code is invalid.',
+        'invalid_finance_type'       => 'es_ The transaction finance type code is invalid.',
+        'country_or_region'          => 'es_ You must add either recipient country or recipient region.',
+        'country_region_in_activity' => 'es_ Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.',
+        'sector_in_activity'         => 'es_ Sector has already been declared at activity level. You can’t declare a sector at the transaction level. To declare at transaction level, you need to remove sector at activity level.',
+        'aid_type'                   => [
+            'invalid_vocabulary'  => 'es_ The transaction aid type vocabulary is invalid.',
+            'invalid_code'        => 'es_ The transaction aid type code is invalid.',
+            'invalid_status_code' => 'es_ The transaction tied status code is invalid.',
+        ],
+        'date'                       => [
+            'before' => 'es_ The @iso-date must not be in future.',
+            'date'   => 'es_ The @iso-date field must be a valid date.',
+        ],
+        'value'                      => [
+            'numeric_amount' => 'es_ The @amount field must be a number.',
+            'date'           => [
+                'before' => 'es_ The @value-date must not be in future.',
+                'date'   => 'es_ The @value-date field must be a valid date.',
+            ],
+        ],
+        'sector'                     => [
+            'required'           => 'es_ You have declared sector at transaction level so you must declare sector for all the transactions.',
+            'invalid_code'       => 'es_ The transaction sector code is invalid.',
+            'vocabulary_uri_url' => 'es_ The transaction sector vocabulary-uri field must be a valid url.',
+        ],
+        'provider_org'               => [
+            'invalid' => 'es_ The transaction provider org type is invalid.',
+        ],
+        'receiver_org'               => [
+            'exclude_operators' => 'es_ The transaction receiver-activity-id field is not valid.',
+            'invalid_type'      => 'es_ The transaction receiver org type is invalid.',
+        ],
+        'recipient_region'           => [
+            'invalid_vocabulary'        => 'es_ The transaction recipient region vocabulary is invalid.',
+            'invalid_region_code'       => 'es_ The transaction recipient region code is invalid.',
+            'vocabulary_uri_url'        => 'es_ The transaction recipient region vocabulary uri must be a valid url.',
+            'region_vocabulary_uri_url' => 'es_ The @vocabulary-uri field must be a valid url.',
+        ],
+        'recipient_country'          => [
+            'invalid_code' => 'es_ The transaction recipient country code is invalid.',
+        ],
+    ],
+    'activity_results'                 => [
+        'result_id' => [
+            'same_activity' => 'es_ All results must belong to the same activity.',
+            'no_match'      => 'es_ Results IDs do not match the specified activity.',
+            'unpublish'     => 'es_ Please unpublish activity before deleting results.',
+        ],
+        'reference' => [
+            'vocabulary_uri_url' => 'es_ The @vocabulary-uri field must be a valid url.',
+            'code_present'       => 'es_ The code is already defined in its indicators',
+            'vocabulary_present' => 'es_ The vocabulary is already defined in its indicators',
+        ],
+    ],
+    'activity_indicators'              => [
+        'invalid_measure'            => 'es_ The indicator measure is invalid.',
+        'invalid_aggregation_status' => 'es_ The indicator aggregation status is invalid.',
+        'invalid_ascending'          => 'es_ The indicator ascending is invalid.',
+        'reference'                  => [
+            'uri_url'                       => 'es_ The @indicator-uri field must be a valid url.',
+            'result_ref_code_present'       => 'es_ The code is already defined in its result',
+            'result_ref_vocabulary_present' => 'es_ The vocabulary is already defined in its result',
+        ],
+        'baseline'                   => [
+            'year'  => [
+                'invalid_year' => 'es_ The @year field is not valid.',
+                'in'           => 'es_ The @year field should be the year of baseline date',
+                'digits'       => 'es_ The @year field must have 4 digits.',
+            ],
+            'value' => [
+                'numeric' => 'es_ The @value field must be a number.',
+                'gte'     => 'es_ The @value field must be greater or equal to 0.',
+            ],
+        ],
+    ],
+    'activity_periods'                 => [
+        'date'  => [
+            'date'             => 'es_ The @date field must be a proper date.',
+            'after'            => 'es_ The @iso-date field of period end must be a date after @iso-field of period start',
+            'gte_1900'         => 'es_ The @iso-date must be greater than 1900',
+            'period_start_end' => 'es_ The @iso-date field of period end and @iso-date of period start must not have difference of more than a year',
+        ],
+        'value' => [
+            'numeric'           => 'es_ The @value field must be numeric.',
+            'qualitative_empty' => 'es_ Value must be omitted when the indicator measure is qualitative.',
+            'target_required'   => 'es_ Target value is required if actual value is not provided.',
+            'actual_required'   => 'es_ Actual value is required if target value is not provided.',
+        ],
+    ],
+    'activity_upload'                  => [
+        'required'          => 'es_ The activity file must be uploaded',
+        'activity_file'     => 'es_ The file must be of either xml or csv format.',
+        'max'               => 'es_ The file shouldn\'t be greater than 10MB.',
+        'xls_required'      => 'es_ The xls file must be uploaded',
+        'xls_activity_file' => 'es_ The file must be of xls format.',
+    ],
+    'organization_document_link'       => [
+        'category_code' => [
+            'unique'   => 'es_ The category @code field must be unique.',
+            'required' => 'es_ The @code field is required.',
+        ],
+        'language'      => [
+            'unique' => 'es_ The language @code field must be unique.',
+        ],
+    ],
+    'value_date_required'              => 'es_ The @value-date field is required.',
+    'value_date_date'                  => 'es_ The @value-date must be a date.',
+    'value_date_after_or_equal'        => 'es_ The value date field must be a date between period start and period end',
+    'value_date_with_value'            => 'es_ The @value-date is required with value.',
+    'value_date_after_equal'           => 'es_ The @value-date field must be a date between period start and period end',
+    'activity_not_exist'               => 'es_ Activity does not exist',
+    'result_not_exist'                 => 'es_ Result does not exist',
+    'transaction_not_exist'            => 'es_ Transaction does not exist',
+    'indicator_not_exist'              => 'es_ Indicator does not exist',
+    'period_not_exist'                 => 'es_ Period does not exist',
+    'must_be_superadmin'               => 'es_ You need to be superadmin to use this route.',
 ];

@@ -13,5 +13,4 @@ return [
     'update_registry_information_api_key_and_publisher_id' => 'fr_ Update registry information - API Key & Publisher ID.',
     'please_enter_correct_api_token'                       => 'fr_ Please enter correct API token.',
     'iati_registry_account_is_inactive'                    => 'fr_ IATI Registry account is inactive',
-    'your_account_is_pending_approval_by_the_iati_team'    => 'fr_ Your account is pending approval by the IATI team - someone should be in touch within two working days.',
 ];

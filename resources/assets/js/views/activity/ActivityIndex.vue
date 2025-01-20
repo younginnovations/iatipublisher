@@ -535,7 +535,7 @@ export default defineComponent({
       refreshMessageType: true,
       refreshMessage:
         translatedData.value[
-          'activity_index.activity_index.activity_has_been_published_successfully_refresh_to_see_changes'
+          'common.common.activity_has_been_published_successfully_refresh_to_see_changes'
         ],
     });
 

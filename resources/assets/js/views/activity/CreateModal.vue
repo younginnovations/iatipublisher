@@ -76,13 +76,11 @@
               <div>
                 <div class="label-field">
                   <label class="label" for="">
-                    {{ translatedData['activity_index.create_modal.language'] }}
+                    {{ translatedData['common.common.language'] }}
                     <span class="required-icon"> *</span>
                   </label>
                   <HoverText
-                    :name="
-                      translatedData['activity_index.create_modal.language']
-                    "
+                    :name="translatedData['common.common.language']"
                     :hover-text="
                       translatedData[
                         'activity_index.create_modal.a_code_specifying_the_language_of_text_in_this_element'
@@ -103,9 +101,7 @@
                   :options="languages"
                   :placeholder="
                     defaultLanguage ??
-                    translatedData[
-                      'activity_index.create_modal.select_language'
-                    ]
+                    translatedData['common.common.select_language']
                   "
                 />
 
@@ -226,13 +222,13 @@
             <BtnComponent
               class="mx-3 bg-white px-3 uppercase"
               type=""
-              :text="translatedData['activity_index.create_modal.cancel']"
+              :text="translatedData['common.common.cancel']"
               @click="closeModal"
             />
             <BtnComponent
               class="space"
               type="primary"
-              :text="translatedData['activity_index.create_modal.save']"
+              :text="translatedData['common.common.save']"
               @click="storeActivity()"
             />
           </div>

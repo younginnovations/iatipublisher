@@ -178,12 +178,12 @@ class ActivityWorkflowController extends Controller
             if (!empty($message)) {
                 return response()->json(['success' => false, 'message' => $message]);
             }
-            $translatedMessage = trans('work_flow/activity_workflow_controller.activity_is_ready_to_be_published');
+            $translatedMessage = trans('common/common.activity_is_ready_to_be_published');
 
             return response()->json(['success' => true, 'message' => $translatedMessage]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('work_flow/activity_workflow_controller.error_has_occurred_while_checking_activity');
+            $translatedMessage = trans('common/common.error_has_occurred_while_checking_activity');
 
             return response()->json(['success' => false, 'message' => $translatedMessage]);
         }

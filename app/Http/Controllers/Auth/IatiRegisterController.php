@@ -111,7 +111,7 @@ class IatiRegisterController extends Controller
                 ]);
             }
 
-            $translatedMessage = trans('register/iati_register_controller.publisher_verified_successfully');
+            $translatedMessage = trans('common/common.publisher_verified_successfully');
 
             return response()->json(['success' => true, 'message' => $translatedMessage, 'data' => $publisherCheck]);
         } catch (ClientException $e) {
@@ -125,7 +125,7 @@ class IatiRegisterController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            $translatedMessage = trans('register/iati_register_controller.error_has_occurred_while_verifying_the_publisher');
+            $translatedMessage = trans('common/common.error_has_occurred_while_verifying_the_publisher');
 
             return response()->json(['success' => false, 'errors' => $translatedMessage]);
         }
@@ -240,7 +240,7 @@ class IatiRegisterController extends Controller
             event(new Registered($createUser['user']));
             Session::put('role_id', app(Role::class)->getOrganizationAdminId());
 
-            $translatedMessage = trans('register/iati_register_controller.user_registered_successfully');
+            $translatedMessage = trans('common/common.user_registered_successfully');
 
             return response()->json(['success' => true, 'message' => $translatedMessage]);
         } catch (Exception $e) {

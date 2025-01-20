@@ -38,20 +38,12 @@
               >
                 <div class="flex justify-between">
                   <label for="api-token" class="text-[14px]">
-                    {{
-                      translatedData[
-                        'onboarding.publishing_setting_step.api_token'
-                      ]
-                    }}
+                    {{ translatedData['common.common.api_token'] }}
                     <span class="required-icon"> *</span>
                   </label>
                   <button>
                     <HoverText
-                      :name="
-                        translatedData[
-                          'onboarding.publishing_setting_step.api_token'
-                        ]
-                      "
+                      :name="translatedData['common.common.api_token']"
                       :hover-text="
                         translatedData[
                           'onboarding.publishing_setting_step.the_api_token_is_a_unique_key_that_is_generated_from_your_organisation'
@@ -155,22 +147,14 @@
               class="text-xs font-bold text-n-40"
               @click="emit(`proceedStep`)"
             >
-              {{
-                translatedData[
-                  'onboarding.publishing_setting_step.skip_to_next_step'
-                ]
-              }}
+              {{ translatedData['common.common.skip_to_next_step'] }}
             </button>
             <button
               class="button primary-btn text-xs disabled:cursor-not-allowed disabled:bg-n-20 disabled:shadow-none"
               :disabled="isSaving || !apiToken"
               @click="proceedStep"
             >
-              {{
-                translatedData[
-                  'onboarding.publishing_setting_step.save_and_next'
-                ]
-              }}
+              {{ translatedData['common.common.save_and_next'] }}
             </button>
           </div>
         </div>
@@ -213,7 +197,7 @@
             class="button primary-btn text-xs"
             @click="emit(`proceedStep`)"
           >
-            {{ translatedData['onboarding.publishing_setting_step.next'] }}
+            {{ translatedData['common.common.next'] }}
           </button>
         </div>
       </div>
@@ -245,7 +229,7 @@
       </div>
       <div class="mb-[30px] self-end">
         <button class="button primary-btn text-xs" @click="emit(`proceedStep`)">
-          {{ translatedData['onboarding.publishing_setting_step.next'] }}
+          {{ translatedData['common.common.next'] }}
         </button>
       </div>
     </div>

@@ -108,9 +108,7 @@
             }
           "
         >
-          {{
-            translatedData['activity_index.download_activity_button.go_back']
-          }}
+          {{ translatedData['common.common.go_back'] }}
         </button>
         <button
           class="rounded bg-bluecoral px-4 py-3 font-bold text-white"
@@ -220,9 +218,7 @@
         </div>
         <div class="flex justify-end space-x-5">
           <button class="ghost-btn" @click="downloadingInProcess = false">
-            {{
-              translatedData['activity_index.download_activity_button.go_back']
-            }}
+            {{ translatedData['common.common.go_back'] }}
           </button>
           <button class="primary-btn" @click="downloadAnyway">
             {{

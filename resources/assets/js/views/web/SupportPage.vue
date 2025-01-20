@@ -4,7 +4,7 @@
       <section class="rounded bg-white py-4 shadow-textbox sm:py-8">
         <article class="px-6 py-4 sm:px-12 sm:py-6">
           <h3 class="text-2xl font-bold text-bluecoral">
-            {{ translatedData['public.support.support'] }}
+            {{ translatedData['common.common.support'] }}
           </h3>
 
           <p class="mt-4 text-base">

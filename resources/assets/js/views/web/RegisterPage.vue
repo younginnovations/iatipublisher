@@ -67,9 +67,7 @@
                 <small class="label">
                   <span class="required-icon px-1">*</span>
                   <span>{{
-                    translatedData[
-                      'public.register.registered_page.register_section.mandatory_fields'
-                    ]
+                    translatedData['common.common.mandatory_fields']
                   }}</span>
                 </small>
               </div>
@@ -172,22 +170,18 @@
               @click="goToPreviousForm()"
             >
               <svg-vue class="mr-3 cursor-pointer" icon="left-arrow" />
-              {{ translatedData['public.register.commons.go_back'] }}
+              {{ translatedData['common.common.go_back'] }}
             </button>
             <span
               v-if="checkStep(1)"
               class="pb-4 text-sm font-normal text-n-40 sm:pb-0"
             >
-              {{
-                translatedData[
-                  'public.register.commons.already_have_an_account'
-                ]
-              }}
+              {{ translatedData['common.common.already_have_an_acoount'] }}
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
               >
-                {{ translatedData['public.register.commons.sign_in'] }}</a
+                {{ translatedData['common.common.sign_in'] }} .</a
               ></span
             >
             <button
@@ -201,16 +195,12 @@
           </div>
           <div v-if="checkStep(2)" class="mt-6 text-center">
             <span class="text-sm font-normal text-n-40">
-              {{
-                translatedData[
-                  'public.register.commons.already_have_an_account'
-                ]
-              }}
+              {{ translatedData['common.common.already_have_an_acoount'] }}
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
               >
-                {{ translatedData['public.register.commons.sign_in'] }}</a
+                {{ translatedData['common.common.sign_in'] }} .</a
               ></span
             >
           </div>
@@ -416,9 +406,7 @@ export default defineComponent({
       if (translatedData.value && registerForm) {
         // Form 1
         registerForm[1].title =
-          translatedData.value[
-            'public.register.registered_page.register_section.heading_one'
-          ];
+          translatedData.value['common.common.publisher_information'];
         registerForm[1].description =
           translatedData.value[
             'public.register.registered_page.register_section.publisher_information_description'
@@ -428,9 +416,7 @@ export default defineComponent({
             'public.register.registered_page.register_section.publisher_information_hover_text'
           ];
         registerForm[1].fields.publisher_name.label =
-          translatedData.value[
-            'public.register.registered_page.register_section.publisher_name'
-          ];
+          translatedData.value['common.common.publisher_name'];
         registerForm[1].fields.publisher_name.placeholder =
           translatedData.value[
             'public.register.registered_page.register_section.publisher_name_placeholder'
@@ -440,36 +426,28 @@ export default defineComponent({
             'public.register.registered_page.register_section.publisher_name_hover_text'
           ];
         registerForm[1].fields.publisher_id.label =
-          translatedData.value[
-            'public.register.registered_page.register_section.publisher_id'
-          ];
+          translatedData.value['common.common.publisher_id'];
         registerForm[1].fields.publisher_id.placeholder =
-          translatedData.value[
-            'public.register.registered_page.register_section.publisher_id_placeholder'
-          ];
+          translatedData.value['common.common.type_your_publisher_id_here'];
         registerForm[1].fields.publisher_id.hover_text =
           translatedData.value[
             'public.register.registered_page.register_section.publisher_id_hover_text'
           ];
         registerForm[1].fields.country.label =
-          translatedData.value[
-            'public.register.registered_page.register_section.country'
-          ];
+          translatedData.value['common.common.country'];
         registerForm[1].fields.country.placeholder =
-          translatedData.value[
-            'public.register.registered_page.register_section.country_placeholder'
-          ];
+          translatedData.value['common.common.select_a_country'];
         registerForm[1].fields.country.hover_text =
           translatedData.value[
             'public.register.registered_page.register_section.country_hover_tezt'
           ];
         registerForm[1].fields.organization_registration_agency.label =
           translatedData.value[
-            'public.register.registered_page.register_section.organisation_registration_agency'
+            'common.common.organisation_registration_agency'
           ];
         registerForm[1].fields.organization_registration_agency.placeholder =
           translatedData.value[
-            'public.register.registered_page.register_section.organisation_registration_agency_placeholder'
+            'common.common.select_an_organisation_registration_agency'
           ];
         registerForm[1].fields.organization_registration_agency.hover_text =
           translatedData.value[
@@ -481,33 +459,25 @@ export default defineComponent({
           ];
         registerForm[1].fields.organization_registration_no.placeholder =
           translatedData.value[
-            'public.register.registered_page.register_section.organisation_registration_number_placeholder'
+            'common.common.type_your_registration_number_here'
           ];
         registerForm[1].fields.organization_registration_no.hover_text =
           translatedData.value[
             'public.register.registered_page.register_section.organisation_registration_number_hover_text'
           ];
         registerForm[1].fields.organization_registration_no.help_text =
-          translatedData.value[
-            'public.register.registered_page.register_section.organisation_registration_number_help_text'
-          ];
+          translatedData.value['common.common.for_example_123456'];
         registerForm[1].fields.iati_organizational_identifier.label =
-          translatedData.value[
-            'public.register.registered_page.register_section.iati_organisation_identifier'
-          ];
+          translatedData.value['common.common.iati_organisation_identifier'];
         registerForm[1].fields.iati_organizational_identifier.hover_text =
           translatedData.value[
             'public.register.registered_page.register_section.iati_organisation_identifier_hover_text'
           ];
         registerForm[1].fields.iati_organizational_identifier.help_text =
-          translatedData.value[
-            'public.register.registered_page.register_section.iati_organisation_identifier_help_text'
-          ];
+          translatedData.value['common.common.this_is_autogenerated'];
         // Form 2
         registerForm[2].title =
-          translatedData.value[
-            'public.register.registered_page.register_section.heading_two'
-          ];
+          translatedData.value['common.common.administrator_information'];
         registerForm[2].description =
           translatedData.value[
             'public.register.registered_page.register_section.administrator_description'
@@ -517,58 +487,34 @@ export default defineComponent({
             'public.register.registered_page.register_section.administrator_hover_text'
           ];
         registerForm[2].fields.full_name.label =
-          translatedData.value[
-            'public.register.registered_page.register_section.full_name'
-          ];
+          translatedData.value['common.common.full_name'];
         registerForm[2].fields.full_name.placeholder =
-          translatedData.value[
-            'public.register.registered_page.register_section.full_name_placeholder'
-          ];
+          translatedData.value['common.common.type_your_full_name_here'];
         registerForm[2].fields.email.label =
-          translatedData.value[
-            'public.register.registered_page.register_section.email'
-          ];
+          translatedData.value['common.common.email_address'];
         registerForm[2].fields.email.placeholder =
-          translatedData.value[
-            'public.register.registered_page.register_section.email_placeholder'
-          ];
+          translatedData.value['common.common.type_valid_email_here'];
 
         registerForm[2].fields.username.label =
-          translatedData.value[
-            'public.register.registered_page.register_section.username'
-          ];
+          translatedData.value['common.common.username'];
         registerForm[2].fields.username.placeholder =
-          translatedData.value[
-            'public.register.registered_page.register_section.username_placeholder'
-          ];
+          translatedData.value['common.common.type_username_here'];
         registerForm[2].fields.username.hover_text =
           translatedData.value[
-            'public.register.registered_page.register_section.username_hover_text'
+            'common.common.you_will_need_this_later_to_login'
           ];
         registerForm[2].fields.default_language.label =
-          translatedData.value[
-            'public.register.registered_page.register_section.default_language'
-          ];
+          translatedData.value['elements.label.default_language'];
         registerForm[2].fields.default_language.placeholder =
-          translatedData.value[
-            'public.register.registered_page.register_section.default_language_placeholder'
-          ];
+          translatedData.value['common.common.select_your_default_language'];
         registerForm[2].fields.password.label =
-          translatedData.value[
-            'public.register.registered_page.register_section.password'
-          ];
+          translatedData.value['common.common.password'];
         registerForm[2].fields.password.placeholder =
-          translatedData.value[
-            'public.register.registered_page.register_section.password_placeholder'
-          ];
+          translatedData.value['common.common.type_password_here'];
         registerForm[2].fields.confirm_password.label =
-          translatedData.value[
-            'public.register.registered_page.register_section.confirm_password'
-          ];
+          translatedData.value['common.common.confirm_password'];
         registerForm[2].fields.confirm_password.placeholder =
-          translatedData.value[
-            'public.register.registered_page.register_section.confirm_password_placeholder'
-          ];
+          translatedData.value['common.common.type_password_here'];
         // Form 3
         registerForm[3].title =
           translatedData.value[
@@ -576,7 +522,7 @@ export default defineComponent({
           ];
         registerForm[3].description =
           translatedData.value[
-            'public.register.registered_page.register_section.email_verification_description'
+            'common.common.please_verify_and_activate_your_iati_publisher_account'
           ];
 
         console.log(

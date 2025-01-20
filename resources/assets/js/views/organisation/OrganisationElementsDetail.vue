@@ -22,21 +22,13 @@
         <div class="inline-flex">
           <BtnComponent
             class="bg-white px-6 uppercase"
-            :text="
-              translatedData[
-                'organisationDetail.organisation_elements_detail.go_back'
-              ]
-            "
+            :text="translatedData['common.common.go_back']"
             type=""
             @click="deleteValue = false"
           />
           <BtnComponent
             class="space"
-            :text="
-              translatedData[
-                'organisationDetail.organisation_elements_detail.delete'
-              ]
-            "
+            :text="translatedData['common.common.delete']"
             type="primary"
             @click="deleteElement(title)"
           />
@@ -83,9 +75,7 @@
           >
             <b class="mr-2 text-base leading-3">.</b>
             <span v-if="status">{{
-              translatedData[
-                'organisationDetail.organisation_elements_detail.completed'
-              ]
+              translatedData['common.common.completed']
             }}</span>
             <span v-else>{{
               translatedData[
@@ -128,9 +118,7 @@
           >
             <svg-vue class="mr-0.5 text-base" icon="delete"></svg-vue>
             <span class="hidden text-[10px] lg:block">{{
-              translatedData[
-                'organisationDetail.organisation_elements_detail.delete'
-              ]
+              translatedData['common.common.delete']
             }}</span>
           </a>
         </div>

@@ -116,7 +116,7 @@
           <BtnComponent
             v-if="publishStep == 0"
             class="bg-white px-6 uppercase"
-            :text="translatedData['activity_index.publish_button.go_back']"
+            :text="translatedData['common.common.go_back']"
             type=""
             @click="publishValue = false"
           />

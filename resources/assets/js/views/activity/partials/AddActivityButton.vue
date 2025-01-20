@@ -20,25 +20,17 @@
               href="#"
               :class="liClass"
               @click="modalValue = true"
-              >{{
-                translatedData[
-                  'activity_index.add_activity_button.add_activity_manually'
-                ]
-              }}</a
+              >{{ translatedData['common.common.add_activity_manually'] }}</a
             >
           </li>
           <li>
             <a id="import-activity" href="/import" :class="liClass">{{
-              translatedData[
-                'activity_index.add_activity_button.import_activities_from_csv_xml'
-              ]
+              translatedData['common.common.import_activities_from_csv_xml']
             }}</a>
           </li>
           <li>
             <a id="import-xls" href="/import/xls" :class="liClass">{{
-              translatedData[
-                'activity_index.add_activity_button.import_activities_from_xls'
-              ]
+              translatedData['common.common.import_activities_from_xls']
             }}</a>
           </li>
         </ul>

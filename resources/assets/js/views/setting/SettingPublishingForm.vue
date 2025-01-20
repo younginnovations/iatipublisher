@@ -27,20 +27,12 @@
           <div class="relative">
             <div class="flex justify-between">
               <label for="publisher-id"
-                >{{
-                  translatedData[
-                    'settings.setting_publishing_form.publisher_id'
-                  ]
-                }}
+                >{{ translatedData['common.common.publisher_id'] }}
               </label>
               <button>
                 <HoverText
                   width="w-72"
-                  :name="
-                    translatedData[
-                      'settings.setting_publishing_form.publisher_id'
-                    ]
-                  "
+                  :name="translatedData['common.common.publisher_id']"
                   :hover-text="
                     translatedData[
                       'settings.setting_publishing_form.this_is_the_unique_id_for_your_organisation_that_you_created'
@@ -76,15 +68,11 @@
           <div class="relative">
             <div class="flex justify-between">
               <label for="api-token"
-                >{{
-                  translatedData['settings.setting_publishing_form.api_token']
-                }}
+                >{{ translatedData['common.common.api_token'] }}
               </label>
               <button>
                 <HoverText
-                  :name="
-                    translatedData['settings.setting_publishing_form.api_token']
-                  "
+                  :name="translatedData['common.common.api_token']"
                   :hover-text="
                     translatedData[
                       'settings.setting_publishing_form.the_api_token_is_a_unique_key_that_is_generated_from_your_organisation'
@@ -149,7 +137,6 @@ import { useStore } from '../../store';
 import { ActionTypes } from '../../store/setting/actions';
 import HoverText from './../../components/HoverText.vue';
 import ShimmerLoading from 'Components/ShimmerLoading.vue';
-import LanguageService from 'Services/language';
 
 export default defineComponent({
   components: {

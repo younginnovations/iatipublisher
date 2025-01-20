@@ -20,9 +20,7 @@
                 <svg-vue :icon="`${sortingDirection()}-arrow`" />
               </span>
               <span class="">{{
-                translatedData[
-                  'activity_index.table_layout.publishing_progress'
-                ]
+                translatedData['common.common.publishing_progress']
               }}</span>
             </a>
           </th>
@@ -46,7 +44,7 @@
           </th>
           <th id="publish" scope="col">
             <span class="hidden">{{
-              translatedData['activity_index.table_layout.publish']
+              translatedData['common.common.publish']
             }}</span>
           </th>
           <th id="cb" scope="col">
@@ -95,7 +93,7 @@
                     datum['default_title_narrative'] &&
                     datum['default_title_narrative'] !== ''
                       ? datum['default_title_narrative']
-                      : translatedData['activity_index.table_layout.untitled']
+                      : translatedData['common.common.untitled']
                   }}</a
                 >
                 <div class="w-52">
@@ -103,7 +101,7 @@
                     datum['default_title_narrative'] &&
                     datum['default_title_narrative'] !== ''
                       ? datum['default_title_narrative']
-                      : translatedData['activity_index.table_layout.untitled']
+                      : translatedData['common.common.untitled']
                   }}</span>
                 </div>
               </div>

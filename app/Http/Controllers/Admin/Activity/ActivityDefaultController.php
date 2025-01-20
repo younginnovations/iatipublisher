@@ -78,7 +78,7 @@ class ActivityDefaultController extends Controller
             return response()->json(['success' => true, 'message' => $translatedMessage, 'data' => $setting]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('activity_detail/activity_default_controller.error_occurred_while_fetching_the_data');
+            $translatedMessage = 'Error occurred while fetching the data.';
 
             return response()->json(['success' => false, 'message' => $translatedMessage]);
         }

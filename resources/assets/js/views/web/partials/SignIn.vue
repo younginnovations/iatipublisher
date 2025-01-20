@@ -7,9 +7,7 @@
 
     <div class="right__container flex w-full flex-col" @keyup.enter="login">
       <h2 class="mb-2 hidden sm:block">
-        {{
-          translatedData['public.login.iati_publishing_tool_section.sign_in']
-        }}
+        {{ translatedData['common.common.sign_in'] }}
       </h2>
       <span class="text-n-40">{{
         translatedData['public.login.sign_in_section.welcome_back_label']
@@ -57,9 +55,7 @@
             error_input: errorData.emailOrUsername,
           }"
           type="text"
-          :placeholder="
-            translatedData['public.login.sign_in_section.username_placeholder']
-          "
+          :placeholder="translatedData['common.common.type_username_here']"
         />
         <svg-vue class="absolute left-5 top-12 text-xl sm:left-6" icon="user" />
         <span
@@ -72,7 +68,7 @@
       </div>
       <div class="relative mb-4 flex flex-col text-sm text-bluecoral">
         <label for="Password">{{
-          translatedData['public.login.sign_in_section.password_label']
+          translatedData['common.common.password']
         }}</label>
         <input
           id="password"
@@ -82,9 +78,7 @@
             error__input: errorData.password || errorData.emailOrUsername,
           }"
           type="password"
-          :placeholder="
-            translatedData['public.login.sign_in_section.password_placeholder']
-          "
+          :placeholder="translatedData['common.common.type_password_here']"
         />
         <svg-vue
           class="absolute left-5 top-12 text-xl sm:left-6"
@@ -107,7 +101,7 @@
         >
       </p>
       <button id="btn" type="submit" class="btn" @click="login">
-        {{ translatedData['public.login.sign_in_section.sign_in'] }}
+        {{ translatedData['common.common.sign_in'] }}
         <svg-vue class="" icon="right-arrow" />
       </button>
     </div>

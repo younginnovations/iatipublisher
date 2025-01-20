@@ -44,9 +44,7 @@
             </li>
             <li class="text-base">
               <span class="text-black">{{
-                translatedData[
-                  'public.iati_standard.point_one.paragraph_one.point_four'
-                ]
+                translatedData['common.common.run_automatic_checks']
               }}</span>
             </li>
             <li class="text-base">
@@ -169,69 +167,70 @@
             </a>
           </p>
         </article>
-        <article class="px-6 py-4 sm:px-12 sm:py-6">
-          <h3 class="my-2 text-2xl font-bold text-bluecoral">
-            {{ translatedData['public.iati_standard.point_four.heading'] }}
-          </h3>
-          <p class="text-base">
-            {{
-              translatedData['public.iati_standard.point_four.paragraph_one']
-            }}
-          </p>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            class="my-2 cursor-pointer"
-            @click="downloadManual('organization')"
-          >
-            {{
-              translatedData['public.iati_standard.point_four.organisation_pdf']
-            }}
-          </a>
-          <br />
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            class="my-2 cursor-pointer"
-            @click="downloadManual('activity')"
-          >
-            {{ translatedData['public.iati_standard.point_four.activity_pdf'] }}
-          </a>
-        </article>
-        <article class="px-6 py-4 sm:px-12 sm:py-6">
-          <h3 class="my-2 text-2xl font-bold text-bluecoral">
-            {{ translatedData['public.iati_standard.point_five.heading'] }}
-          </h3>
-          <p class="text-base">
-            {{
-              translatedData['public.iati_standard.point_five.paragraph_one']
-            }}
-          </p>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://iatistandard.org/en/iati-standard/203/activity-standard/"
-            class="my-2"
-          >
-            <u>{{
-              translatedData[
-                'public.iati_standard.point_five.activity_standard'
-              ]
-            }}</u> </a
-          ><br />
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://iatistandard.org/en/iati-standard/203/organisation-standard/"
-            class="my-2"
-          >
-            <u>{{
-              translatedData[
-                'public.iati_standard.point_five.organisation_standard'
-              ]
-            }}</u>
-          </a>
-        </article>
+        <!--        HIDDEN FOR NOW-->
+        <!--        <article class="px-6 py-4 sm:px-12 sm:py-6">-->
+        <!--          <h3 class="my-2 text-2xl font-bold text-bluecoral">-->
+        <!--            {{ translatedData['public.iati_standard.point_four.heading'] }}-->
+        <!--          </h3>-->
+        <!--          <p class="text-base">-->
+        <!--            {{-->
+        <!--              translatedData['public.iati_standard.point_four.paragraph_one']-->
+        <!--            }}-->
+        <!--          </p>-->
+        <!--          <a-->
+        <!--            target="_blank"-->
+        <!--            rel="noopener noreferrer"-->
+        <!--            class="my-2 cursor-pointer"-->
+        <!--            @click="downloadManual('organization')"-->
+        <!--          >-->
+        <!--            {{-->
+        <!--              translatedData['public.iati_standard.point_four.organisation_pdf']-->
+        <!--            }}-->
+        <!--          </a>-->
+        <!--          <br />-->
+        <!--          <a-->
+        <!--            target="_blank"-->
+        <!--            rel="noopener noreferrer"-->
+        <!--            class="my-2 cursor-pointer"-->
+        <!--            @click="downloadManual('activity')"-->
+        <!--          >-->
+        <!--            {{ translatedData['public.iati_standard.point_four.activity_pdf'] }}-->
+        <!--          </a>-->
+        <!--        </article>-->
+        <!--        <article class="px-6 py-4 sm:px-12 sm:py-6">-->
+        <!--          <h3 class="my-2 text-2xl font-bold text-bluecoral">-->
+        <!--            {{ translatedData['public.iati_standard.point_five.heading'] }}-->
+        <!--          </h3>-->
+        <!--          <p class="text-base">-->
+        <!--            {{-->
+        <!--              translatedData['public.iati_standard.point_five.paragraph_one']-->
+        <!--            }}-->
+        <!--          </p>-->
+        <!--          <a-->
+        <!--            target="_blank"-->
+        <!--            rel="noopener noreferrer"-->
+        <!--            href="https://iatistandard.org/en/iati-standard/203/activity-standard/"-->
+        <!--            class="my-2"-->
+        <!--          >-->
+        <!--            <u>{{-->
+        <!--              translatedData[-->
+        <!--                'public.iati_standard.point_five.activity_standard'-->
+        <!--              ]-->
+        <!--            }}</u> </a-->
+        <!--          ><br />-->
+        <!--          <a-->
+        <!--            target="_blank"-->
+        <!--            rel="noopener noreferrer"-->
+        <!--            href="https://iatistandard.org/en/iati-standard/203/organisation-standard/"-->
+        <!--            class="my-2"-->
+        <!--          >-->
+        <!--            <u>{{-->
+        <!--              translatedData[-->
+        <!--                'public.iati_standard.point_five.organisation_standard'-->
+        <!--              ]-->
+        <!--            }}</u>-->
+        <!--          </a>-->
+        <!--        </article>-->
       </section>
     </div>
   </div>

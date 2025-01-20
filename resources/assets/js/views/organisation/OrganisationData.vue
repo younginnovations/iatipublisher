@@ -129,7 +129,7 @@
                 <HoverText
                   :hover-text="
                     translatedData[
-                      'organisationDetail.organisation_data.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                      'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
                     ]
                   "
                   name=""
@@ -150,15 +150,11 @@
             </div>
             <div class="activities__card elements">
               <div class="mb-7 flex items-center justify-between">
-                <span>{{
-                  translatedData[
-                    'organisationDetail.organisation_data.elements'
-                  ]
-                }}</span>
+                <span>{{ translatedData['common.common.elements'] }}</span>
                 <HoverText
                   :hover-text="
                     translatedData[
-                      'organisationDetail.organisation_data.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                      'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
                     ]
                   "
                   name=""
@@ -168,14 +164,12 @@
               <div class="mb-3 flex justify-between">
                 <div class="flex items-center space-x-1">
                   <svg-vue icon="core" />
-                  <span>{{
-                    translatedData['organisationDetail.organisation_data.core']
-                  }}</span>
+                  <span>{{ translatedData['common.common.core'] }}</span>
                 </div>
                 <HoverText
                   :hover-text="
                     translatedData[
-                      'organisationDetail.organisation_data.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                      'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
                     ]
                   "
                   name=""
@@ -185,16 +179,12 @@
               <div class="flex justify-between">
                 <div class="flex items-center space-x-1">
                   <svg-vue icon="double-tick" class="text-spring-50"></svg-vue>
-                  <span>{{
-                    translatedData[
-                      'organisationDetail.organisation_data.completed'
-                    ]
-                  }}</span>
+                  <span>{{ translatedData['common.common.completed'] }}</span>
                 </div>
                 <HoverText
                   :hover-text="
                     translatedData[
-                      'organisationDetail.organisation_data.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                      'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
                     ]
                   "
                   name=""
@@ -231,14 +221,12 @@
               <div class="activities__card progress mr-1">
                 <div class="mb-2 flex items-center justify-between">
                   <span class="mr-2">{{
-                    translatedData[
-                      'organisationDetail.organisation_data.publishing_progress'
-                    ]
+                    translatedData['common.common.publishing_progress']
                   }}</span>
                   <HoverText
                     :hover-text="
                       translatedData[
-                        'organisationDetail.organisation_data.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                        'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
                       ]
                     "
                     name=""
@@ -259,15 +247,11 @@
               </div>
               <div class="activities__card elements">
                 <div class="mb-7 flex items-center justify-between">
-                  <span>{{
-                    translatedData[
-                      'organisationDetail.organisation_data.elements'
-                    ]
-                  }}</span>
+                  <span>{{ translatedData['common.common.elements'] }}</span>
                   <HoverText
                     :hover-text="
                       translatedData[
-                        'organisationDetail.organisation_data.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                        'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
                       ]
                     "
                     name=""
@@ -277,16 +261,12 @@
                 <div class="mb-3 flex justify-between">
                   <div class="flex items-center space-x-1">
                     <svg-vue icon="core" />
-                    <span>{{
-                      translatedData[
-                        'organisationDetail.organisation_data.core'
-                      ]
-                    }}</span>
+                    <span>{{ translatedData['common.common.core'] }}</span>
                   </div>
                   <HoverText
                     :hover-text="
                       translatedData[
-                        'organisationDetail.organisation_data.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                        'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
                       ]
                     "
                     name=""
@@ -299,16 +279,12 @@
                       icon="double-tick"
                       class="text-spring-50"
                     ></svg-vue>
-                    <span>{{
-                      translatedData[
-                        'organisationDetail.organisation_data.completed'
-                      ]
-                    }}</span>
+                    <span>{{ translatedData['common.common.completed'] }}</span>
                   </div>
                   <HoverText
                     :hover-text="
                       translatedData[
-                        'organisationDetail.organisation_data.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
+                        'common.common.you_cannot_publish_an_activity_until_all_the_mandatory_fields_have_been_filled'
                       ]
                     "
                     name=""

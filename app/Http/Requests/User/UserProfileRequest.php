@@ -59,12 +59,12 @@ class UserProfileRequest extends FormRequest
         $form_type = $this->get('form_type');
 
         if ($form_type === 'password') {
-            $messages['publisher_id.regex'] = trans('userProfile/user_profile_request.the_publisher_id_is_invalid');
+            $messages['publisher_id.regex'] = trans('common/common.the_publisher_id_is_invalid');
         } else {
-            $messages['username.regex'] = trans('userProfile/user_profile_request.the_username_is_invalid');
+            $messages['username.regex'] = trans('common/common.the_username_is_invalid');
         }
 
-        $messages['email.unique'] = trans('userProfile/user_profile_request.email_is_already_in_use_in_iati_publisher');
+        $messages['email.unique'] = trans('common/common.email_is_already_in_use_in_iati_publisher');
 
         return $messages;
     }

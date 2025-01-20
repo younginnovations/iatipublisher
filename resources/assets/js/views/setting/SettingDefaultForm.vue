@@ -20,25 +20,21 @@
       </div>
     </div>
     <span class="text-sm font-bold text-n-50">{{
-      translatedData['settings.setting_default_form.default_for_all_data']
+      translatedData['common.common.default_for_all_data']
     }}</span>
     <div class="register mb-4 mt-4">
       <div class="register__container mb-0">
         <div>
           <div class="flex justify-between">
             <label for="default-currency">{{
-              translatedData['settings.setting_default_form.default_currency']
+              translatedData['elements.label.default_currency']
             }}</label>
             <button>
               <HoverText
-                :name="
-                  translatedData[
-                    'settings.setting_default_form.default_currency'
-                  ]
-                "
+                :name="translatedData['elements.label.default_currency']"
                 :hover-text="
                   translatedData[
-                    'settings.setting_default_form.the_currency_in_which_you_report_your_financial_transactions'
+                    'common.common.the_currency_in_which_you_report_your_financial_transactions'
                   ]
                 "
                 :show-iati-reference="true"
@@ -51,11 +47,7 @@
             v-model="defaultForm.default_currency"
             :disabled="userRole !== 'admin' ? true : false"
             class="vue__select"
-            :placeholder="
-              translatedData[
-                'settings.setting_default_form.select_from_dropdown'
-              ]
-            "
+            :placeholder="translatedData['common.common.select_from_dropdown']"
             :options="props.currencies"
             :searchable="true"
             @click="updateStore('default_currency')"
@@ -75,18 +67,14 @@
         <div>
           <div class="flex justify-between">
             <label for="default-language">{{
-              translatedData['settings.setting_default_form.default_language']
+              translatedData['elements.label.default_language']
             }}</label>
             <button>
               <HoverText
-                :name="
-                  translatedData[
-                    'settings.setting_default_form.default_language'
-                  ]
-                "
+                :name="translatedData['elements.label.default_language']"
                 :hover-text="
                   translatedData[
-                    'settings.setting_default_form.the_language_in_which_you_provide_data_on_your_activities'
+                    'common.common.the_language_in_which_you_provide_data_on_your_activities'
                   ]
                 "
                 :show-iati-reference="true"
@@ -101,9 +89,7 @@
               error__input: defaultError.default_language,
             }"
             :disabled="userRole !== 'admin' ? true : false"
-            :placeholder="
-              translatedData['settings.setting_default_form.select_language']
-            "
+            :placeholder="translatedData['common.common.select_language']"
             :searchable="true"
             :options="props.languages"
             @click="updateStore('default_language')"
@@ -134,16 +120,12 @@
         <div>
           <div class="flex justify-between">
             <label for="default-hierarchy">{{
-              translatedData['settings.setting_default_form.default_hierarchy']
+              translatedData['elements.label.default_hierarchy']
             }}</label>
             <button>
               <HoverText
                 width="w-64"
-                :name="
-                  translatedData[
-                    'settings.setting_default_form.default_hierarchy'
-                  ]
-                "
+                :name="translatedData['elements.label.default_hierarchy']"
                 :hover-text="
                   translatedData[
                     'settings.setting_default_form.if_you_are_reporting_both_programmes_parent_activities'
@@ -168,7 +150,7 @@
           <p v-if="!defaultError.hierarchy">
             {{
               translatedData[
-                'settings.setting_default_form.if_hierarchy_is_not_reported_then_1_is_assumed'
+                'common.common.if_hierarchy_is_not_reported_then_1_is_assumed'
               ]
             }}
           </p>
@@ -179,16 +161,12 @@
         <div>
           <div class="flex justify-between">
             <label for="humanitarian">
-              {{
-                translatedData['settings.setting_default_form.humanitarian']
-              }}</label
+              {{ translatedData['elements.label.humanitarian'] }}</label
             >
             <button>
               <HoverText
                 width="w-72"
-                :name="
-                  translatedData['settings.setting_default_form.humanitarian']
-                "
+                :name="translatedData['elements.label.humanitarian']"
                 :hover-text="
                   translatedData[
                     'settings.setting_default_form.add_a_humanitarian_flag_to_every_activity_that_your_organisation'
@@ -205,9 +183,7 @@
             class="vue__select"
             :class="{ error__input: defaultError.humanitarian }"
             :placeholder="
-              translatedData[
-                'settings.setting_default_form.select_humanitarian_here'
-              ]
+              translatedData['common.common.select_humanitarian_here']
             "
             :options="props.humanitarian"
             :searchable="true"
@@ -223,18 +199,12 @@
         <div>
           <div class="flex justify-between">
             <label for="default-collaboration-type">{{
-              translatedData[
-                'settings.setting_default_form.default_flow_type_level'
-              ]
+              translatedData['elements.label.default_flow_type']
             }}</label>
             <button>
               <HoverText
                 width="w-72"
-                :name="
-                  translatedData[
-                    'settings.setting_default_form.default_flow_type_name'
-                  ]
-                "
+                :name="translatedData['elements.name.default_flow_type']"
                 :hover-text="
                   translatedData[
                     'settings.setting_default_form.whether_the_activity_is_funded_by_official_development_assistance_oda'
@@ -251,9 +221,7 @@
             class="vue__select"
             :class="{ error__input: defaultError.default_flow_type }"
             :placeholder="
-              translatedData[
-                'settings.setting_default_form.select_default_flow_type_here'
-              ]
+              translatedData['common.common.select_default_flow_type_here']
             "
             :options="props.defaultFlowType"
             :searchable="true"
@@ -269,7 +237,7 @@
           <p v-if="!defaultError.default_flow_type">
             {{
               translatedData[
-                'settings.setting_default_form.if_selected_then_default_flow_type_will_be_automatically_populated_in_activity'
+                'common.common.if_selected_then_default_flow_type_will_be_automatically_populated'
               ]
             }}
           </p>
@@ -280,21 +248,15 @@
         <div>
           <div class="flex justify-between">
             <label for="default-collaboration-type">{{
-              translatedData[
-                'settings.setting_default_form.default_finance_type_level'
-              ]
+              translatedData['elements.label.default_finance_type']
             }}</label>
             <button>
               <HoverText
                 width="w-72"
-                :name="
-                  translatedData[
-                    'settings.setting_default_form.default_finance_type_name'
-                  ]
-                "
+                :name="translatedData['elements.name.default_finance_type']"
                 :hover-text="
                   translatedData[
-                    'settings.setting_default_form.the_type_of_finance'
+                    'common.common.the_type_of_finance_eg_grant_loan'
                   ]
                 "
                 :show-iati-reference="true"
@@ -308,9 +270,7 @@
             class="vue__select"
             :class="{ error__input: defaultError.default_finance_type }"
             :placeholder="
-              translatedData[
-                'settings.setting_default_form.select_default_finance_type'
-              ]
+              translatedData['common.common.select_default_finance_type_here']
             "
             :options="props.defaultFinanceType"
             :searchable="true"
@@ -326,7 +286,7 @@
           <p v-if="!defaultError.default_finance_type">
             {{
               translatedData[
-                'settings.setting_default_form.if_selected_then_default_finance_type_will_be_automatically_populated'
+                'common.common.if_selected_then_default_finance_type_will_be_automatically_populated'
               ]
             }}
           </p>
@@ -337,19 +297,15 @@
         <div>
           <div class="flex justify-between">
             <label for="default-collaboration-type">{{
-              translatedData['settings.setting_default_form.default_aid_type']
+              translatedData['elements.label.default_aid_type']
             }}</label>
             <button>
               <HoverText
                 width="w-72"
-                :name="
-                  translatedData[
-                    'settings.setting_default_form.default_aid_type_name'
-                  ]
-                "
+                :name="translatedData['elements.name.default_aid_type']"
                 :hover-text="
                   translatedData[
-                    'settings.setting_default_form.the_type_of_aid_being_supplied_project_type_intervention'
+                    'common.common.the_type_of_aid_being_supplied_project_type_intervention'
                   ]
                 "
                 :show-iati-reference="true"
@@ -363,9 +319,7 @@
             class="vue__select"
             :class="{ error__input: defaultError.default_aid_type }"
             :placeholder="
-              translatedData[
-                'settings.setting_default_form.select_default_aid_type'
-              ]
+              translatedData['common.common.select_default_aid_type_here']
             "
             :options="props.defaultAidType"
             :searchable="true"
@@ -377,7 +331,7 @@
           <p v-if="!defaultError.default_aid_type">
             {{
               translatedData[
-                'settings.setting_default_form.if_selected_then_default_aid_type_will_be_automatically_populated_in_activity'
+                'common.common.if_selected_then_default_aid_type_will_be_automatically_populated'
               ]
             }}
           </p>
@@ -388,18 +342,12 @@
         <div>
           <div class="flex justify-between">
             <label for="default-tied-status">{{
-              translatedData[
-                'settings.setting_default_form.default_tied_status'
-              ]
+              translatedData['elements.label.default_tied_status']
             }}</label>
             <button>
               <HoverText
                 width="w-72"
-                :name="
-                  translatedData[
-                    'settings.setting_default_form.default_tied_status_name'
-                  ]
-                "
+                :name="translatedData['elements.name.default_tied_status']"
                 :hover-text="
                   translatedData[
                     'settings.setting_default_form.whether_the_aid_is_untied_tied_or_partially_tied'
@@ -416,9 +364,7 @@
             class="vue__select"
             :class="{ error__input: defaultError.default_tied_status }"
             :placeholder="
-              translatedData[
-                'settings.setting_default_form.select_default_tied'
-              ]
+              translatedData['common.common.select_default_tied_here']
             "
             :options="props.defaultTiedStatus"
             :searchable="true"
@@ -434,7 +380,7 @@
           <p v-if="!defaultError.default_tied_status">
             {{
               translatedData[
-                'settings.setting_default_form.if_selected_then_default_tied_status_will_be_automatically_populated_in_activity'
+                'common.common.if_selected_then_default_tied_status_will_be_automatically_populated'
               ]
             }}
           </p>
@@ -454,18 +400,12 @@
         <div>
           <div class="flex justify-between">
             <label for="budget-not-provided">{{
-              translatedData[
-                'settings.setting_default_form.budget_not_provided'
-              ]
+              translatedData['elements.label.budget_not_provided']
             }}</label>
             <button>
               <HoverText
                 width="w-72"
-                :name="
-                  translatedData[
-                    'settings.setting_default_form.budget_not_provided'
-                  ]
-                "
+                :name="translatedData['elements.label.budget_not_provided']"
                 :hover-text="
                   translatedData[
                     'settings.setting_default_form.a_code_indicating_the_reason_why_this_activity_does_not_contain'
@@ -503,16 +443,12 @@
         <div>
           <div class="flex justify-between">
             <label for="default-hierarchy">{{
-              translatedData['settings.setting_default_form.linked_data_uri']
+              translatedData['elements.name.linked_data_uri']
             }}</label>
             <button>
               <HoverText
                 width="w-64"
-                :name="
-                  translatedData[
-                    'settings.setting_default_form.linked_data_uri'
-                  ]
-                "
+                :name="translatedData['elements.name.linked_data_uri']"
                 :hover-text="
                   translatedData[
                     'settings.setting_default_form.if_a_publisher_chooses_to_publish_linked_data'
@@ -545,18 +481,12 @@
         <div>
           <div class="flex justify-between">
             <label for="default-collaboration-type">{{
-              translatedData[
-                'settings.setting_default_form.default_collaboration_type'
-              ]
+              translatedData['elements.label.default_collaboration_type']
             }}</label>
             <button>
               <HoverText
                 width="w-72"
-                :name="
-                  translatedData[
-                    'settings.setting_default_form.collaboration_type'
-                  ]
-                "
+                :name="translatedData['elements.name.collaboration_type']"
                 :hover-text="
                   translatedData[
                     'settings.setting_default_form.the_type_of_collaboration_involved_in_the_activitys_disbursements'
@@ -603,12 +533,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, inject, onMounted, ref, Ref } from 'vue';
+import { defineComponent, computed, inject, Ref } from 'vue';
 import Multiselect from '@vueform/multiselect';
 import { useStore } from '../../store';
 import { ActionTypes } from '../../store/setting/actions';
 import HoverText from './../../components/HoverText.vue';
-import LanguageService from 'Services/language';
 
 export default defineComponent({
   components: {

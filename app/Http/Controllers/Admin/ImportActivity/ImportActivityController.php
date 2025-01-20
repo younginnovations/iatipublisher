@@ -97,7 +97,7 @@ class ImportActivityController extends Controller
     {
         try {
             if (!Auth::user()->organization_id) {
-                $translatedMessage = trans('import_activity.import_activity_controller.user_is_not_associated_with_any_organization');
+                $translatedMessage = trans('common/common.user_is_not_associated_with_any_organization');
                 Session::put('error', $translatedMessage);
 
                 return redirect()->route('admin.activities.index');
@@ -106,7 +106,7 @@ class ImportActivityController extends Controller
             return view('admin.import.index');
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('import_activity.import_activity_controller.error_has_occurred_while_rendering_activity_import_page');
+            $translatedMessage = trans('common/common.error_has_occurred_while_rendering_activity_import_page');
 
             return response()->json(['success' => false, 'error' => $translatedMessage]);
         }
@@ -132,7 +132,7 @@ class ImportActivityController extends Controller
             $ongoingImportStatus = $this->importStatusService->getOrganisationImportStatus($orgId);
 
             if (ImportCacheHelper::hasOngoingImport($orgId) || Arr::get($ongoingImportStatus, 'status') === 'processing') {
-                $translatedMessage = trans('import_activity.import_activity_controller.import_is_currently_on_progress_please_cancel_the_current_import_to_continue');
+                $translatedMessage = trans('common/common.import_is_currently_on_progress_please_cancel_the_current_import_to_continue');
 
                 return response()->json([
                     'success' => false,
@@ -175,7 +175,7 @@ class ImportActivityController extends Controller
             DB::commit();
 
             ImportCacheHelper::setImportStepToValidating($orgId);
-            $translatedMessage = trans('import_activity.import_activity_controller.uploaded_successfully');
+            $translatedMessage = trans('common/common.uploaded_successfully');
 
             return response()->json(['success' => true, 'message' => $translatedMessage, 'type' => $filetype]);
         } catch (Exception $e) {
@@ -185,7 +185,7 @@ class ImportActivityController extends Controller
 
             logger()->error($e->getMessage());
 
-            $translatedMessage = trans('import_activity.import_activity_controller.error_has_occurred_while_rendering_activity_import_page');
+            $translatedMessage = trans('common/common.error_has_occurred_while_rendering_activity_import_page');
 
             return response()->json(['success' => false, 'error' => $translatedMessage]);
         }
@@ -247,7 +247,7 @@ class ImportActivityController extends Controller
             Session::put('error', 'Error occurred while importing activity');
             logger()->error($e);
             ImportCacheHelper::clearImportCache(Auth::user()->organization_id);
-            $translatedMessage = trans('import_activity.import_activity_controller.error_has_occurred_while_importing_activity');
+            $translatedMessage = trans('common/common.error_has_occurred_while_importing_activity');
 
             return redirect()->back()->withResponse(['success' => false, 'message' => $translatedMessage]);
         }
@@ -266,7 +266,7 @@ class ImportActivityController extends Controller
             $filetype = Session::get('import_filetype') ?? ImportCacheHelper::getSessionConsistentFiletype($orgId);
 
             if (!$orgId) {
-                $translatedMessage = trans('import_activity.import_activity_controller.user_is_not_associated_with_any_organization');
+                $translatedMessage = trans('common/common.user_is_not_associated_with_any_organization');
 
                 Session::put('error', $translatedMessage);
 
@@ -403,12 +403,12 @@ class ImportActivityController extends Controller
     {
         try {
             $this->importActivityErrorService->deleteImportError($activityId);
-            $translatedMessage = trans('import_activity.import_activity_controller.import_error_for_activity_has_been_successfully_deleted');
+            $translatedMessage = trans('common/common.import_error_for_activity_has_been_successfully_deleted');
 
             return response()->json(['success' => true, 'message' => $translatedMessage]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('import_activity.import_activity_controller.error_has_occurred_while_trying_to_delete_import_error');
+            $translatedMessage = trans('common/common.error_has_occurred_while_trying_to_delete_import_error');
 
             return response()->json(['success' => false, 'message' => $translatedMessage]);
         }

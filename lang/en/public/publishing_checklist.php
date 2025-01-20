@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'publishing_checklist' => 'Publishing Checklist',
     'heading'              => 'Organisations using IATI Publisher need to take the following steps to publish your data',
     'point_one'            => [
         'heading'         => '1. Register a Publisher Account',

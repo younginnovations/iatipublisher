@@ -7,8 +7,4 @@ return [
     'true'               => 'True',
     'false'              => 'False',
     'missing'            => 'Missing',
-    'name'               => 'Name',
-    'language'           => 'Language',
-    'language_missing'   => 'Language Missing',
-    'narrative_missing'  => 'Narrative Missing',
 ];

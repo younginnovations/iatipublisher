@@ -8,7 +8,6 @@ return [
     'the_xml_file_is_in_wrong_format'                            => 'fr_ The XML file is in wrong format. Would you like to download it anyway?',
     'error_message'                                              => 'fr_ Error message',
     'download_error_message'                                     => 'fr_ Download error message',
-    'go_back'                                                    => 'fr_ Go back',
     'download_anyway'                                            => 'fr_ Download Anyway',
     'preparing_activities_for_download'                          => 'fr_ Preparing activities for download',
     'please_be_advised_that_we_are_currently_zipping_activities' => 'fr_ Please be advised that we are currently zipping your activities for a seamless download experience. This process will run in the background and may require some time to complete.',

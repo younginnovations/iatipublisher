@@ -146,7 +146,7 @@ class BulkPublishingController extends Controller
                     ],
                 ]);
             }
-            $translatedMessage = trans('work_flow/bulk_publishing_controller.no_activities_selected');
+            $translatedMessage = trans('common.common.no_activities_selected');
 
             return response()->json(['success' => false, 'message' => $translatedMessage]);
         } catch (MaxBatchSizeExceededException $e) {
@@ -232,7 +232,7 @@ class BulkPublishingController extends Controller
                     ]
                 );
             }
-            $translatedMessage = trans('work_flow/bulk_publishing_controller.no_activities_selected');
+            $translatedMessage = trans('common.common.no_activities_selected');
 
             return response()->json(['success' => false, 'message' => $translatedMessage]);
         } catch (Exception $e) {
@@ -286,7 +286,7 @@ class BulkPublishingController extends Controller
 
             if (!empty($activityIds)) {
                 $activities = $this->activityService->getActivitiesHavingIds($activityIds);
-                $translatedMessage = trans('work_flow/bulk_publishing_controller.no_activities_selected');
+                $translatedMessage = trans('common.common.no_activities_selected');
 
                 if (!count($activities)) {
                     return response()->json(['success' => false, 'message' => $translatedMessage]);
@@ -318,7 +318,7 @@ class BulkPublishingController extends Controller
                     ['success' => true, 'message' => $translatedMessage, 'data' => $response]
                 );
             }
-            $translatedMessage = trans('work_flow/bulk_publishing_controller.no_activities_selected');
+            $translatedMessage = trans('common.common.no_activities_selected');
 
             return response()->json(['success' => false, 'message' => $translatedMessage]);
         } catch (Exception $e) {
@@ -440,7 +440,7 @@ class BulkPublishingController extends Controller
                     'in_progress' => $pubishingStatus['inProgress'],
                 ]);
             }
-            $translatedMessage = trans('work_flow/bulk_publishing_controller.activity_is_ready_to_be_published');
+            $translatedMessage = trans('common/common.activity_is_ready_to_be_published');
 
             return response()->json(
                 ['success' => true, 'message' => $translatedMessage, 'status' => 'completed']
@@ -448,7 +448,7 @@ class BulkPublishingController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
             logger()->error($e);
-            $translatedMessage = trans('work_flow/bulk_publishing_controller.error_has_occurred_while_checking_activity');
+            $translatedMessage = trans('common/common.error_has_occurred_while_checking_activity');
 
             return response()->json(['success' => false, 'message' => $translatedMessage]);
         }
@@ -483,7 +483,7 @@ class BulkPublishingController extends Controller
             );
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('work_flow/bulk_publishing_controller.error_has_occurred_while_checking_activity');
+            $translatedMessage = trans('common/common.error_has_occurred_while_checking_activity');
 
             return response()->json(['success' => false, 'message' => $translatedMessage]);
         }

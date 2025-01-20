@@ -73,7 +73,7 @@ class SettingController extends Controller
             return view('admin.settings.index', compact('currencies', 'languages', 'humanitarian', 'budgetNotProvided', 'userRole', 'defaultCollaborationType', 'defaultFlowType', 'defaultFinanceType', 'defaultAidType', 'defaultTiedStatus'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('settings/setting_controller.error_while_rendering_setting_page');
+            $translatedMessage = trans('common/common.error_while_rendering_setting_page');
 
             return redirect()->route('admin.activities.index')->with('error', $translatedMessage);
         }
@@ -105,7 +105,7 @@ class SettingController extends Controller
 
             $setting->publishing_info = $publishing_info;
             $setting->save();
-            $translatedMessage = trans('settings/setting_controller.settings_fetched_successfully');
+            $translatedMessage = 'Settings fetched successfully.';
 
             return response()->json(['success' => true, 'message' => $translatedMessage, 'data' => $setting]);
         } catch (Exception $e) {
@@ -124,7 +124,7 @@ class SettingController extends Controller
                 ]);
             }
 
-            $translatedMessage = trans('settings/setting_controller.error_occurred_while_fetching_the_data');
+            $translatedMessage = 'Error occurred while fetching the data.';
 
             return response()->json(['success' => false, 'message' => $translatedMessage]);
         }
@@ -385,7 +385,7 @@ class SettingController extends Controller
                 $message = $translatedMessage;
                 $tokenStatus = Enums::TOKEN_CORRECT;
             } elseif ($verifyPublisherInfo['state'] === 'approval_needed') {
-                $translatedMessage = trans('settings/setting_controller.your_account_is_pending_approval_by_the_iati_team');
+                $translatedMessage = trans('common/common.your_account_is_pending_approval_by_the_iati_team');
 
                 $message = $translatedMessage;
                 $tokenStatus = Enums::TOKEN_PENDING;

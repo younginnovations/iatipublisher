@@ -271,6 +271,7 @@ return [
     'first_title_required'             => 'fr_ The first title is required.',
     'xml_lang_unique'                  => 'fr_ The @xml:lang field must be unique.',
     'narrative_language_unique'        => 'fr_ The narrative language field must be unique.',
+    'narrative_with_language'          => 'fr_ The narrative field is required with language field.',
     'xml_lang_invalid'                 => 'fr_ The @xml:lang field is invalid.',
     'narrative_is_required'            => 'fr_ The Narrative field is required.',
     'period_end_date'                  => 'fr_ Period end must be a date.',
@@ -285,8 +286,25 @@ return [
     'document_link_language_invalid'   => 'fr_ The document link language code is invalid.',
     'iso_proper_date'                  => 'fr_ The @iso-date field must be a proper date.',
     'iso_gt_1900'                      => 'fr_ The @iso-date field must be a greater than 1900.',
+    'iso_date_required'                => 'fr_ The @iso-date field is required.',
+    'iso_date_after'                   => 'fr_ The @iso-date field must be a date after period-start date.',
+    'period_longer'                    => 'fr_ The period must not be longer than one year.',
     'description_type_invalid'         => 'fr_ The selected description type is invalid.',
     'vocabulary_uri_url'               => 'fr_ The @vocabulary-uri field must be a valid url.',
+    'name_narrative_required'          => 'fr_ The narrative is required.',
+    'registration_number_regex'        => 'fr_ The registration_number format is invalid.',
+    'invalid_currency'                 => 'fr_ The value currency is invalid.',
+    'invalid_ref'                      => 'fr_ The @ref format is invalid.',
+    'reporting_org_ref_must_match'     => 'fr_ The @ref of reporting-org must match the organisation-identifier.',
+    'language_required_with_narrative' => 'fr_ The language field is required when narrative field is present.',
+    'amount_required'                  => 'fr_ The amount field is required.',
+    'amount_numeric'                   => 'fr_ The amount must be numeric.',
+    'amount_min'                       => 'fr_ The amount must not be in negative.',
+    'amount_with_value'                => 'fr_ The amount field is required with value.',
+    'amount_number'                    => 'fr_ The amount field must be a number.',
+    'amount_negative'                  => 'fr_ The amount field must not be in negative.',
+    'username_regex'                   => 'fr_ The username is invalid. Username must be purely lowercase alphabets followed by alphanumeric(ascii) characters and these symbols:-_',
+    'email_unique'                     => 'fr_ Email is already in use in IATI Publisher.',
     'other_identifier'                 => [
         'regex'        => 'fr_ The other identifier reference field shouldn\'t contain the symbols /, &, | or ?.',
         'type_invalid' => 'fr_ The other identifier type is not valid.',
@@ -449,15 +467,12 @@ return [
             'regex'        => 'fr_ The planned disbursement receiver org ref shouldn\'t contain the symbols /, &, | or ?.',
         ],
         'value'        => [
-            'amount'   => [
+            'amount' => [
                 'required' => 'fr_ Amount field is required',
                 'numeric'  => 'fr_ Amount field must be a number',
                 'min'      => 'fr_ Amount field must not be in negative.'
             ],
-            'currency' => [
-                'invalid_currency' => 'fr_ The value currency is invalid.'
-            ],
-            'date'     => [
+            'date'   => [
                 'required'     => 'fr_ Value date is a required field',
                 'invalid_date' => 'fr_ The Value Date must be a valid Date',
             ],
@@ -498,13 +513,132 @@ return [
             'gt_1900'          => 'fr_ The iso-date field must be date after year 1900.',
             'after'            => 'fr_ The Period End iso-date must be a date after Period Start iso-date',
         ],
-        'amount'     => [
-            'numeric' => 'fr_ The amount field must be a number.',
-            'min'     => 'fr_ The amount field must not be in negative.',
-        ],
         'value'      => [
-            'date'             => 'fr_ The value-date field must be a valid date.',
-            'invalid_currency' => 'fr_ The value currency is invalid.',
+            'date' => 'fr_ The value-date field must be a valid date.',
         ],
     ],
+    'activity_transactions'            => [
+        'transaction_id'             => [
+            'same_activity' => 'fr_ All transactions must belong to the same activity.',
+            'mismatch'      => 'fr_ Transaction IDs do not match the specified activity.',
+            'unpublish'     => 'fr_ Please unpublish activity before deleting transactions.',
+        ],
+        'invalid_type'               => 'fr_ The transaction type is invalid.',
+        'invalid_flow_type'          => 'fr_ The transaction flow type code is invalid.',
+        'invalid_finance_type'       => 'fr_ The transaction finance type code is invalid.',
+        'country_or_region'          => 'fr_ You must add either recipient country or recipient region.',
+        'country_region_in_activity' => 'fr_ Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.',
+        'sector_in_activity'         => 'fr_ Sector has already been declared at activity level. You can’t declare a sector at the transaction level. To declare at transaction level, you need to remove sector at activity level.',
+        'aid_type'                   => [
+            'invalid_vocabulary'  => 'fr_ The transaction aid type vocabulary is invalid.',
+            'invalid_code'        => 'fr_ The transaction aid type code is invalid.',
+            'invalid_status_code' => 'fr_ The transaction tied status code is invalid.',
+        ],
+        'date'                       => [
+            'before' => 'fr_ The @iso-date must not be in future.',
+            'date'   => 'fr_ The @iso-date field must be a valid date.',
+        ],
+        'value'                      => [
+            'numeric_amount' => 'fr_ The @amount field must be a number.',
+            'date'           => [
+                'before' => 'fr_ The @value-date must not be in future.',
+                'date'   => 'fr_ The @value-date field must be a valid date.',
+            ],
+        ],
+        'sector'                     => [
+            'required'           => 'fr_ You have declared sector at transaction level so you must declare sector for all the transactions.',
+            'invalid_code'       => 'fr_ The transaction sector code is invalid.',
+            'vocabulary_uri_url' => 'fr_ The transaction sector vocabulary-uri field must be a valid url.',
+        ],
+        'provider_org'               => [
+            'invalid' => 'fr_ The transaction provider org type is invalid.',
+        ],
+        'receiver_org'               => [
+            'exclude_operators' => 'fr_ The transaction receiver-activity-id field is not valid.',
+            'invalid_type'      => 'fr_ The transaction receiver org type is invalid.',
+        ],
+        'recipient_region'           => [
+            'invalid_vocabulary'        => 'fr_ The transaction recipient region vocabulary is invalid.',
+            'invalid_region_code'       => 'fr_ The transaction recipient region code is invalid.',
+            'vocabulary_uri_url'        => 'fr_ The transaction recipient region vocabulary uri must be a valid url.',
+            'region_vocabulary_uri_url' => 'fr_ The @vocabulary-uri field must be a valid url.',
+        ],
+        'recipient_country'          => [
+            'invalid_code' => 'fr_ The transaction recipient country code is invalid.',
+        ],
+    ],
+    'activity_results'                 => [
+        'result_id' => [
+            'same_activity' => 'fr_ All results must belong to the same activity.',
+            'no_match'      => 'fr_ Results IDs do not match the specified activity.',
+            'unpublish'     => 'fr_ Please unpublish activity before deleting results.',
+        ],
+        'reference' => [
+            'vocabulary_uri_url' => 'fr_ The @vocabulary-uri field must be a valid url.',
+            'code_present'       => 'fr_ The code is already defined in its indicators',
+            'vocabulary_present' => 'fr_ The vocabulary is already defined in its indicators',
+        ],
+    ],
+    'activity_indicators'              => [
+        'invalid_measure'            => 'fr_ The indicator measure is invalid.',
+        'invalid_aggregation_status' => 'fr_ The indicator aggregation status is invalid.',
+        'invalid_ascending'          => 'fr_ The indicator ascending is invalid.',
+        'reference'                  => [
+            'uri_url'                       => 'fr_ The @indicator-uri field must be a valid url.',
+            'result_ref_code_present'       => 'fr_ The code is already defined in its result',
+            'result_ref_vocabulary_present' => 'fr_ The vocabulary is already defined in its result',
+        ],
+        'baseline'                   => [
+            'year'  => [
+                'invalid_year' => 'fr_ The @year field is not valid.',
+                'in'           => 'fr_ The @year field should be the year of baseline date',
+                'digits'       => 'fr_ The @year field must have 4 digits.',
+            ],
+            'value' => [
+                'numeric' => 'fr_ The @value field must be a number.',
+                'gte'     => 'fr_ The @value field must be greater or equal to 0.',
+            ],
+        ],
+    ],
+    'activity_periods'                 => [
+        'date'  => [
+            'date'             => 'fr_ The @date field must be a proper date.',
+            'after'            => 'fr_ The @iso-date field of period end must be a date after @iso-field of period start',
+            'gte_1900'         => 'fr_ The @iso-date must be greater than 1900',
+            'period_start_end' => 'fr_ The @iso-date field of period end and @iso-date of period start must not have difference of more than a year',
+        ],
+        'value' => [
+            'numeric'           => 'fr_ The @value field must be numeric.',
+            'qualitative_empty' => 'fr_ Value must be omitted when the indicator measure is qualitative.',
+            'target_required'   => 'fr_ Target value is required if actual value is not provided.',
+            'actual_required'   => 'fr_ Actual value is required if target value is not provided.',
+        ],
+    ],
+    'activity_upload'                  => [
+        'required'          => 'fr_ The activity file must be uploaded',
+        'activity_file'     => 'fr_ The file must be of either xml or csv format.',
+        'max'               => 'fr_ The file shouldn\'t be greater than 10MB.',
+        'xls_required'      => 'fr_ The xls file must be uploaded',
+        'xls_activity_file' => 'fr_ The file must be of xls format.',
+    ],
+    'organization_document_link'       => [
+        'category_code' => [
+            'unique'   => 'fr_ The category @code field must be unique.',
+            'required' => 'fr_ The @code field is required.',
+        ],
+        'language'      => [
+            'unique' => 'fr_ The language @code field must be unique.',
+        ],
+    ],
+    'value_date_required'              => 'fr_ The @value-date field is required.',
+    'value_date_date'                  => 'fr_ The @value-date must be a date.',
+    'value_date_after_or_equal'        => 'fr_ The value date field must be a date between period start and period end',
+    'value_date_with_value'            => 'fr_ The @value-date is required with value.',
+    'value_date_after_equal'           => 'fr_ The @value-date field must be a date between period start and period end',
+    'activity_not_exist'               => 'fr_ Activity does not exist',
+    'result_not_exist'                 => 'fr_ Result does not exist',
+    'transaction_not_exist'            => 'fr_ Transaction does not exist',
+    'indicator_not_exist'              => 'fr_ Indicator does not exist',
+    'period_not_exist'                 => 'fr_ Period does not exist',
+    'must_be_superadmin'               => 'fr_ You need to be superadmin to use this route.',
 ];

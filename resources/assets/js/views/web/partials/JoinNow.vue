@@ -4,9 +4,7 @@
   >
     <div class="right__container flex flex-col">
       <h2 class="mb-2 hidden sm:block">
-        {{
-          translatedData['public.login.iati_publishing_tool_section.join_now']
-        }}
+        {{ translatedData['common.common.join_now'] }}
       </h2>
       <span class="mb-8 text-n-40 xl:pr-6">
         {{ translatedData['public.login.join_now_section.to_begin_text'] }}

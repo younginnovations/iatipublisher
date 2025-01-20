@@ -2,7 +2,7 @@
   <div class="mt-14">
     <div class="reset text-center">
       <h2>
-        {{ translatedData['public.forgot_password.confirm_page.heading'] }}
+        {{ translatedData['common.common.password_recovery'] }}
       </h2>
       <p class="mb-5">
         {{ translatedData['public.forgot_password.confirm_page.subheading'] }}

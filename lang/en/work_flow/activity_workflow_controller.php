@@ -7,6 +7,4 @@ return [
     'error_has_occurred_while_un_publishing_activity'    => 'Error has occurred while un-publishing activity.',
     'validating_activities'                              => 'Validating Activities.',
     'error_has_occurred_while_validating_activity'       => 'Error has occurred while validating activity.',
-    'activity_is_ready_to_be_published'                  => 'Activity is ready to be published.',
-    'error_has_occurred_while_checking_activity'         => 'Error has occurred while checking activity.',
 ];

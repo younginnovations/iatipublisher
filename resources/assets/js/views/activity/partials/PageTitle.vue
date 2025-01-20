@@ -6,14 +6,14 @@
           <nav aria-label="breadcrumbs" class="breadcrumb">
             <p>
               <span class="last font-bold">{{
-                translatedData['activity_index.page_title.your_activities']
+                translatedData['common.common.your_activities']
               }}</span>
             </p>
           </nav>
         </div>
         <div class="inline-flex flex-col space-y-2 md:flex-row md:items-center">
           <h4 class="mr-4 text-3xl font-bold xl:text-heading-4">
-            {{ translatedData['activity_index.page_title.your_activities'] }}
+            {{ translatedData['common.common.your_activities'] }}
           </h4>
           <div class="tooltip-btn">
             <button class="">
@@ -62,7 +62,7 @@
           "
           :title="
             translatedData[
-              'activity_index.page_title.activity_couldnt_be_published_because'
+              'common.common.activity_couldnt_be_published_because'
             ]
           "
           @close-popup="

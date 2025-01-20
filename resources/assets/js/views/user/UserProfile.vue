@@ -123,7 +123,7 @@
             </div>
             <div class="flex w-full flex-col gap-2">
               <label class="text-sm text-n-50"
-                >{{ translatedData['userProfile.user_profile.confirm_password']
+                >{{ translatedData['common.common.confirm_password']
                 }}<span class="text-[red]"> * </span>
               </label>
               <span class="relative">
@@ -164,10 +164,10 @@
                 }
               "
             >
-              {{ translatedData['userProfile.user_profile.cancel'] }}
+              {{ translatedData['common.common.cancel'] }}
             </button>
             <button class="primary-btn !px-10" @click="updatePassword">
-              {{ translatedData['userProfile.user_profile.save'] }}
+              {{ translatedData['common.common.save'] }}
             </button>
           </div>
         </div>
@@ -188,7 +188,7 @@
           <div class="grid grid-cols-2 gap-6">
             <div class="col-span-2 flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
-                >{{ translatedData['userProfile.user_profile.full_name']
+                >{{ translatedData['common.common.full_name']
                 }}<span class="text-[red]"> * </span></label
               >
               <input
@@ -234,7 +234,7 @@
 
             <div class="flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
-                >{{ translatedData['userProfile.user_profile.email']
+                >{{ translatedData['common.common.email']
                 }}<span class="text-[red]"> * </span></label
               >
               <input
@@ -271,9 +271,7 @@
               <Multiselect
                 v-model="formData.language_preference"
                 :options="languagePreference"
-                :placeholder="
-                  translatedData['userProfile.user_profile.select_language']
-                "
+                :placeholder="translatedData['common.common.select_language']"
                 :searchable="true"
               />
               <span
@@ -332,7 +330,7 @@
 
       <div class="flex space-x-2 border-b border-n-20 py-6">
         <div class="text-base font-bold text-n-40">
-          {{ translatedData['userProfile.user_profile.name'] }}
+          {{ translatedData['common.common.name'] }}
         </div>
         <div class="max-w-[60vw] overflow-x-hidden text-ellipsis text-base">
           {{ userData['full_name'] }}
@@ -340,7 +338,7 @@
       </div>
       <div class="flex space-x-2 border-b border-n-20 py-6">
         <div class="text-base font-bold text-n-40">
-          {{ translatedData['userProfile.user_profile.username'] }}
+          {{ translatedData['common.common.username'] }}
         </div>
         <div class="text-base">{{ userData['username'] }}</div>
       </div>
@@ -354,7 +352,7 @@
       </div>
       <div class="flex space-x-2 py-6">
         <div class="text-base font-bold text-n-40">
-          {{ translatedData['userProfile.user_profile.email'] }}
+          {{ translatedData['common.common.email'] }}
         </div>
         <div>
           <a>{{ userData['email'] }}</a>
@@ -376,7 +374,6 @@
                 ]
               }}</a
             >
-            {{ translatedData['if_you_havent_received_such_and_email'] }}
           </div>
         </div>
       </div>

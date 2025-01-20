@@ -83,12 +83,12 @@ class IatiRegisterFormRequest extends FormRequest
 
         switch ($step) {
             case '1':
-                $messages['publisher_id.regex'] = trans('register/iati_register_form_request.the_publisher_id_is_invalid');
+                $messages['publisher_id.regex'] = trans('common/common.the_publisher_id_is_invalid');
                 $messages['registration_number.regex'] = trans('register/iati_register_form_request.the_registration_number_is_invalid');
                 break;
             case '4':
-                $messages['username.regex'] = trans('register/iati_register_form_request.the_username_is_invalid');
-                $messages['email.unique'] = trans('register/iati_register_form_request.email_is_already_in_use_in_iati_publisher');
+                $messages['username.regex'] = trans('common/common.the_username_is_invalid');
+                $messages['email.unique'] = trans('common/common.email_is_already_in_use_in_iati_publisher');
                 break;
         }
 

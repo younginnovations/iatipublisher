@@ -45,7 +45,7 @@ class TotalBudgetController extends Controller
             return view('admin.organisation.forms.totalBudget.totalBudget', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('organisationDetail/total_budget_controller.error_has_occurred_while_opening_organization_reporting_org_form');
+            $translatedMessage = trans('common/common.error_has_occurred_while_opening_organization_reporting_org_form');
 
             return redirect()->route('admin.organisation.index')->with('error', $translatedMessage);
         }

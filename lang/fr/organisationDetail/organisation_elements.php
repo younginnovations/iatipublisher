@@ -1,9 +1,7 @@
 <?php
 
 return [
-    "search_elements_to_add_edit" => "fr_Search elements to add/edit",
-    "all_elements"                => "fr_All Elements",
-    "core"                        => "fr_Core",
-    "completed"                   => "fr_Completed",
-    "not_completed"               => "fr_Not Completed",
+    "search_elements_to_add_edit" => "Search elements to add/edit",
+    "all_elements"                => "All Elements",
+    "not_completed"               => "Not Completed",
 ];

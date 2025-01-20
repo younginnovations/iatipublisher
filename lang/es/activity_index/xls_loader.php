@@ -3,7 +3,7 @@
 return [
     'importing'                           => 'es_ Importing',
     'multiple_activities'                 => 'es_ Multiple Activities',
-    'upload_failed:'                      => 'es_ upload failed:',
+    'upload_failed'                       => 'es_ upload failed:',
     'retry'                               => 'es_ Retry',
     'file_upload_complete'                => 'es_ file upload complete',
     'uploading'                           => 'es_ Uploading',

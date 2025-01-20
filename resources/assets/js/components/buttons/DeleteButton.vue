@@ -28,13 +28,13 @@
       <div class="inline-flex">
         <BtnComponent
           class="bg-white px-6 uppercase"
-          :text="translatedData['activity_index.delete_button.go_back']"
+          :text="translatedData['common.common.go_back']"
           type=""
           @click="deleteValue = false"
         />
         <BtnComponent
           class="space"
-          :text="translatedData['activity_index.delete_button.delete']"
+          :text="translatedData['common.common.delete']"
           type="primary"
           @click="deleteFunction"
         />
@@ -77,8 +77,7 @@ interface LoaderTypeface {
 const loader: LoaderTypeface = reactive({
   value: false,
   text:
-    translatedData?.value?.['activity.delete_button.please_wait'] ||
-    'Please wait...',
+    translatedData?.value?.['common.common.please_wait'] || 'Please wait...',
 });
 
 // call api for unpublishing

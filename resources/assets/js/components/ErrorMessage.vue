@@ -209,7 +209,7 @@
               <p>
                 {{
                   translatedData[
-                    'activity_index.error_message.your_account_is_pending_approval_by_the_iati_team'
+                    'common.common.your_account_is_pending_approval_by_the_iati_team'
                   ]
                 }}
               </p>

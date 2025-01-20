@@ -29,7 +29,7 @@
       <div class="inline-flex">
         <BtnComponent
           class="bg-white px-6 uppercase"
-          :text="translatedData['activity_index.unpublish_button.go_back']"
+          :text="translatedData['common.common.go_back']"
           type=""
           @click="unpublishValue = false"
         />
@@ -87,7 +87,7 @@ interface LoaderTypeface {
 
 const loader: LoaderTypeface = reactive({
   value: false,
-  text: translatedData['activity_index.unpublish_button.please_wait'],
+  text: translatedData['common.common.please_wait'],
 });
 
 // call api for unpublishing

@@ -75,7 +75,7 @@ class TitleController extends Controller
             return view('admin.activity.title.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('activity_detail/title_controller.error_has_occurred_while_opening_activity_title_form');
+            $translatedMessage = trans('common/common.error_has_occurred_while_opening_activity_title_form');
 
             return redirect()->route('admin.activity.show', $id)->with(
                 'error',

@@ -30,9 +30,7 @@
                   ? translatedData[
                       'public.login.iati_publishing_tool_section.havent_registered_label'
                     ]
-                  : translatedData[
-                      'public.login.iati_publishing_tool_section.already_have_account_label'
-                    ]
+                  : translatedData['common.common.already_have_an_account']
               }}
               <button
                 class="ml-1 border-b-2 border-b-transparent text-base text-turquoise hover:border-b-2 hover:border-b-turquoise"
@@ -40,12 +38,8 @@
               >
                 {{
                   pageContent === 'Join Now'
-                    ? translatedData[
-                        'public.login.iati_publishing_tool_section.join_now'
-                      ]
-                    : translatedData[
-                        'public.login.iati_publishing_tool_section.sign_in'
-                      ]
+                    ? translatedData['common.common.join_now']
+                    : translatedData['common.common.sign_in']
                 }}
               </button>
             </span>

@@ -78,7 +78,7 @@ class TransactionController extends Controller
             return view('admin.activity.transaction.transaction', compact('activity', 'transactions', 'types', 'toast'));
         } catch (Exception $e) {
             logger()->error($e);
-            $translatedMessage = trans('activity_detail/transaction_controller.error_has_occurred_while_rendering_activity_transactions_listing');
+            $translatedMessage = trans('common/common.error_has_occurred_while_rendering_activity_transactions_listing');
 
             return redirect()->route('admin.activity.show', $activityId)->with(
                 'error',
@@ -112,7 +112,7 @@ class TransactionController extends Controller
             ]);
         } catch (Exception $e) {
             logger()->error($e);
-            $translatedMessage = trans('activity_detail/transaction_controller.error_occurred_while_fetching_the_data');
+            $translatedMessage = 'Error occurred while fetching the data.';
 
             return response()->json(['success' => false, 'message' => $translatedMessage]);
         }

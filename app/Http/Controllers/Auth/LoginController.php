@@ -141,11 +141,9 @@ class LoginController extends Controller
                 'emailOrUsername.not_in_spam_emails' => trans('validation.not_in_spam_emails'),
                 'password.required'                  => trans(
                     'validation.required',
-                    ['attribute' => trans('public/login.sign_in_section.password_label')]
                 ),
                 'password.string'                    => trans(
                     'validation.string',
-                    ['attribute' => trans('public/login.sign_in_section.password_label')]
                 ),
             ]
         );

@@ -136,7 +136,7 @@ class RegisterController extends Controller
                     'success'         => false,
                     'publisher_error' => true,
                     'errors'          => [
-                        'publisher_id' => [trans('register/register_controller.publisher_id_doesnt_exist_in_iati_registry')],
+                        'publisher_id' => [trans('common/common.publisher_id_doesnt_exist_in_iati_registry')],
                     ],
                 ]);
             }
@@ -160,7 +160,7 @@ class RegisterController extends Controller
                 ]);
             }
 
-            $translatedMessage = trans('register/register_controller.publisher_verified_successfully');
+            $translatedMessage = trans('common/common.publisher_verified_successfully');
 
             return response()->json(['success' => true, 'message' => $translatedMessage, 'data' => $response]);
         } catch (ClientException $e) {
@@ -170,7 +170,7 @@ class RegisterController extends Controller
                 [
                     'success' => false,
                     'errors'  => [
-                        'publisher_name' => [trans('register/register_controller.publisher_id_doesnt_exist_in_iati_registry')],
+                        'publisher_name' => [trans('common/common.publisher_id_doesnt_exist_in_iati_registry')],
                         'publisher_id'   => [trans('register/register_controller.publisher_name_doesnt_match_your_iati_registry_information')],
                     ],
                 ]
@@ -178,7 +178,7 @@ class RegisterController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            $translatedMessage = trans('register/register_controller.error_has_occurred_while_verifying_the_publisher');
+            $translatedMessage = trans('common/common.error_has_occurred_while_verifying_the_publisher');
 
             return response()->json(['success' => false, 'error' => $translatedMessage]);
         }
@@ -227,8 +227,8 @@ class RegisterController extends Controller
         ]);
 
         $validator->setCustomMessages([
-            'username.regex' => trans('register/register_controller.the_username_is_invalid'),
-            'email.unique'   => trans('register/register_controller.email_is_already_in_use_in_iati_publisher'),
+            'username.regex' => trans('common/common.the_username_is_invalid'),
+            'email.unique'   => trans('common/common.email_is_already_in_use_in_iati_publisher'),
         ]);
 
         if ($validator->fails()) {
@@ -239,7 +239,7 @@ class RegisterController extends Controller
         event(new Registered($user));
         Session::put('role_id', app(Role::class)->getOrganizationAdminId());
 
-        $translatedMessage = trans('register/register_controller.user_registered_successfully');
+        $translatedMessage = trans('common/common.user_registered_successfully');
 
         return response()->json(['success' => true, 'message' => $translatedMessage]);
     }
