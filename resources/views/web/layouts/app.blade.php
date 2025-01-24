@@ -36,6 +36,10 @@
 
     <!-- styles -->
     <link rel="stylesheet" href="{{ mix('css/webportal-app.css') }}" media="print" onload="this.media='all'">
+    <link
+        href="https://cdn.jsdelivr.net/npm/iati-design-system@3.5.0/dist/css/iati.min.css"
+        rel="stylesheet"
+    />
     
     <link rel="icon"
         href="{{ asset('favicon.ico') }}"
@@ -59,6 +63,8 @@
     <script defer src="{{ mix('/js/vendor.js') }}"></script>
     <script defer src="{{ mix('/js/app.js') }}"></script>
     <script defer src="{{ mix('js/webportal-script.js') }}"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/iati-design-system@3.5.0/dist/js/iati.js"></script>
+
 
 </body>
 

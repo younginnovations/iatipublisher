@@ -1,151 +1,162 @@
 <template>
-  <div class="wrapper smooth relative bg-bluecoral sm:h-72">
-    <div class="mx-3 sm:mx-10 xl:mx-24 xl:px-1">
-      <header class="header relative z-10 grid">
-        <nav
-          class="relative z-10 mt-6 flex items-center justify-between rounded-md bg-white px-3 pt-5 text-xs sm:mt-12 sm:px-10"
+  <div class="iati-mobile-nav js-iati-mobile-nav">
+    <div class="iati-mobile-nav__overlay js-iati-mobile-overlay"></div>
+    <nav class="iati-mobile-nav__menu">
+      <div class="iati-mobile-nav__header">
+        <h2 class="iati-mobile-nav__label">Menu</h2>
+        <button
+          class="iati-menu-toggle iati-menu-toggle--close js-iati-menu-toggle-close"
         >
-          <a class="pb-5" href="/">
-            <svg-vue class="w-52 text-6xl sm:w-60" icon="header-logo" />
-          </a>
-          <div>
-            <ul
-              id="nav-list"
-              class="nav__list flex pt-10 leading-5 xl:space-x-3"
-            >
-              <li class="nav__links active dropdown">
-                <a href="/about">ABOUT</a>
-                <NavDropdown
-                  name="About"
-                  text="IATI Publisher helps small and medium-sized organisations publish IATI data on development and humanitarian financing and activities"
-                  btn-text="Learn more"
-                  btn-link="/about"
-                />
-              </li>
-              <li class="nav__links active dropdown">
-                <a href="/publishing-checklist">PUBLISHING CHECKLIST</a>
-                <NavDropdown
-                  name="Publishing checklist"
-                  text="New to IATI? Use our checklist to track each step required for your organisation to successfully publish IATI data"
-                  btn-text="Read more"
-                  btn-link="/publishing-checklist"
-                />
-              </li>
-              <li class="nav__links active dropdown relative">
-                <a href="/iati-standard">IATI STANDARD</a>
-                <NavDropdown
-                  name="IATI Standard"
-                  text="The IATI Standard provides information and guidance on all the data fields that
-                        your organisation can publish IATI data on"
-                  btn-text="See all data fields"
-                  btn-link="/iati-standard"
-                />
-              </li>
-              <li class="nav__links active dropdown">
-                <a href="/support">SUPPORT</a>
-                <NavDropdown
-                  name="Support"
-                  text=" Any questions? Get help to publish your organisation’s data"
-                  btn-text="Read more"
-                  btn-link="/support"
-                />
-              </li>
-
-              <!-- commented to temporarily hide language buttons -->
-
-              <!-- <li class="absolute bottom-4 left-0 right-0  xl:hidden">
-                <div class="flex items-center justify-center">
-                  <span class="mr-2 pt-5 pb-5 uppercase text-white xl:pt-0"
-                    >Language:</span
-                  >
-                  <ul class="languages flex items-center justify-center">
-                    <li class="nav__links">
-                      <a class="nav__active links__active" href="/">EN</a>
-                    </li>
-                    <li class="nav__links">
-                      <a href="/">FR</a>
-                    </li>
-                    <li class="nav__links">
-                      <a href="/">ES</a>
-                    </li>
-                  </ul>
-                </div>
-              </li> -->
-            </ul>
-          </div>
-          <!-- remove width later -->
-          <div class="languages hidden w-[170px] pt-11 xl:block">
-            <!-- commented to temporarily hide language buttons -->
-
-            <!-- <div class="flex">
-              <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0">Language:</span>
-              <ul class="flex items-center justify-center">
-                <li class="nav__links">
-                  <a class="nav__active links__active" href="/">EN</a>
-                </li>
-                <li class="nav__links">
-                  <a href="/">FR</a>
-                </li>
-                <li class="nav__links">
-                  <a href="/">ES</a>
-                </li>
-              </ul>
-            </div> -->
-          </div>
-          <div id="menu-overlay"></div>
-          <div
-            id="hamburger"
-            class="hamburger home-burger-menu mb-4 scale-90 xl:hidden"
-          >
-            <span class="bg-bluecoral" />
-            <span class="bg-bluecoral" />
-            <span class="bg-bluecoral" />
-          </div>
-        </nav>
-        <div
-          class="header__title mt-6 flex flex-wrap items-center justify-between gap-2 border-l-4 border-l-turquoise px-4 py-2 sm:px-6 sm:py-5"
-        >
-          <h1
-            class="text-xl font-bold text-white sm:text-4xl sm:text-heading-2"
-          >
-            {{ title }}
-          </h1>
+          <span>Close</span>
+        </button>
+      </div>
+      <ul class="">
+        <li class="iati-mobile-nav__item">
+          <a href="#" class="iati-mobile-nav__link">Tool Home</a>
+        </li>
+        <li class="iati-mobile-nav__item">
+          <a href="#" class="iati-mobile-nav__link">About</a>
+        </li>
+      </ul>
+      <ul class="">
+        <li class="iati-mobile-nav__item">
           <a
-            v-if="auth === '1'"
-            :href="superAdmin ? '/list-organisations' : '/activities'"
-            class="button secondary-btn"
+            href="https://iatistandard.org/en/about/"
+            class="iati-mobile-nav__link"
+            >About IATI</a
           >
-            {{
-              superAdmin ? 'Go to Organisation List' : 'Go to Your Activities'
-            }}
-            <svg-vue class="text-2xl" icon="right-arrow" />
+        </li>
+        <li class="iati-mobile-nav__item">
+          <a
+            href="https://iatistandard.org/en/using-data/"
+            class="iati-mobile-nav__link"
+            >Use Data</a
+          >
+        </li>
+        <li class="iati-mobile-nav__item">
+          <a
+            href="https://iatistandard.org/en/guidance/publishing-data/"
+            class="iati-mobile-nav__link"
+          >
+            Publish Data
           </a>
-        </div>
-      </header>
-    </div>
+        </li>
+        <li class="iati-mobile-nav__item">
+          <a
+            href="https://iatistandard.org/guidance/get-support/"
+            class="iati-mobile-nav__link"
+          >
+            Contact
+          </a>
+        </li>
+        <li class="iati-mobile-nav__item">
+          <a href="#" class="iati-mobile-nav__link">Help Docs</a>
+        </li>
+      </ul>
+    </nav>
   </div>
+
+  <header class="iati-header">
+    <div class="iati-header__section iati-header__section--first">
+      <div class="iati-header__container">
+        <a href="https://iatistandard.org/" aria-label="Go to IATI homepage">
+          <img
+            class="iati-header__logo"
+            alt=""
+            src="https://iati.github.io/design-system/assets/logo-colour-Bag5CeA4.svg"
+          />
+        </a>
+
+        <nav class="iati-header__general-nav">
+          <ul class="iati-piped-list">
+            <li>
+              <a href="https://iatistandard.org/en/about/">About IATI</a>
+            </li>
+            <li>
+              <a href="https://iatistandard.org/en/using-data/">Use Data</a>
+            </li>
+            <li>
+              <a href="https://iatistandard.org/en/guidance/publishing-data/">
+                Publish Data
+              </a>
+            </li>
+            <li>
+              <a href="https://iatistandard.org/guidance/get-support/">
+                Contact
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <div
+      class="iati-header__section iati-header__section--last iati-brand-background"
+    >
+      <div class="iati-header__container iati-brand-background__content">
+        <div class="iati-header__actions">
+          <div class="iati-country-switcher">
+            <label
+              for="iati-country-switcher"
+              class="iati-country-switcher__label"
+              >Choose your language</label
+            >
+            <select
+              id="iati-country-switcher"
+              class="iati-country-switcher__control cursor-pointer"
+            >
+              <option>English</option>
+              <option>French</option>
+              <option>Spanish</option>
+            </select>
+          </div>
+
+          <button class="iati-button iati-button--light hide--mobile-nav">
+            <span>Help Docs</span>
+            <i class="iati-icon iati-icon--info"></i>
+          </button>
+          <button class="iati-button iati-button--light">
+            <span>Search</span>
+            <i class="iati-icon iati-icon--search"></i>
+          </button>
+
+          <button
+            class="iati-menu-toggle iati-menu-toggle--open js-iati-menu-toggle-open"
+          >
+            <span class="iati-menu-toggle__label">Menu</span>
+          </button>
+        </div>
+
+        <div class="iati-header-title">
+          <p class="iati-header-title__eyebrow">IATI Tools</p>
+          <p class="iati-header-title__heading">IATI Publisher</p>
+        </div>
+
+        <div class="iati-header__nav">
+          <nav>
+            <ul class="iati-tool-nav">
+              <li><a href="/" class="iati-tool-nav-link">IATI Publisher</a></li>
+              <li><a href="/about" class="iati-tool-nav-link">About</a></li>
+              <li>
+                <a href="/publishing-checklist" class="iati-tool-nav-link"
+                  >Publishing Checklist</a
+                >
+              </li>
+              <li>
+                <a href="/iati-standard" class="iati-tool-nav-link"
+                  >IATI Standard</a
+                >
+              </li>
+              <li><a href="/support" class="iati-tool-nav-link">Support</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
 </template>
 
-<script lang="ts">
-import { defineComponent, onMounted, onUnmounted } from 'vue';
-import NavDropdown from '../../../components/NavDropdown.vue';
+<script setup lang="ts">
+import { ref } from 'vue';
 
-export default defineComponent({
-  components: {
-    NavDropdown,
-  },
-  props: {
-    title: { type: String, required: true },
-    auth: { type: String, required: true },
-    superAdmin: { type: Boolean, required: false, default: false },
-  },
-  setup() {
-    onMounted(() => {
-      document.body.classList.add('no-nav');
-    });
-    onUnmounted(() => {
-      document.body.classList.remove('no-nav');
-    });
-  },
-});
+const isActive = ref('');
 </script>

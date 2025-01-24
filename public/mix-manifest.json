@@ -1,10 +1,36 @@
 {
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=f87626548e77fdad534ba62d95b1e6c6",
+=======
+<<<<<<< HEAD
+    "/js/app.js": "/js/app.js?id=d90f4c0ff15fdac44b1efd5a25837063",
+>>>>>>> 853c8c20 (-[x] Header Footer Design System Integration)
     "/js/script.js": "/js/script.js?id=5022c99737e05b78f00088f76a8a0f9f",
     "/js/webportal-script.js": "/js/webportal-script.js?id=1bcae4271c042a8b79b241f34a1653fc",
     "/js/formbuilder.js": "/js/formbuilder.js?id=61b98dc742ffedfa84ee6995cd9691c5",
+=======
+<<<<<<< HEAD
+    "/js/app.js": "/js/app.js?id=9ad6a60f9e4920935e882b84c76134bd",
+    "/js/script.js": "/js/script.js?id=1b7daeec82b90108f10210751a69236d",
+    "/js/webportal-script.js": "/js/webportal-script.js?id=b575e764668b3559917bdf4cce514c6b",
+    "/js/formbuilder.js": "/js/formbuilder.js?id=fe5f7ed2f535b132deb64e41f45d7a35",
+>>>>>>> a94adf46 (-[x] Header Footer Design System Integration)
     "/manifest.js": "/manifest.js?id=3ed1124c8f4dcb98acc36de67cb80349",
+<<<<<<< HEAD
     "/css/webportal-app.css": "/css/webportal-app.css?id=99e38697d1af3004294590d3a35792e7",
     "/css/app.css": "/css/app.css?id=74573bbde5f541e98c3e95cdf9add10d",
+=======
+    "/css/webportal-app.css": "/css/webportal-app.css?id=71f014dd2fe03c8a8042e36f88cfb349",
+    "/css/app.css": "/css/app.css?id=77cbecca26daebdbb95eed429e8a1e6e",
+=======
+    "/js/app.js": "/js/app.js?id=5eedfe81456ef0adf128b9e2e3c1a460",
+    "/js/script.js": "/js/script.js?id=95df6a0e2b922d12659f74807a5b1013",
+    "/js/webportal-script.js": "/js/webportal-script.js?id=4e3b8856bb2ee647dcaedc85a43fca97",
+    "/js/formbuilder.js": "/js/formbuilder.js?id=c0972596538d9574558967bec653f72d",
+    "/manifest.js": "/manifest.js?id=3ed1124c8f4dcb98acc36de67cb80349",
+    "/css/webportal-app.css": "/css/webportal-app.css?id=af8ac750f9e32cd730d74440f0aa1c0a",
+    "/css/app.css": "/css/app.css?id=49c20c5d30e48e7ad9788f2521851589",
+>>>>>>> 630205eb (-[x] Header Footer Design System Integration)
+>>>>>>> 853c8c20 (-[x] Header Footer Design System Integration)
     "/js/vendor.js": "/js/vendor.js?id=1d9dc84f31934bcf90e4083803feee6b"
 }

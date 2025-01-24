@@ -8,7 +8,7 @@
       >
         <div class="left__container rounded-lg p-5 sm:p-10">
           <span class="left__title font-bold">IATI Publisher</span>
-          <p class="pt-2 sm:pb-8 sm:pt-6">
+          <p class="pt-2 leading-6 sm:pb-8 sm:pt-6">
             Welcome to IATI Publisher. This lets you publish IATI data on your
             organisation's development and humanitarian activities.
             <br />
@@ -16,7 +16,7 @@
               Use this page to create a new account for your organisation.
             </span>
           </p>
-          <div class="block">
+          <div class="block leading-6">
             <span class="flex flex-wrap">
               {{
                 pageContent === 'Join Now'
