@@ -32,7 +32,9 @@
             }"
             @click="toggleTab('publish')"
           >
-            {{ translatedData['common.common.publishing_settings'] }}
+            {{
+              toTitleCase(translatedData['common.common.publishing_settings'])
+            }}
           </button>
           <button
             class="tab-btn"
@@ -41,7 +43,7 @@
             }"
             @click="toggleTab('default')"
           >
-            {{ translatedData['settings.setting_default_form.default_values'] }}
+            {{ toTitleCase(translatedData['common.common.default_values']) }}
           </button>
         </div>
         <SettingPublishingForm
@@ -103,8 +105,10 @@ import SettingPublishingForm from './SettingPublishingForm.vue';
 import Loader from '../../components/Loader.vue';
 import Toast from 'Components/ToastMessage.vue';
 import LanguageService from 'Services/language';
+import { toTitleCase } from '../../composable/utils';
 
 export default defineComponent({
+  methods: { toTitleCase },
   components: {
     SettingDefaultForm,
     SettingPublishingForm,
@@ -260,7 +264,9 @@ export default defineComponent({
           }
         }
 
-        LanguageService.getTranslatedData('common,settings,common')
+        LanguageService.getTranslatedData(
+          'workflow_frontend,common,settings,common'
+        )
           .then((response) => {
             translatedData.value = response.data;
           })

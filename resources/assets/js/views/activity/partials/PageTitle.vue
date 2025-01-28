@@ -19,22 +19,18 @@
             <button class="">
               <svg-vue icon="question-mark" />
               <span>{{
-                translatedData['activity_index.page_title.what_is_an_activity']
+                translatedData['common.common.what_is_an_activity']
               }}</span>
             </button>
             <div class="tooltip-btn__content z-[1]">
               <div class="content">
                 <div class="mb-1.5 text-caption-c1 font-bold text-bluecoral">
-                  {{
-                    translatedData[
-                      'activity_index.page_title.what_is_an_activity'
-                    ]
-                  }}
+                  {{ translatedData['common.common.what_is_an_activity'] }}
                 </div>
                 <p
                   v-html="
                     translatedData[
-                      'activity_index.page_title.what_is_an_activity_description'
+                      'common.common.what_is_an_activity_description'
                     ]
                   "
                 ></p>
@@ -86,11 +82,7 @@
                 <BtnComponent
                   v-if="store.state.selectedActivities.length > 0"
                   type="secondary"
-                  :text="
-                    getPublishedSelectedMessage(
-                      store.state.selectedActivities.length
-                    )
-                  "
+                  :text="publishedSelectedMessage"
                   icon="approved-cloud"
                   :disabled="
                     store.state.selectedActivities.length === 0 ||
@@ -124,7 +116,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref, Ref, defineProps } from 'vue';
+import { inject, ref, Ref, defineProps, computed } from 'vue';
 import DownloadActivityButton from './DownloadActivityButton.vue';
 import AddActivityButton from './AddActivityButton.vue';
 import Toast from 'Components/ToastMessage.vue';
@@ -164,37 +156,39 @@ const checkPublish = () => {
   }
 };
 
+// Computed property for the published selected message
+const publishedSelectedMessage = computed(() => {
+  const length = store.state.selectedActivities.length;
+  let baseMessage =
+    translatedData.value['activity_index.page_title.publish_selected'];
+  baseMessage = replaceCountPlaceHolderWithCount(baseMessage, length);
+
+  return baseMessage;
+});
+
+function replaceCountPlaceHolderWithCount(text: string, count: number) {
+  return text?.replace(':count', count.toString());
+}
+
 function getYouCanOnlyPublish100ActivitiesAtATimeMessage(length: number) {
   const baseMessage =
     translatedData.value[
-      'activity.page_title.you_can_only_publish_up_to_100_activities_at_a_time'
+      'activity_index.page_title.you_can_only_publish_up_to_100_activities_at_a_time'
     ];
   let dynamicMessage =
     translatedData.value[
-      'activity.page_title.please_remove_activities_from_selection_to_publish'
+      'activity_index.page_title.please_remove_activities_from_selection_to_publish'
     ];
 
   if (length > 1) {
     dynamicMessage =
       translatedData.value[
-        'activity.page_title.please_remove_activity_from_selection_to_publish'
+        'activity_index.page_title.please_remove_activity_from_selection_to_publish'
       ];
   }
 
   dynamicMessage = replaceCountPlaceHolderWithCount(dynamicMessage, length);
 
   return `${baseMessage} ${dynamicMessage}`;
-}
-
-function getPublishedSelectedMessage(length: number) {
-  let baseMessage =
-    translatedData.value['activity.page_title.publish_selected'];
-  baseMessage = replaceCountPlaceHolderWithCount(baseMessage, length);
-
-  return baseMessage;
-}
-
-function replaceCountPlaceHolderWithCount(text: string, count: number) {
-  return text.replace(':count', count.toString());
 }
 </script>

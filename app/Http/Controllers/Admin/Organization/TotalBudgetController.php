@@ -37,7 +37,7 @@ class TotalBudgetController extends Controller
     {
         try {
             $id = Auth::user()->organization_id;
-            $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
+            $element = readOrganizationElementJsonSchema();
             $organization = $this->totalBudgetService->getOrganizationData($id);
             $form = $this->totalBudgetService->formGenerator($id);
             $data = ['title'=> $element['total_budget']['label'], 'name'=>'total-budget'];
@@ -45,7 +45,7 @@ class TotalBudgetController extends Controller
             return view('admin.organisation.forms.totalBudget.totalBudget', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('common/common.error_has_occurred_while_opening_organization_reporting_org_form');
+            $translatedMessage = trans('common/common.error_has_occurred_while_opening_form');
 
             return redirect()->route('admin.organisation.index')->with('error', $translatedMessage);
         }
@@ -62,16 +62,16 @@ class TotalBudgetController extends Controller
     {
         try {
             if (!$this->totalBudgetService->update(Auth::user()->organization_id, $request->all())) {
-                $translatedMessage = trans('organisationDetail/total_budget_controller.error_has_occurred_while_updating_organization_total_budget');
+                $translatedMessage = trans('common/common.failed_to_update_data');
 
                 return redirect()->route('admin.organisation.index')->with('error', $translatedMessage);
             }
-            $translatedMessage = trans('organisationDetail/total_budget_controller.organization_total_budget_updated_successfully');
+            $translatedMessage = trans('common/common.updated_successfully');
 
             return redirect()->route('admin.organisation.index')->with('success', $translatedMessage);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('organisationDetail/total_budget_controller.error_has_occurred_while_updating_organization_total_budget');
+            $translatedMessage = trans('common/common.failed_to_update_data');
 
             return redirect()->route('admin.organisation.index')->with('error', $translatedMessage);
         }

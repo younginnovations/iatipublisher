@@ -26,9 +26,7 @@
         }"
       >
         <label class="text-sm font-bold text-bluecoral" for="password">{{
-          translatedData[
-            'public.forgot_password.reset_password_page.new_password.title'
-          ]
+          translatedData['common.common.new_password']
         }}</label>
         <input
           id="new_password"
@@ -173,7 +171,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      LanguageService.getTranslatedData('common,public')
+      LanguageService.getTranslatedData('workflow_frontend,common,public')
         .then((response) => {
           translatedData.value = response.data;
         })

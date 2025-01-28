@@ -24,11 +24,7 @@
             <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
               <div class="flex">
                 <a class="whitespace-nowrap font-bold" href="/activities">
-                  {{
-                    translatedData[
-                      'activity_detail.activity_detail.your_activities'
-                    ]
-                  }}
+                  {{ translatedData['common.common.your_activities'] }}
                 </a>
                 <span class="separator mx-4"> / </span>
                 <div class="breadcrumb__title">
@@ -41,9 +37,7 @@
                     {{
                       pageTitle
                         ? pageTitle
-                        : translatedData[
-                            'activity_detail.activity_detail.untitled'
-                          ]
+                        : getTranslatedUntitled(translatedData)
                     }}
                   </span>
                 </div>
@@ -66,18 +60,14 @@
                     {{
                       pageTitle
                         ? pageTitle
-                        : translatedData[
-                            'activity_detail.activity_detail.untitled'
-                          ]
+                        : getTranslatedUntitled(translatedData)
                     }}
                   </span>
                   <span class="ellipsis__title--hover">
                     {{
                       pageTitle
                         ? pageTitle
-                        : translatedData[
-                            'activity_detail.activity_detail.untitled'
-                          ]
+                        : getTranslatedUntitled(translatedData)
                     }}
                   </span>
                 </h4>
@@ -501,8 +491,11 @@ import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
 
 // Vuex Store
 import { detailStore } from 'Store/activities/show';
-import { useStore } from 'Store/activities/index';
-import { onlyDeprecatedStatusMap } from 'Composable/utils';
+import { useStore } from 'Store/activities';
+import {
+  getTranslatedUntitled,
+  onlyDeprecatedStatusMap,
+} from 'Composable/utils';
 import LanguageService from 'Services/language';
 
 export default defineComponent({
@@ -589,7 +582,9 @@ export default defineComponent({
     }
 
     const translatedData = ref({});
-    LanguageService.getTranslatedData('common,activity_detail,activity_index')
+    LanguageService.getTranslatedData(
+      'workflow_frontend,common,activity_detail,activity_index,elements'
+    )
       .then((response) => {
         translatedData.value = response.data;
       })
@@ -947,6 +942,6 @@ export default defineComponent({
       translatedData,
     };
   },
-  methods: { onlyDeprecatedStatusMap },
+  methods: { getTranslatedUntitled, onlyDeprecatedStatusMap },
 });
 </script>

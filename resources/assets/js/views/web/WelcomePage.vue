@@ -20,7 +20,7 @@
                 translatedData[
                   'public.login.iati_publishing_tool_section.page_to_register'
                 ]
-              }}.
+              }}
             </span>
           </p>
           <div class="block">
@@ -93,7 +93,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      LanguageService.getTranslatedData('common,public')
+      LanguageService.getTranslatedData('workflow_frontend,common,public')
         .then((response) => {
           translatedData.value = response.data;
         })

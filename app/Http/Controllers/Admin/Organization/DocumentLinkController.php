@@ -41,7 +41,7 @@ class DocumentLinkController extends Controller
     {
         try {
             $id = Auth::user()->organization_id;
-            $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
+            $element = readOrganizationElementJsonSchema();
             $organization = $this->documentLinkService->getOrganizationData($id);
             $form = $this->documentLinkService->formGenerator($id, deprecationStatusMap: Arr::get($organization->deprecation_status_map, 'document_link', []));
             $status = $organization->document_link_element_completed ?? false;
@@ -50,7 +50,7 @@ class DocumentLinkController extends Controller
             return view('admin.organisation.forms.documentLink.documentLink', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('organisationDetail/document_link_controller.error_has_occurred_while_opening_organization_document_link_form');
+            $translatedMessage = trans('common/common.error_has_occurred_while_opening_form');
 
             return redirect()->route('admin.organisation.index')->with('error', $translatedMessage);
         }
@@ -67,16 +67,16 @@ class DocumentLinkController extends Controller
     {
         try {
             if (!$this->documentLinkService->update(Auth::user()->organization_id, $request->all())) {
-                $translatedMessage = trans('organisationDetail/document_link_controller.error_has_occurred_while_updating_organization_document_link');
+                $translatedMessage = trans('common/common.failed_to_update_data');
 
                 return redirect()->route('admin.organisation.index')->with('error', $translatedMessage);
             }
-            $translatedMessage = trans('organisationDetail/document_link_controller.organization_document_link_updated_successfully');
+            $translatedMessage = trans('common/common.updated_successfully');
 
             return redirect()->route('admin.organisation.index')->with('success', $translatedMessage);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('organisationDetail/document_link_controller.error_has_occurred_while_updating_organization_document_link');
+            $translatedMessage = trans('common/common.failed_to_update_data');
 
             return redirect()->route('admin.organisation.index')->with('error', $translatedMessage);
         }

@@ -41,7 +41,7 @@ class RecipientCountryBudgetController extends Controller
     {
         try {
             $id = Auth::user()->organization_id;
-            $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
+            $element = readOrganizationElementJsonSchema();
             $organization = $this->recipientCountryBudgetService->getOrganizationData($id);
 
             $form = $this->recipientCountryBudgetService->formGenerator($id, deprecationStatusMap: Arr::get($organization->deprecation_status_map, 'recipient_country_budget', []));
@@ -51,7 +51,7 @@ class RecipientCountryBudgetController extends Controller
             return view('admin.organisation.forms.recipientCountryBudget.recipientCountryBudget', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('organisationDetail/recipient_country_budget_controller.error_has_occurred_while_opening_organization_recipient_country_budget_form');
+            $translatedMessage = trans('common/common.error_has_occurred_while_opening_form');
 
             return redirect()->route('admin.organisation.index')->with('error', $translatedMessage);
         }
@@ -68,16 +68,16 @@ class RecipientCountryBudgetController extends Controller
     {
         try {
             if (!$this->recipientCountryBudgetService->update(Auth::user()->organization_id, $request->all())) {
-                $translatedMessage = trans('organisationDetail/recipient_country_budget_controller.error_has_occurred_while_updating_organization_recipient_country_budget');
+                $translatedMessage = trans('common/common.failed_to_update_data');
 
                 return redirect()->route('admin.organisation.index')->with('error', $translatedMessage);
             }
-            $translatedMessage = trans('organisationDetail/recipient_country_budget_controller.organization_recipient_country_budget_updated_successfully');
+            $translatedMessage = trans('common/common.updated_successfully');
 
             return redirect()->route('admin.organisation.index')->with('success', $translatedMessage);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('organisationDetail/recipient_country_budget_controller.error_has_occurred_while_updating_organization_recipient_country_budget');
+            $translatedMessage = trans('common/common.failed_to_update_data');
 
             return redirect()->route('admin.organisation.index')->with('error', $translatedMessage);
         }

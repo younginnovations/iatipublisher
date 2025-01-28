@@ -7,9 +7,7 @@
       @click="toggle"
     >
       <svg-vue icon="download-file" />
-      {{
-        translatedData['activity_index.download_activity_button.download_all']
-      }}
+      {{ translatedData['common.common.download_all'] }}
       <svg-vue icon="dropdown-arrow" class="text-blue-coral !text-[6px]" />
     </button>
     <button
@@ -72,7 +70,7 @@
       <p class="text-sm font-bold">
         {{
           translatedData[
-            'activity.download_activity_button.the_xml_file_is_in_wrong_format'
+            'activity_index.download_activity_button.the_xml_file_is_in_wrong_format'
           ]
         }}
       </p>
@@ -91,7 +89,7 @@
             @click="downloadError('error', message)"
             >{{
               translatedData[
-                'activity.download_activity_button.download_error_message'
+                'activity_index.download_activity_button.download_error_message'
               ]
             }}</a
           >
@@ -139,7 +137,7 @@
           <svg-vue icon="warning-fill" class="text-camel-50"></svg-vue>
           <span class="text-sm font-bold text-n-50">{{
             translatedData[
-              'activity.download_activity_button.preparing_activities_for_download'
+              'workflow_frontend.download.preparing_activities_for_download'
             ]
           }}</span>
         </div>
@@ -147,14 +145,14 @@
           <p class="mb-4">
             {{
               translatedData[
-                'activity.download_activity_button.please_be_advised_that_we_are_currently_zipping_activities'
+                'activity_index.download_activity_button.please_be_advised_that_we_are_currently_zipping_activities'
               ]
             }}
           </p>
           <p>
             {{
               translatedData[
-                'activity.download_activity_button.to_monitor_the_progress_kindly_refer_to_the_status_bar'
+                'activity_index.download_activity_button.to_monitor_the_progress_kindly_refer_to_the_status_bar'
               ]
             }}
           </p>
@@ -166,7 +164,7 @@
           >
             {{
               translatedData[
-                'activity.download_activity_button.cancel_download'
+                'activity_index.download_activity_button.cancel_download'
               ]
             }}
           </button>
@@ -174,9 +172,7 @@
             class="primary-btn"
             @click="downloadXls(store.state.selectedActivities.length)"
           >
-            {{
-              translatedData['activity_index.download_activity_button.continue']
-            }}
+            {{ translatedData['common.common.continue'] }}
           </button>
         </div>
       </div>
@@ -188,7 +184,7 @@
           <span class="text-sm font-bold text-n-50">
             {{
               translatedData[
-                'activity.download_activity_button.preparation_for_download_already_in_progress'
+                'activity_index.download_activity_button.preparation_for_download_already_in_progress'
               ]
             }}</span
           >
@@ -197,21 +193,21 @@
           <p>
             {{
               translatedData[
-                'activity.download_activity_button.we_are_currently_preparing_the_activities_for_download'
+                'activity_index.download_activity_button.we_are_currently_preparing_the_activities_for_download'
               ]
             }}
           </p>
           <p>
             {{
               translatedData[
-                'activity.download_activity_button.if_you_would_like_to_proceed_with_the_new_download'
+                'activity_index.download_activity_button.if_you_would_like_to_proceed_with_the_new_download'
               ]
             }}
           </p>
           <p>
             {{
               translatedData[
-                'activity.download_activity_button.would_you_like_to_proceed_with_the_new_download'
+                'activity_index.download_activity_button.would_you_like_to_proceed_with_the_new_download'
               ]
             }}
           </p>
@@ -223,7 +219,7 @@
           <button class="primary-btn" @click="downloadAnyway">
             {{
               translatedData[
-                'activity.download_activity_button.download_anyway'
+                'activity_index.download_activity_button.download_anyway'
               ]
             }}
           </button>
