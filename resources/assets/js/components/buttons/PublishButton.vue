@@ -17,7 +17,7 @@
         <svg-vue class="mr-1 text-lg text-spring-50" icon="warning" />
         <b>{{
           translatedData[
-            'activity.publish_button.another_activity_is_currently_being_published'
+            'common.common.another_activity_is_currently_being_published'
           ]
         }}</b>
       </div>
@@ -25,7 +25,7 @@
         <div class="text-sm leading-normal">
           {{
             translatedData[
-              'activity.publish_button.please_wait_for_previous_bulk_publish_to_complete_or_cancel_previous_bulk_publish'
+              'common.common.please_wait_for_previous_bulk_publish_to_complete_or_cancel_previous_bulk_publish'
             ]
           }}
         </div>
@@ -34,19 +34,13 @@
     <div class="flex justify-between space-x-2">
       <BtnComponent
         class="bg-white px-6 uppercase"
-        :text="
-          translatedData[
-            'activity_index.publish_button.cancel_previous_bulk_publish'
-          ]
-        "
+        :text="translatedData['common.common.cancel_previous_bulk_publish']"
         type=""
         @click="startNewPublishing()"
       />
       <BtnComponent
         class="bg-white px-6 uppercase"
-        :text="
-          translatedData['activity_index.publish_button.wait_for_completion']
-        "
+        :text="translatedData['common.common.wait_for_completion']"
         type="primary"
         @click="showExistingProcessModal = false"
       />
@@ -60,33 +54,6 @@
     @reset="resetPublishStep"
   >
     <div class="popup mb-4">
-      <div class="">
-        <div class="title mb-6 flex items-center text-sm">
-          <svg-vue
-            class="mr-1 text-lg"
-            :class="{
-              'text-spring-50': publishStateChange.alertState,
-              'text-crimson-40': !publishStateChange.alertState,
-            }"
-            :icon="publishStateChange.icon"
-          />
-          <b>{{ publishStateChange.title }} </b>
-        </div>
-        <div
-          class="rounded-lg bg-mint p-4"
-          :class="{
-            'bg-mint': publishStateChange.alertState,
-            'bg-[#FFF1F0]': !publishStateChange.alertState && publishStep !== 1,
-            '!bg-eggshell': !publishStateChange.alertState && publishStep === 1,
-          }"
-        >
-          <div
-            class="text-sm leading-normal"
-            v-html="publishStateChange.description"
-          ></div>
-        </div>
-      </div>
-
       <div v-if="hasDeprecatedValueInUse && publishStep === 0" class="my-6">
         <div class="title mb-4 flex h-5 items-center text-sm">
           <svg-vue
@@ -125,9 +92,7 @@
           <BtnComponent
             v-if="publishStep == 0"
             class="space"
-            :text="
-              translatedData['activity_index.publish_button.add_missing_data']
-            "
+            :text="translatedData['common.common.add_missing_data']"
             type="primary"
             @click="publishValue = false"
           />
@@ -171,7 +136,7 @@ import Loader from 'Components/sections/ProgressLoader.vue';
 
 // Vuex Store
 import { detailStore } from 'Store/activities/show';
-import { useStore } from 'Store/activities/index';
+import { useStore } from 'Store/activities';
 
 const props = defineProps({
   type: { type: String, default: 'primary' },
@@ -338,18 +303,6 @@ const publishStateChange = computed(() => {
 
   return publishState;
 });
-
-// // increment and decrement function
-// const stepPlusOne = () => {
-//   if (publishStep.value >= 0 && publishStep.value < 4) {
-//     publishStep.value++;
-//   }
-// };
-// const stepMinusOne = () => {
-//   if (publishStep.value > 0 && publishStep.value <= 4) {
-//     publishStep.value--;
-//   }
-// };
 
 // reactive variable for errors number
 interface Err {

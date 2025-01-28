@@ -20,9 +20,7 @@ const props = defineProps({
 const resolvedText = computed(() => {
   return (
     props.text ||
-    translatedData?.value[
-      'activity.previously_published.previously_published_on_iati'
-    ] ||
+    translatedData?.value['common.common.previously_published_on_iati'] ||
     ''
   );
 });

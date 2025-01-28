@@ -17,25 +17,17 @@
         <div class="mb-5">
           <div class="form-group-title-container">
             <HoverText
-              :name="
-                translatedData[
-                  'common.common.document_link_sub_elements_title_label'
-                ]
-              "
+              :name="translatedData['elements.label.title']"
               :hover-text="
                 translatedData[
-                  'activity._index.create_modal.a_short_human_readable_title'
+                  'activity_index.create_modal.a_short_human_readable_title'
                 ]
               "
               position="right"
               :show-iati-reference="true"
             />
             <p class="form-group-title">
-              {{
-                translatedData[
-                  'common.common.document_link_sub_elements_title_label'
-                ]
-              }}
+              {{ translatedData['elements.label.title'] }}
             </p>
           </div>
           <div class="form-group">
@@ -43,19 +35,11 @@
               <div>
                 <div class="label-field">
                   <label class="label" for="narrative"
-                    >{{
-                      translatedData[
-                        'common.title_sub_elements_narrative_label.narrative'
-                      ]
-                    }}
+                    >{{ translatedData['elements.label.narrative'] }}
                     <span class="required-icon"> *</span>
                   </label>
                   <HoverText
-                    :name="
-                      translatedData[
-                        'common.title_sub_elements_narrative_label.narrative'
-                      ]
-                    "
+                    :name="translatedData['elements.label.narrative']"
                     :hover-text="
                       translatedData[
                         'activity_index.create_modal.the_free_text_name_or_description_of_the_item_being_described'
@@ -88,19 +72,11 @@
               <div>
                 <div class="label-field">
                   <label class="label" for="">
-                    {{
-                      translatedData[
-                        'common.common.title_sub_elements_narrative_attributes_language_label'
-                      ]
-                    }}
+                    {{ translatedData['elements.label.language'] }}
                     <span class="required-icon"> *</span>
                   </label>
                   <HoverText
-                    :name="
-                      translatedData[
-                        'common.common.title_sub_elements_narrative_attributes_language_label'
-                      ]
-                    "
+                    :name="translatedData['elements.label.language']"
                     :hover-text="
                       translatedData[
                         'activity_index.create_modal.a_code_specifying_the_language_of_text_in_this_element'
@@ -121,9 +97,7 @@
                   :options="languages"
                   :placeholder="
                     defaultLanguage ??
-                    translatedData[
-                      'common.common.title_sub_elements_narrative_attributes_language_placeholder'
-                    ]
+                    translatedData['common.common.select_language']
                   "
                 />
 
@@ -138,7 +112,7 @@
                 <span v-else class="text-xs font-normal text-n-40"
                   >{{
                     translatedData[
-                      'common.common.title_sub_elements_narrative_attributes_language_help_text'
+                      'common.common.if_no_language_is_selected_your_default_language_is_assumed'
                     ]
                   }}
                 </span>
@@ -295,6 +269,7 @@ export default defineComponent({
       narrative: '',
       language: '',
       activity_identifier: '',
+      iati_identifier_text: '',
     });
 
     const iatiIdentifierText = computed(() => {

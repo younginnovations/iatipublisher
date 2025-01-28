@@ -89,8 +89,8 @@
           </div>
           <div class="mb-5 flex space-x-6">
             <div class="flex w-full flex-col gap-2">
-              <label class="text-sm text-n-50"
-                >{{ translatedData['userProfile.user_profile.new_password'] }}
+              <label class="text-sm text-n-50">
+                {{ translatedData['userProfile.user_profile.new_password'] }}
                 <span class="text-[red]"> * </span>
               </label>
               <span class="relative">
@@ -122,9 +122,9 @@
               </span>
             </div>
             <div class="flex w-full flex-col gap-2">
-              <label class="text-sm text-n-50"
-                >{{ translatedData['common.common.confirm_password']
-                }}<span class="text-[red]"> * </span>
+              <label class="text-sm text-n-50">
+                {{ translatedData['common.common.confirm_password'] }}
+                <span class="text-[red]"> * </span>
               </label>
               <span class="relative">
                 <svg-vue
@@ -187,10 +187,10 @@
           </div>
           <div class="grid grid-cols-2 gap-6">
             <div class="col-span-2 flex flex-col items-start gap-2">
-              <label class="text-sm text-n-50"
-                >{{ translatedData['common.common.full_name']
-                }}<span class="text-[red]"> * </span></label
-              >
+              <label class="text-sm text-n-50">
+                {{ translatedData['common.common.full_name'] }}
+                <span class="text-[red]"> * </span>
+              </label>
               <input
                 v-model="formData.full_name"
                 :class="
@@ -210,9 +210,10 @@
               </span>
             </div>
             <div class="flex flex-col items-start gap-2">
-              <label class="text-sm text-n-50"
-                >Username<span class="text-[red]"> * </span></label
-              >
+              <label class="text-sm text-n-50">
+                {{ translatedData['common.common.username'] }}
+                <span class="text-[red]"> * </span>
+              </label>
               <input
                 v-model="formData.username"
                 :class="
@@ -233,10 +234,10 @@
             </div>
 
             <div class="flex flex-col items-start gap-2">
-              <label class="text-sm text-n-50"
-                >{{ translatedData['common.common.email']
-                }}<span class="text-[red]"> * </span></label
-              >
+              <label class="text-sm text-n-50">
+                {{ toTitleCase(translatedData['common.common.email']) }}
+                <span class="text-[red]"> * </span>
+              </label>
               <input
                 v-model="formData.email"
                 :class="
@@ -271,11 +272,7 @@
               <Multiselect
                 v-model="formData.language_preference"
                 :options="languagePreference"
-                :placeholder="
-                  translatedData[
-                    'common.common.title_sub_elements_narrative_attributes_language_placeholder'
-                  ]
-                "
+                :placeholder="translatedData['common.common.select_language']"
                 :searchable="true"
               />
               <span
@@ -322,8 +319,6 @@
                 }
               "
             >
-              <!-- <svg-vue icon=""></svg-vue> -->
-
               {{
                 translatedData['userProfile.user_profile.change_your_password']
               }}
@@ -334,11 +329,7 @@
 
       <div class="flex space-x-2 border-b border-n-20 py-6">
         <div class="text-base font-bold text-n-40">
-          {{
-            translatedData[
-              'common.common.reporting_org_sub_elements_narrative_label'
-            ]
-          }}
+          {{ toTitleCase(translatedData['common.common.name']) }}
         </div>
         <div class="max-w-[60vw] overflow-x-hidden text-ellipsis text-base">
           {{ userData['full_name'] }}
@@ -346,13 +337,17 @@
       </div>
       <div class="flex space-x-2 border-b border-n-20 py-6">
         <div class="text-base font-bold text-n-40">
-          {{ translatedData['common.common.username'] }}
+          {{ toTitleCase(translatedData['common.common.username']) }}
         </div>
         <div class="text-base">{{ userData['username'] }}</div>
       </div>
       <div class="flex space-x-2 border-b border-n-20 py-6">
         <div class="text-base font-bold text-n-40">
-          {{ translatedData['userProfile.user_profile.language_preference'] }}
+          {{
+            toTitleCase(
+              translatedData['userProfile.user_profile.language_preference']
+            )
+          }}
         </div>
         <div class="text-base">
           {{ languagePreference[userData['language_preference']] }}
@@ -360,7 +355,7 @@
       </div>
       <div class="flex space-x-2 py-6">
         <div class="text-base font-bold text-n-40">
-          {{ translatedData['common.common.email'] }}
+          {{ toTitleCase(translatedData['common.common.email']) }}
         </div>
         <div>
           <a>{{ userData['email'] }}</a>
@@ -390,7 +385,9 @@
         class="flex space-x-2 border-b border-n-20 py-6"
       >
         <div class="text-base font-bold text-n-40">
-          {{ translatedData['userProfile.user_profile.organization'] }}
+          {{
+            toTitleCase(translatedData['userProfile.user_profile.organization'])
+          }}
         </div>
         <div class="text-base">
           {{ userData['organization_name'] }}
@@ -401,11 +398,7 @@
         class="flex space-x-2 border-b border-n-20 py-6"
       >
         <div class="text-base font-bold text-n-40">
-          {{
-            translatedData[
-              'common.common.participating_org_attributes_organization_role_label'
-            ]
-          }}
+          {{ toTitleCase(translatedData['common.common.role']) }}
         </div>
         <div class="text-base">
           {{ userData['user_role'] }}
@@ -424,6 +417,7 @@ import PopupModal from 'Components/PopupModal.vue';
 import Multiselect from '@vueform/multiselect';
 import { watchIgnorable } from '@vueuse/core';
 import LanguageService from 'Services/language';
+import { toTitleCase } from '../../composable/utils';
 
 const props = defineProps({
   user: { type: Object, required: true },
@@ -591,7 +585,7 @@ const updateProfile = () => {
 const translatedData = ref({});
 
 onMounted(() => {
-  LanguageService.getTranslatedData('common,userProfile')
+  LanguageService.getTranslatedData('workflow_frontend,common,userProfile')
     .then((response) => {
       translatedData.value = response.data;
     })

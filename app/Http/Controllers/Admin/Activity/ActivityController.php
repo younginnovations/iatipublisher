@@ -166,9 +166,8 @@ class ActivityController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
-            $translatedMessage = trans('activity_detail/activity_controller.error_has_occurred_while_fetching_activities');
 
-            return response()->json(['success' => false, 'error' => $translatedMessage]);
+            return response()->json(['success' => false, 'error' => 'Error has occurred while fetching activities']);
         }
     }
 
@@ -198,9 +197,9 @@ class ActivityController extends Controller
             $this->db->beginTransaction();
             $activity = $this->activityService->store($input);
             $this->db->commit();
-            Session::put('success', trans('activity_detail/activity_controller.activity_has_been_created_successfully'));
 
             $translatedMessage = trans('activity_detail/activity_controller.activity_created_successfully');
+            Session::put('success', $translatedMessage);
 
             return response()->json([
                 'success' => true,
@@ -269,7 +268,7 @@ class ActivityController extends Controller
             );
         } catch (Exception $e) {
             logger()->error($e);
-            $translatedMessage = trans('activity_detail/activity_controller.error_has_occurred_while_opening_activity_detail_page');
+            $translatedMessage = trans('common/common.error_has_occurred_while_opening_form');
 
             return redirect()->route('admin.activities.index')->with('error', $translatedMessage);
         }
@@ -531,7 +530,7 @@ class ActivityController extends Controller
     public function getActivitiesCountByPublishedStatus(): JsonResponse
     {
         try {
-            $translatedMessage = trans('activity_detail/activity_controller.fetched_activities_count_by_published_status');
+            $translatedMessage = 'Fetched Activities Count By Published Status';
 
             return response()->json(
                 [
@@ -543,7 +542,7 @@ class ActivityController extends Controller
         } catch (Exception $e) {
             logger()->error($e);
 
-            $translatedMessage = trans('activity_detail/activity_controller.failed_to_fetch_activities_count_error');
+            $translatedMessage = 'Failed to fetch activities count error';
 
             return response()->json(
                 [
@@ -567,7 +566,7 @@ class ActivityController extends Controller
     public function duplicateActivity(Request $request): JsonResponse
     {
         if (env('APP_ENV') === 'production') {
-            $translatedMessage = trans('activity_detail/activity_controller.this_operation_is_not_allowed_in_the_production_environment');
+            $translatedMessage = 'This Operation Is Not Allowed In The Production Environment.';
 
             abort(403, $translatedMessage);
         }
@@ -582,7 +581,7 @@ class ActivityController extends Controller
             'no_of_iterations' => $validated['no_of_iterations'],
         ]);
 
-        $translatedMessage = trans('activity_detail/activity_controller.activity_duplication_completed_successfully');
+        $translatedMessage = 'Activity Duplication Completed Successfully';
 
         return response()->json([
             'message' => $translatedMessage,

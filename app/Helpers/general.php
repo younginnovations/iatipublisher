@@ -74,6 +74,12 @@ if (!function_exists('readElementJsonSchema')) {
      */
     function readElementJsonSchema(): array
     {
+        $cacheKey = 'elementJsonSchema';
+
+        if (Cache::has($cacheKey)) {
+            return Cache::get($cacheKey);
+        }
+
         $jsonContentAsAssocArray = readJsonFile('IATI/Data/elementJsonSchema.json');
 
         $jsonContentAsFlattenedArray = Arr::dot($jsonContentAsAssocArray);
@@ -84,7 +90,11 @@ if (!function_exists('readElementJsonSchema')) {
             }
         }
 
-        return Arr::undot($jsonContentAsFlattenedArray);
+        $cacheableData = Arr::undot($jsonContentAsFlattenedArray);
+
+        Cache::put($cacheKey, $cacheableData);
+
+        return $cacheableData;
     }
 }
 
@@ -97,6 +107,12 @@ if (!function_exists('readOrganizationElementJsonSchema')) {
      */
     function readOrganizationElementJsonSchema(): array
     {
+        $cacheKey = 'organizationElementJsonSchema';
+
+        if (Cache::has($cacheKey)) {
+            return Cache::get($cacheKey);
+        }
+
         $jsonContentAsAssocArray = readJsonFile('IATI/Data/organizationElementJsonSchema.json');
 
         $jsonContentAsFlattenedArray = Arr::dot($jsonContentAsAssocArray);
@@ -109,7 +125,11 @@ if (!function_exists('readOrganizationElementJsonSchema')) {
             }
         }
 
-        return Arr::undot($jsonContentAsFlattenedArray);
+        $cacheableData = Arr::undot($jsonContentAsFlattenedArray);
+
+        Cache::put($cacheKey, $cacheableData);
+
+        return $cacheableData;
     }
 }
 
@@ -1547,6 +1567,11 @@ function regroupResponseForAllActivity(array $response, array $uniqueIdentifiers
     }
 
     return $groupedResponses;
+}
+
+function getTranslatedUntitled(): string
+{
+    return trans('common/common.untitled');
 }
 
 /**

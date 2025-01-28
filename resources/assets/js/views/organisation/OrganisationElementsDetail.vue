@@ -4,16 +4,12 @@
       <div class="mb-4">
         <div class="title mb-6 flex">
           <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
-          <b>{{
-            translatedData[
-              'organisationDetail.organisation_elements_detail.delete_element'
-            ]
-          }}</b>
+          <b>{{ translatedData['common.common.delete_element'] }}</b>
         </div>
         <div class="rounded-lg bg-rose p-4">
           {{
             translatedData[
-              'organisationDetail.organisation_elements_detail.are_you_sure_you_want_to_delete_this_element'
+              'common.common.are_you_sure_you_want_to_delete_this_element'
             ]
           }}
         </div>
@@ -90,9 +86,7 @@
           >
             <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
             <span class="hidden text-[10px] lg:block">{{
-              translatedData[
-                'organisationDetail.organisation_elements_detail.edit'
-              ]
+              translatedData['common.common.edit']
             }}</span>
           </a>
 
@@ -136,16 +130,15 @@
           <div v-for="(post, i) in data.content" :key="i" class="title-content">
             <div v-if="post.narrative" class="flex flex-col">
               <span v-if="post.language" class="language mb-1.5">
-                (Language: {{ types?.languages[post.language] }})
+                ({{ getTranslatedLanguage(translatedData) }}:
+                {{ types?.languages[post.language] }})
               </span>
               <span v-if="post.narrative" class="max-w-[887px] text-sm">
                 {{ post.narrative }}
               </span>
             </div>
             <span v-else class="text-sm italic">{{
-              translatedData[
-                'organisationDetail.organisation_elements_detail.title_missing'
-              ]
+              getTranslatedMissing(translatedData, 'title')
             }}</span>
             <div v-if="i !== data.content.length - 1" class="mb-4"></div>
           </div>
@@ -205,6 +198,7 @@ import Modal from 'Components/PopupModal.vue';
 import { useToggle } from '@vueuse/core';
 import axios from 'axios';
 import HelperText from 'Components/HelperText.vue';
+import { getTranslatedLanguage, getTranslatedMissing } from 'Composable/utils';
 
 const props = defineProps({
   data: {

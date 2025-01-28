@@ -90,7 +90,7 @@ const toastMessage = inject('toastMessage') as ToastMessageTypeface;
 
 const deleteFunction = () => {
   loader.value = true;
-  loader.text = translatedData.value['activity.delete_button.deleting'];
+  loader.text = translatedData.value['activity_index.delete_button.deleting'];
   deleteValue.value = false;
   const deleteEndPoint = `/activity/${store.state.selectedActivities}`;
 

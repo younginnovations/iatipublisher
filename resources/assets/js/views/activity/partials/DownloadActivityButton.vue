@@ -7,9 +7,7 @@
       @click="toggle"
     >
       <svg-vue icon="download-file" />
-      {{
-        translatedData['activity_index.download_activity_button.download_all']
-      }}
+      {{ translatedData['common.common.download_all'] }}
       <svg-vue icon="dropdown-arrow" class="text-blue-coral !text-[6px]" />
     </button>
     <button
@@ -60,6 +58,71 @@
         </li>
       </ul>
     </div>
+<<<<<<< HEAD
+=======
+    <Modal
+      :modal-active="showErrorpopup"
+      width="583"
+      @close="
+        () => {
+          showErrorpopup = false;
+        }
+      "
+    >
+      <p class="text-sm font-bold">
+        {{
+          translatedData[
+            'activity_index.download_activity_button.the_xml_file_is_in_wrong_format'
+          ]
+        }}
+      </p>
+
+      <div class="mb-4 h-40 overflow-y-auto rounded-lg bg-rose p-4 text-sm">
+        <div class="mb-2 flex justify-between">
+          <div class="text-xs font-bold">
+            {{
+              translatedData[
+                'activity_index.download_activity_button.error_message'
+              ]
+            }}
+          </div>
+          <a
+            class="right-3 top-1 cursor-pointer text-xs font-bold"
+            @click="downloadError('error', message)"
+            >{{
+              translatedData[
+                'activity_index.download_activity_button.download_error_message'
+              ]
+            }}</a
+          >
+        </div>
+        {{ message }}
+      </div>
+
+      <div class="flex justify-end space-x-4">
+        <button
+          class="text-xs font-bold capitalize text-bluecoral"
+          @click="
+            () => {
+              showErrorpopup = false;
+            }
+          "
+        >
+          {{ translatedData['common.common.go_back'] }}
+        </button>
+        <button
+          class="rounded bg-bluecoral px-4 py-3 font-bold text-white"
+          @click="downloadErrorxml(store.state.selectedActivities.length)"
+        >
+          {{
+            translatedData[
+              'activity_index.download_activity_button.download_anyway'
+            ]
+          }}
+        </button>
+      </div>
+    </Modal>
+>>>>>>> 9451b67a (- [x] Validation message reduced)
     <Toast
       v-if="toastVisibility"
       :type="toastmessageType"
@@ -77,7 +140,7 @@
           <svg-vue icon="warning-fill" class="text-camel-50"></svg-vue>
           <span class="text-sm font-bold text-n-50">{{
             translatedData[
-              'activity.download_activity_button.preparing_activities_for_download'
+              'workflow_frontend.download.preparing_activities_for_download'
             ]
           }}</span>
         </div>
@@ -85,14 +148,14 @@
           <p class="mb-4">
             {{
               translatedData[
-                'activity.download_activity_button.please_be_advised_that_we_are_currently_zipping_activities'
+                'activity_index.download_activity_button.please_be_advised_that_we_are_currently_zipping_activities'
               ]
             }}
           </p>
           <p>
             {{
               translatedData[
-                'activity.download_activity_button.to_monitor_the_progress_kindly_refer_to_the_status_bar'
+                'activity_index.download_activity_button.to_monitor_the_progress_kindly_refer_to_the_status_bar'
               ]
             }}
           </p>
@@ -104,7 +167,7 @@
           >
             {{
               translatedData[
-                'activity.download_activity_button.cancel_download'
+                'activity_index.download_activity_button.cancel_download'
               ]
             }}
           </button>
@@ -112,9 +175,7 @@
             class="primary-btn"
             @click="downloadXls(store.state.selectedActivities.length)"
           >
-            {{
-              translatedData['activity_index.download_activity_button.continue']
-            }}
+            {{ translatedData['common.common.continue'] }}
           </button>
         </div>
       </div>
@@ -126,7 +187,7 @@
           <span class="text-sm font-bold text-n-50">
             {{
               translatedData[
-                'activity.download_activity_button.preparation_for_download_already_in_progress'
+                'activity_index.download_activity_button.preparation_for_download_already_in_progress'
               ]
             }}</span
           >
@@ -135,21 +196,21 @@
           <p>
             {{
               translatedData[
-                'activity.download_activity_button.we_are_currently_preparing_the_activities_for_download'
+                'activity_index.download_activity_button.we_are_currently_preparing_the_activities_for_download'
               ]
             }}
           </p>
           <p>
             {{
               translatedData[
-                'activity.download_activity_button.if_you_would_like_to_proceed_with_the_new_download'
+                'activity_index.download_activity_button.if_you_would_like_to_proceed_with_the_new_download'
               ]
             }}
           </p>
           <p>
             {{
               translatedData[
-                'activity.download_activity_button.would_you_like_to_proceed_with_the_new_download'
+                'activity_index.download_activity_button.would_you_like_to_proceed_with_the_new_download'
               ]
             }}
           </p>
@@ -161,7 +222,7 @@
           <button class="primary-btn" @click="downloadAnyway">
             {{
               translatedData[
-                'activity.download_activity_button.download_anyway'
+                'activity_index.download_activity_button.download_anyway'
               ]
             }}
           </button>

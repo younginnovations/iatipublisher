@@ -37,15 +37,17 @@
                       class="breadcrumb__title last overflow-hidden text-n-30"
                       >{{
                         organization.name
-                          ? organization.name['0'].narrative ?? 'Untitled'
-                          : 'Untitled'
+                          ? organization.name['0'].narrative ??
+                            getTranslatedUntitled(translatedData)
+                          : getTranslatedUntitled(translatedData)
                       }}</span
                     >
                     <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
                       {{
                         organization.name
-                          ? organization.name['0'].narrative ?? 'Untitled'
-                          : 'Untitled'
+                          ? organization.name['0'].narrative ??
+                            getTranslatedUntitled(translatedData)
+                          : getTranslatedUntitled(translatedData)
                       }}
                     </span>
                   </div>
@@ -65,15 +67,17 @@
                   >
                     {{
                       organization.name
-                        ? organization.name['0'].narrative ?? 'Untitled'
-                        : 'Untitled'
+                        ? organization.name['0'].narrative ??
+                          getTranslatedUntitled(translatedData)
+                        : getTranslatedUntitled(translatedData)
                     }}
                   </span>
                   <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
                     {{
                       organization.name
-                        ? organization.name['0'].narrative ?? 'Untitled'
-                        : 'Untitled'
+                        ? organization.name['0'].narrative ??
+                          getTranslatedUntitled(translatedData)
+                        : getTranslatedUntitled(translatedData)
                     }}
                   </span>
                 </h4>
@@ -353,9 +357,11 @@ import { useToggle } from '@vueuse/core';
 import { watchIgnorable } from '@vueuse/core';
 import ErrorPopupForPublish from 'Components/ErrorPopupForPublish.vue';
 import LanguageService from 'Services/language';
+import { getTranslatedUntitled } from 'Composable/utils';
 
 export default defineComponent({
   name: 'OrganisationData',
+  methods: { getTranslatedUntitled },
   components: {
     HoverText,
     RadialProgressBar,
@@ -437,7 +443,9 @@ export default defineComponent({
     onMounted(() => {
       window.addEventListener('resize', calcWidth);
 
-      LanguageService.getTranslatedData('common,organisationDetail,elements')
+      LanguageService.getTranslatedData(
+        'workflow_frontend,common,organisationDetail,elements'
+      )
         .then((response) => {
           translatedData.value = response.data;
           console.log(translatedData.value);
@@ -447,7 +455,7 @@ export default defineComponent({
       window.addEventListener('scroll', handleScroll);
 
       if (props.toast.message !== '') {
-        toastData.type = props.toast.type === 'success' ? true : false;
+        toastData.type = props.toast.type === 'success';
         toastData.visibility = true;
         toastData.message = props.toast.message;
       }
@@ -532,7 +540,7 @@ export default defineComponent({
         elementProps[k]['not_completed'] = !elementProps[k]['completed'];
       });
 
-      if (flag === false) {
+      if (!flag) {
         delete organizationData[key];
       }
     });

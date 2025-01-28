@@ -294,12 +294,7 @@ function triggerModel() {
 }
 
 onMounted(async () => {
-  const translatedLanguage = await LanguageService.getTranslatedData(
-    'common,public'
-  );
-  console.log('Translated Data', translatedLanguage);
-
-  LanguageService.getTranslatedData('common,public')
+  LanguageService.getTranslatedData('workflow_frontend,common,public')
     .then((response) => {
       translatedData.value = response.data;
     })

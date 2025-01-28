@@ -13,7 +13,7 @@
 
       <div class="reset__content">
         <label class="text-sm font-bold text-bluecoral" for="email">{{
-          translatedData['common.common.email']
+          toTitleCase(translatedData['common.common.email'])
         }}</label>
         <input
           id="email"
@@ -42,8 +42,10 @@ import { defineComponent, ref, reactive, onMounted } from 'vue';
 import Loader from '../../components/Loader.vue';
 import axios from 'axios';
 import LanguageService from 'Services/language';
+import { toTitleCase } from 'Composable/utils';
 
 export default defineComponent({
+  methods: { toTitleCase },
   components: {
     Loader,
   },
@@ -86,7 +88,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      LanguageService.getTranslatedData('common,public')
+      LanguageService.getTranslatedData('workflow_frontend,common,public')
         .then((response) => {
           translatedData.value = response.data;
         })

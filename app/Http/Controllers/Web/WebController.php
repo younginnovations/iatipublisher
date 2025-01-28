@@ -170,15 +170,15 @@ class WebController extends Controller
 
                 // Working for outer files
                 $outerFiles = File::allFiles(base_path("lang/{$lang}"));
-                $outerFiletranslations = [];
+                $outerFileTranslations = [];
 
                 foreach ($outerFiles as $outerFile) {
                     $outerFileName = pathinfo($outerFile->getRealPath(), PATHINFO_FILENAME);
                     $obtainedData = require $outerFile->getRealPath();
-                    $outerFiletranslations[$outerFileName] = $obtainedData;
+                    $outerFileTranslations[$outerFileName] = $obtainedData;
                 }
 
-                $cacheData['general'] = $outerFiletranslations;
+                $cacheData['general'] = $outerFileTranslations;
 
                 // Writing to cache
                 Cache::put("translated_data_{$lang}", $cacheData, now()->addHours(24));
