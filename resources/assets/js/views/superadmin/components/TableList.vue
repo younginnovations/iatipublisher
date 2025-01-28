@@ -112,7 +112,7 @@
           id="publisher-type"
           v-model="filter.publisher_type"
           :options="publisherTypes"
-          placeholder="Organisation Type"
+          placeholder="ORGANISATION TYPE"
           mode="multiple"
           :taggable="true"
           :close-on-select="true"

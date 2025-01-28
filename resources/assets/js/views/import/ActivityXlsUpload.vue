@@ -625,7 +625,6 @@ async function checkOngoingImports() {
     const response = await axios.get('/import/check-ongoing-import');
 
     if (hasOngoingImport(response.data.data)) {
-      console.log('response data', response.data);
       showHasOngoingImportWarning(response.data.data.import_type);
     } else {
       uploadFile();
@@ -642,7 +641,6 @@ function hasOngoingImport(responseDataWithHasImportFlag): boolean {
 function showHasOngoingImportWarning(importType: null | string) {
   hasOngoingImportWarning.value = true;
   ongoingImportType.value = importType ? importType : '';
-  console.log(importType);
 }
 
 watch(

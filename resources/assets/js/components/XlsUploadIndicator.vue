@@ -194,7 +194,8 @@ onMounted(async () => {
       if (supportButton !== null) {
         minimize?.value
           ? (supportButton.style.transform = 'translatey(-20px)')
-          : (supportButton.style.transform = 'translatex(-450px)');
+          : // : (supportButton.style.transform = 'translatex(-450px)');
+            '';
 
         clearInterval(checkSupportButton);
       }
@@ -558,13 +559,16 @@ const hideBulkpublishLoader = () => {
 };
 
 const handleActivityPublishedData = (data) => {
+  console.log('Data', data);
   activityPublishedData.value = data;
 };
 
 const validationFailedActivities = computed(() => {
   return Object.values(
     store.state.bulkActivityPublishStatus.importedActivitiesList
-  ).some((item) => item?.is_valid === false);
+  ).some(
+    (item) => item?.is_valid === false || item?.top_level_error === 'error'
+  );
 });
 
 const handleBackgroundProcessToggler = () => {

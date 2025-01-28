@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Observers;
 
+use App\Helpers\BulkPublishCacheHelper;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\Activity\Transaction;
 use App\IATI\Services\Activity\TransactionService;
@@ -83,6 +84,13 @@ class TransactionObserver
         }
 
         $activityObj->saveQuietly();
+
+        $orgId = $activityObj->org_id;
+        $activityId = $activityObj->id;
+
+        if (BulkPublishCacheHelper::hasOngoingBulkPublish($orgId)) {
+            BulkPublishCacheHelper::appendActivityIdInBulkPublishCache($orgId, $activityId);
+        }
     }
 
     /**

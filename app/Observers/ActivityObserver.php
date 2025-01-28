@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Observers;
 
+use App\Helpers\BulkPublishCacheHelper;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Services\ElementCompleteService;
 use Illuminate\Support\Facades\Auth;
@@ -110,6 +111,12 @@ class ActivityObserver
         $activity->updated_by = Auth::user()->id;
         $activity->complete_percentage = $this->elementCompleteService->calculateCompletePercentage($activity->element_status);
         $activity->saveQuietly();
+
+        $orgId = $activity->org_id;
+
+        if (BulkPublishCacheHelper::hasOngoingBulkPublish($orgId)) {
+            BulkPublishCacheHelper::appendActivityIdInBulkPublishCache($orgId, $activity->id);
+        }
     }
 
     /**
