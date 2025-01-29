@@ -340,7 +340,7 @@ class ContactInfoRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $telephoneIndex => $telephone) {
-            $rules[sprintf('%s.telephone.%s.telephone', $formBase, $telephoneIndex)] = ['nullable', 'regex:/^[0-9*#+-]+$/', 'min:7', 'max:20'];
+            $rules[sprintf('%s.telephone.%s.telephone', $formBase, $telephoneIndex)] = ['nullable', 'regex:/^\(\+\d{1,3}\)\s?\d{1,3}(\s?\d{1,4}){1,3}$/', 'min:7', 'max:20'];
         }
 
         return $rules;
