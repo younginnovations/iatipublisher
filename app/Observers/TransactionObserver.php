@@ -45,35 +45,32 @@ class TransactionObserver
     {
         $activityObj = $transaction->activity;
         $elementStatus = $activityObj->element_status;
-        $elementStatus['transactions'] = $this->elementCompleteService->isTransactionsElementCompleted($transaction->activity);
-        $isSectorFilledInActivityLevel = !is_array_value_empty($activityObj->sector);
-        $isSectorCompletedInActivityLevel = Arr::get($elementStatus, 'sector', false);
-        $transactionService = app()->make(TransactionService::class);
-        $isSectorFilledInTransactionLevel = $transactionService->checkIfTransactionHasElementDefined($activityObj, 'sector');
-        $isSectorCompleteInTransactionLevel = $this->elementCompleteService->isSectorElementCompleted(new Activity(['sector' => $transaction->transaction['sector']]));
 
-        switch([
-            $isSectorFilledInActivityLevel,
-            $isSectorCompletedInActivityLevel,
-            $isSectorFilledInTransactionLevel,
-            $isSectorCompleteInTransactionLevel,
-        ]) {
-            case [0, 0, 1, 1]:
-            case [0, 1, 1, 1]:
-            case [1, 1, 0, 0]:
-                $elementStatus['sector'] = true;
-                break;
-            default:
-                $elementStatus['sector'] = false;
-                break;
+        $elementStatus['transactions'] = $this->elementCompleteService->isTransactionsElementCompleted($transaction->activity);
+
+        $isSectorFilledInActivityLevel = !is_array_value_empty($activityObj->sector);
+        $isSectorCompletedInActivityLevel = $this->elementCompleteService->isSectorElementCompleted($activityObj);
+
+        /** @var $transactionService TransactionService */
+        $transactionService = app(TransactionService::class);
+
+        $isSectorFilledInTransactionLevel = $transactionService->checkIfTransactionHasElementDefined($activityObj, 'sector');
+        $isSectorCompleteInTransactionLevel = $this->elementCompleteService->isSectorElementCompletedInTransaction($transaction->activity);
+
+        $elementStatus['sector'] = false;
+
+        if (($isSectorFilledInActivityLevel && $isSectorCompletedInActivityLevel) || ($isSectorFilledInTransactionLevel && $isSectorCompleteInTransactionLevel)) {
+            $elementStatus['sector'] = true;
         }
 
-        $recipientRegionOrCountryIsCompleteInTransaction = $this->recipientRegionIsEmptyInTransaction($transaction->transaction['recipient_region']) || $this->recipientCountryIsEmptyInTransaction($transaction->transaction['recipient_country']);
         $recipientRegionOrCountryIsCompleteInActivity = $this->elementCompleteService->isRecipientCountryElementCompleted($activityObj) || $this->elementCompleteService->isRecipientRegionElementCompleted($activityObj);
 
-        if ($recipientRegionOrCountryIsCompleteInTransaction || $recipientRegionOrCountryIsCompleteInActivity) {
+        if ($recipientRegionOrCountryIsCompleteInActivity) {
             $elementStatus['recipient_region'] = true;
             $elementStatus['recipient_country'] = true;
+        } else {
+            $elementStatus['recipient_region'] = false;
+            $elementStatus['recipient_country'] = false;
         }
 
         $activityObj->element_status = $elementStatus;

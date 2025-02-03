@@ -1549,3 +1549,49 @@ function regroupResponseForAllActivity(array $response, array $uniqueIdentifiers
 
     return $groupedResponses;
 }
+
+/**
+ * Returns array of activity element names in snake case.
+ * Making this instead of using $activity->getAttributes() method that laravel has because:
+ * There were case where I was not getting attributes reliably.
+ * Need this function when using ElementCompleteService::refreshElementStatus().
+ *
+ * @return string[]
+ */
+function getActivityAttributes(): array
+{
+    return  [
+        'iati_identifier',
+        'other_identifier',
+        'title',
+        'description',
+        'activity_status',
+        'activity_date',
+        'contact_info',
+        'activity_scope',
+        'participating_org',
+        'recipient_country',
+        'recipient_region',
+        'location',
+        'sector',
+        'country_budget_items',
+        'humanitarian_scope',
+        'policy_marker',
+        'collaboration_type',
+        'default_flow_type',
+        'default_finance_type',
+        'default_aid_type',
+        'default_tied_status',
+        'budget',
+        'planned_disbursement',
+        'capital_spend',
+        'document_link',
+        'related_activity',
+        'legacy_data',
+        'conditions',
+        'tag',
+        'reporting_org',
+        'transactions',
+        'result',
+    ];
+}

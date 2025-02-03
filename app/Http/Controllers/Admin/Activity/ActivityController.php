@@ -121,7 +121,7 @@ class ActivityController extends Controller
             $settingsDefaultValue = $this->settingService->getSetting()->default_values ?? [];
             $defaultLanguage = getDefaultValue($settingsDefaultValue, 'language', 'Activity/Language.json' ?? []);
 
-            // User onboarding part
+            /** User onboarding part */
             $organization = Auth::user()->organization;
             $organizationOnboarding = $this->organizationOnboardingService->getOrganizationOnboarding($organization->id);
             $isFirstTime = false;
@@ -203,7 +203,7 @@ class ActivityController extends Controller
                 'data' => $activity,
             ]);
         } catch (Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while saving activity.', 'data' => []]);
         }

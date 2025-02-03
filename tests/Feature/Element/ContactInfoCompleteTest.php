@@ -4,70 +4,97 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Element;
 
+use App\IATI\Models\Activity\Activity;
+use Illuminate\Support\Arr;
+use Tests\Traits\FilterMandatoryItemsTrait;
+
 /**
- * Class ContactInfoCompleteTest.
+ * Class LocationCompleteTest.
  */
 class ContactInfoCompleteTest extends ElementCompleteTest
 {
+    use FilterMandatoryItemsTrait;
+
     /**
-     * Element contact_info.
+     * Element location.
      *
      * @var string
      */
     private string $element = 'contact_info';
 
     /**
-     * Mandatory attribute test.
+     * @var array|string[]
+     */
+    private array $mandatoryAttributes = ['attributes.type.criteria' => 'mandatory'];
+
+    /**
+     * @var array
+     */
+    private array $mandatorySubelements = [];
+
+    /**
+     * Test for ensuring mandatory attributes have not changed since the time of writing this test.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_contact_info_mandatory_attributes(): void
+    public function test_contact_info_mandatory_attributes_have_not_changed(): void
     {
-        $this->test_mandatory_attributes($this->element, []);
+        $contactInfoSchema = Arr::get(readElementJsonSchema(), $this->element, []);
+        $contactInfoFlattened = flattenArrayWithKeys($contactInfoSchema);
+        $contactInfoFlattened = getItemsWhereKeyContains($contactInfoFlattened, '.criteria');
+        $mandatoryItemsInSchema = array_filter(
+            $contactInfoFlattened,
+            fn ($item) => !empty($item) && $item == 'mandatory'
+        );
+
+        $this->unsetMandatorySubelements($mandatoryItemsInSchema);
+
+        $this->assertEquals($mandatoryItemsInSchema, $this->mandatoryAttributes);
     }
 
     /**
-     * Mandatory sub element test.
+     * Test for ensuring mandatory subelements have not changed since the time of writing this test.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_condition_mandatory_sub_elements(): void
+    public function test_contact_info_subelements_have_not_changed(): void
     {
-        $this->test_mandatory_sub_elements($this->element, []);
+        $contactInfoSchema = Arr::get(readElementJsonSchema(), $this->element, []);
+        $contactInfoFlattened = flattenArrayWithKeys($contactInfoSchema);
+        $contactInfoFlattened = getItemsWhereKeyContains($contactInfoFlattened, '.criteria');
+        $mandatoryItemsInSchema = array_filter(
+            $contactInfoFlattened,
+            fn ($item) => !empty($item) && $item == 'mandatory'
+        );
+
+        $this->unsetMandatoryAttributes($mandatoryItemsInSchema);
+
+        $this->assertEquals($mandatoryItemsInSchema, $this->mandatorySubelements);
     }
 
     /**
-     * Empty contact_info data test.
+     * Test for ensuring the contact info is not complete with empty data.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_contact_info_empty_data(): void
+    public function test_contact_info_is_not_complete_in_empty_data(): void
     {
-        $actualData = '';
+        $actualData = [];
 
         $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
     }
 
     /**
-     * Empty contact_info array test.
+     * Test for ensuring the contact info is not complete with an empty JSON array.
      *
      * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_empty_array(): void
-    {
-        $actualData = json_decode('[]', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Empty contact_info json array test.
      *
-     * @return void
      * @throws \JsonException
      */
     public function test_contact_info_empty_json_array(): void
@@ -78,447 +105,168 @@ class ContactInfoCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * Sub element person_name empty test.
+     *  Test for checking if contact info is incomplete when all sub-elements are filled except for the type attribute.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_contact_info_sub_element_empty_person_name(): void
+    public function test_contact_info_is_incomplete_when_all_subelements_are_filled_except_type_attribute()
     {
+        $activity = new Activity();
+        $data = '[{"type":null,"organisation":[{"narrative":[{"narrative":"Org name","language":"ng"}]}],"department":[{"narrative":[{"narrative":"Dept","language":"ng"}]}],"person_name":[{"narrative":[{"narrative":"John","language":"ng"}]}],"job_title":[{"narrative":[{"narrative":"PM","language":"ng"}]}],"telephone":[{"telephone":"9860123456"}],"email":[{"email":"superadmin@yipl.com.np"}],"website":[{"website":"https://iatipublisher-staging.yipl.com.np"}],"mailing_address":[{"narrative":[{"narrative":"Mahalaxmi-sthan, Patan","language":"ng"}]}]}]';
         $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":"","job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
+            $data,
             true,
             512,
             JSON_THROW_ON_ERROR
         );
+        $activity->contact_info = $actualData;
 
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
+        $this->assertFalse($this->elementCompleteService->isContactInfoElementCompleted($activity));
     }
 
     /**
-     * Sub element person_name empty array test.
+     * Test for checking if contact info is incomplete when the type attribute is filled but no sub-elements are filled.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_contact_info_sub_element_empty_person_name_array(): void
+    public function test_contact_info_is_incomplete_when_type_attribute_is_filled_but_no_subelement_is_filled()
     {
+        $activity = new Activity();
+        $data = '[{"type":"1","organisation":[{"narrative":[{"narrative":null,"language":null}]}],"department":[{"narrative":[{"narrative":null,"language":null}]}],"person_name":[{"narrative":[{"narrative":null,"language":null}]}],"job_title":[{"narrative":[{"narrative":null,"language":null}]}],"telephone":[{"telephone":null}],"email":[{"email":null}],"website":[{"website":null}],"mailing_address":[{"narrative":[{"narrative":null,"language":null}]}]}]';
         $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[],"job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
+            $data,
             true,
             512,
             JSON_THROW_ON_ERROR
         );
+        $activity->contact_info = $actualData;
 
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
+        $this->assertFalse($this->elementCompleteService->isContactInfoElementCompleted($activity));
     }
 
     /**
-     * Sub element person_name empty json array test.
+     * Test for checking if contact info is complete when the type attribute plus any sub-element is filled.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_contact_info_sub_element_empty_person_name_json_array(): void
+    public function test_contact_info_is_complete_when_type_attribute_plus_any_subelement_is_filled()
     {
+        $activity = new Activity();
+        $data = '[{"type":"1","organisation":[{"narrative":[{"narrative":"narr 1","language":"en"}]}],"department":[{"narrative":[{"narrative":null,"language":null}]}],"person_name":[{"narrative":[{"narrative":null,"language":null}]}],"job_title":[{"narrative":[{"narrative":null,"language":null}]}],"telephone":[{"telephone":null}],"email":[{"email":null}],"website":[{"website":null}],"mailing_address":[{"narrative":[{"narrative":null,"language":null}]}]}]';
         $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{}],"job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
+            $data,
             true,
             512,
             JSON_THROW_ON_ERROR
         );
+        $activity->contact_info = $actualData;
 
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
+        $this->assertTrue($this->elementCompleteService->isContactInfoElementCompleted($activity));
     }
 
     /**
-     * Sub element person_name empty narrative test.
+     * Test for checking if contact info is complete when the type attribute plus multiple sub-elements are filled.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_contact_info_sub_element_person_name_empty_narrative(): void
+    public function test_contact_info_is_complete_when_type_attribute_plus_multiple_subelements_are_filled()
     {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":""}],"job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
+        $activity = new Activity();
+        $data = '[{"type":"1","organisation":[{"narrative":[{"narrative":"Org name","language":"en"}]}],"department":[{"narrative":[{"narrative":"Dept","language":"en"}]}],"person_name":[{"narrative":[{"narrative":null,"language":null}]}],"job_title":[{"narrative":[{"narrative":null,"language":null}]}],"telephone":[{"telephone":"123456789"}],"email":[{"email":"test@example.com"}],"website":[{"website":"https://example.com"}],"mailing_address":[{"narrative":[{"narrative":"Address","language":"en"}]}]}]';
+        $actualData = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
+        $activity->contact_info = $actualData;
 
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
+        $this->assertTrue($this->elementCompleteService->isContactInfoElementCompleted($activity));
     }
 
     /**
-     * Sub element person_name empty narrative array test.
+     * Test for checking if contact info is incomplete when the type attribute is missing.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_contact_info_sub_element_person_name_empty_narrative_array(): void
+    public function test_contact_info_is_incomplete_when_type_attribute_is_missing()
     {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[]}],"job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
+        $activity = new Activity();
+        $data = '[{"organisation":[{"narrative":[{"narrative":"Org name","language":"en"}]}]}]';
+        $actualData = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
+        $activity->contact_info = $actualData;
 
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
+        $this->assertFalse($this->elementCompleteService->isContactInfoElementCompleted($activity));
     }
 
     /**
-     * Sub element person_name empty narrative json array test.
+     * Test for checking if contact info is incomplete when the contact info element is missing.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_contact_info_sub_element_person_name_empty_narrative_json_array(): void
+    public function test_contact_info_is_incomplete_when_contact_info_element_is_missing()
     {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{}]}],"job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
+        $activity = new Activity();
+        $activity->contact_info = null;
 
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
+        $this->assertFalse($this->elementCompleteService->isContactInfoElementCompleted($activity));
     }
 
     /**
-     * Sub element person_name sub element narrative empty narrative test.
+     * Test for checking if contact info is complete with the type attribute and all sub-elements filled.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_contact_info_sub_element_person_name_sub_element_narrative_empty_narrative(): void
+    public function test_contact_info_is_complete_with_type_attributes_and_all_sub_elements_filled()
     {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"","language":"en"}]}],"job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
+        $activity = new Activity();
+        $data = '[{"type":"1","organisation":[{"narrative":[{"narrative":"Org name","language":"en"}]}],"department":[{"narrative":[{"narrative":"Dept","language":"en"}]}],"person_name":[{"narrative":[{"narrative":"John Doe","language":"en"}]}],"job_title":[{"narrative":[{"narrative":"Manager","language":"en"}]}],"telephone":[{"telephone":"123456789"}],"email":[{"email":"test@example.com"}],"website":[{"website":"https://example.com"}],"mailing_address":[{"narrative":[{"narrative":"Address","language":"en"}]}]}]';
+        $actualData = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
+        $activity->contact_info = $actualData;
 
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
+        $this->assertTrue($this->elementCompleteService->isContactInfoElementCompleted($activity));
     }
 
     /**
-     * Sub element person_name sub element narrative no narrative key test.
+     * Test for checking if multiple contact info elements are incomplete when one instance is incomplete.
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function test_contact_info_sub_element_person_name_sub_element_narrative_no_narrative_key(): void
+    public function test_multiple_contact_info_is_incomplete_when_one_is_incomplete()
     {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"language":"en"}]}],"job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
+        $activity = new Activity();
+        $data = '[{"type":"1","organisation":[{"narrative":[{"narrative":"Org name","language":"en"}]}],"department":[{"narrative":[{"narrative":"Dept","language":"en"}]}],"person_name":[{"narrative":[{"narrative":"John","language":"en"}]}],"job_title":[{"narrative":[{"narrative":"PM","language":"en"}]}],"telephone":[{"telephone":"123456789"}],"email":[{"email":"test@example.com"}],"website":[{"website":"https://example.com"}],"mailing_address":[{"narrative":[{"narrative":"Address","language":"en"}]}]}, {"type":"2","organisation":[],"department":[],"person_name":[],"job_title":[],"telephone":[{"telephone":null}],"email":[{"email":null}],"website":[{"website":null}],"mailing_address":[]}]';
+        $actualData = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
+        $activity->contact_info = $actualData;
 
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
+        $this->assertFalse($this->elementCompleteService->isContactInfoElementCompleted($activity));
     }
 
     /**
-     * Sub element job_title empty test.
+     *Test for checking if multiple contact info elements with all contact info instances complete.
      *
      * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_empty_job_title(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":"","telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element job_title empty array test.
      *
-     * @return void
      * @throws \JsonException
      */
-    public function test_contact_info_sub_element_empty_job_title_array(): void
+    public function test_multiple_contact_info_elements_with_one_complete()
     {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
+        $activity = new Activity();
+        $data = '[{"type":"1","organisation":[{"narrative":[{"narrative":"Org name","language":"en"}]}],"department":[{"narrative":[{"narrative":"Dept","language":"en"}]}],"person_name":[{"narrative":[{"narrative":"John","language":"en"}]}],"job_title":[{"narrative":[{"narrative":"PM","language":"en"}]}],"telephone":[{"telephone":"123456789"}],"email":[{"email":"test@example.com"}],"website":[{"website":"https://example.com"}],"mailing_address":[{"narrative":[{"narrative":"Address","language":"en"}]}]}, {"type":"1","organisation":[{"narrative":[{"narrative":"narr 1","language":"en"}]}],"department":[{"narrative":[{"narrative":null,"language":null}]}],"person_name":[{"narrative":[{"narrative":null,"language":null}]}],"job_title":[{"narrative":[{"narrative":null,"language":null}]}],"telephone":[{"telephone":null}],"email":[{"email":null}],"website":[{"website":null}],"mailing_address":[{"narrative":[{"narrative":null,"language":null}]}]}]';
+        $actualData = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
+        $activity->contact_info = $actualData;
 
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element job_title empty json array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_empty_job_title_json_array(): void
-    {
-        $actualData = json_decode('[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element job_title empty narrative test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_job_title_empty_narrative(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{"narrative":""}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element job_title empty narrative array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_job_title_empty_narrative_array(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{"narrative":[]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element job_title empty narrative json array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_job_title_empty_narrative_json_array(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element job_title sub element narrative empty narrative test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_job_title_sub_element_narrative_empty_narrative(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{"narrative":[{"narrative":"","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element job_title sub element narrative no narrative key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_job_title_sub_element_narrative_no_narrative_key(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{"narrative":[{"language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element mailing_address empty test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_empty_mailing_address(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"contact-info1-person-name-narrative1","language":"ae"}]}],"job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":""}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element mailing_address empty array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_empty_mailing_address_array(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element mailing_address empty json array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_empty_mailing_address_json_array(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element mailing_address empty narrative test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_mailing_address_empty_narrative(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{"narrative":""}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":""}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * ub element mailing_address empty narrative array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_mailing_address_empty_narrative_array(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{"narrative":[]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element mailing_address empty narrative json array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_mailing_address_empty_narrative_json_array(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element mailing_address sub element narrative empty narrative test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_mailing_address_sub_element_narrative_empty_narrative(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{"narrative":[{"narrative":"","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element mailing_address sub element narrative no narrative key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_sub_element_mailing_address_sub_element_narrative_no_narrative_key(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"asd","language":"en"}]}],"job_title":[{"narrative":[{"language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Contact Info element complete test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_contact_info_element_complete(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"1","organisation":[{"narrative":[{"narrative":"contact-info1-org-narrative1","language":"aa"}]}],"department":[{"narrative":[{"narrative":"contact-info1-dept-narrative1","language":"ab"}]}],"person_name":[{"narrative":[{"narrative":"contact-info1-person-name-narrative1","language":"ae"}]}],"job_title":[{"narrative":[{"narrative":"contact-info1-job-title-narrative1","language":"af"}]}],"telephone":[{"telephone":"+977-0044111222333444"}],"email":[{"email":"manish.pradhan@yipl.com.np"}],"website":[{"website":"https:\/\/www.google.com"}],"mailing_address":[{"narrative":[{"narrative":"contact-info1-mailing-address-narrative1","language":"am"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
+        $this->assertTrue($this->elementCompleteService->isContactInfoElementCompleted($activity));
     }
 }

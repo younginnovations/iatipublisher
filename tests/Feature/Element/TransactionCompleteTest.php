@@ -4,60 +4,275 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Element;
 
+use Illuminate\Support\Arr;
+use Tests\Traits\FilterMandatoryItemsTrait;
+use Tests\Traits\TestDataTrait;
+
 /**
  * Class TransactionCompleteTest.
  */
 class TransactionCompleteTest extends ElementCompleteTest
 {
+    use FilterMandatoryItemsTrait;
+    use TestDataTrait;
+
+    protected array $mandatorySubelements = [
+        'sub_elements.transaction_type.attributes.transaction_type_code.criteria' => 'mandatory',
+        'sub_elements.transaction_date.attributes.date.criteria'                  => 'mandatory',
+        'sub_elements.value.attributes.amount.criteria'                           => 'mandatory',
+        'sub_elements.value.attributes.date.criteria'                             => 'mandatory',
+        'sub_elements.value.attributes.currency.criteria'                         => 'mandatory',
+    ];
+
+    protected array $mandatoryAttributes = [];
+
     /**
      * Element transactions.
      *
      * @var string
      */
-    private string $element = 'transactions';
+    private string  $element = 'transactions';
 
     /**
-     * Mandatory attribute test.
+     * Test for ensuring mandatory attributes have not changed since the time of writing this test.
      *
      * @return void
-     * @throws \JsonException
-     */
-    public function test_transaction_mandatory_attributes(): void
-    {
-        $this->test_mandatory_attributes($this->element, []);
-    }
-
-    /**
-     * Mandatory sub element test.
      *
-     * @return void
      * @throws \JsonException
      */
-    public function test_transaction_mandatory_sub_elements(): void
+    public function test_contact_info_mandatory_attributes_have_not_changed(): void
     {
-        $this->test_mandatory_sub_elements($this->element, [
-            'transaction_type' => ['transaction_type_code'],
-            'transaction_date' => ['date'],
-            'value'            => ['amount', 'date', 'currency'],
-        ]);
-    }
-
-    /**
-     * Transaction element complete test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_transaction_element_complete(): void
-    {
-        $elementSchema = getElementSchema($this->element);
-        $actualData = json_decode(
-            '{"reference":"ref test1","humanitarian":"1","transaction_type":[{"transaction_type_code":"1"}],"transaction_date":[{"date":"2022-07-08"}],"value":[{"amount":"5000","date":"2022-07-08","currency":"AED"}],"description":[{"narrative":[{"narrative":"test description","language":"ab"},{"narrative":"description 2","language":"af"}]}],"provider_organization":[{"organization_identifier_code":"provider ref","provider_activity_id":"15","type":"15","narrative":[{"narrative":"narative 1","language":"ae"},{"narrative":"narrative 2","language":"am"}]}],"receiver_organization":[{"organization_identifier_code":"receiver org","receiver_activity_id":"16","type":"15","narrative":[{"narrative":"receiver narrative 1","language":"ab"},{"narrative":"receiver narrative 2","language":"ak"}]}],"disbursement_channel":[{"disbursement_channel_code":null}],"sector":[{"sector_vocabulary":"2","category_code":"112","narrative":[{"narrative":"test narrative","language":"ab"},{"narrative":"test narrative 2","language":"am"}]},{"sector_vocabulary":"4","text":"5638","narrative":[{"narrative":"narrative 22","language":"af"},{"narrative":"narrative 23","language":"am"}]}],"recipient_country":[{"country_code":"AL","narrative":[{"narrative":"test narrative","language":"ab"},{"narrative":"test narrative recipient","language":"am"}]}],"recipient_region":[{"region_vocabulary":"99","custom_code":"test code","vocabulary_uri":"https:\/\/github.com\/younginnovations\/iatipublisher\/runs\/6980821807?check_suite_focus=true","narrative":[{"narrative":"narrative region 1","language":"aa"},{"narrative":"narrative region 2","language":"am"}]}],"flow_type":[{"flow_type":"10"}],"finance_type":[{"finance_type":"210"}],"aid_type":[{"aid_type_vocabulary":"1","aid_type_code":"A02"},{"aid_type_vocabulary":"4","cash_and_voucher_modalities":"1"}],"tied_status":[{"tied_status_code":"3"}]}',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
+        $transactionSchema = Arr::get(readElementJsonSchema(), $this->element, []);
+        $transactionFlattened = flattenArrayWithKeys($transactionSchema);
+        $transactionFlattened = getItemsWhereKeyContains($transactionFlattened, '.criteria');
+        $mandatoryItemsInSchema = array_filter(
+            $transactionFlattened,
+            fn ($item) => !empty($item) && $item == 'mandatory'
         );
 
-        $this->test_transaction_data_complete($elementSchema['sub_elements'], $actualData);
+        $this->unsetMandatorySubelements($mandatoryItemsInSchema);
+
+        $this->assertEquals($mandatoryItemsInSchema, $this->mandatoryAttributes);
+    }
+
+    /**
+     * Test for ensuring mandatory subelements have not changed since the time of writing this test.
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function test_contact_info_subelements_have_not_changed(): void
+    {
+        $transactionSchema = Arr::get(readElementJsonSchema(), $this->element, []);
+        $transactionFlattened = flattenArrayWithKeys($transactionSchema);
+        $transactionFlattened = getItemsWhereKeyContains($transactionFlattened, '.criteria');
+        $mandatoryItemsInSchema = array_filter(
+            $transactionFlattened,
+            fn ($item) => !empty($item) && $item == 'mandatory'
+        );
+
+        $this->unsetMandatoryAttributes($mandatoryItemsInSchema);
+
+        $this->assertEquals($mandatoryItemsInSchema, $this->mandatorySubelements);
+    }
+
+    public function test_transaction_incomplete_when_doesnt_exist()
+    {
+        $activity = $this->createDummyActivity();
+
+        $this->assertFalse($this->elementCompleteService->isTransactionsElementCompleted($activity));
+    }
+
+    public function test_transaction_incomplete_when_all_transactions_value_is_null()
+    {
+        $actualData = [$this->getEmptyTransactionData()];
+
+        $activity = $this->createDummyActivity();
+        $activity = $this->setTransactionValue($activity, $actualData);
+
+        $this->assertFalse($this->elementCompleteService->isTransactionsElementCompleted($activity));
+    }
+
+    public function test_transaction_complete_when_all_transactions_value_is_filled()
+    {
+        $actualData = [$this->getCompleteTransactionData()];
+
+        $activity = $this->createDummyActivity();
+        $activity = $this->setTransactionValue($activity, $actualData);
+
+        $this->assertTrue($this->elementCompleteService->isTransactionsElementCompleted($activity));
+    }
+
+    public function test_transaction_incomplete_when_transaction_type_is_null()
+    {
+        $actualData = [$this->getCompleteTransactionData()];
+        $actualData[0]['transaction_type'] = null;
+
+        $activity = $this->createDummyActivity();
+        $activity = $this->setTransactionValue($activity, $actualData);
+
+        $this->assertFalse($this->elementCompleteService->isTransactionsElementCompleted($activity));
+    }
+
+    public function test_transaction_incomplete_when_transaction_type_transaction_type_code_is_null()
+    {
+        $actualData = [$this->getCompleteTransactionData()];
+        $actualData[0]['transaction_type'][0]['transaction_type_code'] = null;
+
+        $activity = $this->createDummyActivity();
+        $activity = $this->setTransactionValue($activity, $actualData);
+
+        $this->assertFalse($this->elementCompleteService->isTransactionsElementCompleted($activity));
+    }
+
+    public function test_transaction_incomplete_when_transaction_date_is_null()
+    {
+        $actualData = [$this->getCompleteTransactionData()];
+        $actualData[0]['transaction_date'] = null;
+
+        $activity = $this->createDummyActivity();
+        $activity = $this->setTransactionValue($activity, $actualData);
+
+        $this->assertFalse($this->elementCompleteService->isTransactionsElementCompleted($activity));
+    }
+
+    public function test_transaction_incomplete_when_transaction_date_date_is_null()
+    {
+        $actualData = [$this->getCompleteTransactionData()];
+        $actualData[0]['transaction_date'][0]['date'] = null;
+
+        $activity = $this->createDummyActivity();
+        $activity = $this->setTransactionValue($activity, $actualData);
+
+        $this->assertFalse($this->elementCompleteService->isTransactionsElementCompleted($activity));
+    }
+
+    public function test_transaction_incomplete_when_transaction_value_is_null()
+    {
+        $actualData = [$this->getCompleteTransactionData()];
+        $actualData[0]['value'] = null;
+
+        $activity = $this->createDummyActivity();
+        $activity = $this->setTransactionValue($activity, $actualData);
+
+        $this->assertFalse($this->elementCompleteService->isTransactionsElementCompleted($activity));
+    }
+
+    public function test_transaction_incomplete_when_transaction_value_amount_is_null()
+    {
+        $actualData = [$this->getCompleteTransactionData()];
+        $actualData[0]['value'][0]['amount'] = null;
+
+        $activity = $this->createDummyActivity();
+        $activity = $this->setTransactionValue($activity, $actualData);
+
+        $this->assertFalse($this->elementCompleteService->isTransactionsElementCompleted($activity));
+    }
+
+    public function test_transaction_incomplete_when_transaction_value_date_is_null()
+    {
+        $actualData = [$this->getCompleteTransactionData()];
+        $actualData[0]['value'][0]['date'] = null;
+
+        $activity = $this->createDummyActivity();
+        $activity = $this->setTransactionValue($activity, $actualData);
+
+        $this->assertFalse($this->elementCompleteService->isTransactionsElementCompleted($activity));
+    }
+
+    public function test_transaction_incomplete_when_transaction_value_currency_is_null()
+    {
+        $actualData = [$this->getCompleteTransactionData()];
+        $actualData[0]['value'][0]['currency'] = null;
+
+        $activity = $this->createDummyActivity();
+        $activity = $this->setTransactionValue($activity, $actualData);
+
+        $this->assertFalse($this->elementCompleteService->isTransactionsElementCompleted($activity));
+    }
+
+    public function test_activity_RR_and_RC_incomplete_when_transaction_RR_is_not_filled()
+    {
+        $actualData = [$this->getCompleteTransactionData()];
+
+        $activity = $this->createDummyActivity();
+        $activity = $this->setTransactionValue($activity, $actualData);
+
+        $elementStatus = $activity->element_status;
+
+        $this->assertTrue($elementStatus['transactions'], 'Transactions is incomplete.');
+        $this->assertFalse($elementStatus['recipient_country'], 'Recipient country is complete. It should be incomplete.');
+        $this->assertFalse($elementStatus['recipient_region'], 'Recipient region is complete. It should be incomplete.');
+    }
+
+    public function test_activity_RR_and_RC_complete_when_transaction_RR_is_filled()
+    {
+        $actualData = [$this->getCompleteTransactionData(withRR: true)];
+
+        $activity = $this->createDummyActivity();
+        $activity = $this->setTransactionValue($activity, $actualData);
+
+        $elementStatus = $activity->element_status;
+
+        $this->assertTrue($elementStatus['transactions'], 'Transactions is incomplete.');
+        $this->assertTrue($elementStatus['recipient_country'], 'Recipient country is incomplete. It should be complete.');
+        $this->assertTrue($elementStatus['recipient_region'], 'Recipient region is incomplete. It should be complete.');
+    }
+
+    public function test_activity_RR_and_RC_incomplete_when_transaction_RC_is_not_filled()
+    {
+        $actualData = [$this->getCompleteTransactionData()];
+
+        $activity = $this->createDummyActivity();
+        $activity = $this->setTransactionValue($activity, $actualData);
+
+        $elementStatus = $activity->element_status;
+
+        $this->assertTrue($elementStatus['transactions'], 'Transactions is incomplete.');
+        $this->assertFalse($elementStatus['recipient_country'], 'Recipient country is complete. It should be incomplete.');
+        $this->assertFalse($elementStatus['recipient_region'], 'Recipient region is complete. It should be incomplete.');
+    }
+
+    public function test_activity_RR_and_RC_complete_when_transaction_RC_is_filled()
+    {
+        $actualData = [$this->getCompleteTransactionData(withRC: true)];
+
+        $activity = $this->createDummyActivity();
+        $activity = $this->setTransactionValue($activity, $actualData);
+
+        $elementStatus = $activity->element_status;
+
+        $this->assertTrue($elementStatus['transactions'], 'Transactions is incomplete.');
+        $this->assertTrue($elementStatus['recipient_country'], 'Recipient country is incomplete. It should be complete.');
+        $this->assertTrue($elementStatus['recipient_region'], 'Recipient region is incomplete. It should be complete.');
+    }
+
+    public function test_activity_sector_incomplete_when_transaction_sector_is_not_filled()
+    {
+        $actualData = [$this->getCompleteTransactionData()];
+
+        $activity = $this->createDummyActivity();
+        $activity = $this->setTransactionValue($activity, $actualData);
+
+        $elementStatus = $activity->element_status;
+
+        $this->assertTrue($elementStatus['transactions'], 'Transactions is incomplete.');
+        $this->assertFalse($elementStatus['recipient_country'], 'Recipient country is complete. It should be incomplete.');
+        $this->assertFalse($elementStatus['recipient_region'], 'Recipient region is complete. It should be incomplete.');
+    }
+
+    public function test_activity_sector_complete_when_transaction_sector_is_filled()
+    {
+        $actualData = [$this->getCompleteTransactionData(withRC: true)];
+
+        $activity = $this->createDummyActivity();
+        $activity = $this->setTransactionValue($activity, $actualData);
+
+        $elementStatus = $activity->element_status;
+
+        $this->assertTrue($elementStatus['transactions'], 'Transactions is incomplete.');
+        $this->assertTrue($elementStatus['recipient_country'], 'Recipient country is incomplete. It should be complete.');
+        $this->assertTrue($elementStatus['recipient_region'], 'Recipient region is incomplete. It should be complete.');
     }
 }

@@ -130,6 +130,9 @@ trait DownloadActivitySimpleElementTrait
 
     /**
      * Get activity general description.
+     * Get order:
+     *  - Try to get description text where description language matches activity default language.
+     *  - Try to get first description text where description type matches general description (1).
      *
      * @param $activityArray
      * @param $rowIndex
@@ -138,11 +141,23 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getActivityDescriptionGeneral($activityArray, $rowIndex): ?string
     {
-        return ($rowIndex === 0) ? $this->getDescriptionText(Arr::get($activityArray, 'description', []), Arr::get($activityArray, 'default_field_values.default_language', ''), '1') : '';
+        $type = '1';
+        $activityDescription = Arr::get($activityArray, 'description', []);
+        $defaultLanguage = Arr::get($activityArray, 'default_field_values.default_language', '');
+        $generalDescription = $this->getDescriptionText($activityDescription, $defaultLanguage, $type);
+
+        $generalDescription = empty($generalDescription)
+            ? $this->getFirstDescriptionTextThatMatchesType($activityDescription, $type)
+            : $generalDescription;
+
+        return ($rowIndex === 0) ? $generalDescription : '';
     }
 
     /**
      * Get activity objectives description.
+     * Get order:
+     *   - Try to get description text where description language matches activity default language.
+     *   - Try to get first description text where description type matches objective description (2).
      *
      * @param $activityArray
      * @param $rowIndex
@@ -151,11 +166,23 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getActivityDescriptionObjectives($activityArray, $rowIndex): ?string
     {
-        return ($rowIndex === 0) ? $this->getDescriptionText(Arr::get($activityArray, 'description', []), Arr::get($activityArray, 'default_field_values.default_language', ''), '2') : '';
+        $type = '2';
+        $activityDescription = Arr::get($activityArray, 'description', []);
+        $defaultLanguage = Arr::get($activityArray, 'default_field_values.default_language', '');
+        $objectiveDescription = $this->getDescriptionText($activityDescription, $defaultLanguage, $type);
+
+        $objectiveDescription = empty($objectiveDescription)
+            ? $this->getFirstDescriptionTextThatMatchesType($activityDescription, $type)
+            : $objectiveDescription;
+
+        return ($rowIndex === 0) ? $objectiveDescription : '';
     }
 
     /**
      * Get activity target groups description.
+     * Get order:
+     *   - Try to get description text where description language matches activity default language.
+     *   - Try to get first description text where description type matches target groups description (3).
      *
      * @param $activityArray
      * @param $rowIndex
@@ -164,11 +191,23 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getActivityDescriptionTargetGroups($activityArray, $rowIndex): ?string
     {
-        return ($rowIndex === 0) ? $this->getDescriptionText(Arr::get($activityArray, 'description', []), Arr::get($activityArray, 'default_field_values.default_language', ''), '3') : '';
+        $type = '3';
+        $activityDescription = Arr::get($activityArray, 'description', []);
+        $defaultLanguage = Arr::get($activityArray, 'default_field_values.default_language', '');
+        $targetGroupDescription = $this->getDescriptionText($activityDescription, $defaultLanguage, $type);
+
+        $targetGroupDescription = empty($targetGroupDescription)
+            ? $this->getFirstDescriptionTextThatMatchesType($activityDescription, $type)
+            : $targetGroupDescription;
+
+        return ($rowIndex === 0) ? $targetGroupDescription : '';
     }
 
     /**
      * Get activity others description.
+     * Get order:
+     *   - Try to get description text where description language matches activity default language.
+     *   - Try to get first description text where description type matches other description (4).
      *
      * @param $activityArray
      * @param $rowIndex
@@ -177,7 +216,16 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getActivityDescriptionOthers($activityArray, $rowIndex): ?string
     {
-        return ($rowIndex === 0) ? $this->getDescriptionText(Arr::get($activityArray, 'description', []), Arr::get($activityArray, 'default_field_values.default_language', ''), '4') : '';
+        $type = '4';
+        $activityDescription = Arr::get($activityArray, 'description', []);
+        $defaultLanguage = Arr::get($activityArray, 'default_field_values.default_language', '');
+        $otherDescription = $this->getDescriptionText($activityDescription, $defaultLanguage, $type);
+
+        $otherDescription = empty($otherDescription)
+            ? $this->getFirstDescriptionTextThatMatchesType($activityDescription, $type)
+            : $otherDescription;
+
+        return ($rowIndex === 0) ? $otherDescription : '';
     }
 
     /**
@@ -482,6 +530,10 @@ trait DownloadActivitySimpleElementTrait
     /**
      * Get activity policy marker vocabulary.
      *
+     * UNDERSTANDING THE RETURN STATEMENTS:
+     *  Since vocabulary is an  optional field in the forms, there can be data where there is no vocab but has code.
+     *  So we need to check if code exists, if exists then set vocab = 99 in the downloaded file.
+     *
      * @param $activityArray
      * @param $rowIndex
      *
@@ -489,7 +541,20 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getPolicyMarkerVocabulary($activityArray, $rowIndex): ?string
     {
-        return (string) (Arr::get($activityArray, 'policy_marker.' . $rowIndex . '.policy_marker_vocabulary', ''));
+        $policyMarkerVocabulary = Arr::get($activityArray, 'policy_marker.' . $rowIndex . '.policy_marker_vocabulary');
+        $hasCode = Arr::get($activityArray, 'policy_marker.' . $rowIndex . '.policy_marker', false)
+            || Arr::get($activityArray, 'policy_marker.' . $rowIndex . '.policy_marker_text', false);
+        $hasVocab = !empty($policyMarkerVocabulary);
+
+        if ($hasVocab) {
+            return $policyMarkerVocabulary;
+        }
+
+        if ($hasCode) {
+            return '99';
+        }
+
+        return null;
     }
 
     /**
@@ -502,7 +567,12 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getPolicyMarkerCode($activityArray, $rowIndex): ?string
     {
-        return (string) ($this->getPolicyMarkerCodeFromVocabulary(Arr::get($activityArray, 'policy_marker.' . $rowIndex . '.policy_marker_vocabulary', ''), Arr::get($activityArray, 'policy_marker.' . $rowIndex, [])));
+        return (string) (
+            $this->getPolicyMarkerCodeFromVocabulary(
+                Arr::get($activityArray, 'policy_marker.' . $rowIndex . '.policy_marker_vocabulary', ''),
+                Arr::get($activityArray, 'policy_marker.' . $rowIndex, [])
+            )
+        );
     }
 
     /**
@@ -541,7 +611,10 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getPolicyMarkerNarrative($activityArray, $rowIndex): ?string
     {
-        return $this->getNarrativeText(Arr::get($activityArray, 'policy_marker.' . $rowIndex . '.narrative', []), Arr::get($activityArray, 'default_field_values.default_language', ''));
+        return $this->getNarrativeText(
+            Arr::get($activityArray, 'policy_marker.' . $rowIndex . '.narrative', []),
+            Arr::get($activityArray, 'default_field_values.default_language', '')
+        );
     }
 
     /**

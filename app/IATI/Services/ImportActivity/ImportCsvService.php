@@ -10,6 +10,7 @@ use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Activity\TransactionRepository;
 use App\IATI\Repositories\Import\ImportActivityErrorRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
+use App\IATI\Services\ElementCompleteService;
 use App\IATI\Traits\FillDefaultValuesTrait;
 use App\Imports\CsvToArray;
 use Exception;
@@ -99,6 +100,11 @@ class ImportCsvService
     protected Filesystem $filesystem;
 
     /**
+     * @var ElementCompleteService
+     */
+    private ElementCompleteService $elementCompleteService;
+
+    /**
      * ImportManager constructor.
      *
      * @param Excel                  $excel
@@ -120,7 +126,8 @@ class ImportCsvService
         OrganizationRepository $organizationRepo,
         TransactionRepository $transactionRepo,
         ImportActivityErrorRepository $importActivityErrorRepo,
-        Filesystem $filesystem
+        Filesystem $filesystem,
+        ElementCompleteService $elementCompleteService
     ) {
         $this->excel = $excel;
         $this->processor = $processor;
@@ -131,6 +138,7 @@ class ImportCsvService
         $this->transactionRepo = $transactionRepo;
         $this->importActivityErrorRepo = $importActivityErrorRepo;
         $this->filesystem = $filesystem;
+        $this->elementCompleteService = $elementCompleteService;
         $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'CsvImporter/tmp');
         $this->csv_file_storage_path = env('CSV_FILE_STORAGE_PATH', 'CsvImporter/file');
     }
@@ -189,6 +197,7 @@ class ImportCsvService
      *
      * @throws BindingResolutionException
      * @throws \JsonException
+     * @throws \ReflectionException
      */
     public function create($activities): void
     {
@@ -228,6 +237,10 @@ class ImportCsvService
                 } else {
                     $this->importActivityErrorRepo->deleteImportError($oldActivity->id);
                 }
+
+                $this->elementCompleteService->refreshElementStatus(
+                    $this->activityRepo->getActivitityWithRelationsById($oldActivity->id)
+                );
             } else {
                 $createdActivity = $this->activityRepo->createActivity(Arr::get($activity, 'data'));
 
@@ -238,6 +251,10 @@ class ImportCsvService
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($createdActivity->id, $activity['errors']);
                 }
+
+                $this->elementCompleteService->refreshElementStatus(
+                    $this->activityRepo->getActivitityWithRelationsById($createdActivity->id)
+                );
             }
         }
     }

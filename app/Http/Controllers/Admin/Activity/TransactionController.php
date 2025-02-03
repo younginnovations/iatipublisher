@@ -345,6 +345,7 @@ class TransactionController extends Controller
         try {
             $this->transactionService->deleteTransaction($transactionId);
 
+            $activity = $this->activityService->getActivity($id);
             Session::flash('success', 'Transaction Deleted Successfully');
 
             return response()->json([

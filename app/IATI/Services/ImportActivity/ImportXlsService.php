@@ -12,6 +12,7 @@ use App\IATI\Repositories\Activity\TransactionRepository;
 use App\IATI\Repositories\Import\ImportActivityErrorRepository;
 use App\IATI\Repositories\Import\ImportStatusRepository;
 use App\IATI\Services\Activity\ActivityService;
+use App\IATI\Services\ElementCompleteService;
 use App\XlsImporter\Events\XlsWasUploaded;
 use Exception;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -70,6 +71,8 @@ class ImportXlsService
      */
     protected ImportStatusRepository $importStatusRepo;
 
+    private ElementCompleteService $elementCompleteService;
+
     /**
      * XmlImportManager constructor.
      *
@@ -89,7 +92,8 @@ class ImportXlsService
         PeriodRepository $periodRepository,
         IndicatorRepository $indicatorRepository,
         ImportActivityErrorRepository $importActivityErrorRepo,
-        ImportStatusRepository $importStatusRepo
+        ImportStatusRepository $importStatusRepo,
+        ElementCompleteService $elementCompleteService,
     ) {
         $this->transactionRepository = $transactionRepository;
         $this->activityRepository = $activityRepository;
@@ -98,6 +102,7 @@ class ImportXlsService
         $this->importActivityErrorRepo = $importActivityErrorRepo;
         $this->importStatusRepo = $importStatusRepo;
         $this->periodRepository = $periodRepository;
+        $this->elementCompleteService = $elementCompleteService;
         $this->xls_file_storage_path = env('XLS_FILE_STORAGE_PATH', 'XlsImporter/file');
         $this->xls_data_storage_path = env('XLS_DATA_STORAGE_PATH', 'XlsImporter/tmp');
     }
@@ -167,6 +172,8 @@ class ImportXlsService
      * @param $activityId
      *
      * @return $this
+     * @throws \JsonException
+     * @throws \ReflectionException
      */
     protected function saveTransactions($transactions, $activityId): static
     {
@@ -196,6 +203,7 @@ class ImportXlsService
      *
      * @throws BindingResolutionException
      * @throws \JsonException
+     * @throws \ReflectionException
      */
     protected function saveActivities($activities): void
     {
@@ -204,6 +212,7 @@ class ImportXlsService
         $contents = json_decode(awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $organizationId, $userId, 'valid.json')), false, 512, JSON_THROW_ON_ERROR | 0);
 
         foreach ($activities as $value) {
+            $storeActivity = null;
             $activity = unsetErrorFields($contents[$value]);
             $activity['data'] = unsetDeprecatedFieldValues(Arr::get($activity, 'data', []));
 
@@ -227,22 +236,46 @@ class ImportXlsService
                 $this->transactionRepository->deleteTransaction($existingId);
                 $this->saveTransactions(Arr::get($activityData, 'transactions', []), $existingId);
 
+                $storeActivity = $this->activityRepository->find($existingId);
+
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($existingId, $activity['errors']);
                 } else {
                     $this->importActivityErrorRepo->deleteImportError($existingId);
                 }
             } else {
-                $activityService = app()->make(ActivityService::class);
+                /** @var $activityService ActivityService */
+                $activityService = app(ActivityService::class);
                 $organizationIdentifier = Auth::user()->organization->identifier;
                 $defaultValues = $activityService->getDefaultValues();
 
                 $activityData['org_id'] = $organizationId;
                 $activityData['upload_medium'] = 'xls';
-                $activityData['collaboration_type'] = isset($defaultValues['default_collaboration_type']) && !empty($defaultValues['default_collaboration_type']) ? (int) $defaultValues['default_collaboration_type'] : null;
-                $activityData['default_flow_type'] = isset($defaultValues['default_flow_type']) && !empty($defaultValues['default_flow_type']) ? (int) $defaultValues['default_flow_type'] : null;
-                $activityData['default_finance_type'] = isset($defaultValues['default_finance_type']) && !empty($defaultValues['default_finance_type']) ? (int) $defaultValues['default_finance_type'] : null;
-                $activityData['default_tied_status'] = isset($defaultValues['default_tied_status']) && !empty($defaultValues['default_tied_status']) ? (int) $defaultValues['default_tied_status'] : null;
+
+                $activityData['collaboration_type'] = $this->getIntOrNullFromActivityDataOrDefaultValues(
+                    activityData         : $activityData,
+                    activityDataAccessKey: 'collaboration_type',
+                    defaultValues        : $defaultValues,
+                    defaultDataKey       : 'default_collaboration_type'
+                );
+                $activityData['flow_type'] = $this->getIntOrNullFromActivityDataOrDefaultValues(
+                    activityData         : $activityData,
+                    activityDataAccessKey: 'flow_type',
+                    defaultValues        : $defaultValues,
+                    defaultDataKey       : 'default_flow_type'
+                );
+                $activityData['finance_type'] = $this->getIntOrNullFromActivityDataOrDefaultValues(
+                    activityData         : $activityData,
+                    activityDataAccessKey: 'finance_type',
+                    defaultValues        : $defaultValues,
+                    defaultDataKey       : 'default_finance_type'
+                );
+                $activityData['tied_status'] = $this->getIntOrNullFromActivityDataOrDefaultValues(
+                    activityData         : $activityData,
+                    activityDataAccessKey: 'tied_status',
+                    defaultValues        : $defaultValues,
+                    defaultDataKey       : 'default_tied_status'
+                );
 
                 $activityData['iati_identifier']['iati_identifier_text'] = $organizationIdentifier . '-' . $activityData['iati_identifier']['activity_identifier'];
                 $activityData['iati_identifier']['present_organization_identifier'] = $organizationIdentifier;
@@ -264,7 +297,28 @@ class ImportXlsService
                     $this->importActivityErrorRepo->updateOrCreateError($storeActivity->id, $activity['errors']);
                 }
             }
+
+            $this->elementCompleteService->refreshElementStatus(
+                $this->activityRepository->getActivitityWithRelationsById($storeActivity->id)
+            );
         }
+    }
+
+    public function getIntOrNullFromActivityDataOrDefaultValues(
+        array $activityData,
+        string $activityDataAccessKey,
+        array $defaultValues,
+        string $defaultDataKey
+    ): ?int {
+        $value = Arr::get($activityData, $activityDataAccessKey);
+
+        if (!empty($value)) {
+            return (int) $value;
+        }
+
+        $defaultValue = Arr::get($defaultValues, $defaultDataKey);
+
+        return !empty($defaultValue) ? (int) $defaultValue : null;
     }
 
     /**
