@@ -17,17 +17,10 @@ use Illuminate\Support\Arr;
  */
 class DownloadActivityService
 {
-    use ChecksCsvHeaders, DownloadActivitySimpleElementTrait, DownloadActivityComplexElementTrait, DownloadTransactionTrait;
-
-    /**
-     * @var ActivityRepository
-     */
-    protected ActivityRepository $activityRepository;
-
-    /**
-     * @var XmlGenerator
-     */
-    protected XmlGenerator $xmlGenerator;
+    use ChecksCsvHeaders;
+    use DownloadActivityComplexElementTrait;
+    use DownloadActivitySimpleElementTrait;
+    use DownloadTransactionTrait;
 
     /**
      * @var array
@@ -67,11 +60,9 @@ class DownloadActivityService
      * @param XmlGenerator $xmlGenerator
      */
     public function __construct(
-        ActivityRepository $activityRepository,
-        XmlGenerator $xmlGenerator
+        protected ActivityRepository $activityRepository,
+        protected XmlGenerator $xmlGenerator
     ) {
-        $this->activityRepository = $activityRepository;
-        $this->xmlGenerator = $xmlGenerator;
     }
 
     /**
@@ -193,6 +184,11 @@ class DownloadActivityService
     /**
      * Returns activity description narrative for particular description type.
      *
+     * UNDERSTANDING THE : || $type === '1'
+     *  That is to handle data where description narrative is present but no type is specified.
+     *  That type of description will be default-ed to type 1 in the downloaded file.
+     *
+     *
      * @param $descriptions
      * @param $language
      * @param $type
@@ -203,7 +199,7 @@ class DownloadActivityService
     {
         if (!empty($descriptions) && is_array($descriptions) && count($descriptions)) {
             foreach ($descriptions as $description) {
-                if (Arr::get($description, 'type', $type) === $type) {
+                if (Arr::get($description, 'type', $type) === $type || $type === '1') {
                     return (string) $this->getNarrativeText(Arr::get($description, 'narrative', []), $language);
                 }
             }
@@ -290,11 +286,11 @@ class DownloadActivityService
      */
     public function getPolicyMarkerCodeFromVocabulary($policyMarkerVocabulary, $policyMarker): ?string
     {
-        if (!empty($policyMarkerVocabulary) && $policyMarkerVocabulary !== '1') {
-            return (string) Arr::get($policyMarker, 'policy_marker_text', '');
+        if ($policyMarkerVocabulary === '1') {
+            return (string) Arr::get($policyMarker, 'policy_marker', '');
         }
 
-        return (string) Arr::get($policyMarker, 'policy_marker', '');
+        return Arr::get($policyMarker, 'policy_marker_text', '');
     }
 
     /**
@@ -452,5 +448,24 @@ class DownloadActivityService
     public function getAllActivitiesQueryToDownload($queryParams, $authUser): object
     {
         return $this->activityRepository->getAllActivitiesQueryToDownload($authUser['organization_id'], $queryParams);
+    }
+
+    /**
+     * Returns the first narrative text of the first description that matches given description type.
+     *
+     * @param array  $descriptions
+     * @param string $type
+     *
+     * @return string
+     */
+    public function getFirstDescriptionTextThatMatchesType(array $descriptions, string $type = '1'): string
+    {
+        foreach ($descriptions as $description) {
+            if ($description['type'] === $type) {
+                return Arr::get($description, 'narrative.0.narrative') ?? '';
+            }
+        }
+
+        return '';
     }
 }

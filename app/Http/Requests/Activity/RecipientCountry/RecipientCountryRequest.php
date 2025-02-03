@@ -223,6 +223,10 @@ class RecipientCountryRequest extends ActivityBaseRequest
             return [];
         }
 
+        $column = array_map(function ($item) {
+            return $item ?? '';
+        }, $column);
+
         $counted = !empty($column) ? array_count_values($column) : [];
         $duplicates = array_filter($counted, static function ($value) {
             return $value > 1;

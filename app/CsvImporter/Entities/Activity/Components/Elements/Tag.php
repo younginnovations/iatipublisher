@@ -136,45 +136,119 @@ class Tag extends Element
      */
     protected function setTagCode($key, $value, $index): void
     {
-        if (!isset($this->data['tag'][$index]['tag_text'])) {
-            $this->data['tag'][$index]['tag_text'] = '';
-        }
-
         if ($key === $this->_csvHeaders[1]) {
+            if (!isset($this->data['tag'][$index]['tag_text'])) {
+                $this->data['tag'][$index]['tag_text'] = '';
+            }
+
             $tagVocabulary = $this->data['tag'][$index]['tag_vocabulary'] ?? '';
             $value = (!$value) ? '' : trim((string) $value);
 
-            if ($tagVocabulary === '2') {
-                $validTagCode = $this->loadCodeList('UNSDG-Goals');
+            switch ($tagVocabulary) {
+                case '2':
+                    $this->handleGoalsTag($index, $value);
+                    break;
 
-                if ($value) {
-                    foreach ($validTagCode as $code => $name) {
-                        if (strcasecmp($value, $name) === 0) {
-                            $value = (string) $code;
-                            break;
-                        }
-                    }
-                }
+                case '3':
+                    $this->handleTargetsTag($index, $value);
+                    break;
 
-                $this->data['tag'][$index]['goals_tag_code'] = $value;
-            } elseif ($tagVocabulary === '3') {
-                $validTagCode = $this->loadCodeList('UNSDG-Targets');
+                case '1':
+                case '4':
+                    $this->handleTextTag($index, $value, $tagVocabulary);
+                    break;
 
-                if (!is_float($value)) {
-                    foreach ($validTagCode as $code => $name) {
-                        if (strcasecmp($value, $name) === 0) {
-                            $value = is_float($code) ? (float) $code : $code;
-                            break;
-                        }
-                    }
-                }
-
-                $this->data['tag'][$index]['targets_tag_code'] = $value;
-            } else {
-                $this->data['tag'][$index]['tag_text'] = $value;
-                $this->data['tag'][$index]['tag_vocabulary'] = $tagVocabulary;
+                default:
+                    $this->handleDefaultTag($index, $value, $tagVocabulary);
+                    break;
             }
         }
+    }
+
+    /**
+     * Initialize the tag structure if not set.
+     */
+    private function initializeTag($index): void
+    {
+        if (!isset($this->data['tag'][$index]['tag_text'])) {
+            $this->data['tag'][$index]['tag_text'] = '';
+        }
+    }
+
+    /**
+     * Sanitize value by trimming and converting to string.
+     */
+    private function sanitizeValue($value): string
+    {
+        return (!$value) ? '' : trim((string) $value);
+    }
+
+    /**
+     * Handle case for '2' (UNSDG-Goals).
+     */
+    private function handleGoalsTag($index, $value): void
+    {
+        $value = $this->getMappedCode('UNSDG-Goals', $value);
+        $this->data['tag'][$index]['goals_tag_code'] = $value;
+        $this->updateTagFields($index, ['tag_vocabulary', 'goals_tag_code', 'narrative']);
+    }
+
+    /**
+     * Handle case for '3' (UNSDG-Targets).
+     */
+    private function handleTargetsTag($index, $value): void
+    {
+        $value = $this->getMappedCode('UNSDG-Targets', $value, true);
+        $this->data['tag'][$index]['targets_tag_code'] = $value;
+        $this->updateTagFields($index, ['tag_vocabulary', 'targets_tag_code', 'narrative']);
+    }
+
+    /**
+     * Handle cases '1' and '4' (tag_text).
+     */
+    private function handleTextTag($index, $value, $tagVocabulary): void
+    {
+        $this->data['tag'][$index]['tag_text'] = $value;
+        $this->data['tag'][$index]['tag_vocabulary'] = $tagVocabulary;
+        $this->updateTagFields($index, ['tag_vocabulary', 'tag_text', 'narrative']);
+    }
+
+    /**
+     * Handle the default case.
+     */
+    private function handleDefaultTag($index, $value, $tagVocabulary): void
+    {
+        $this->data['tag'][$index]['tag_text'] = $value;
+        $this->data['tag'][$index]['tag_vocabulary'] = $tagVocabulary;
+        $this->updateTagFields($index, ['tag_vocabulary', 'tag_text', 'narrative', 'vocabulary_uri']);
+    }
+
+    /**
+     * Retrieve the mapped code from a code list.
+     */
+    private function getMappedCode(string $listName, string $value, bool $allowFloat = false): float|int|string
+    {
+        if (!$value) {
+            return $value;
+        }
+
+        $validTagCode = $this->loadCodeList($listName);
+
+        foreach ($validTagCode as $code => $name) {
+            if (strcasecmp($value, $name) === 0) {
+                return $allowFloat && is_float($code) ? (float) $code : $code;
+            }
+        }
+
+        return $value;
+    }
+
+    /**
+     * Update tag fields while keeping only necessary attributes.
+     */
+    private function updateTagFields($index, array $fields): void
+    {
+        $this->data['tag'][$index] = Arr::only($this->data['tag'][$index], $fields);
     }
 
     /**

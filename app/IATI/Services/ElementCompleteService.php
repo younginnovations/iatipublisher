@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace App\IATI\Services;
 
 use App\Constants\CoreElements;
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Services\Activity\RecipientRegionService;
 use App\IATI\Traits\ElementCompleteServiceTrait;
 use App\IATI\Traits\ElementDeprecationService;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use JsonException;
+use ReflectionMethod;
 
 /**
  * Class ElementCompleteService.
@@ -210,7 +214,10 @@ class ElementCompleteService
         $this->element = 'title';
         $elementSchema = getElementSchema($this->element);
 
-        return $this->isSubElementDataCompleted($this->mandatorySubElements($elementSchema['sub_elements']), ['narrative' => $activity->title]);
+        return $this->isSubElementDataCompleted(
+            $this->mandatorySubElements($elementSchema['sub_elements']),
+            ['narrative' => $activity->title]
+        );
     }
 
     /**
@@ -356,7 +363,67 @@ class ElementCompleteService
     {
         $this->element = 'sector';
 
-        return $this->isLevelOneMultiDimensionElementCompleted($activity->sector);
+        if ($this->activityHasTransactionSector($activity) && $this->isSectorElementCompletedInTransaction($activity)) {
+            return true;
+        }
+
+        if ((!$activity->sector) || (is_variable_null($activity->sector)) || (is_array_value_empty($activity->sector))) {
+            return false;
+        }
+
+        $shouldConsiderPercentage = count(Arr::get($activity, 'sector', [])) > 1;
+
+        foreach ($activity->sector as $sector) {
+            $sectorVocab = Arr::get($sector, 'sector_vocabulary') ?? null;
+            $codeKey = $this->getSectorCodeKeyBasedOnVocab((string) $sectorVocab);
+
+            if ($this->isEmptyValue(Arr::get($sector, $codeKey))) {
+                return false;
+            }
+
+            if ($shouldConsiderPercentage && $this->isEmptyValue(Arr::get($sector, 'percentage'))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function isSectorElementCompletedInTransaction(Activity $activity): bool
+    {
+        $transactions = $activity->transactions;
+
+        foreach ($transactions as $transaction) {
+            foreach (Arr::get($transaction, 'transaction.sector', []) as $sector) {
+                if (!is_array_value_empty($sector)) {
+                    $sectorVocab = Arr::get($sector, 'sector_vocabulary') ?? null;
+                    $codeKey = $this->getSectorCodeKeyBasedOnVocab((string) $sectorVocab);
+
+                    if ($this->isEmptyValue(Arr::get($sector, $codeKey))) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public function activityHasTransactionSector(Activity $activity): bool
+    {
+        $transactions = $activity->transactions;
+
+        if (!empty($transactions)) {
+            foreach ($transactions as $transaction) {
+                $transactionSector = Arr::get($transaction, 'transaction.sector', []);
+
+                if (!is_array_value_empty($transactionSector)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -420,7 +487,21 @@ class ElementCompleteService
     {
         $this->element = 'policy_marker';
 
-        return $this->isLevelOneMultiDimensionElementCompleted($activity->policy_marker);
+        if (!$activity->policy_marker) {
+            return false;
+        }
+
+        foreach ($activity->policy_marker as $policyMarker) {
+            $isIncomplete = $this->policyMarkerVocabIsCustom($policyMarker)
+                ? $this->customPolicyMarkerIsIncomplete($policyMarker)
+                : $this->policyMarkerIsIncomplete($policyMarker);
+
+            if ($isIncomplete) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -443,7 +524,7 @@ class ElementCompleteService
 
         $participatingOrgData = $activity->participating_org;
 
-        if (is_variable_null($participatingOrgData)) {
+        if (is_variable_null($participatingOrgData) || is_array_value_empty($participatingOrgData)) {
             return false;
         }
 
@@ -635,7 +716,21 @@ class ElementCompleteService
     {
         $this->element = 'contact_info';
 
-        return $this->isLevelTwoMultiDimensionElementCompleted($activity->contact_info);
+        if (!$activity->contact_info) {
+            return false;
+        }
+
+        foreach ($activity->contact_info as $contactInfo) {
+            $contactInfoTypeIsEmpty = empty(Arr::get($contactInfo, 'type'));
+            $allOtherFields = Arr::except($contactInfo, 'type');
+            $allOtherFieldsAreEmpty = is_variable_null($allOtherFields) || is_array_value_empty($allOtherFields);
+
+            if ($contactInfoTypeIsEmpty || $allOtherFieldsAreEmpty) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -651,7 +746,17 @@ class ElementCompleteService
     {
         $this->element = 'location';
 
-        return !is_variable_null($activity->location);
+        if (!$activity->location) {
+            return false;
+        }
+
+        foreach ($activity->location as $location) {
+            if (is_variable_null($location) || is_array_value_empty($location)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -702,7 +807,10 @@ class ElementCompleteService
 
         foreach ($data as $datum) {
             foreach (['period_start', 'period_end'] as $item) {
-                if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements'][$item], getArr($datum, $item))) {
+                if (!$this->isLevelOneMultiDimensionDataCompleted(
+                    $elementSchema['sub_elements'][$item],
+                    getArr($datum, $item)
+                )) {
                     return false;
                 }
             }
@@ -736,8 +844,14 @@ class ElementCompleteService
     {
         foreach ($data as $baselineDatum) {
             if (
-                !$this->isLevelOneMultiDimensionDataCompleted($subElement['sub_elements']['comment'], getArr($baselineDatum, 'comment'))
-                || !$this->isLevelTwoMultiDimensionDataCompleted($subElement['sub_elements']['document_link'], getArr($baselineDatum, 'document_link'))
+                !$this->isLevelOneMultiDimensionDataCompleted(
+                    $subElement['sub_elements']['comment'],
+                    getArr($baselineDatum, 'comment')
+                )
+                || !$this->isLevelTwoMultiDimensionDataCompleted(
+                    $subElement['sub_elements']['document_link'],
+                    getArr($baselineDatum, 'document_link')
+                )
             ) {
                 return false;
             }
@@ -760,13 +874,19 @@ class ElementCompleteService
     {
         if (
             !$this->isSingleDimensionAttributeCompleted($elementSchema, $data)
-            || !$this->isLevelTwoMultiDimensionDataCompleted($elementSchema['sub_elements']['document_link'], getArr($data, 'document_link'))
+            || !$this->isLevelTwoMultiDimensionDataCompleted(
+                $elementSchema['sub_elements']['document_link'],
+                getArr($data, 'document_link')
+            )
         ) {
             return false;
         }
 
         foreach (['title', 'description', 'reference'] as $item) {
-            if (!$this->isLevelOneMultiDimensionDataCompleted($elementSchema['sub_elements'][$item], getArr($data, $item))) {
+            if (!$this->isLevelOneMultiDimensionDataCompleted(
+                $elementSchema['sub_elements'][$item],
+                getArr($data, $item)
+            )) {
                 return false;
             }
         }
@@ -901,11 +1021,15 @@ class ElementCompleteService
         $indicatorExists = is_array($indicatorData) && count($indicatorData) > 0;
 
         if ($periodExists) {
-            return $this->isPeriodElementCompleted($periodData) && $this->isIndicatorElementCompleted($indicatorData) && $this->isResultElementDataCompleted($resultData);
+            return $this->isPeriodElementCompleted($periodData) && $this->isIndicatorElementCompleted(
+                $indicatorData
+            ) && $this->isResultElementDataCompleted($resultData);
         }
 
         if ($indicatorExists) {
-            return $this->isIndicatorElementCompleted($indicatorData) && $this->isResultElementDataCompleted($resultData);
+            return $this->isIndicatorElementCompleted($indicatorData) && $this->isResultElementDataCompleted(
+                $resultData
+            );
         }
 
         return false;
@@ -973,6 +1097,14 @@ class ElementCompleteService
      */
     public function checkIfRecipientRegionElementCompleted($activity): bool
     {
+        if ($this->recipientRegionIsSetInTransaction($activity)) {
+            return $this->isRecipientRegionCompleteInTransaction($activity);
+        }
+
+        if ($this->recipientCountryIsSetInTransaction($activity)) {
+            return $this->isRecipientCompleteCompleteInTransaction($activity);
+        }
+
         $regionStatus = $this->isLevelOneMultiDimensionElementCompleted($activity->recipient_region);
 
         if (empty($activity->recipient_region) && !empty($activity->recipient_country)) {
@@ -998,7 +1130,7 @@ class ElementCompleteService
              * Comparing with ( 100 - % of RecipientCountry ) is the same as comparing with 100.0 if Recipient Country is empty.
              */
             if (empty($activity->recipient_country) && $firstGroupTotalPercentage !== 100.0) {
-                return  false;
+                return false;
             }
 
             if (!empty($activity->recipient_country)) {
@@ -1024,6 +1156,14 @@ class ElementCompleteService
      */
     public function checkIfRecipientCountryElementCompleted($activity): bool
     {
+        if ($this->recipientRegionIsSetInTransaction($activity)) {
+            return $this->isRecipientRegionCompleteInTransaction($activity);
+        }
+
+        if ($this->recipientCountryIsSetInTransaction($activity)) {
+            return $this->isRecipientCompleteCompleteInTransaction($activity);
+        }
+
         $countryStatus = $this->isLevelOneMultiDimensionElementCompleted($activity->recipient_country);
 
         if (empty($activity->recipient_country) && !empty($activity->recipient_region)) {
@@ -1034,7 +1174,7 @@ class ElementCompleteService
             })['total'];
 
             if ($firstGroupTotalPercentage === 100.0) {
-                return $countryStatus;
+                return true;
             }
 
             return false;
@@ -1062,41 +1202,58 @@ class ElementCompleteService
      *
      * @return void
      *
-     * @throws BindingResolutionException
+     * @throws JsonException
+     * @throws \ReflectionException
      */
     public function refreshElementStatus($activity): void
     {
-        $skippables = [
-            'id',
-            'org_id',
-            'status',
-            'created_at',
-            'updated_at',
-            'created_by',
-            'updated_by',
-            'upload_medium',
-            'linked_to_iati',
-            'element_status',
-            'default_field_values',
-            'migrated_from_aidstream',
-            'complete_percentage',
-        ];
-
         $elementStatus = [];
-        $attributes = $activity->getAttributes();
+        $attributes = getActivityAttributes();
 
-        foreach ($attributes as $attribute => $value) {
-            $attributeMethod = dashesToCamelCase('is_' . $attribute . '_element_completed');
+        foreach ($attributes as $attribute) {
+            $methodName = dashesToCamelCase('is_' . $attribute . '_element_completed');
 
-            if (!in_array($attribute, $skippables) && is_callable([$this, $attributeMethod])) {
-                $elementStatus[$attribute] = call_user_func([$this, $attributeMethod], $activity);
+            if (is_callable([$this, $methodName])) {
+                if ($attribute === 'reporting_org') {
+                    $elementStatus[$attribute] = Arr::get(auth()->user()->organization, 'element_status.reporting_org', false);
+                } else {
+                    $elementStatus[$attribute] = call_user_func([$this, $methodName], $activity);
+                }
             }
         }
 
         $activity->element_status = $elementStatus;
         $activity->complete_percentage = $this->calculateCompletePercentage($activity->element_status);
         $activity->timestamps = false;
+
         $activity->updateQuietly(['touch' => false]);
+    }
+
+    /**
+     * Returns an array of relation names loaded in the model.
+     *
+     * @param Model $model
+     *
+     * @return array
+     * @throws \ReflectionException
+     */
+    public function getRelationNames(Model $model): array
+    {
+        $relations = [];
+
+        foreach (get_class_methods($model) as $method) {
+            $reflection = new ReflectionMethod($model, $method);
+
+            if ($reflection->isPublic() && !$reflection->isStatic() && $reflection->getNumberOfParameters() === 0) {
+                $returnType = $reflection->getReturnType();
+
+                if ($returnType && is_subclass_of($returnType->getName(), Relation::class)) {
+                    $relations[] = $method;
+                }
+            }
+        }
+
+        return $relations;
     }
 
     /**
@@ -1145,12 +1302,12 @@ class ElementCompleteService
             'complete_percentage',
         ];
         $deprecationMap = [];
-        $attributes = $activity->getAttributes();
+        $attributes = getActivityAttributes();
 
-        foreach ($attributes as $attribute => $value) {
+        foreach ($attributes as $attribute) {
             $attributeMethod = dashesToCamelCase('does_' . $attribute . '_have_deprecated_code');
 
-            if (!in_array($attribute, $skippables) && is_callable([$this, $attributeMethod])) {
+            if (is_callable([$this, $attributeMethod])) {
                 $deprecationMap[$attribute] = call_user_func([$this, $attributeMethod], $activity);
             }
         }
@@ -1160,8 +1317,113 @@ class ElementCompleteService
         $activity->updateQuietly(['touch' => false]);
     }
 
+    /**
+     * @param $value
+     *
+     * @return bool
+     */
     public function isEmptyValue($value): bool
     {
-        return trim($value ?? '') === '';
+        return $value === null || (is_string($value) && trim($value) === '');
+    }
+
+    /**
+     * @param $policy_marker
+     *
+     * @return bool
+     */
+    private function policyMarkerVocabIsCustom($policy_marker): bool
+    {
+        return Arr::get($policy_marker, 'policy_marker_vocabulary') !== '1';
+    }
+
+    /**
+     * @param $policyMarker
+     *
+     * @return bool
+     */
+    private function customPolicyMarkerIsIncomplete($policyMarker): bool
+    {
+        return $this->isEmptyValue(Arr::get($policyMarker, 'policy_marker_text'));
+    }
+
+    /**
+     * @param $policyMarker
+     *
+     * @return bool
+     */
+    private function policyMarkerIsIncomplete($policyMarker): bool
+    {
+        return $this->isEmptyValue(Arr::get($policyMarker, 'policy_marker'));
+    }
+
+    private function getSectorCodeKeyBasedOnVocab(?string $sectorVocab): string
+    {
+        return match ($sectorVocab) {
+            '1'     => 'code',
+            '2'     => 'category_code',
+            '7'     => 'sdg_goal',
+            '8'     => 'sdg_target',
+            default => 'text',
+        };
+    }
+
+    private function recipientCountryIsSetInTransaction($activity): bool
+    {
+        $transactions = $activity->transactions;
+
+        foreach ($transactions as $transaction) {
+            if (!is_array_value_empty(Arr::get($transaction, 'transaction.recipient_country', []))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function recipientRegionIsSetInTransaction($activity): bool
+    {
+        $transactions = $activity->transactions;
+
+        foreach ($transactions as $transaction) {
+            if (!is_array_value_empty(Arr::get($transaction, 'transaction.recipient_region', []))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isRecipientRegionCompleteInTransaction($activity): bool
+    {
+        $transactions = $activity->transactions;
+
+        foreach ($transactions as $transaction) {
+            $recipientRegion = Arr::get($transaction, 'transaction.recipient_region.0', []);
+
+            if (isset($recipientRegion['region_code']) && empty($recipientRegion['region_code'])) {
+                return false;
+            } elseif (isset($recipientRegion['custom_code']) && empty($recipientRegion['custom_code'])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function isRecipientCompleteCompleteInTransaction($activity): bool
+    {
+        $transactions = $activity->transactions;
+
+        foreach ($transactions as $transaction) {
+            $recipientCountry = Arr::get($transaction, 'transaction.recipient_country.0', []);
+            $countryCode = Arr::get($recipientCountry, 'country_code');
+
+            if (empty($countryCode)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

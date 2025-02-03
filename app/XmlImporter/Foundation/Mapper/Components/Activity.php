@@ -320,19 +320,12 @@ class Activity
     public function description($element): array
     {
         $type = $this->attributes($element, 'type');
-        $descType = $type;
-        $this->description[$descType]['type'] = $descType;
 
-        if (array_key_exists('narrative', Arr::get($this->description, $descType, []))) {
-            $narrativeIndex = count($this->description[$descType]['narrative']);
+        $descriptionNumber = count($this->description);
 
-            foreach ($this->narrative($element) as $narrative) {
-                $this->description[$descType]['narrative'][$narrativeIndex] = $narrative;
-                $narrativeIndex++;
-            }
-        } else {
-            $this->description[$descType]['narrative'] = $this->narrative($element);
-        }
+        $this->description[$descriptionNumber]['type'] = $type;
+
+        $this->description[$descriptionNumber]['narrative'] = $this->narrative($element);
 
         return $this->description;
     }
@@ -865,6 +858,13 @@ class Activity
     /**
      * Read default aid type from xml.
      *
+     * UNDERSTANDING THE SWITCH STATEMENT:
+     *  - In the form level we can select code without having to select vocabulary.
+     *  - But the code that can be selected without vocabulary belongs to AidType.json.
+     *  - So moving case '1' as default case will handle that scenarios where xml contains code but not vocab.
+     *  - But we still need to verify that the code actually belongs to AidType.json, so im filtering it.
+     *
+     *
      * @param mixed $element
      * @param mixed $template
      *
@@ -877,25 +877,59 @@ class Activity
         $vocabulary = $this->attributes($element, 'vocabulary');
         $code = $this->attributes($element, 'code');
 
+        $currentDefaultAidType = $this->defaultAidType[$this->index];
+        $currentDefaultAidType['default_aid_type_vocabulary'] = $vocabulary;
+
         switch ($vocabulary) {
-            case '1':
-                $this->defaultAidType[$this->index]['default_aid_type'] = strtoupper($code);
-                break;
             case '2':
-                $this->defaultAidType[$this->index]['earmarking_category'] = $code;
+                $currentDefaultAidType['earmarking_category'] = $code;
+                $fields = ['default_aid_type_vocabulary', 'earmarking_category'];
                 break;
+
             case '3':
-                $this->defaultAidType[$this->index]['earmarking_modality'] = strtoupper($code);
+                $currentDefaultAidType['earmarking_modality'] = strtoupper($code);
+                $fields = ['default_aid_type_vocabulary', 'earmarking_modality'];
                 break;
+
             case '4':
-                $this->defaultAidType[$this->index]['cash_and_voucher_modalities'] = $code;
+                $currentDefaultAidType['cash_and_voucher_modalities'] = $code;
+                $fields = ['default_aid_type_vocabulary', 'cash_and_voucher_modalities'];
+                break;
+
+            default:
+                $code = strtoupper($code);
+                $currentDefaultAidType['default_aid_type'] = '';
+
+                if ($this->isValidAidTypeCode($code)) {
+                    $currentDefaultAidType['default_aid_type'] = $code;
+                }
+
+                $fields = ['default_aid_type_vocabulary', 'default_aid_type'];
                 break;
         }
 
-        $this->defaultAidType[$this->index]['default_aid_type_vocabulary'] = $vocabulary;
+        $currentDefaultAidType = Arr::only($currentDefaultAidType, $fields);
+        $this->defaultAidType[$this->index] = $currentDefaultAidType;
+
         $this->index++;
 
         return $this->defaultAidType;
+    }
+
+    /**
+     * Check if code is valid by comparing against AidType.json.
+     *
+     * @param string $code
+     *
+     * @return bool
+     */
+    private function isValidAidTypeCode(string $code): bool
+    {
+        $filePath = 'AppData/Data/Activity/AidType.json';
+        $aidTypes = Arr::get(json_decode(getJsonFromSource($filePath), true), 'AidType', []);
+        $validCodes = array_map(fn ($item) => $item['code'], $aidTypes);
+
+        return in_array($code, $validCodes, true);
     }
 
     /**
@@ -910,27 +944,36 @@ class Activity
     {
         $this->tagVariable[$this->index] = $template['tag'];
         $tagVocabulary = $this->attributes($element, 'vocabulary');
-        $tagVocabulary = $tagVocabulary;
 
         $this->tagVariable[$this->index]['tag_vocabulary'] = $this->attributes($element, 'vocabulary');
         $this->tagVariable[$this->index]['vocabulary_uri'] = $this->attributes($element, 'vocabulary-uri');
         $this->tagVariable[$this->index]['narrative'] = $this->narrative($element);
 
         switch ($tagVocabulary) {
-            case '1':
-                $this->tagVariable[$this->index]['tag_text'] = $this->attributes($element, 'code');
-                break;
             case '2':
                 $this->tagVariable[$this->index]['goals_tag_code'] = $this->attributes($element, 'code');
+                $fields = ['tag_vocabulary', 'goals_tag_code', 'narrative'];
+
                 break;
             case '3':
                 $this->tagVariable[$this->index]['targets_tag_code'] = strtolower($this->attributes($element, 'code'));
+                $fields = ['tag_vocabulary', 'targets_tag_code', 'narrative'];
+
                 break;
-            case '99':
+            case '1':
+            case '4':
                 $this->tagVariable[$this->index]['tag_text'] = $this->attributes($element, 'code');
+                $fields = ['tag_vocabulary', 'tag_text', 'narrative'];
+
+                break;
+            default:
+                $this->tagVariable[$this->index]['tag_text'] = $this->attributes($element, 'code');
+                $fields = ['tag_vocabulary', 'tag_text', 'narrative', 'vocabulary_uri'];
+
                 break;
         }
 
+        $this->tagVariable[$this->index] = Arr::only($this->tagVariable[$this->index], $fields);
         $this->index++;
 
         return $this->tagVariable;

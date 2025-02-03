@@ -85,17 +85,14 @@ class ActivityService
             $page
         );
 
+        $orgReportingOrgStatus = Arr::get(\auth()->user()->organization, 'element_status.reporting_org', false);
+
         foreach ($activities as $idx => $activity) {
             $activities[$idx]['default_title_narrative'] = $activity->default_title_narrative;
-            $activity->setAttribute(
-                'coreCompleted',
-                isCoreElementCompleted(
-                    array_merge(
-                        ['reporting_org' => $activity->organization->reporting_org_element_completed],
-                        $activity->element_status
-                    )
-                )
-            );
+            $elementStatus = $activity->element_status;
+            $elementStatus['reporting_org'] = $orgReportingOrgStatus;
+
+            $activity->setAttribute('coreCompleted', isCoreElementCompleted($elementStatus));
         }
 
         return $activities;
@@ -171,18 +168,18 @@ class ActivityService
         }
 
         return $this->activityRepository->store([
-            'iati_identifier' => $activity_identifier,
-            'title' => $activity_title,
-            'collaboration_type' => isset($defaultValues['default_collaboration_type']) && !empty($defaultValues['default_collaboration_type']) ? (int) $defaultValues['default_collaboration_type'] : null,
-            'default_flow_type' => isset($defaultValues['default_flow_type']) && !empty($defaultValues['default_flow_type']) ? (int) $defaultValues['default_flow_type'] : null,
-            'default_finance_type' => isset($defaultValues['default_finance_type']) && !empty($defaultValues['default_finance_type']) ? (int) $defaultValues['default_finance_type'] : null,
-            'default_aid_type' => $defaultAidType,
-            'default_tied_status' => isset($defaultValues['default_tied_status']) && !empty($defaultValues['default_tied_status']) ? (int) $defaultValues['default_tied_status'] : null,
-            'org_id' => $authUser->organization_id,
-            'element_status' => $defaultElementStatus,
+            'iati_identifier'      => $activity_identifier,
+            'title'                => $activity_title,
+            'collaboration_type'   => (int) Arr::get($defaultValues, 'default_collaboration_type') ?: null,
+            'default_flow_type'    => (int) Arr::get($defaultValues, 'default_flow_type') ?: null,
+            'default_finance_type' => (int) Arr::get($defaultValues, 'default_finance_type') ?: null,
+            'default_aid_type'     => $defaultAidType,
+            'default_tied_status'  => (int) Arr::get($defaultValues, 'default_tied_status') ?: null,
+            'org_id'               => $authUser->organization_id,
+            'element_status'       => $defaultElementStatus,
             'default_field_values' => $this->getDefaultValues(),
-            'reporting_org' => $authUser->organization->reporting_org,
-            'other_identifier' => $activityOtherIdentifiers,
+            'reporting_org'        => $authUser->organization->reporting_org,
+            'other_identifier'     => $activityOtherIdentifiers,
         ]);
     }
 

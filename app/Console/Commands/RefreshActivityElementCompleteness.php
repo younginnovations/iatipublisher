@@ -9,6 +9,7 @@ use App\IATI\Services\ElementCompleteService;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -45,22 +46,29 @@ class RefreshActivityElementCompleteness extends Command
                 foreach ($activities as $activity) {
                     $this->info("Started for activity: $activity->id");
 
-                    $activityElementNames = $activity->getAttributes();
+                    $activityElementNames = getActivityAttributes();
                     $elementStatus = [];
 
-                    foreach ($activityElementNames as $element => $value) {
+                    foreach ($activityElementNames as $element) {
                         $methodName = dashesToCamelCase('is_' . $element . '_element_completed');
 
                         if (method_exists($elementCompleteService, $methodName)) {
-                            $elementStatus[$element] = $elementCompleteService->$methodName($activity);
+                            if ($element === 'reporting_org') {
+                                $organization = $activity->organization;
+                                $elementStatus[$element] = Arr::get($organization, 'element_status.reporting_org', false);
+                            } else {
+                                $elementStatus[$element] = $elementCompleteService->$methodName($activity);
+                            }
                         }
                     }
 
                     $elementStatus['result'] = $elementCompleteService->isResultElementCompleted($activity);
                     $elementStatus['transactions'] = $elementCompleteService->isTransactionsElementCompleted($activity);
 
+                    $complete_percentage = $elementCompleteService->calculateCompletePercentage($elementStatus);
+
                     $activity->timestamps = false;
-                    $activity->updateQuietly(['element_status' => $elementStatus]);
+                    $activity->updateQuietly(['element_status' => $elementStatus, 'complete_percentage' => $complete_percentage]);
 
                     $this->info("Completed for activity: $activity->id");
                     $this->info('---------------------------------------');

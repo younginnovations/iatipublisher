@@ -781,8 +781,8 @@
         "type": "select",
         "placeholder": "Select vocabulary",
         "choices": "Activity/TagVocabulary.json",
-        "required": false,
-        "criteria": "",
+        "required": true,
+        "criteria": "mandatory",
         "hover_text": "Select the vocabulary or taxonomy used for tag classifications. You may choose to tag your activity according to an internal category list by choosing \u201899 - Reporting Organisation\u2019.",
         "help_text": ""
       },
@@ -1002,7 +1002,7 @@
             "placeholder": "Select language",
             "choices": "Activity/Language.json",
             "required": false,
-            "criteria": "recommended",
+            "criteria": "",
             "hover_text": "",
             "help_text": "If no language is selected, your default language is assumed."
           }
@@ -1263,7 +1263,7 @@
                 "type": "textarea",
                 "placeholder": "Type narrative",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "add_more": true,
                 "attr": {
                   "row": 4
@@ -1799,8 +1799,8 @@
         "type": "select",
         "placeholder": "Select type",
         "choices": "Activity/ContactType.json",
-        "required": false,
-        "criteria": "",
+        "required": true,
+        "criteria": "mandatory",
         "hover_text": "Select the category that best describes the type of contact information that you are providing.",
         "help_text": ""
       }
@@ -1823,7 +1823,7 @@
             "type": "textarea",
             "placeholder": "Type narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -1838,7 +1838,7 @@
                 "placeholder": "Select language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -1864,7 +1864,7 @@
             "type": "textarea",
             "placeholder": "Type narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -1879,7 +1879,7 @@
                 "placeholder": "Select language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -1946,7 +1946,7 @@
             "type": "textarea",
             "placeholder": "Type narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -1961,7 +1961,7 @@
                 "placeholder": "Select language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -2057,7 +2057,7 @@
             "type": "textarea",
             "placeholder": "Type narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -2072,7 +2072,7 @@
                 "placeholder": "Select language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -2124,7 +2124,7 @@
             "placeholder": "Select code",
             "choices": "Activity/GeographicLocationReach.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "",
             "help_text": ""
           }
@@ -2150,7 +2150,7 @@
             "placeholder": "Select vocabulary",
             "choices": "Activity/GeographicVocabulary.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "Select a recognised gazetteer or administrative boundary repository from the drop-down list.",
             "help_text": ""
           },
@@ -2160,7 +2160,7 @@
             "type": "text",
             "placeholder": "Enter a code",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "Provide a location code which corresponds to the vocabulary that you have selected.",
             "help_text": ""
           }
@@ -2184,7 +2184,7 @@
             "type": "textarea",
             "placeholder": "Type narrative here",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -2199,7 +2199,7 @@
                 "placeholder": "Select language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -2224,7 +2224,7 @@
             "type": "textarea",
             "placeholder": "Type narrative here",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -2239,7 +2239,7 @@
                 "placeholder": "Select language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -2265,7 +2265,7 @@
             "type": "textarea",
             "placeholder": "Type narrative here",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -2280,7 +2280,7 @@
                 "placeholder": "Select language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "If no language is selected, your default language is assumed."
               }
@@ -2307,7 +2307,7 @@
             "placeholder": "Select vocabulary",
             "choices": "Activity/GeographicVocabulary.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "Select an administrative boundary list to use for your activity location.",
             "help_text": ""
           },
@@ -2318,7 +2318,7 @@
             "placeholder": "Select code",
             "choices": "Activity/Country.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "Provide a code from your chosen administrative boundary list.",
             "help_text": ""
           },
@@ -2352,7 +2352,7 @@
             "type": "text",
             "placeholder": "Type srs name",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "The name of the spatial reference system used by the coordinates.",
             "help_text": ""
           }
@@ -2370,7 +2370,7 @@
                 "type": "text",
                 "placeholder": "Type latitude value",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": ""
               },
@@ -2380,7 +2380,7 @@
                 "type": "text",
                 "placeholder": "Type longitude value",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": ""
               }
@@ -2406,7 +2406,7 @@
             "placeholder": "Select code",
             "choices": "Activity/GeographicExactness.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "If you have provided the geo-coordinates for the activity location, then select an option from the <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/geographicexactness/'>Geographic Exactness list</a> to specify whether the location is exact or approximate.",
             "help_text": ""
           }
@@ -2430,7 +2430,7 @@
             "placeholder": "Select code",
             "choices": "Activity/GeographicLocationClass.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "",
             "help_text": ""
           }
@@ -2454,7 +2454,7 @@
             "placeholder": "Select code",
             "choices": "Activity/LocationType.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "You can provide more detail on the type of activity location (e.g. beach, well or college).<br><br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/locationtype/'>Click here for more information on location types</a>",
             "help_text": ""
           }
@@ -2525,7 +2525,7 @@
             "type": "date",
             "placeholder": "YYYY-MM-DD",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "",
             "help_text": ""
           }
