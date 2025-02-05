@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 /**
  * class Issue1419HardDeleteSoftDeletedUsers.
  *
- * Issue link : https://github.com/IATI/iatipublisher/issues/1419
+ * Issue link : https://github.com/iati/iatipublisher/issues/1419
  */
 class Issue1419HardDeleteSoftDeletedUsers extends Command
 {

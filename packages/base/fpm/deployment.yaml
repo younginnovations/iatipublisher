@@ -22,7 +22,7 @@ spec:
         - name: github-credentials
       initContainers:
         - name: migrations
-          image: ghcr.io/IATI/iatipublisher/cli
+          image: ghcr.io/iati/iatipublisher/cli
           command: [ "/bin/sh","-c" ]
           args: ["chown -R www-data:www-data /opt/apps/laravel-in-kubernetes/storage/logs; php artisan migrate --force"]
           volumeMounts:
@@ -40,7 +40,7 @@ spec:
               name: iatipublisher
           - secretRef:
               name: iatipublisher
-        image: ghcr.io/IATI/iatipublisher/fpm_server
+        image: ghcr.io/iati/iatipublisher/fpm_server
         imagePullPolicy: IfNotPresent
         command: [ "/bin/sh","-c" ]
         args: ["php artisan optimize:clear && php artisan command:UpdateJsonFiles && php artisan command:SetAppDataJsonCache && php artisan command:FetchOrganisationRegistrationAgency; php-fpm"]

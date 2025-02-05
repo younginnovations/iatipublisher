@@ -30,7 +30,7 @@ spec:
               name: iatipublisher
           - secretRef:
               name: iatipublisher
-        image: ghcr.io/IATI/iatipublisher/horizon
+        image: ghcr.io/iati/iatipublisher/horizon
         lifecycle:
           preStop:
             exec:

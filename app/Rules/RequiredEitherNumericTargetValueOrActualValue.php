@@ -10,7 +10,7 @@ use Illuminate\Support\Arr;
 /**
  * @class RequiredEitherNumericTargetValueOrActualValue
  *
- * Change source: https://github.com/IATI/iatipublisher/issues/1492
+ * Change source: https://github.com/iati/iatipublisher/issues/1492
  */
 class RequiredEitherNumericTargetValueOrActualValue implements Rule
 {

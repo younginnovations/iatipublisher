@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Cache;
 /**
  * This command will set app data json cache. This command will be executed at each deployment.
  *
- * This is for issue 1342: https://github.com/IATI/iatipublisher/issues/1342
+ * This is for issue 1342: https://github.com/iati/iatipublisher/issues/1342
  *
  * @class SetAppDataJsonCache
  */

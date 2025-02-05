@@ -217,7 +217,7 @@ class ValidationStatusRepository extends Repository
     }
 
     /**
-     * Change source: https://github.com/IATI/iatipublisher/issues/1423.
+     * Change source: https://github.com/iati/iatipublisher/issues/1423.
      * Bug: Activity validation status response missing some activities.
      *
      * Basically what was happening is:

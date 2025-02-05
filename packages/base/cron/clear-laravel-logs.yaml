@@ -13,7 +13,7 @@ spec:
             - name: github-credentials
           containers:
             - name: clear-laravel-logs
-              image: ghcr.io/IATI/iatipublisher/cli
+              image: ghcr.io/iati/iatipublisher/cli
               command: ["/bin/sh"]
               args:
                 - "-c"
