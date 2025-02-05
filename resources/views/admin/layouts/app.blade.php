@@ -35,6 +35,11 @@
      <link rel="icon"
         href="{{ asset('favicon.ico') }}"
         type="image/x-icon" />
+    <link
+        href="https://cdn.jsdelivr.net/npm/iati-design-system@3.5.0/dist/css/iati.min.css"
+        rel="stylesheet"
+        
+    />
 
 
 
@@ -81,6 +86,7 @@
     <script defer src="{{ mix('/js/app.js') }}"></script>
     <script defer src="{{ mix('/js/script.js') }}"></script>
     <script defer src="{{ mix('js/formbuilder.js') }}"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/iati-design-system@3.5.0/dist/js/iati.js"></script>
     <!-- Start of iati Zendesk Widget script -->
     <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=f1df04e0-f01e-4ab5-9091-67b2fddd6e60"> </script>
     <script type="text/javascript">

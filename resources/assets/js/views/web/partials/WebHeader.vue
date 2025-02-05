@@ -3,7 +3,7 @@
     <div class="iati-mobile-nav__overlay js-iati-mobile-overlay"></div>
     <nav class="iati-mobile-nav__menu">
       <div class="iati-mobile-nav__header">
-        <h2 class="iati-mobile-nav__label">Menu</h2>
+        <h2 class="iati-mobile-nav__label text-white">Menu</h2>
         <button
           class="iati-menu-toggle iati-menu-toggle--close js-iati-menu-toggle-close"
         >
@@ -12,10 +12,7 @@
       </div>
       <ul class="">
         <li class="iati-mobile-nav__item">
-          <a href="#" class="iati-mobile-nav__link">Tool Home</a>
-        </li>
-        <li class="iati-mobile-nav__item">
-          <a href="#" class="iati-mobile-nav__link">About</a>
+          <a href="/" class="iati-mobile-nav__link">IATI Publisher</a>
         </li>
       </ul>
       <ul class="">
@@ -110,13 +107,12 @@
             </select>
           </div>
 
-          <button class="iati-button iati-button--light hide--mobile-nav">
+          <button
+            class="iati-button iati-button--light hide--mobile-nav"
+            @click="downloadManual('user')"
+          >
             <span>Help Docs</span>
             <i class="iati-icon iati-icon--info"></i>
-          </button>
-          <button class="iati-button iati-button--light">
-            <span>Search</span>
-            <i class="iati-icon iati-icon--search"></i>
           </button>
 
           <button
@@ -135,18 +131,6 @@
           <nav>
             <ul class="iati-tool-nav">
               <li><a href="/" class="iati-tool-nav-link">IATI Publisher</a></li>
-              <li><a href="/about" class="iati-tool-nav-link">About</a></li>
-              <li>
-                <a href="/publishing-checklist" class="iati-tool-nav-link"
-                  >Publishing Checklist</a
-                >
-              </li>
-              <li>
-                <a href="/iati-standard" class="iati-tool-nav-link"
-                  >IATI Standard</a
-                >
-              </li>
-              <li><a href="/support" class="iati-tool-nav-link">Support</a></li>
             </ul>
           </nav>
         </div>
@@ -156,7 +140,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import axios from 'axios';
 
-const isActive = ref('');
+function downloadManual(type: string) {
+  let fileName = {
+    user: 'IATI_Publisher-User_Manual_v1.1.pdf',
+  };
+  let url = window.location.origin + `/Data/Manuals/${fileName[type]}`;
+
+  axios({
+    url: url,
+    method: 'GET',
+    responseType: 'arraybuffer',
+  }).then((response) => {
+    let blob = new Blob([response.data], {
+      type: 'application/pdf',
+    });
+    let link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = fileName[type];
+    link.click();
+  });
+}
 </script>

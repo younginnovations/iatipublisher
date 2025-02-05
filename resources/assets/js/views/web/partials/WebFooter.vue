@@ -49,12 +49,6 @@
                   >.
                 </p>
               </div>
-              <div>
-                <ul>
-                  <li><a href="#">Web vX.Y.Z</a></li>
-                  <li><a href="#">API vX.Y.Z</a></li>
-                </ul>
-              </div>
             </div>
           </div>
         </div>

@@ -1,98 +1,111 @@
 <template>
-  <footer
-    id="footer"
-    class="mt-7 bg-bluecoral text-sm leading-6 text-n-20 sm:mt-10 md:mt-20"
-  >
-    <div class="border-b border-white border-opacity-20">
-      <div class="mx-3 py-10 sm:mx-10 xl:mx-24 xl:px-1">
-        <div
-          class="footer__container grid grid-flow-row gap-8 sm:gap-y-10 md:grid-cols-2 lg:grid-cols-4 lg:justify-items-center"
-        >
-          <div>
-            <a href="/">
-              <svg-vue
-                class="h-auto w-60 text-6xl sm:w-64"
-                icon="footer-logo"
-              />
-            </a>
-          </div>
+  <footer class="iati-design-system iati-footer iati-brand-background mt-14">
+    <div class="iati-brand-background__content">
+      <div class="iati-footer__section iati-footer__section--first">
+        <div class="iati-footer__container">
+          <div class="iati-footer-block">
+            <h2 class="iati-footer-block__title text-white">Useful Links</h2>
+            <div class="iati-footer-block__content">
+              <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
 
-          <div class="footer__links">
-            <span class="font-bold text-n-10">IATI Publisher</span>
-            <ul class="mt-2 flex flex-col">
-              <li>
-                <a :href="superAdmin ? '/list-organisations' : '/activities'">{{
-                  superAdmin ? 'Organisation List' : 'Your Activities'
-                }}</a>
-              </li>
-              <li><a href="/about">About</a></li>
-              <li>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="cursor-pointer"
-                  @click="downloadManual('user')"
-                  >User Manual v1.1</a
-                >
-              </li>
-            </ul>
-          </div>
-          <div class="footer__links">
-            <span class="font-bold text-n-10">IATI Standard</span>
-            <ul class="mt-2 flex flex-col">
-              <li><a href="/iati-standard">IATI Standard</a></li>
-              <li><a href="/publishing-checklist">Publishing Checklist</a></li>
-              <li><a href="/support">Support</a></li>
-              <li>
-                <a
-                  href="https://iatistandard.org/en/privacy-policy/"
-                  target="_blank"
-                  >Privacy Policy</a
-                >
-              </li>
-            </ul>
-          </div>
-          <div class="footer__links lg:justify-self-end">
-            <div class="text-xs leading-5">
-              <p>Part of the IATI Unified Platform</p>
-              <p>Code licensed under the GNU AGPL.</p>
-              <p>Documentation licensed under CC BY 3.0</p>
+                <li>
+                  <a
+                    rel="noopener noreferrer"
+                    class="cursor-pointer"
+                    @click="downloadManual('user')"
+                    >User Manual v1.1</a
+                  >
+                </li>
+              </ul>
             </div>
-            <div class="my-5 flex items-center space-x-2 text-n-10">
-              <svg-vue class="text-2xl" icon="headphone" />
-              <span class="text-xs font-bold uppercase"
-                >Any questions? Contact Support</span
-              >
-            </div>
-            <ul>
-              <li>
-                <a
-                  class="text-sm text-n-10"
-                  href="mailto:support@iatistandard.org"
-                  >support@iatistandard.org</a
-                >
-              </li>
-            </ul>
           </div>
         </div>
       </div>
-    </div>
-    <div class="mx-5 py-7 sm:mx-10 xl:mx-24 xl:px-1">
-      <div class="footer__container grid gap-3 sm:grid-cols-2">
-        <span class="flex items-center text-n-30">
-          <svg-vue class="mr-1 text-base" icon="copyright" />
-          Copyright IATI 2022. All rights reserved.</span
-        >
-        <div class="flex sm:justify-end">
-          <a
-            href="https://www.youtube.com/channel/UCAVH1gcgJXElsj8ENC-bDQQ"
-            target="_blank"
-          >
-            <svg-vue class="mr-1 mt-1 text-4xl" icon="youtube" />
-          </a>
-          <a class="ml-4" href="https://twitter.com/IATI_aid" target="_blank">
-            <svg-vue class="mr-1 mt-1 text-4xl" icon="twitter" />
-          </a>
+
+      <div class="iati-footer__section">
+        <div class="iati-footer__container">
+          <div class="iati-footer-block">
+            <h2 class="iati-footer-block__title text-white">
+              Additional Information
+            </h2>
+            <div
+              class="iati-footer-block__content iati-footer-block__content--columns"
+            >
+              <div>
+                <p>Part of the IATI Unified Platform.</p>
+                <p>
+                  Code licensed under
+                  <a href="https://www.gnu.org/licenses/agpl-3.0.en.html"
+                    >GNU AGPL</a
+                  >.
+                </p>
+                <p>
+                  Documentation licensed under
+                  <a href="https://creativecommons.org/licenses/by/4.0/"
+                    >CC BY 3.0</a
+                  >.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="iati-footer__section iati-footer__section--last">
+        <div class="iati-footer__container">
+          <nav>
+            <ul class="iati-piped-list iati-footer__legal-nav">
+              <li>
+                <a href="https://iatistandard.org/en/privacy-policy/"
+                  >Privacy</a
+                >
+              </li>
+              <li>
+                <a href="https://iatistandard.org/en/data-removal/"
+                  >Data removal</a
+                >
+              </li>
+              <li><span>© Copyright IATI 2024</span></li>
+            </ul>
+          </nav>
+
+          <div class="iati-country-switcher">
+            <label
+              for="iati-country-switcher"
+              class="iati-country-switcher__label"
+              >Choose your language</label
+            >
+            <select
+              id="iati-country-switcher"
+              class="iati-country-switcher__control"
+            >
+              <option>English</option>
+              <option>French</option>
+            </select>
+          </div>
+
+          <div class="iati-footer__social">
+            <a
+              href="https://www.linkedin.com/company/international-aid-transparency-initiative/"
+              aria-label="LinkedIn"
+            >
+              <i class="iati-icon iati-icon--linkedin"></i>
+            </a>
+            <a href="https://x.com/IATI_aid" aria-label="X">
+              <i class="iati-icon iati-icon--x"></i>
+            </a>
+            <a
+              href="https://www.youtube.com/channel/UCAVH1gcgJXElsj8ENC-bDQQ"
+              aria-label="YouTube"
+            >
+              <i class="iati-icon iati-icon--youtube"></i>
+            </a>
+            <a href="https://www.facebook.com/IATIaid/" aria-label="Facebook">
+              <i class="iati-icon iati-icon--facebook"></i>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -100,12 +113,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
 import axios from 'axios';
-
-defineProps({
-  superAdmin: { type: Boolean, required: false, default: false },
-});
 
 function downloadManual(type: string) {
   let fileName = {
