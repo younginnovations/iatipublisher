@@ -16,7 +16,7 @@ spec:
             - name: github-credentials
           containers:
           - name: iati-fix-storage-permission
-            image: ghcr.io/younginnovations/iatipublisher/cli
+            image: ghcr.io/IATI/iatipublisher/cli
             imagePullPolicy: IfNotPresent
             command:
             - /bin/sh

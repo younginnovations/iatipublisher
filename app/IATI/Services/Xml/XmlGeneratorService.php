@@ -27,7 +27,7 @@ class XmlGeneratorService
     protected XmlSchemaErrorParser $xmlErrorParser;
 
     /**
-     * Change Source: https://github.com/younginnovations/iatipublisher/issues/1423
+     * Change Source: https://github.com/IATI/iatipublisher/issues/1423
      * Bug: Cancel bulk publishing not working.
      *
      * We can, should and must only cancel bulk publish for activity where 'bulk_publishing_status' table  is status 'created'.

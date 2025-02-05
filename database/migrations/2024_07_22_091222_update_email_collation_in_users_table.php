@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 /*
- * Change source: https://github.com/younginnovations/iatipublisher/issues/1491
+ * Change source: https://github.com/IATI/iatipublisher/issues/1491
  */
 return new class extends Migration {
     /**
