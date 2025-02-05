@@ -22,7 +22,7 @@ spec:
         - name: github-credentials
       containers:
       - name: iatipublisher-webserver
-        image: ghcr.io/younginnovations/iatipublisher/web_server
+        image: ghcr.io/IATI/iatipublisher/web_server
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80

@@ -129,7 +129,7 @@ class TransactionFactory extends Factory
                                 }
                             ],
                             "region_vocabulary": "99",
-                            "vocabulary_uri": "https://github.com/younginnovations/iatipublisher/runs/6980821807?check_suite_focus=true"
+                            "vocabulary_uri": "https://github.com/IATI/iatipublisher/runs/6980821807?check_suite_focus=true"
                         }
                     ],
                     "reference": "ref test",

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 /**
  * class Issue1419FillFullnameAndEmailInAuditLog.
  *
- * Issue link : https://github.com/younginnovations/iatipublisher/issues/1419
+ * Issue link : https://github.com/IATI/iatipublisher/issues/1419
  */
 class Issue1419FillFullnameAndEmailInAuditLog extends Command
 {

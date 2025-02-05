@@ -18,7 +18,7 @@ use SimpleXMLElement;
 
 /**
  * This command implements changes to fix the bug raised in issue 1363.
- * See issue: https://github.com/younginnovations/iatipublisher/issues/1363.
+ * See issue: https://github.com/IATI/iatipublisher/issues/1363.
  *
  * [!!WARNING!!] This is a one time use command.
  *

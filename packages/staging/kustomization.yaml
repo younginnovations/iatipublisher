@@ -11,13 +11,13 @@ resources:
 - github-credentails-sealed-secret.yaml
 
 images:
-  - name: ghcr.io/younginnovations/iatipublisher/cli
+  - name: ghcr.io/IATI/iatipublisher/cli
     newTag: latest
-  - name: ghcr.io/younginnovations/iatipublisher/cron
+  - name: ghcr.io/IATI/iatipublisher/cron
     newTag: latest
-  - name: ghcr.io/younginnovations/iatipublisher/fpm_server
+  - name: ghcr.io/IATI/iatipublisher/fpm_server
     newTag: latest
-  - name: ghcr.io/younginnovations/iatipublisher/web_server
+  - name: ghcr.io/IATI/iatipublisher/web_server
     newTag: latest
-  - name: ghcr.io/younginnovations/iatipublisher/horizon
+  - name: ghcr.io/IATI/iatipublisher/horizon
     newTag: latest

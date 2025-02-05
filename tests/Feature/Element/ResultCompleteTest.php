@@ -83,7 +83,7 @@ class ResultCompleteTest extends ElementCompleteTest
     {
         $this->element = 'indicator';
         /*
-         * Change source: https://github.com/younginnovations/iatipublisher/issues/1542
+         * Change source: https://github.com/IATI/iatipublisher/issues/1542
          * Only title is a mandatory sub elements.
          */
         $this->test_mandatory_sub_elements($this->element, []);
@@ -129,7 +129,7 @@ class ResultCompleteTest extends ElementCompleteTest
     {
         $this->element = 'result';
         /*
-         * Change source: https://github.com/younginnovations/iatipublisher/issues/1542
+         * Change source: https://github.com/IATI/iatipublisher/issues/1542
          * Only title and type are mandatory sub elements.
          */
         $this->test_mandatory_sub_elements($this->element, []);

@@ -1,5 +1,4 @@
-
-<h1> IATI Publisher</h1> <a href="https://www.codefactor.io/repository/github/younginnovations/iatipublisher"><img src="https://www.codefactor.io/repository/github/younginnovations/iatipublisher/badge" alt="CodeFactor" /></a> <br/><br/>
+<h1> IATI Publisher</h1> <a href="https://www.codefactor.io/repository/github/IATI/iatipublisher"><img src="https://www.codefactor.io/repository/github/IATI/iatipublisher/badge" alt="CodeFactor" /></a> <br/><br/>
 
 
 IATI Publisher is a free-to-use publishing tool built using Laravel framework which will provide a simplified, intuitive, robust and more efficient process for publishers to add, modify and update their IATI data.
@@ -18,9 +17,9 @@ The prerequisite for this project are:
 
 ## Install
 IATI Publisher can be cloned from GitHub repository and installed as follows:
-- git clone https://github.com/younginnovations/iatipublisher.git<br />
+- git clone https://github.com/IATI/iatipublisher.git<br />
   OR<br />
-  git clone git@github.com:younginnovations/iatipublisher.git
+  git clone git@github.com:IATI/iatipublisher.git
 - cd iatipublisher
 
 ## Run
@@ -44,7 +43,7 @@ This application is coded in PHP using [Laravel](https://laravel.com/docs/9.x) f
 
 ## Tools and packages
 
-The packages used in this application can be seen in [composer.json](https://github.com/younginnovations/iatipublisher/blob/main/composer.json) and [package.json](https://github.com/younginnovations/iatipublisher/blob/main/package.json) file. Some of the important packages and dependencies used are:
+The packages used in this application can be seen in [composer.json](https://github.com/IATI/iatipublisher/blob/main/composer.json) and [package.json](https://github.com/IATI/iatipublisher/blob/main/package.json) file. Some of the important packages and dependencies used are:
 - Sass: ^1.32.11
 - Vue: ^3.0.23
 - Typescript: ^4.6.3

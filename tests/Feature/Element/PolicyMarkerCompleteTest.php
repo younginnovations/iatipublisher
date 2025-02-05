@@ -295,7 +295,7 @@ class PolicyMarkerCompleteTest extends ElementCompleteTest
     public function test_policy_marker_is_incomplete_when_custom_vocab_and_policy_marker_text_is_missing()
     {
         $actualData = json_decode(
-            '[{"policy_marker_vocabulary":"99","vocabulary_uri":"https://github.com/younginnovations/iatipublisher","significance":"2","narrative":[{"narrative":"Narr one","language":"ng"}]}]',
+            '[{"policy_marker_vocabulary":"99","vocabulary_uri":"https://github.com/IATI/iatipublisher","significance":"2","narrative":[{"narrative":"Narr one","language":"ng"}]}]',
             true
         );
 
@@ -314,7 +314,7 @@ class PolicyMarkerCompleteTest extends ElementCompleteTest
     public function test_policy_marker_is_incomplete_when_custom_vocab_and_policy_marker_text_is_null()
     {
         $actualData = json_decode(
-            '[{"policy_marker_vocabulary":"99","vocabulary_uri":"https://github.com/younginnovations/iatipublisher","significance":"2","policy_marker_text":null,"narrative":[{"narrative":"Narr one","language":"ng"}]}]',
+            '[{"policy_marker_vocabulary":"99","vocabulary_uri":"https://github.com/IATI/iatipublisher","significance":"2","policy_marker_text":null,"narrative":[{"narrative":"Narr one","language":"ng"}]}]',
             true
         );
 
@@ -333,7 +333,7 @@ class PolicyMarkerCompleteTest extends ElementCompleteTest
     public function test_policy_marker_is_incomplete_when_custom_vocab_and_policy_marker_text_is_empty_string()
     {
         $actualData = json_decode(
-            '[{"policy_marker_vocabulary":"99","vocabulary_uri":"https://github.com/younginnovations/iatipublisher","significance":"2","policy_marker_text":"","narrative":[{"narrative":"Narr one","language":"ng"}]}]',
+            '[{"policy_marker_vocabulary":"99","vocabulary_uri":"https://github.com/IATI/iatipublisher","significance":"2","policy_marker_text":"","narrative":[{"narrative":"Narr one","language":"ng"}]}]',
             true
         );
 
@@ -352,7 +352,7 @@ class PolicyMarkerCompleteTest extends ElementCompleteTest
     public function test_policy_marker_is_complete_when_custom_vocab_and_policy_marker_text_is_zero()
     {
         $actualData = json_decode(
-            '[{"policy_marker_vocabulary":"99","vocabulary_uri":"https://github.com/younginnovations/iatipublisher","significance":"2","policy_marker_text":"0","narrative":[{"narrative":"Narr one","language":"ng"}]}]',
+            '[{"policy_marker_vocabulary":"99","vocabulary_uri":"https://github.com/IATI/iatipublisher","significance":"2","policy_marker_text":"0","narrative":[{"narrative":"Narr one","language":"ng"}]}]',
             true
         );
 
@@ -371,7 +371,7 @@ class PolicyMarkerCompleteTest extends ElementCompleteTest
     public function test_policy_marker_is_complete_when_custom_vocab_and_all_filled()
     {
         $actualData = json_decode(
-            '[{"policy_marker_vocabulary":"99","vocabulary_uri":"https://github.com/younginnovations/iatipublisher","significance":"2","policy_marker_text":"12345","narrative":[{"narrative":"Narr one","language":"ng"}]}]',
+            '[{"policy_marker_vocabulary":"99","vocabulary_uri":"https://github.com/IATI/iatipublisher","significance":"2","policy_marker_text":"12345","narrative":[{"narrative":"Narr one","language":"ng"}]}]',
             true
         );
 
@@ -390,7 +390,7 @@ class PolicyMarkerCompleteTest extends ElementCompleteTest
     public function test_policy_marker_is_complete_when_all_filled_multiple()
     {
         $actualData = json_decode(
-            '[{"policy_marker_vocabulary":"99","vocabulary_uri":"https://github.com/younginnovations/iatipublisher","significance":"2","policy_marker_text":"12345","narrative":[{"narrative":"Narr one","language":"ng"}]},{"policy_marker_vocabulary":"1","significance":"2","policy_marker":"1","narrative":[{"narrative":"Another narr","language":"ng"}]}]',
+            '[{"policy_marker_vocabulary":"99","vocabulary_uri":"https://github.com/IATI/iatipublisher","significance":"2","policy_marker_text":"12345","narrative":[{"narrative":"Narr one","language":"ng"}]},{"policy_marker_vocabulary":"1","significance":"2","policy_marker":"1","narrative":[{"narrative":"Another narr","language":"ng"}]}]',
             true
         );
 

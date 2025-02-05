@@ -28,7 +28,7 @@ class ClearOlderAuditLogs extends Command
      *
      * @var string
      */
-    protected $description = 'Clear audit logs older than one month. See issue: https://github.com/younginnovations/iatipublisher/issues/1456';
+    protected $description = 'Clear audit logs older than one month. See issue: https://github.com/IATI/iatipublisher/issues/1456';
 
     /**
      * Execute the console command.
