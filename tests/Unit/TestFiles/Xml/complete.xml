@@ -438,7 +438,7 @@
         <language code="af"/>
         <document-date iso-date="2023-01-09"/>
       </document-link>
-      <reference vocabulary="99" code="2345" vocabulary-uri="https://github.com/IATI/iatipublisher/issues"/>
+      <reference vocabulary="99" code="2345" vocabulary-uri="https://github.com/iati/iatipublisher/issues"/>
       <indicator measure="1" ascending="1" aggregation-status="1">
         <title>
           <narrative xml:lang="ae">description</narrative>

@@ -196,7 +196,7 @@ class BudgetXmlTest extends XmlBaseTest
 
     /**
      * Do not throw validation if revised not match with budget period.
-     * Change source: https://github.com/IATI/iatipublisher/issues/1493.
+     * Change source: https://github.com/iati/iatipublisher/issues/1493.
      *
      * @return void
      * @test

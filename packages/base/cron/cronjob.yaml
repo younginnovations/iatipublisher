@@ -22,7 +22,7 @@ spec:
         - name: github-credentials
       containers:
         - name: iatipublisher-cron
-          image: ghcr.io/IATI/iatipublisher/cron
+          image: ghcr.io/iati/iatipublisher/cron
           imagePullPolicy: IfNotPresent
           envFrom:
               - configMapRef:
