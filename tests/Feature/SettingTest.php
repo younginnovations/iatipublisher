@@ -41,6 +41,10 @@ class SettingTest extends TestCase
 
         $this->actingAs($org->user)->get('/setting')
              ->assertStatus(200);
+
+        $activity = null;
+        $contactInfoData = [];
+        $this->actingAs($org->user)->put('activity/$activity->id/contact_info', $contactInfoData, )->assertStatus(203); //redirect code
     }
 
     /**

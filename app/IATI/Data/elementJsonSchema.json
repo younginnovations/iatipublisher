@@ -5501,7 +5501,7 @@
             "hover_text": "elements/element_json_schema.transactions_sub_elements_aid_type_attributes_aid_type_vocabulary_hover_text",
             "help_text": ""
           },
-          "aid_type_code": {
+          "aid_type_code": {     
             "name": "aid_type_code",
             "label": "elements/label.code",
             "type": "select",
