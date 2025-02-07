@@ -11,6 +11,7 @@
         >
           <div class="mt-4 flex items-center gap-1 bg-n-10 p-4 text-sm">
             <svg-vue class="text-xl" icon="warning-activity" />
+            <!-- !TODO: Remove this -->
             <span>
               Changes have been detected in your activity data. Please
               revalidate before continuing.
