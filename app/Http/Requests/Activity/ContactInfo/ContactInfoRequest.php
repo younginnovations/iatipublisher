@@ -341,7 +341,8 @@ class ContactInfoRequest extends ActivityBaseRequest
 
         foreach ($formFields as $telephoneIndex => $telephone) {
 //            $rules[sprintf('%s.telephone.%s.telephone', $formBase, $telephoneIndex)] = ['nullable', 'min:7', 'max:20'];
-            $rules[sprintf('%s.telephone.%s.telephone', $formBase, $telephoneIndex)] = ['nullable', 'regex:/^\(\+\d{1,3}\)\s?\d{1,3}(\s?\d{1,4}){1,3}$/', 'min:7', 'max:20'];
+//            $rules[sprintf('%s.telephone.%s.telephone', $formBase, $telephoneIndex)] = ['nullable', 'regex:/^\(\+\d{1,3}\)\s?\d{1,3}(\s?\d{1,4}){1,3}$/', 'min:7', 'max:20'];
+            $rules[sprintf('%s.telephone.%s.telephone', $formBase, $telephoneIndex)] = ['nullable', 'regex:/^(?:\+977\d{10}|\d{10}|\d{4}-\d{2}-\d{4}|\(\+977\)\d{10})$/', 'min:7', 'max:20'];
         }
 
         return $rules;
@@ -552,19 +553,18 @@ class ContactInfoRequest extends ActivityBaseRequest
      * @param $formBase
      *
      * @return array
-     */
     protected function getMessagesForTelephone($formFields, $formBase): array
     {
-        $messages = [];
+    $messages = [];
 
-        foreach ($formFields as $telephoneIndex => $telephone) {
-            $messages[sprintf('%s.telephone.%s.telephone.numeric', $formBase, $telephoneIndex)] = 'The contact info telephone number must be valid numeric value.';
-            $messages[sprintf('%s.telephone.%s.telephone.regex', $formBase, $telephoneIndex)] = 'The contact info telephone number is invalid.';
-            $messages[sprintf('%s.telephone.%s.telephone.min', $formBase, $telephoneIndex)] = 'The contact info telephone number must have atleast 7 digits.';
-            $messages[sprintf('%s.telephone.%s.telephone.max', $formBase, $telephoneIndex)] = 'The contact info telephone number must not have more than 20 digits.';
-        }
+    foreach ($formFields as $telephoneIndex => $telephone) {
+        $messages[sprintf('%s.telephone.%s.telephone.numeric', $formBase, $telephoneIndex)] = 'The contact info telephone number must be valid numeric value.';
+        $messages[sprintf('%s.telephone.%s.telephone.regex', $formBase, $telephoneIndex)] = 'The contact info telephone number is invalid.';
+        $messages[sprintf('%s.telephone.%s.telephone.min', $formBase, $telephoneIndex)] = 'The contact info telephone number must have atleast 7 digits.';
+        $messages[sprintf('%s.telephone.%s.telephone.max', $formBase, $telephoneIndex)] = 'The contact info telephone number must not have more than 20 digits.';
+    }
 
-        return $messages;
+    return $messages;
     }
 
     /**
