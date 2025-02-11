@@ -62,7 +62,7 @@ class ContactInfoTest extends TestCase
         $response->assertRedirect("/activity/{$activity->id}");
     }
 
-    public function test_if_redirects_incase_contact_info_fails_to_save_contact_info()
+    public function test_redirects_when_contact_info_validation_fails()
     {
         $role = Role::factory()->create();
         $org = Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();
