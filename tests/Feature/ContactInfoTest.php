@@ -45,11 +45,16 @@ class ContactInfoTest extends TestCase
                 [
                     'type'      => '1',
                     'telephone' => [
-                        'telephone' => '+9779849792399',
+                        'telephone' => '(+977)9812345679',
                     ],
                 ],
             ],
         ];
+        $validator = Validator::make($postData, [
+            'contact_info.*.telephone.telephone' => ['nullable', 'regex:/^(?:\+977\d{10}|\d{10}|\d{4}-\d{2}-\d{4}|\(\+977\)\d{10})$/', 'min:7', 'max:20'],
+        ]);
+
+        $this->assertTrue($validator->passes());
 
         $response = $this->actingAs($org->user)->put("/activity/$activity->id/contact_info", $postData);
         $response->assertStatus(302);
@@ -82,7 +87,7 @@ class ContactInfoTest extends TestCase
                 [
                     'type'      => '1',
                     'telephone' => [
-                        'telephone' => '+977-9849792399',
+                        'telephone' =>['+977)9812345679', 'adsdsdsd', '987324'],
                     ],
                 ],
             ],
