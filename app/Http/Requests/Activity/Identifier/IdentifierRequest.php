@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Identifier;
 
 use App\IATI\Services\Activity\ActivityService;
-use App\Rules\NoLeadingWhiteSpace;
-use App\Rules\NoSpacesInBetween;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -62,12 +60,12 @@ class IdentifierRequest extends FormRequest
             }
 
             return [
-                'activity_identifier' => ['required', Rule::notIn($activityIdentifiers), 'not_regex:/(&|!|\/|\||\?)/', new NoLeadingWhiteSpace(), new NoSpacesInBetween()],
+                'activity_identifier' => ['required', Rule::notIn($activityIdentifiers), 'not_regex:/(&|!|\/|\||\?)/'],
             ];
         }
 
         return [
-            empty($elementName) ? 'activity_identifier' : "$elementName.activity_identifier" => ['required', 'not_regex:/(&|!|\/|\||\?)/ '],
+            empty($elementName) ? 'activity_identifier' : "$elementName.activity_identifier" => ['required', 'not_regex:/(&|!|\/|\||\?)/'],
         ];
     }
 
