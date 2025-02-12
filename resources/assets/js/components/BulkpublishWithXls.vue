@@ -133,9 +133,7 @@
             <svg-vue icon="warning-fill" class="flex-shrink-0 text-lg" />
           </div>
           <div class="pt-2">
-            {{
-              translatedData['workflow_frontend.validation.validation_failed']
-            }}
+            {{ translatedData['common.common.validation_failed'] }}
           </div>
         </div>
       </div>

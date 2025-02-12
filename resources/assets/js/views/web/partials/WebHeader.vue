@@ -18,7 +18,7 @@
                 <NavDropdown
                   :name="translatedData['common.common.about']"
                   :text="translatedData['public.header.about.description']"
-                  :btn-text="translatedData['public.header.learn_more']"
+                  :btn-text="translatedData['common.common.learn_more']"
                   btn-link="/about"
                 />
               </li>

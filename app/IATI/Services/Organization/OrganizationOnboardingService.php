@@ -238,7 +238,7 @@ class OrganizationOnboardingService
         foreach ($organizationOnboarding['steps_status'] as &$onboardingStep) {
             $onboardingStep['title'] = match ($onboardingStep['step']) {
                 1 => Str::title(trans('common/common.publishing_settings')),
-                2 => Str::title(trans('onboarding/organisation_data_step.default_values')),
+                2 => Str::title(trans('common/common.default_values')),
                 3 => Str::title(trans('onboarding/organisation_data_step.organization_data')),
                 4 => Str::title(trans('common/common.activity')),
             };

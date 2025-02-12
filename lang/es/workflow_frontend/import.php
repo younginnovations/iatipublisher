@@ -41,8 +41,8 @@ return [
     'we_detected_some_errors_in_the_uploaded_file'                             => 'es_ We detected some errors in the uploaded file.',
     'identifier_errors'                                                        => 'es_ Identifier Errors',
     'we_have_found_some_identifier_errors_in_the_imported_file'                => 'es_ We have found some identifier errors in the imported file. You cannot import data until all the identifier errors are resolved.',
-    'additionally_there_are'                                                   => 'Additionally, there are :countCritical critical error, :countError errors and :countWarning warning in the file',
-    'download_identifier_errors'                                               => 'download identifier errors',
-    'some_of_the_template_contain_errors'                                      => 'Some of the :statusTemplate contain critical errors and thus, cannot be uploaded to IATI Publisher. Please review the errors and follow the instructions provided in the user manual.',
-    'review_errors'                                                            => 'Review errors',
+    'additionally_there_are'                                                   => 'es_ Additionally, there are :countCritical critical error, :countError errors and :countWarning warning in the file',
+    'download_identifier_errors'                                               => 'es_ download identifier errors',
+    'some_of_the_template_contain_errors'                                      => 'es_ Some of the :statusTemplate contain critical errors and thus, cannot be uploaded to IATI Publisher. Please review the errors and follow the instructions provided in the user manual.',
+    'review_errors'                                                            => 'es_ Review errors',
 ];

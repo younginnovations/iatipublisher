@@ -91,7 +91,7 @@
           class="rounded bg-bluecoral px-5 py-2 font-semibold text-white"
           @click="close"
         >
-          {{ translatedData['activity_index.error_popup_for_publish.close'] }}
+          {{ translatedData['common.common.close'] }}
         </button>
       </div>
     </div>

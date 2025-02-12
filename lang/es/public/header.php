@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'learn_more'           => 'es_ Learn more',
     'read_more'            => 'es_ Read more',
     'see_fields'           => 'es_ See all data fields',
     'about'                => [
