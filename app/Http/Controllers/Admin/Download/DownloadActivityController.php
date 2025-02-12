@@ -280,10 +280,6 @@ class DownloadActivityController extends Controller
 
             $mergedContent = $this->downloadActivityService->getCombinedXmlFile($activities);
 
-            if (!$download && !$this->xmlServiceProvider->isValidAgainstSchema($mergedContent)) {
-                return response()->json(['success' => false, 'xml_error' => true, 'message' => json_encode(libxml_get_errors(), JSON_THROW_ON_ERROR)]);
-            }
-
             $this->auditService->auditEvent($activities, 'download', 'xml');
 
             return response($mergedContent)
