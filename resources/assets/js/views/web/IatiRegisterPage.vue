@@ -192,7 +192,7 @@
               v-if="checkStep(1)"
               class="pb-4 text-sm font-normal text-n-40 sm:pb-0"
             >
-              {{ translatedData['common.common.already_have_an_acoount'] }}
+              {{ translatedData['common.common.already_have_an_account'] }}
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
@@ -210,7 +210,7 @@
           </div>
           <div v-if="checkStep(2)" class="mt-6 text-center">
             <span class="text-sm font-normal text-n-40">
-              {{ translatedData['common.common.already_have_an_acoount'] }}
+              {{ translatedData['common.common.already_have_an_account'] }}
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
@@ -1219,7 +1219,9 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      LanguageService.getTranslatedData('workflow_frontend,common,public')
+      LanguageService.getTranslatedData(
+        'workflow_frontend,common,public,elements'
+      )
         .then((response) => {
           translatedData.value = response.data;
         })

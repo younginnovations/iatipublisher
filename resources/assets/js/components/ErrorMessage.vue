@@ -116,13 +116,34 @@
             </div>
 
             <div class="ml-5 text-left">
-              <p
-                v-html="
+              <p>
+                {{
                   translatedData[
                     'activity_index.error_message.please_check_for_the_verification_email_sent_to_you'
                   ]
-                "
-              ></p>
+                }}
+                <span>
+                  (
+                  <a
+                    class="cursor-pointer border-b-2 border-b-bluecoral font-bold text-bluecoral hover:border-b-spring-50"
+                    @click="resendVerificationEmail"
+                  >
+                    {{
+                      translatedData[
+                        'activity_index.error_message.click_here_to_resend_the_verification_email'
+                      ]
+                    }}
+                  </a>
+                  ).
+                </span>
+                <span
+                  v-html="
+                    translatedData[
+                      'activity_index.error_message.contact_support_for_further_assistance'
+                    ]
+                  "
+                ></span>
+              </p>
             </div>
           </div>
         </div>

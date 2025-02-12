@@ -126,7 +126,10 @@ export function getTranslatedMissing(translatedData, element = ''): string {
   let returnValue = translatedData['common.common.missing'];
 
   if (element) {
-    returnValue = (getTranslatedElement(translatedData, element) ?? element) + ' ' + translatedData['common.common.missing'];
+    returnValue =
+      (getTranslatedElement(translatedData, element) ?? element) +
+      ' ' +
+      translatedData['common.common.missing'];
   }
 
   return toTitleCase(returnValue);
@@ -142,7 +145,10 @@ export function getTranslatedDeleteElement(translatedData, element = '') {
   let returnValue = translatedData['common.common.delete'];
 
   if (element) {
-    returnValue = translatedData['common.common.delete'] + ' ' + getTranslatedElement(translatedData, element) ?? element;
+    returnValue =
+      translatedData['common.common.delete'] +
+        ' ' +
+        getTranslatedElement(translatedData, element) ?? element;
   }
 
   return toTitleCase(returnValue);

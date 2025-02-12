@@ -145,9 +145,7 @@
                   :class="hierarchyErrors.length > 0 ? 'border-crimson-50' : ''"
                   type="text"
                   :placeholder="
-                    translatedData[
-                      'onboarding.default_values_step.type_default_hierarchy_here'
-                    ]
+                    translatedData['common.common.type_default_hierarchy_here']
                   "
                 />
 

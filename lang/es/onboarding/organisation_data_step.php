@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'default_values'                                                       => 'es_ default values',
     'organization_data'                                                    => 'es_ organization data',
     'verification_required'                                                => 'es_ Verification Required',
     'you_can_skip_this_step_for_now'                                       => 'es_ You can skip this step for now and come back to it once your account has been verified.',

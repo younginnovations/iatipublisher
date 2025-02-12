@@ -59,7 +59,7 @@ class ActivityController extends Controller
             }
 
             $translatedMessage = trans(
-                'api/activity_controller.the_element_element_deleted_successfully',
+                'organisationDetail/organization_controller.the_element_element_deleted_successfully',
                 ['element'=> str_replace('_', '-', $element)]
             );
 

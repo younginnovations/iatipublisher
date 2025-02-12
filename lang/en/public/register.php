@@ -71,7 +71,6 @@ return [
             // Form 1
             'publisher_information_description'            => 'This information will be used to register your organisation',
             'publisher_information_hover_text'             => 'Provide information about your organisation. You will need to provide the same information that you used to create your Publisher Account on the IATI Registry (iatiregistry.org).',
-            'publisher_name'                               => 'Publisher Name',
             'publisher_name_placeholder'                   => 'Type your Publisher Name here',
             'publisher_name_hover_text'                    => 'Provide the name of your organisation.',
             'publisher_id_hover_text'                      => 'This is the unique ID for your organisation that you created when you set up your IATI Registry Publisher Account. It should be a shorter version of your organisation\'s name, which will include lowercase letters and may include numbers, - (dash) or _ (underscore). For example nef_mali\' for Near East Foundation Mali.',
