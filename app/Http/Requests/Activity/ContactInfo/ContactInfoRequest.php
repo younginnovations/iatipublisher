@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\ContactInfo;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use App\Rules\ValidPhoneNumber;
 use Illuminate\Support\Arr;
 
 /**
@@ -340,9 +341,7 @@ class ContactInfoRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $telephoneIndex => $telephone) {
-//            $rules[sprintf('%s.telephone.%s.telephone', $formBase, $telephoneIndex)] = ['nullable', 'min:7', 'max:20'];
-//            $rules[sprintf('%s.telephone.%s.telephone', $formBase, $telephoneIndex)] = ['nullable', 'regex:/^\(\+\d{1,3}\)\s?\d{1,3}(\s?\d{1,4}){1,3}$/', 'min:7', 'max:20'];
-            $rules[sprintf('%s.telephone.%s.telephone', $formBase, $telephoneIndex)] = ['nullable', 'regex:/^(?:\+977\d{10}|\d{10}|\d{4}-\d{2}-\d{4}|\(\+977\)\d{10})$/', 'min:7', 'max:20'];
+            $rules[sprintf('%s.telephone.%s.telephone', $formBase, $telephoneIndex)] = ['nullable', 'min:7', 'max:20', new ValidPhoneNumber];
         }
 
         return $rules;
