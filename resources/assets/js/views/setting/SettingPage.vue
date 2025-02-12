@@ -2,12 +2,14 @@
   <section class="section-wrapper">
     <Loader v-if="loaderVisibility" />
     <div class="setting input__field">
-      <span class="text-xs font-bold text-n-40">Settings</span>
+      <span class="text-xs font-bold text-n-40">
+        {{ translatedData['common.common.settings'] }}</span
+      >
       <div class="flex items-center justify-between">
         <div class="my-2 flex items-center sm:mb-6 sm:mt-4">
           <a href="/activities"><svg-vue icon="left-arrow" /></a>
           <h2 class="ml-3 text-heading-5 font-bold text-n-50 sm:text-heading-4">
-            Settings
+            {{ translatedData['common.common.settings'] }}
           </h2>
         </div>
         <div>
@@ -30,7 +32,9 @@
             }"
             @click="toggleTab('publish')"
           >
-            Publishing Settings
+            {{
+              toTitleCase(translatedData['common.common.publishing_settings'])
+            }}
           </button>
           <button
             class="tab-btn"
@@ -39,7 +43,7 @@
             }"
             @click="toggleTab('default')"
           >
-            Default Values
+            {{ toTitleCase(translatedData['common.common.default_values']) }}
           </button>
         </div>
         <SettingPublishingForm
@@ -73,7 +77,7 @@
           :class="userRole !== 'admin' && 'cursor-not-allowed'"
           class="ghost-btn mr-4 sm:mr-8"
           href="/activities"
-          >Cancel</a
+          >{{ translatedData['common.common.cancel'] }}</a
         >
         <button
           :class="userRole !== 'admin' && 'cursor-not-allowed'"
@@ -82,8 +86,8 @@
         >
           {{
             tab === 'publish'
-              ? 'Save publishing setting'
-              : 'Save default values'
+              ? translatedData['common.common.save_publishing_setting']
+              : translatedData['common.common.save_default_values']
           }}
         </button>
       </div>
@@ -100,8 +104,11 @@ import SettingDefaultForm from './SettingDefaultForm.vue';
 import SettingPublishingForm from './SettingPublishingForm.vue';
 import Loader from '../../components/Loader.vue';
 import Toast from 'Components/ToastMessage.vue';
+import LanguageService from 'Services/language';
+import { toTitleCase } from '../../composable/utils';
 
 export default defineComponent({
+  methods: { toTitleCase },
   components: {
     SettingDefaultForm,
     SettingPublishingForm,
@@ -161,6 +168,7 @@ export default defineComponent({
   },
 
   setup(props) {
+    const translatedData = ref({});
     let toastTimeoutId;
     let initialApiCallCompleted = ref(false);
     const tab = ref('publish');
@@ -255,6 +263,14 @@ export default defineComponent({
             updateStore('UPDATE_DEFAULT_VALUES', key, activityValues[key]);
           }
         }
+
+        LanguageService.getTranslatedData(
+          'workflow_frontend,common,settings,common'
+        )
+          .then((response) => {
+            translatedData.value = response.data;
+          })
+          .catch((error) => console.log(error));
       }
     });
 
@@ -399,6 +415,7 @@ export default defineComponent({
 
     provide('userRole', props.userRole);
     provide('isSuperadmin', props.isSuperadmin);
+    provide('translatedData', translatedData);
 
     return {
       props,
@@ -414,6 +431,7 @@ export default defineComponent({
       submitForm,
       initialApiCallCompleted,
       showTokenTag,
+      translatedData,
     };
   },
 });

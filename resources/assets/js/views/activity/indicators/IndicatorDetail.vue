@@ -88,7 +88,7 @@
           <li v-for="(rData, r, ri) in indicatorData" :key="ri">
             <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
               <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
-              {{ r }}
+              {{ toKebabCase(r) }}
             </a>
           </li>
 
@@ -118,7 +118,7 @@
             <li v-for="(rData, r, ri) in indicatorData" :key="ri">
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
                 <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
-                {{ r }}
+                {{ toKebabCase(r) }}
                 <span
                   v-if="isMandatoryForIndicator(r)"
                   class="required-icon px-1"
@@ -257,6 +257,7 @@ import {
   watch,
   computed,
   onUnmounted,
+  watchEffect,
 } from 'vue';
 
 //component
@@ -265,7 +266,11 @@ import PageTitle from 'Components/sections/PageTitle.vue';
 import Toast from 'Components/ToastMessage.vue';
 
 //helper
-import { countDocumentLink, isEveryValueNull } from 'Composable/utils';
+import {
+  countDocumentLink,
+  isEveryValueNull,
+  toKebabCase,
+} from 'Composable/utils';
 
 import {
   TitleElement,
@@ -281,9 +286,11 @@ import {
 
 //composable
 import getActivityTitle from 'Composable/title';
+import LanguageService from 'Services/language';
 
 export default defineComponent({
   name: 'IndicatorDetail',
+  methods: { toKebabCase },
   components: {
     TitleElement,
     Measure,
@@ -329,6 +336,14 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translatedData = ref({});
+    LanguageService.getTranslatedData(
+      'workflow_frontend,common,activity_detail,activity_index,elements'
+    )
+      .then((response) => {
+        translatedData.value = response.data;
+      })
+      .catch((error) => console.log(error));
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
 
@@ -384,7 +399,7 @@ export default defineComponent({
     /**
      * Breadcrumb data
      */
-    const breadcrumbData = [
+    const breadcrumbData = reactive([
       {
         title: 'Your Activities',
         link: '/activities',
@@ -409,7 +424,22 @@ export default defineComponent({
         title: indicatorTitle,
         link: '',
       },
-    ];
+    ]);
+
+    /**
+     * Using Translated Breadcrumb titles
+     */
+    watchEffect(() => {
+      if (translatedData.value) {
+        breadcrumbData[0].title =
+          translatedData.value['common.common.your_activities'];
+        breadcrumbData[2].title =
+          translatedData.value['common.common.result_list'];
+        breadcrumbData[4].title =
+          translatedData.value['common.common.indicator_list'];
+      }
+    });
+
     const handleScroll = () => {
       positionY.value = window.scrollY;
     };
@@ -442,6 +472,7 @@ export default defineComponent({
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', calcWidth);
     });
+
     watch(
       () => showSidebar.value,
       (sidebar) => {
@@ -450,6 +481,8 @@ export default defineComponent({
         } else document.documentElement.style.overflow = 'auto';
       }
     );
+
+    provide('translatedData', translatedData);
 
     return {
       linkClasses,
