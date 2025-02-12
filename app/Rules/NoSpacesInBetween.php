@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Support\Str;
 
 class NoSpacesInBetween implements Rule
 {
@@ -13,7 +16,6 @@ class NoSpacesInBetween implements Rule
      */
     public function __construct()
     {
-        //
     }
 
     /**
@@ -23,9 +25,9 @@ class NoSpacesInBetween implements Rule
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute, $value)
+    public function passes($attribute, $value): bool
     {
-        return preg_match('/^\S*$/u', $value);
+        return !Str::contains(trim($value), ' ');
     }
 
     /**
@@ -33,8 +35,8 @@ class NoSpacesInBetween implements Rule
      *
      * @return string
      */
-    public function message()
+    public function message(): string
     {
-        return 'The activity_identifier must not have no space';
+        return 'The activity-identifier must not contain spaces.';
     }
 }

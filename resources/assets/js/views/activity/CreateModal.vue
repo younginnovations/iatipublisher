@@ -145,7 +145,7 @@
                   class="form__input"
                   type="text"
                   placeholder=""
-                  :value="iatiIdentiferText"
+                  :value="iatiIdentifierText"
                   disabled="true"
                 />
 
@@ -235,7 +235,7 @@ export default defineComponent({
       activity_identifier: '',
     });
 
-    const iatiIdentiferText = computed(() => {
+    const iatiIdentifierText = computed(() => {
       return formData.activity_identifier
         ? organization.identifier + '-' + formData.activity_identifier
         : '';
@@ -260,7 +260,7 @@ export default defineComponent({
 
     function storeActivity() {
       loaderVisibility.value = true;
-      formData.iati_identifier_text = iatiIdentiferText.value;
+      formData.iati_identifier_text = iatiIdentifierText.value;
 
       axios
         .post('/activity', formData)
@@ -298,6 +298,7 @@ export default defineComponent({
       closeModal,
       storeActivity,
       defaultLanguage,
+      iatiIdentifierText,
     };
   },
 });

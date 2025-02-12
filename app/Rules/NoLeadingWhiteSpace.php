@@ -17,7 +17,6 @@ class NoLeadingWhiteSpace implements Rule
      */
     public function __construct()
     {
-        //
     }
 
     /**
@@ -34,12 +33,11 @@ class NoLeadingWhiteSpace implements Rule
     {
         $loggedInOrganisation = auth()->user()->organization;
         $organisationIdentifier = $loggedInOrganisation->identifier;
+
         $activityIdentifier = $value;
 
         $iatiIdentifierTextFromForm = (request()->get('iati_identifier_text'));
         $iatiIdentifierTextReal = $organisationIdentifier . '-' . $activityIdentifier;
-
-//        dd(request()->all(), $iatiIdentifierTextReal, $iatiIdentifierTextFromForm);
 
         return $iatiIdentifierTextFromForm === $iatiIdentifierTextReal;
     }
@@ -51,6 +49,6 @@ class NoLeadingWhiteSpace implements Rule
      */
     public function message() : string
     {
-        return 'The activity-identifier must not have leading space';
+        return 'The activity-identifier must not start with space.';
     }
 }
