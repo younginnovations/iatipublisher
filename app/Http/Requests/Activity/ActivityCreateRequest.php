@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity;
 
 use App\IATI\Services\Activity\ActivityService;
+use App\Rules\NoLeadingWhiteSpace;
+use App\Rules\NoSpacesInBetween;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -57,7 +59,7 @@ class ActivityCreateRequest extends FormRequest
 
         return [
             'narrative'            => ['required'],
-            'activity_identifier'  => ['required', Rule::notIn($activityIdentifiers), 'not_regex:/(&|!|\/|\||\?)/'],
+            'activity_identifier'  => ['required', Rule::notIn($activityIdentifiers), 'not_regex:/(&|!|\/|\||\?)/', new NoLeadingWhiteSpace(), new NoSpacesInBetween()],
             'iati_identifier_text' => ['sometimes'],
         ];
     }
