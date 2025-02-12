@@ -137,7 +137,7 @@
           <div id="progress" class="mb-1 flex">
             <div class="activities__card progress mr-1">
               <div class="mb-2 flex items-center justify-between">
-                <span class="mr-2">Publishing Progress</span>
+                <span class="mr-2">Core Completeness</span>
                 <HoverText
                   hover-text="The IATI Standard contains a wide range of data elements and your organisation is encouraged to (at least) publish data in elements marked as “Core”."
                   name=""
@@ -214,7 +214,7 @@
             <div class="mb-1 flex">
               <div class="activities__card progress mr-1">
                 <div class="mb-2 flex items-center justify-between">
-                  <span class="mr-2">Publishing Progress</span>
+                  <span class="mr-2">Core Completeness</span>
                   <HoverText
                     hover-text="The IATI Standard contains a wide range of data elements and your organisation is encouraged to (at least) publish data in elements marked as “Core”."
                     name=""

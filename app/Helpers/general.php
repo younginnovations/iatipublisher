@@ -219,15 +219,8 @@ if (!function_exists('getMandatoryElements')) {
     function getMandatoryElements(): array
     {
         return [
-            'identifier',
             'name',
             'reporting_org',
-            'total_budget',
-            'total_expenditure',
-            'recipient_org_budget',
-            'recipient_country_budget',
-            'recipient_region_budget',
-            'document_link',
         ];
     }
 }
