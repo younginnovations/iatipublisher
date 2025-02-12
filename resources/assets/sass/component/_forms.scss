@@ -692,12 +692,13 @@ aside {
 }
 
 .subelement {
-  &:has(.wrapped-child-body:nth-of-type(n + 2)) {
+  &:has(.wrapped-child-body:nth-of-type(n + 2)):not(:has(.height-hide)) {
     .wrapped-child-body {
       margin-bottom: 32px !important;
     }
   }
-  &:has(.multi-form:nth-of-type(n + 2)) {
+
+  &:has(.multi-form:nth-of-type(n + 2)):not(:has(.height-hide)) {
     .multi-form {
       margin-bottom: 32px !important;
     }
