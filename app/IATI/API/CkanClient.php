@@ -114,6 +114,7 @@ class CkanClient
             'Accept-Charset: utf-8',
             'Accept-Encoding: gzip',
             'Cookie: auth_tkt=foo',
+            'User-Agent: iati-publisher',
         ];
 
         if (env('APP_ENV') == 'production') {
