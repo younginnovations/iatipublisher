@@ -124,9 +124,7 @@
                 :is-percent="true"
                 :percent="progress"
               ></RadialProgressBar>
-              <span
-                >Fill mandatory fields of all elements to get 100% score</span
-              >
+              <span>Complete all core elements to get 100% score</span>
             </div>
             <div class="activities__card elements">
               <div class="mb-7 flex items-center justify-between">
@@ -201,9 +199,7 @@
                   :is-percent="true"
                   :percent="progress"
                 ></RadialProgressBar>
-                <span
-                  >Fill mandatory fields of all elements to get 100% score</span
-                >
+                <span>Complete all core elements to get 100% score</span>
               </div>
               <div class="activities__card elements">
                 <div class="mb-7 flex items-center justify-between">
