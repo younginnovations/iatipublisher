@@ -111,7 +111,7 @@
           <div class="mb-1 flex">
             <div class="activities__card progress mr-1">
               <div class="mb-2 flex items-center justify-between">
-                <span class="mr-2">Publishing Progress</span>
+                <span class="mr-2">Core Completeness</span>
                 <HoverText
                   hover-text="You cannot publish an activity until all the mandatory fields have been filled."
                   name=""
@@ -124,9 +124,7 @@
                 :is-percent="true"
                 :percent="progress"
               ></RadialProgressBar>
-              <span
-                >Fill mandatory fields of all elements to get 100% score</span
-              >
+              <span>Complete all core elements to get 100% score</span>
             </div>
             <div class="activities__card elements">
               <div class="mb-7 flex items-center justify-between">
@@ -188,7 +186,7 @@
             <div class="mb-1 flex">
               <div class="activities__card progress mr-1">
                 <div class="mb-2 flex items-center justify-between">
-                  <span class="mr-2">Publishing Progress</span>
+                  <span class="mr-2">Core Completeness</span>
                   <HoverText
                     hover-text="You cannot publish an activity until all the mandatory fields have been filled."
                     name=""
@@ -201,9 +199,7 @@
                   :is-percent="true"
                   :percent="progress"
                 ></RadialProgressBar>
-                <span
-                  >Fill mandatory fields of all elements to get 100% score</span
-                >
+                <span>Complete all core elements to get 100% score</span>
               </div>
               <div class="activities__card elements">
                 <div class="mb-7 flex items-center justify-between">

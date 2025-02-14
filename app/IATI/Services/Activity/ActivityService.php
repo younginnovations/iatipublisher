@@ -269,7 +269,7 @@ class ActivityService
     }
 
     /**
-     * Return activity publishing progress in percentage.
+     * Return activity core completeness in percentage.
      *
      * @param $activity
      *
