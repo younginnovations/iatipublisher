@@ -120,6 +120,7 @@ class OrganizationIdentifierController extends Controller
                     'base_uri' => env('IATI_API_ENDPOINT'),
                     'headers'  => [
                         'X-CKAN-API-Key' => env('IATI_API_KEY'),
+                        'User-Agent'     => 'iati-publisher',
                     ],
                 ]
             );

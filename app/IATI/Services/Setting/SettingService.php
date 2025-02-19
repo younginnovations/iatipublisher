@@ -184,6 +184,7 @@ class SettingService
                 'base_uri' => env('IATI_API_ENDPOINT'),
                 'headers'  => [
                     'X-CKAN-API-Key' => env('IATI_API_KEY'),
+                    'User-Agent'     =>'iati-publisher',
                 ],
             ]
         );
@@ -210,6 +211,7 @@ class SettingService
                 'base_uri' => env('IATI_API_ENDPOINT'),
                 'headers'  => [
                     'X-CKAN-API-Key' => $data['api_token'],
+                    'User-Agent'     => 'iati-publisher',
                 ],
             ]
         );
