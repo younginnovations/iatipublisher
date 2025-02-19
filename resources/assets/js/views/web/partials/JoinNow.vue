@@ -63,25 +63,13 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
-import LanguageService from 'Services/language';
+<script setup lang="ts">
+import { defineProps } from 'vue';
 
-export default defineComponent({
-  setup() {
-    const translatedData = ref({});
-
-    onMounted(() => {
-      LanguageService.getTranslatedData('workflow_frontend,common,public')
-        .then((response) => {
-          translatedData.value = response.data;
-        })
-        .catch((error) => console.log(error));
-    });
-
-    return {
-      translatedData,
-    };
+defineProps({
+  translatedData: {
+    type: Object,
+    required: true,
   },
 });
 </script>

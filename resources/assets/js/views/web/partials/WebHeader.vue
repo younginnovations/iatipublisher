@@ -138,7 +138,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
+import { defineComponent, onUnmounted } from 'vue';
 import NavDropdown from '../../../components/NavDropdown.vue';
 import LanguageService from 'Services/language';
 
@@ -150,23 +150,10 @@ export default defineComponent({
     title: { type: String, required: true },
     auth: { type: String, required: true },
     superAdmin: { type: Boolean, required: false, default: false },
+    translatedData: { type: Object, required: true },
+    currentLanguage: { type: String, required: true },
   },
   setup() {
-    const translatedData = ref({});
-    const currentLanguage = ref('en');
-    onMounted(async () => {
-      document.body.classList.add('no-nav');
-
-      currentLanguage.value = await LanguageService.getLanguage();
-
-      LanguageService.getTranslatedData(
-        'workflow_frontend,common,public,elements'
-      )
-        .then((response) => {
-          translatedData.value = response.data;
-        })
-        .catch((error) => console.log(error));
-    });
     onUnmounted(() => {
       document.body.classList.remove('no-nav');
     });
@@ -174,7 +161,6 @@ export default defineComponent({
     const changeLanguage = (lang: string) => {
       LanguageService.changeLanguage(lang)
         .then(() => {
-          currentLanguage.value = lang;
           window.location.reload();
         })
         .catch((error) => {
@@ -184,8 +170,6 @@ export default defineComponent({
 
     return {
       changeLanguage,
-      translatedData,
-      currentLanguage,
     };
   },
 });

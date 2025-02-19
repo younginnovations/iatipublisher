@@ -146,9 +146,14 @@
 
 <script setup lang="ts">
 import axios from 'axios';
-import { onMounted, ref } from 'vue';
-import LanguageService from 'Services/language';
+import { defineProps } from 'vue';
 
+defineProps({
+  translatedData: {
+    type: Object,
+    required: true,
+  },
+});
 function downloadManual(type: string) {
   let fileName = {
     user: 'IATI_Publisher-User_Manual_v1.1.pdf',
@@ -169,15 +174,4 @@ function downloadManual(type: string) {
     link.click();
   });
 }
-
-const translatedData = ref({});
-
-onMounted(() => {
-  LanguageService.getTranslatedData('workflow_frontend,common,footer')
-    .then((response) => {
-      translatedData.value = response.data;
-      console.log(translatedData.value);
-    })
-    .catch((error) => console.log(error));
-});
 </script>

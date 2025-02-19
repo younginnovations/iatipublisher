@@ -361,6 +361,8 @@ const props = defineProps({
   superAdmin: { type: Boolean, required: true },
   hasAdminBar: { type: Number || Boolean, default: false },
   defaultLanguage: { type: String, default: '' },
+  translatedData: { type: Object, required: true },
+  currentLanguage: { type: String, required: true },
 });
 
 const showUserDropdown = ref(false);
@@ -376,8 +378,6 @@ const errorToastVisibility = ref(false);
 const errorToastMessage = ref('');
 const errorToastType = ref(false);
 const translatedData = ref({});
-const currentLanguage = ref('en');
-console.log(currentLanguage.value);
 
 const data = reactive({
   languageNavLiClasses: 'flex',
@@ -390,46 +390,49 @@ const data = reactive({
     {
       language: 'EN',
       permalink: '#',
-      active: currentLanguage.value == 'en',
+      active: props.currentLanguage == 'en',
     },
     {
       language: 'FR',
       permalink: '#',
-      active: currentLanguage.value == 'fr',
+      active: props.currentLanguage == 'fr',
     },
     {
       language: 'ES',
       permalink: '#',
-      active: currentLanguage.value == 'es',
+      active: props.currentLanguage == 'es',
     },
   ],
+
   org_menus: [
     {
-      name: 'Activity DATA',
+      name: props.translatedData['adminHeader.admin_header.activity_data'],
       identifier: 'activity-data',
       permalink: '/activities',
       active: true,
     },
     {
-      name: 'Organisation DATA',
+      name: props.translatedData['adminHeader.admin_header.organisation_data'],
       identifier: 'organisation-data',
       permalink: '/organisation',
       active: false,
     },
     {
-      name: 'Settings',
+      name: props.translatedData['common.common.settings'],
       identifier: 'settings',
       permalink: '/setting',
       active: false,
     },
     {
-      name: 'Add / Import Activity',
+      name: props.translatedData[
+        'adminHeader.admin_header.add_import_activity'
+      ],
       identifier: 'add-import-activity',
       permalink: '#',
       active: false,
     },
     {
-      name: 'Users',
+      name: props.translatedData['common.common.users'],
       identifier: 'users',
       permalink: '/users',
       active: false,
@@ -450,7 +453,7 @@ const data = reactive({
     },
 
     {
-      name: 'Users',
+      name: props.translatedData['common.common.users'],
       identifier: 'users',
       permalink: '/users',
       active: false,
@@ -461,7 +464,6 @@ const data = reactive({
 const changeLanguage = (lang: string) => {
   LanguageService.changeLanguage(lang)
     .then(() => {
-      currentLanguage.value = lang;
       window.location.reload();
     })
     .catch((error) => {
@@ -475,20 +477,6 @@ watch(
     isLoading.value = value;
   }
 );
-
-watchEffect(() => {
-  if (translatedData.value) {
-    data.org_menus[0].name =
-      translatedData.value['adminHeader.admin_header.activity_data'];
-    data.org_menus[1].name =
-      translatedData.value['adminHeader.admin_header.organisation_data'];
-    data.org_menus[2].name = translatedData.value['common.common.settings'];
-    data.org_menus[3].name =
-      translatedData.value['adminHeader.admin_header.add_import_activity'];
-    data.org_menus[4].name = translatedData.value['common.common.users'];
-    data.superadmin_menus[2].name = translatedData.value['common.common.users'];
-  }
-});
 
 const liClass =
   'block p-2.5 text-n-40 text-tiny uppercase leading-[1.5] font-bold hover:!text-n-50 hover:bg-n-10';
@@ -639,18 +627,6 @@ const redirectProfile = () => {
 
 onUnmounted(() => {
   localStorage.removeItem('openAddModel');
-});
-
-onMounted(async () => {
-  currentLanguage.value = await LanguageService.getLanguage();
-
-  LanguageService.getTranslatedData(
-    'common,adminHeader,activity_index,elements'
-  )
-    .then((response) => {
-      translatedData.value = response.data;
-    })
-    .catch((error) => console.log(error));
 });
 
 provide('defaultLanguage', props.defaultLanguage);

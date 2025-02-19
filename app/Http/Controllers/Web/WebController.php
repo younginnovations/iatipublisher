@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\IATI\Traits\IatiTranslationTrait;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 
@@ -144,53 +143,12 @@ class WebController extends Controller
             if (!$folders) {
                 return response()->json(['success' => false, 'message' => 'No folders provided.']);
             }
-
-            $lang = App::getLocale();
-            $cacheData = null;
-//            $cacheData = Cache::get("translated_data_{$lang}");
+            $translator = new class {
+                use IatiTranslationTrait;
+            };
             $folders = explode(',', $folders);
-
-            if (!$cacheData) {
-                // Working for all folders
-                $folderPaths = File::directories(base_path("lang/{$lang}"));
-
-                foreach ($folderPaths as $fl) {
-                    $folderName = basename($fl);
-                    $files = File::allFiles($fl);
-                    $translations = [];
-
-                    foreach ($files as $file) {
-                        $fileName = pathinfo($file->getRealPath(), PATHINFO_FILENAME);
-                        $fileTranslations = require $file->getRealPath();
-                        $translations[$fileName] = $fileTranslations;
-                    }
-
-                    $cacheData[$folderName] = $translations;
-                }
-
-                // Working for outer files
-                $outerFiles = File::allFiles(base_path("lang/{$lang}"));
-                $outerFileTranslations = [];
-
-                foreach ($outerFiles as $outerFile) {
-                    $outerFileName = pathinfo($outerFile->getRealPath(), PATHINFO_FILENAME);
-                    $obtainedData = require $outerFile->getRealPath();
-                    $outerFileTranslations[$outerFileName] = $obtainedData;
-                }
-
-                $cacheData['general'] = $outerFileTranslations;
-
-                // Writing to cache
-                Cache::put("translated_data_{$lang}", $cacheData, now()->addHours(24));
-            }
-
-            $requiredTranslations = [];
-
-            foreach ($folders as $folder) {
-                if (array_key_exists($folder, $cacheData)) {
-                    $requiredTranslations[$folder] = Arr::get($cacheData, $folder, []);
-                }
-            }
+            $cacheData = $translator->loadTranslations();
+            $requiredTranslations = $translator->filterTranslations($cacheData, $folders);
 
             return response()->json(['success' => true, 'data' => Arr::dot($requiredTranslations)]);
         } catch (\Exception $e) {

@@ -134,11 +134,9 @@ class IatiRegisterController extends Controller
     /**
      * Verifies and validates contact info form.
      *
-     * @param ContactInfoFormRequest $request
+     * @param IatiRegisterFormRequest $request
      *
      * @return RedirectResponse|JsonResponse
-     * @throws \JsonException
-     * @throws \Throwable
      */
     public function verifyContactInfo(IatiRegisterFormRequest $request): JsonResponse|RedirectResponse
     {

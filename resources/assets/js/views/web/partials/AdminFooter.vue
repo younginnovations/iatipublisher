@@ -146,12 +146,12 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, onMounted, ref } from 'vue';
+import { defineProps } from 'vue';
 import axios from 'axios';
-import LanguageService from 'Services/language';
 
 defineProps({
   superAdmin: { type: Boolean, required: false, default: false },
+  translatedData: { type: Object, required: true },
 });
 
 function downloadManual(type: string) {
@@ -174,15 +174,4 @@ function downloadManual(type: string) {
     link.click();
   });
 }
-
-const translatedData = ref({});
-
-onMounted(() => {
-  LanguageService.getTranslatedData('workflow_frontend,common,footer')
-    .then((response) => {
-      translatedData.value = response.data;
-      console.log(translatedData.value);
-    })
-    .catch((error) => console.log(error));
-});
 </script>

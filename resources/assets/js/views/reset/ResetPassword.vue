@@ -109,6 +109,10 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    translatedData: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     const loaderVisibility = ref(false);
@@ -123,8 +127,6 @@ export default defineComponent({
       password: '',
       password_confirmation: '',
     });
-
-    const translatedData = ref({});
 
     function reset() {
       loaderVisibility.value = true;
@@ -170,21 +172,12 @@ export default defineComponent({
         });
     }
 
-    onMounted(() => {
-      LanguageService.getTranslatedData('workflow_frontend,common,public')
-        .then((response) => {
-          translatedData.value = response.data;
-        })
-        .catch((error) => console.log(error));
-    });
-
     return {
       props,
       loaderVisibility,
       formData,
       errorData,
       reset,
-      translatedData,
     };
   },
 });

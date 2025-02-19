@@ -41,21 +41,24 @@
 import { defineComponent, ref, reactive, onMounted } from 'vue';
 import Loader from '../../components/Loader.vue';
 import axios from 'axios';
-import LanguageService from 'Services/language';
 import { toTitleCase } from 'Composable/utils';
 
 export default defineComponent({
-  methods: { toTitleCase },
   components: {
     Loader,
   },
-  setup() {
+  props: {
+    translatedData: {
+      type: Object,
+      required: true,
+    },
+  },
+  setup(props) {
     const formData = reactive({
       email: '',
     });
     const emailError = ref('');
     const loaderVisibility = ref(false);
-    const translatedData = ref({});
 
     function reset() {
       loaderVisibility.value = true;
@@ -87,22 +90,14 @@ export default defineComponent({
         });
     }
 
-    onMounted(() => {
-      LanguageService.getTranslatedData('workflow_frontend,common,public')
-        .then((response) => {
-          translatedData.value = response.data;
-        })
-        .catch((error) => console.log(error));
-    });
-
     return {
       formData,
       loaderVisibility,
       emailError,
       reset,
-      translatedData,
     };
   },
+  methods: { toTitleCase },
 });
 </script>
 

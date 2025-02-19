@@ -109,7 +109,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from 'vue';
+import { defineComponent, inject, onMounted, reactive, Ref, ref } from 'vue';
 import axios from 'axios';
 import Loader from 'Components/Loader.vue';
 import LanguageService from 'Services/language';
@@ -129,10 +129,12 @@ export default defineComponent({
       required: false,
       default: '',
     },
+    translatedData: {
+      type: Object,
+      required: true,
+    },
   },
   setup() {
-    const translatedData = ref({});
-
     const formData = reactive({
       emailOrUsername: '',
       password: '',
@@ -172,20 +174,11 @@ export default defineComponent({
         });
     }
 
-    onMounted(() => {
-      LanguageService.getTranslatedData('workflow_frontend,common,public')
-        .then((response) => {
-          translatedData.value = response.data;
-        })
-        .catch((error) => console.log(error));
-    });
-
     return {
       formData,
       errorData,
       isLoaderVisible,
       login,
-      translatedData,
     };
   },
 });

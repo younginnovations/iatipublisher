@@ -51,17 +51,17 @@
         v-if="pageContent === 'Join Now'"
         :message="message"
         :intent="intent"
+        :translated-data="translatedData"
       />
-      <JoinNow v-else />
+      <JoinNow v-else :translated-data="translatedData" />
     </div>
   </section>
 </template>
 
 <script>
-import { defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, ref, toRef } from 'vue';
 import SignIn from './partials/SignIn.vue';
 import JoinNow from './partials/JoinNow.vue';
-import LanguageService from 'Services/language';
 
 export default defineComponent({
   components: {
@@ -82,9 +82,12 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    translatedData: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
-    const translatedData = ref({});
     const pageContent = ref(props.page === 'signin' ? 'Join Now' : 'Sign In');
 
     function togglePage() {
@@ -92,18 +95,9 @@ export default defineComponent({
         pageContent.value === 'Join Now' ? 'Sign In' : 'Join Now';
     }
 
-    onMounted(() => {
-      LanguageService.getTranslatedData('workflow_frontend,common,public')
-        .then((response) => {
-          translatedData.value = response.data;
-        })
-        .catch((error) => console.log(error));
-    });
-
     return {
       pageContent,
       togglePage,
-      translatedData,
     };
   },
 });

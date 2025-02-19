@@ -12,16 +12,13 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { defineProps } from 'vue';
 import LanguageService from 'Services/language';
 
-const translatedData = ref({});
-
-onMounted(() => {
-  LanguageService.getTranslatedData('workflow_frontend,common,public')
-    .then((response) => {
-      translatedData.value = response.data;
-    })
-    .catch((error) => console.log(error));
+defineProps({
+  translatedData: {
+    type: Object,
+    required: true,
+  },
 });
 </script>
