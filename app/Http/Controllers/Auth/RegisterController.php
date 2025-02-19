@@ -122,6 +122,7 @@ class RegisterController extends Controller
                 'query'       => ['id' => $postData['publisher_id'] ?? ''],
             ];
             $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
+            $clientConfig['headers']['User-Agent'] = 'iati-publisher';
 
             if (env('APP_ENV') !== 'production') {
                 $requestConfig['auth'] = [env('IATI_USERNAME'), env('IATI_PASSWORD')];

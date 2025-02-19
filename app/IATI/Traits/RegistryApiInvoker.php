@@ -38,6 +38,8 @@ trait RegistryApiInvoker
             $clientConfig['headers']['authorization'] = $apiKey;
         }
 
+        $clientConfig['headers']['User-Agent'] = 'iati-publisher';
+
         $client = new Client($clientConfig);
 
         $res = $client->get(sprintf('%s/action/%s', env('IATI_API_ENDPOINT'), $action), $requestConfig);

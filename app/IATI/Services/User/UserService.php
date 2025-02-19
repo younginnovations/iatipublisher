@@ -218,6 +218,8 @@ class UserService
     public function checkPublisher(string $publisher_id, bool $exists = true): array
     {
         $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
+        $clientConfig['headers']['User-Agent'] = 'iati-publisher';
+
         $requestConfig = [
             'http_errors' => false,
         ];
@@ -264,6 +266,8 @@ class UserService
     public function checkIATIIdentifier(string $identifier): array
     {
         $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
+        $clientConfig['headers']['User-Agent'] = 'iati-publisher';
+
         $requestConfig = [
             'http_errors' => false,
             'query'       => ['q' => $identifier ?? '', 'all_fields' => true, 'include_extras' => true],
@@ -315,6 +319,8 @@ class UserService
     public function checkUser(array $data, bool $exists = true): array
     {
         $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
+        $clientConfig['headers']['User-Agent'] = 'iati-publisher';
+
         $requestConfig = [
             'http_errors' => false,
             'query'       => ['id' => $data['username'] ?? ''],
@@ -364,6 +370,8 @@ class UserService
     public function createUserInRegistry(array $data): array
     {
         $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
+        $clientConfig['headers']['User-Agent'] = 'iati-publisher';
+
         $requestConfig = [
             'http_errors' => false,
             'form_params'       => [
@@ -407,6 +415,8 @@ class UserService
     public function createAPItoken(string $username): array
     {
         $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
+        $clientConfig['headers']['User-Agent'] = 'iati-publisher';
+
         $requestConfig = [
             'http_errors' => false,
             'form_params'       => [
@@ -459,6 +469,7 @@ class UserService
         }
 
         $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
+        $clientConfig['headers']['User-Agent'] = 'iati-publisher';
         $clientConfig['headers']['X-CKAN-API-Key'] = $token;
         $client = new Client($clientConfig);
         $res = $client->request('POST', env('IATI_API_ENDPOINT') . '/action/organization_create', $requestConfig);
