@@ -12,5 +12,5 @@ return [
     'api_token_incorrect_please_enter_valid_api_token'  => 'API token incorrect. Please enter valid API token.',
     'api_token_verified_successfully'                   => 'API token verified successfully.',
     'your_api_token_is_invalid'                         => 'Your API token is invalid',
-    'error_occurred_while_verify_publisher'             => 'Error occurred while verify publisher',
+    'error_occurred_while_verify_publisher'             => 'Error verifying publisher',
 ];

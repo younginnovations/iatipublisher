@@ -37,7 +37,7 @@
             <span class="text-sm font-bold text-n-50">
               {{
                 translatedData[
-                  'activity_index.error_message.account_not_verified'
+                  'activity_index.error_message.email_not_verified'
                 ]
               }}
             </span>

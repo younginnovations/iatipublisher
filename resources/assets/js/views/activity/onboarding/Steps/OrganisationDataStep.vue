@@ -207,7 +207,7 @@
                   id="secondary-reporter"
                   class="vue__select"
                   :placeholder="
-                    translatedData['common.common.select_secondary_reporter']
+                    translatedData['common.common.select_an_option']
                   "
                   :searchable="true"
                   :options="secondaryReporterOptions"
@@ -398,24 +398,15 @@ const translatedData = inject('translatedData') as Ref;
 const contentValues = [
   {
     title: translatedData['elements.label.reference'],
-    content:
-      translatedData[
-        'onboarding.organisation_data_step.provide_the_iati_organisation_identifier_of_the_organisation'
-      ],
+    content: '',
   },
   {
     title: translatedData['elements.label.reference'],
-    content:
-      translatedData[
-        'onboarding.organisation_data_step.select_the_type_that_best_describes_the_organisation'
-      ],
+    content: '',
   },
   {
     title: translatedData['elements.label.secondary_reporter'],
-    content:
-      translatedData[
-        'onboarding.organisation_data_step.are_you_reproducing_the_data_reported_by_another_organisation'
-      ],
+    content: '',
   },
 ];
 

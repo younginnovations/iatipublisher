@@ -35,7 +35,7 @@
                 <button class="">
                   <svg-vue icon="question-mark" />
                   <span>{{
-                    translatedData['common.common.what_is_an_activity']
+                    translatedData['common.common.what_is_activity']
                   }}</span>
                 </button>
                 <div class="tooltip-btn__content z-[50]">
@@ -43,12 +43,12 @@
                     <div
                       class="mb-1.5 text-caption-c1 font-bold text-bluecoral"
                     >
-                      {{ translatedData['common.common.what_is_an_activity'] }}
+                      {{ translatedData['common.common.what_is_activity'] }}
                     </div>
                     <p
                       v-html="
                         translatedData[
-                          'common.common.what_is_an_activity_description'
+                          'common.common.what_is_activity_description'
                         ]
                       "
                     ></p>

@@ -2,7 +2,6 @@
 
 return [
     'alerts'                                               => 'Alerts',
-    'account_not_verified'                                 => 'Account not verified',
     'complete_your_setup'                                  => 'Complete your setup',
     'publisher_is_inactive'                                => 'Publisher is Inactive',
     'show_less'                                            => 'Show less',

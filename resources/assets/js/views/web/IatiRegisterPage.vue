@@ -304,6 +304,7 @@ export default defineComponent({
   },
 
   setup(props) {
+    const translatedData = ref({});
     const step = ref(1);
     const publisherExists = ref(true);
     const isLoaderVisible = ref(false);

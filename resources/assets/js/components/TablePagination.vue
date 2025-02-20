@@ -9,7 +9,7 @@
       @click="previousPage"
     >
       <svg-vue icon="arrow-left"></svg-vue>
-      <span class="">{{ translatedData['common.common.prev'] }}</span>
+      <span class="">{{ translatedData['common.common.previous'] }}</span>
     </a>
 
     <span v-if="data.last_page < 6" class="flex"
