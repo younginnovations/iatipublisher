@@ -2,7 +2,7 @@
   <div class="relative bg-paper px-5 pb-[71px] pt-4 xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      title="Period List"
+      :title="translatedData['common.common.period_list']"
       :back-link="indicatorLink"
     >
       <div class="flex items-center space-x-3">
@@ -13,7 +13,11 @@
           class="mr-3"
         />
         <a :href="`${periodLink}/create`">
-          <Btn text="Add Period" icon="plus" type="primary" />
+          <Btn
+            :text="translatedData['common.common.add_period']"
+            icon="plus"
+            type="primary"
+          />
         </a>
       </div>
     </PageTitle>
@@ -23,13 +27,18 @@
         <thead>
           <tr class="bg-n-10 text-left">
             <th id="transaction_type" scope="col">
-              <span>Start Date - End Date</span>
+              <span
+                >{{ getTranslatedElement(translatedData, 'start_date') }} -
+                {{ getTranslatedElement(translatedData, 'end_date') }}</span
+              >
             </th>
             <th id="code" scope="col" width="190px">
-              <span>Period number</span>
+              <span>{{
+                getTranslatedElement(translatedData, 'period_number')
+              }}</span>
             </th>
             <th id="action" scope="col" width="177px">
-              <span>Action</span>
+              <span>{{ translatedData['common.common.action'] }}</span>
             </th>
           </tr>
         </thead>
@@ -48,13 +57,13 @@
                 {{
                   pe.period.period_start[0].date
                     ? dateFormat(pe.period.period_start[0].date)
-                    : 'Missing'
+                    : getTranslatedMissing(translatedData)
                 }}
                 -
                 {{
                   pe.period.period_end[0].date
                     ? dateFormat(pe.period.period_end[0].date)
-                    : 'Missing'
+                    : getTranslatedMissing(translatedData)
                 }}
               </a>
             </td>
@@ -64,13 +73,15 @@
                 <a class="mr-6 text-n-40" :href="`${periodLink}/${pe.id}/edit`">
                   <svg-vue icon="edit" class="text-xl"></svg-vue>
                 </a>
-                <DeleteAction item-type="period" :item-id="pe.id" />
+                <DeleteAction :item-id="pe.id" item-type="period" />
               </div>
             </td>
           </tr>
         </tbody>
         <tbody v-else>
-          <td colspan="5" class="text-center">Periods not found</td>
+          <td colspan="5" class="text-center">
+            {{ translatedData['common.common.no_data_found'] }}
+          </td>
         </tbody>
       </table>
     </div>
@@ -93,6 +104,10 @@ import {
   ref,
   reactive,
   provide,
+  inject,
+  Ref,
+  computed,
+  watchEffect,
 } from 'vue';
 import axios from 'axios';
 // components
@@ -105,9 +120,16 @@ import DeleteAction from 'Components/sections/DeleteAction.vue';
 // composable
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
+import {
+  getTranslatedElement,
+  getTranslatedMissing,
+  toTitleCase,
+} from '../../../composable/utils';
+import LanguageService from 'Services/language';
 
 export default defineComponent({
   name: 'PeriodList',
+  methods: { getTranslatedMissing, getTranslatedElement },
   components: {
     Btn,
     Pagination,
@@ -134,6 +156,15 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translatedData = ref({});
+    LanguageService.getTranslatedData(
+      'workflow_frontend,common,activity_detail,activity_index,elements'
+    )
+      .then((response) => {
+        translatedData.value = response.data;
+      })
+      .catch((error) => console.log(error));
+
     const { activity, parentData } = toRefs(props);
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
@@ -176,9 +207,9 @@ export default defineComponent({
     /**
      * Breadcrumb data
      */
-    const breadcrumbData = [
+    const breadcrumbData = reactive([
       {
-        title: 'Your Activities',
+        title: 'Your activities',
         link: '/activity',
       },
       {
@@ -205,7 +236,39 @@ export default defineComponent({
         title: 'Period List',
         link: '',
       },
-    ];
+    ]);
+
+    /**
+     * Using Translated Breadcrumb titles
+     */
+    watchEffect(() => {
+      if (translatedData.value) {
+        breadcrumbData[0].title =
+          translatedData.value['common.common.your_activities'];
+        breadcrumbData[2].title =
+          translatedData.value['common.common.result_list'];
+        breadcrumbData[4].title =
+          translatedData.value['common.common.indicator_list'];
+        breadcrumbData[6].title =
+          translatedData.value['common.common.period_list'];
+      }
+    });
+
+    /**
+     * Using Translated Breadcrumb titles
+     */
+    watchEffect(() => {
+      if (translatedData.value) {
+        breadcrumbData[0].title =
+          translatedData.value['common.common.your_activities'];
+        breadcrumbData[2].title =
+          translatedData.value['common.common.result_list'];
+        breadcrumbData[4].title =
+          translatedData.value['common.common.indicator_list'];
+        breadcrumbData[6].title =
+          translatedData.value['common.common.period_list'];
+      }
+    });
 
     onMounted(async () => {
       axios.get(`/indicator/${indicatorId}/periods/page/1`).then((res) => {
@@ -251,6 +314,7 @@ export default defineComponent({
       indicatorId,
       toastData,
       handleNavigate,
+      translatedData,
     };
   },
 });
