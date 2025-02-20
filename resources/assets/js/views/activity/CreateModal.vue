@@ -229,7 +229,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, onMounted, reactive, Ref, ref, computed } from 'vue';
+import {
+  defineComponent,
+  inject,
+  onMounted,
+  reactive,
+  Ref,
+  ref,
+  computed,
+} from 'vue';
 import Modal from '../../components/PopupModal.vue';
 import BtnComponent from '../../components/ButtonComponent.vue';
 import Multiselect from '@vueform/multiselect';

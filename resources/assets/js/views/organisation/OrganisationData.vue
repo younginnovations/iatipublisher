@@ -124,10 +124,8 @@
             <div class="activities__card progress mr-1">
               <div class="mb-2 flex items-center justify-between">
                 <span class="mr-2">{{
-                     translatedData[
-                      'common.common.core_completeness'
-                    ]
-                  }}</span>
+                  translatedData['common.common.core_completeness']
+                }}</span>
                 <HoverText
                   :hover-text="
                     translatedData[
@@ -219,8 +217,8 @@
               <div class="activities__card progress mr-1">
                 <div class="mb-2 flex items-center justify-between">
                   <span class="mr-2">{{
-                      translatedData['common.common.core_completeness']
-                    }}</span>
+                    translatedData['common.common.core_completeness']
+                  }}</span>
                   <HoverText
                     :hover-text="
                       translatedData[

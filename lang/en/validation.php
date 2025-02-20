@@ -96,7 +96,6 @@ return [
     'required_only_one_among'                          => 'Either :attribute or :values is required.',
     'recipient_country_region_percentage_sum'          => 'Sum of percentage of Recipient Country and Recipient Region must be equal to 100.',
     'unique_lang'                                      => 'Repeated :attribute in the same language is not allowed.',
-<<<<<<< HEAD
     'indicator_ascending'                              => 'Indicator Ascending should be true/false, 0/1 or Yes/No.',
     'indicator_size'                                   => 'Indicator Baseline Year or Value should occur once and no more than once within an Indicator.',
     'narrative_required'                               => ':attribute Narrative is required.',
@@ -111,9 +110,6 @@ return [
     'not_in_spam_emails' => 'This email has been flagged as spam and cannot be used.',
     'no_leading_white_space' => 'The activity-identifier must not start with space.',
     'no_spaces_in_between' => 'The activity-identifier must not contain spaces.',
-=======
-    'not_in_spam_emails'                               => 'This email has been flagged as spam and cannot be used.',
->>>>>>> 9451b67a (- [x] Validation message reduced)
 
     /*
     |--------------------------------------------------------------------------
