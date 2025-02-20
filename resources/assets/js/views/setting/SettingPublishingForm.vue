@@ -7,11 +7,7 @@
       <div class="mb-4 flex items-center text-xs text-n-50">
         <button>
           <HoverText
-            :name="
-              translatedData[
-                'settings.setting_publishing_form.iati_registry_information'
-              ]
-            "
+            :name="translatedData['settings.setting.registry_information']"
             :hover-text="
               translatedData[
                 'settings.setting_publishing_form.iati_publisher_needs_to_add_your_organisations'

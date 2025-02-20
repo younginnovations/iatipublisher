@@ -345,18 +345,13 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    translatedData: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     const { activity } = toRefs(props);
-
-    const translatedData = ref({});
-    LanguageService.getTranslatedData(
-      'workflow_frontend,common,activity_detail,activity_index,elements'
-    )
-      .then((response) => {
-        translatedData.value = response.data;
-      })
-      .catch((error) => console.log(error));
 
     const activityId = activity.value.id,
       activityTitle = getActivityTitle(activity.value.title, 'en'),
@@ -674,7 +669,7 @@ export default defineComponent({
      */
     const breadcrumbData = reactive([
       {
-        title: translatedData?.value['common.common.your_activities'],
+        title: props.translatedData['common.common.your_activities'],
         link: '/activities',
       },
       {
@@ -682,7 +677,7 @@ export default defineComponent({
         link: activityLink,
       },
       {
-        title: translatedData?.value['common.common.transaction_list'],
+        title: props.translatedData['common.common.transaction_list'],
         link: '',
       },
     ]);
@@ -691,11 +686,11 @@ export default defineComponent({
      * Using Translated Breadcrumb titles
      */
     watchEffect(() => {
-      if (translatedData.value) {
+      if (props.translatedData) {
         breadcrumbData[0].title =
-          translatedData.value['common.common.your_activities'];
+          props.translatedData['common.common.your_activities'];
         breadcrumbData[2].title =
-          translatedData.value['common.common.transaction_list'];
+          props.translatedData['common.common.transaction_list'];
       }
     });
 
@@ -730,7 +725,6 @@ export default defineComponent({
       initiateDelete,
       deleteTransactionList,
       resetPill,
-      translatedData,
     };
   },
   computed: {

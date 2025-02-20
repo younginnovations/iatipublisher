@@ -165,10 +165,13 @@ export default defineComponent({
       type: Boolean,
       required: false,
     },
+    translatedData: {
+      type: Object,
+      required: true,
+    },
   },
 
   setup(props) {
-    const translatedData = ref({});
     let toastTimeoutId;
     let initialApiCallCompleted = ref(false);
     const tab = ref('publish');
@@ -263,14 +266,6 @@ export default defineComponent({
             updateStore('UPDATE_DEFAULT_VALUES', key, activityValues[key]);
           }
         }
-
-        LanguageService.getTranslatedData(
-          'workflow_frontend,common,settings,common'
-        )
-          .then((response) => {
-            translatedData.value = response.data;
-          })
-          .catch((error) => console.log(error));
       }
     });
 
@@ -415,7 +410,7 @@ export default defineComponent({
 
     provide('userRole', props.userRole);
     provide('isSuperadmin', props.isSuperadmin);
-    provide('translatedData', translatedData);
+    provide('translatedData', props.translatedData);
 
     return {
       props,
@@ -431,7 +426,6 @@ export default defineComponent({
       submitForm,
       initialApiCallCompleted,
       showTokenTag,
-      translatedData,
     };
   },
 });

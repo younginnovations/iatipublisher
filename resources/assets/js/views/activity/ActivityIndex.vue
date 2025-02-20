@@ -212,6 +212,10 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
+    translatedData: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     interface ActivitiesInterface {
@@ -438,12 +442,6 @@ export default defineComponent({
     );
 
     onMounted(async () => {
-      translatedData.value = (
-        await Language.getTranslatedData(
-          'workflow_frontend,common,activity_index,onboarding,elements'
-        )
-      ).data;
-
       fetchActivitiesCountByPublishStatus();
       publishingActivities.value = pa.value?.publishingActivities;
 
@@ -619,7 +617,7 @@ export default defineComponent({
     provide('activities', publishingActivities as Ref);
     provide('completed', uploadComplete);
     provide('defaultLanguage', props.defaultLanguage);
-    provide('translatedData', translatedData);
+    provide('translatedData', props.translatedData);
 
     return {
       store,
@@ -655,7 +653,6 @@ export default defineComponent({
       currentPage,
       paginationReset,
       isDisabledPublish,
-      translatedData,
     };
   },
 });

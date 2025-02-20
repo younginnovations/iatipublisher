@@ -127,7 +127,7 @@
           "1": "True",
           "0": "False"
         },
-        "placeholder": "common/common.select_secondary_reporter",
+        "placeholder": "common/common.select_an_option",
         "required": false,
         "criteria": "",
         "hover_text": "common/common.if_you_are_publishing_data_about_your_own_organisation",
@@ -708,7 +708,7 @@
             "type": "select",
             "multiselect": false,
             "choices": "Activity/RegionVocabulary.json",
-            "placeholder": "common/common.select_vocabulary",
+            "placeholder": "common.common.select_an_option",
             "required": false,
             "criteria": "",
             "hover_text": "common/common.you_can_select_regions_from_the_oecd_dac_un_or_your_own_internal_codelist",

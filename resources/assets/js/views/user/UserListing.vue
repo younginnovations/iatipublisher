@@ -156,7 +156,7 @@
                 id="role"
                 v-model="formData.role_id"
                 :options="roles"
-                :placeholder="translatedData['common.common.select_user_role']"
+                :placeholder="translatedData['common.common.select_an_option']"
                 :searchable="true"
               />
               <span v-if="formError['role_id']" class="error">{{

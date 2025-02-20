@@ -273,16 +273,20 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    translatedData: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
-    const translatedData = ref({});
-    LanguageService.getTranslatedData(
-      'workflow_frontend,common,activity_detail,activity_index,elements'
-    )
-      .then((response) => {
-        translatedData.value = response.data;
-      })
-      .catch((error) => console.log(error));
+    // const translatedData = ref({});
+    // LanguageService.getTranslatedData(
+    //   'workflow_frontend,common,activity_detail,activity_index,elements'
+    // )
+    //   .then((response) => {
+    //     props.translatedData = response.data;
+    //   })
+    //   .catch((error) => console.log(error));
 
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
@@ -333,9 +337,9 @@ export default defineComponent({
      * Using Translated Breadcrumb titles
      */
     watchEffect(() => {
-      if (translatedData.value) {
+      if (props.translatedData) {
         breadcrumbData[0].title =
-          translatedData.value['common.common.your_activities'];
+          props.translatedData['common.common.your_activities'];
       }
     });
 
@@ -388,7 +392,7 @@ export default defineComponent({
       }
     );
 
-    provide('translatedData', translatedData);
+    provide('translatedData', props.translatedData);
 
     return {
       activityLink,
@@ -403,7 +407,6 @@ export default defineComponent({
       showSidebar,
       istopVisible,
       isMandatoryForResult,
-      translatedData,
     };
   },
 });

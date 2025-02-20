@@ -304,6 +304,7 @@ export default defineComponent({
   },
 
   setup(props) {
+    const translatedData = ref({});
     const step = ref(1);
     const publisherExists = ref(true);
     const isLoaderVisible = ref(false);
@@ -721,10 +722,7 @@ export default defineComponent({
                 'public.register.not_registered_page.register_section.source'
               ],
             name: 'source',
-            placeholder:
-              props.translatedData[
-                'public.register.not_registered_page.register_section.source_placeholder'
-              ],
+            placeholder: props.translatedData['common.common.select_an_option'],
             id: 'contact-email',
             required: true,
             hover_text:

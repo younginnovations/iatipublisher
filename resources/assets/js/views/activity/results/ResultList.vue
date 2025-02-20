@@ -69,7 +69,7 @@
               }}</span>
             </th>
             <th id="action" scope="col">
-              <span>{{ translatedData['common.common.acton'] }}</span>
+              <span>{{ translatedData['common.common.action'] }}</span>
             </th>
             <th id="select_all" scope="col">
               <span>
@@ -284,6 +284,10 @@ export default defineComponent({
       required: true,
     },
     toast: {
+      type: Object,
+      required: true,
+    },
+    translatedData: {
       type: Object,
       required: true,
     },
@@ -730,7 +734,6 @@ export default defineComponent({
       deleteToggle,
       deleteValue,
       confirmDelete,
-      translatedData,
     };
   },
 });

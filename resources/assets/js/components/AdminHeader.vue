@@ -377,7 +377,7 @@ const toastType = ref(false);
 const errorToastVisibility = ref(false);
 const errorToastMessage = ref('');
 const errorToastType = ref(false);
-const translatedData = ref({});
+// const translatedData = ref({});
 
 const data = reactive({
   languageNavLiClasses: 'flex',
@@ -630,7 +630,7 @@ onUnmounted(() => {
 });
 
 provide('defaultLanguage', props.defaultLanguage);
-provide('translatedData', translatedData);
+provide('translatedData', props.translatedData);
 </script>
 
 <style src="@vueform/multiselect/themes/default.css"></style>

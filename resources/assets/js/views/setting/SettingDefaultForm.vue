@@ -47,7 +47,7 @@
             v-model="defaultForm.default_currency"
             :disabled="userRole !== 'admin'"
             class="vue__select"
-            :placeholder="translatedData['common.common.select_from_dropdown']"
+            :placeholder="translatedData['common.common.select_an_option']"
             :options="props.currencies"
             :searchable="true"
             @click="updateStore('default_currency')"
@@ -56,13 +56,7 @@
             {{ defaultError.default_currency }}
           </span>
 
-          <p v-if="!defaultError.default_currency">
-            {{
-              translatedData[
-                'settings.setting_default_form.if_you_do_not_set_your_default_currency'
-              ]
-            }}
-          </p>
+          <p v-if="!defaultError.default_currency"></p>
         </div>
         <div>
           <div class="flex justify-between">
@@ -98,13 +92,7 @@
             {{ defaultError.default_language }}
           </span>
 
-          <p v-if="!defaultError.default_language">
-            {{
-              translatedData[
-                'settings.setting_default_form.if_you_do_not_set_your_default_language'
-              ]
-            }}
-          </p>
+          <p v-if="!defaultError.default_language"></p>
         </div>
       </div>
     </div>
@@ -182,9 +170,7 @@
             :disabled="userRole !== 'admin'"
             class="vue__select"
             :class="{ error__input: defaultError.humanitarian }"
-            :placeholder="
-              translatedData['common.common.select_humanitarian_here']
-            "
+            :placeholder="translatedData['common.common.select_an_option']"
             :options="props.humanitarian"
             :searchable="true"
             @click="updateStore('humanitarian')"
@@ -220,9 +206,7 @@
             :disabled="userRole !== 'admin'"
             class="vue__select"
             :class="{ error__input: defaultError.default_flow_type }"
-            :placeholder="
-              translatedData['common.common.select_default_flow_type_here']
-            "
+            :placeholder="translatedData['common.common.select_an_option']"
             :options="props.defaultFlowType"
             :searchable="true"
             @click="updateStore('default_flow_type')"
@@ -235,11 +219,8 @@
             {{ defaultError.default_flow_type }}
           </span>
           <p v-if="!defaultError.default_flow_type">
-            {{
-              translatedData[
-                'common.common.if_selected_then_default_flow_type_will_be_automatically_populated'
-              ]
-            }}
+            If selected, then default flow type will be automatically populated
+            in activity when created.
           </p>
         </div>
         <!-- Default Flow Type -->
@@ -269,9 +250,7 @@
             :disabled="userRole !== 'admin'"
             class="vue__select"
             :class="{ error__input: defaultError.default_finance_type }"
-            :placeholder="
-              translatedData['common.common.select_default_finance_type_here']
-            "
+            :placeholder="translatedData['common.common.select_an_option']"
             :options="props.defaultFinanceType"
             :searchable="true"
             @click="updateStore('default_finance_type')"
@@ -284,11 +263,8 @@
             {{ defaultError.default_finance_type }}
           </span>
           <p v-if="!defaultError.default_finance_type">
-            {{
-              translatedData[
-                'common.common.if_selected_then_default_finance_type_will_be_automatically_populated'
-              ]
-            }}
+            If selected, then default finance type will be automatically
+            populated in activity when created.
           </p>
         </div>
         <!-- Default Finance Type -->
@@ -318,9 +294,7 @@
             :disabled="userRole !== 'admin'"
             class="vue__select"
             :class="{ error__input: defaultError.default_aid_type }"
-            :placeholder="
-              translatedData['common.common.select_default_aid_type_here']
-            "
+            :placeholder="translatedData['common.common.select_an_option']"
             :options="props.defaultAidType"
             :searchable="true"
             @click="updateStore('default_aid_type')"
@@ -329,11 +303,9 @@
             {{ defaultError.default_aid_type }}
           </span>
           <p v-if="!defaultError.default_aid_type">
-            {{
-              translatedData[
-                'common.common.if_selected_then_default_aid_type_will_be_automatically_populated'
-              ]
-            }}
+            If selected, then default aid type will be automatically populated
+            in activity when created. Also, Vocabulary type "OECD DAC" will be
+            chosen by default.
           </p>
         </div>
         <!-- Default Aid Type -->
@@ -363,9 +335,7 @@
             :disabled="userRole !== 'admin'"
             class="vue__select"
             :class="{ error__input: defaultError.default_tied_status }"
-            :placeholder="
-              translatedData['common.common.select_default_tied_here']
-            "
+            :placeholder="translatedData['common.common.select_an_option']"
             :options="props.defaultTiedStatus"
             :searchable="true"
             @click="updateStore('default_tied_status')"
@@ -420,11 +390,7 @@
             :disabled="userRole !== 'admin'"
             class="vue__select"
             :class="{ error__input: defaultError.budget_not_provided }"
-            :placeholder="
-              translatedData[
-                'settings.setting_default_form.select_budget_not_provided_type_here'
-              ]
-            "
+            :placeholder="translatedData['common.common.select_an_option']"
             :options="props.budgetNotProvided"
             :searchable="true"
             @click="updateStore('budget_not_provided')"
@@ -464,11 +430,7 @@
             :disabled="userRole !== 'admin'"
             class="register__input mb-2"
             type="text"
-            :placeholder="
-              translatedData[
-                'settings.setting_default_form.type_linked_data_uri_here'
-              ]
-            "
+            :placeholder="translatedData['common.common.type_vocabulary_uri']"
             @input="updateStore('linked_data_uri')"
           />
           <span v-if="defaultError.linked_data_uri" class="error" role="alert">
@@ -502,11 +464,7 @@
             :disabled="userRole !== 'admin'"
             class="vue__select"
             :class="{ error__input: defaultError.default_collaboration_type }"
-            :placeholder="
-              translatedData[
-                'settings.setting_default_form.select_collaboration_type'
-              ]
-            "
+            :placeholder="translatedData['common.common.select_an_option']"
             :options="props.defaultCollaborationType"
             :searchable="true"
             @click="updateStore('default_collaboration_type')"
@@ -518,13 +476,7 @@
           >
             {{ defaultError.default_collaboration_type }}
           </span>
-          <p v-if="!defaultError.default_collaboration_type">
-            {{
-              translatedData[
-                'settings.setting_default_form.if_selected_then_default_collaboration_type_will_be_automatically_populated'
-              ]
-            }}
-          </p>
+          <p v-if="!defaultError.default_collaboration_type"></p>
         </div>
         <!-- Default Collaboration Type -->
       </div>

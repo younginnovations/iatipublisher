@@ -45,7 +45,7 @@
                   id="default-currency"
                   class="vue__select"
                   :placeholder="
-                    translatedData['common.common.select_from_dropdown']
+                    translatedData['common.common.select_an_option']
                   "
                   :searchable="true"
                   :options="props.currencies"
@@ -86,9 +86,7 @@
                   id="default-language"
                   class="vue__select"
                   :placeholder="
-                    translatedData[
-                      'common.common.select_language_from_dropdown'
-                    ]
+                    translatedData['common.common.select_an_option']
                   "
                   :searchable="true"
                   :options="props.languages"
@@ -187,7 +185,7 @@
                   id="humanitarian"
                   class="vue__select"
                   :placeholder="
-                    translatedData['common.common.select_humanitarian_here']
+                    translatedData['common.common.select_an_option']
                   "
                   :searchable="true"
                   :options="props.humanitarian"
@@ -221,9 +219,7 @@
                   id="default-flow-type"
                   class="vue__select"
                   :placeholder="
-                    translatedData[
-                      'common.common.select_default_flow_type_here'
-                    ]
+                    translatedData['common.common.select_an_option']
                   "
                   :searchable="true"
                   :options="props.defaultFlowType"
@@ -232,13 +228,7 @@
                 (value:string) => (allDefaultValue.default_flow_type = value)
               "
                 />
-                <p class="pt-2 text-xs text-n-40">
-                  {{
-                    translatedData[
-                      'common.common.if_selected_then_default_flow_type_will_be_automatically_populated'
-                    ]
-                  }}
-                </p>
+                <p class="pt-2 text-xs text-n-40"></p>
               </div>
               <!-- Default Flow Type End -->
               <!-- Default Finance Type Start -->
@@ -266,9 +256,7 @@
                   id="default-finance-type"
                   class="vue__select"
                   :placeholder="
-                    translatedData[
-                      'common.common.select_default_finance_type_here'
-                    ]
+                    translatedData['common.common.select_an_option']
                   "
                   :searchable="true"
                   :options="props.defaultFinanceType"
@@ -301,9 +289,7 @@
                         translatedData['elements.name.default_finance_type']
                       "
                       :hover-text="
-                        translatedData[
-                          'common.common.select_default_aid_type_here'
-                        ]
+                        translatedData['common.common.select_an_option']
                       "
                       :show-iati-reference="true"
                     />
@@ -313,7 +299,7 @@
                   id="default-aid-type"
                   class="vue__select"
                   :placeholder="
-                    translatedData['common.common.select_default_aid_type_here']
+                    translatedData['common.common.select_an_option']
                   "
                   :searchable="true"
                   :options="props.defaultAidType"
@@ -323,11 +309,9 @@
               "
                 />
                 <p class="pt-2 text-xs text-n-40">
-                  {{
-                    translatedData[
-                      'common.common.if_selected_then_default_aid_type_will_be_automatically_populated'
-                    ]
-                  }}
+                  If selected, then default aid type will be automatically
+                  populated in activity when created. Also, Vocabulary type
+                  "OECD DAC" will be chosen by default.
                 </p>
               </div>
               <!-- Default Aid Type End -->
@@ -355,9 +339,7 @@
                   id="default-tied-status"
                   class="vue__select"
                   :placeholder="
-                    translatedData[
-                      'common.common.select_default_tied_status_here'
-                    ]
+                    translatedData['common.common.select_an_option']
                   "
                   :searchable="true"
                   :options="props.defaultTiedStatus"
@@ -367,11 +349,8 @@
               "
                 />
                 <p class="pt-2 text-xs text-n-40">
-                  {{
-                    translatedData[
-                      'common.common.if_selected_then_default_tied_status_will_be_automatically_populated'
-                    ]
-                  }}
+                  If selected, then default tied status will be automatically
+                  populated in activity when created.
                 </p>
               </div>
               <!-- Default Tied Status End -->

@@ -569,6 +569,10 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    translatedData: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     interface paType {
@@ -939,7 +943,6 @@ export default defineComponent({
       indexStore,
       pa,
       errorsWithoutAdvisory,
-      translatedData,
     };
   },
   methods: { getTranslatedUntitled, onlyDeprecatedStatusMap },

@@ -53,9 +53,7 @@
                 id="default-currency"
                 v-model="defaultValues.default_currency"
                 class="vue__select"
-                :placeholder="
-                  translatedData['common.common.select_from_dropdown']
-                "
+                :placeholder="translatedData['common.common.select_an_option']"
                 :options="currencies"
                 :searchable="true"
               />
@@ -78,7 +76,7 @@
                     'common.common.the_currency_in_which_you_are_reporting_your_financial_transactions_for_this_activity'
                   ]
                 }}
-                {{ translatedData['common.common.select_from_dropdown'] }}
+                {{ translatedData['common.common.select_an_option'] }}
               </p>
             </div>
 
@@ -105,9 +103,7 @@
                 id="default-language"
                 v-model="defaultValues.default_language"
                 class="vue__select"
-                :placeholder="
-                  translatedData['common.common.select_from_dropdown']
-                "
+                :placeholder="translatedData['common.common.select_an_option']"
                 :searchable="true"
                 :options="props.languages"
               />
@@ -130,7 +126,7 @@
                     'common.common.the_language_in_which_you_are_reporting_this_activity'
                   ]
                 }}
-                {{ translatedData['common.common.select_from_dropdown'] }}
+                {{ translatedData['common.common.select_an_option'] }}
               </p>
             </div>
 
@@ -177,11 +173,10 @@
                 v-if="defaultErrors.hierarchy.length === 0"
                 class="text-xs text-n-40"
               >
-                {{
-                  translatedData[
-                    'common.common.iati_allows_for_activities_to_be_reported'
-                  ]
-                }}
+                IATI allows for activities to be reported hierarchically (eg.
+                parent - child ; programme - project - sub-project, etc). For
+                activities at lower levels, their hierarchy can be edited as you
+                are entering them.
               </p>
             </div>
 
@@ -253,9 +248,7 @@
                 id="humanitarian"
                 v-model="defaultValues.humanitarian"
                 class="vue__select"
-                :placeholder="
-                  translatedData['common.common.select_humanitarian_here']
-                "
+                :placeholder="translatedData['common.common.select_an_option']"
                 :options="humanitarian"
                 :searchable="true"
               />
