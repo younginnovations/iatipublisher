@@ -1,84 +1,66 @@
 <?php
 
 return [
-    // Commons
-    'commons'             => [
-        'next_step'               => 'Next Step',
+  'commons'             => [
+    'next_step' => 'Next Step',
+  ],
+  'not_registered_page' => [
+    'heading'             => 'Create IATI Publisher and IATI Registry accounts',
+    'start_journey'       => 'Start your IATI publishing journey by creating accounts in both IATI Publisher and the IATI Registry',
+    'step_count_out_of_5' => 'Step :count out of 5',
+    'register_section'    => [
+      'publisher_information_description'           => 'This information will be used to register your organisation as an IATI publisher',
+      'publisher_information_hover_text'            => 'Organisations that publish IATI data are known as IATI \'publishers\'. To publish data, organisations need an account on the IATI Registry (iatiregistry.org). Enter your organisation\'s information here and we\'ll create the necessary accounts for you.',
+      'publisher_name_hover_text'                   => 'The name of the organisation that data is being published about.',
+      'publisher_id_hover_text'                     => 'A unique ID for your organisation. It can include letters, numbers and - (dash) and _ (underscore). Where possible, use a short abbreviation of your organisation\'s name, for example: \'nef_mali\' for Near East Foundation Mali.',
+      'organisation_registration_agency_hover_text' => 'Select an agency in the country where your organisation is registered. If you do not know this, please <a target=\"_blank\" href=\"https://iatistandard.org/en/guidance/get-support/\">Contact support</a>',
+      'identifier_hover_text'                       => 'This is a unique code for your organisation generated from the Registration Agency and Registration Number entered. <br><br><a href=\"http://iatistandard.org/en/guidance/preparing-organisation/organisation-account/how-to-create-your-iati-organisation-identifier/\" target=\"_blank\">Click here for more information.</a>',
+      'organisation_type'                           => 'Organisation Type',
+      'organisation_type_hover_text'                => 'Select the type that best describes your organisation. <br><br><a href=\"https://iatistandard.org/en/iati-standard/203/codelists/organisationtype/\" target=\"_blank\"> Read more about organisation types.</a>',
+      'data_licence'                                => 'Data Licence',
+      'data_licence_hover_text'                     => 'The licence under which your data is being published. IATI is an open data standard and requires you to make your data available under an open licence so it can be freely used. One of the most frequently used licenses is Creative Commons Attribution. <br><br><a href=\'https://iatistandard.org/en/guidance/standard-overview/preparing-your-organisation-data-publication/how-to-license-your-data/\' target=\'_blank\' > Click here for more information.</a>',
+      'publisher_logo_url'                          => 'Publisher Logo URL',
+      'publisher_logo_url_placeholder'              => 'e.g. http://mylogo.com ',
+      'publisher_logo_url_hover_text'               => 'Provide a link to an image of your organisation\'s logo (Optimum size: 200 x 120 px)',
+      'organisation_description'                    => 'Organisation Description',
+      'organisation_description_hover_text'         => 'Provide a short description about your organisation.',
+      'heading_two'                                 => 'Contact Information',
+      'contact_information_description'             => 'This is your organisation\'s contact information',
+      'contact_email'                               => 'Contact Email',
+      'contact_hover_text'                          => 'Please add a contact email address for your organisation. Please note that IATI is an open data standard and the email provided here will be visible to others on the IATI Registry.',
+      'website_placeholder'                         => 'e.g. http://mywebsite.com',
+      'website_hover_text'                          => 'Add the URL to your organisation\'s website.',
+      'address'                                     => 'Address',
+      'address_hover_text'                          => 'Provide a contact address for your organisation.',
+      'heading_three'                               => 'Additional Information',
+      'publishing_description'                      => 'This is about how your organisation will publish data',
+      'source'                                      => 'Source',
+      'source_hover_text'                           => 'Primary - your organisation is publishing its own or (associated organisations\') data. <br><br>Secondary - your organisation is reproducing data on the activities of another organisation.',
+      'record_exclusions'                           => 'Data Exclusions',
+      'record_exclusions_hover_text'                => 'If your organisation has a policy on what data it can and can\'t publish, you can provide information and a link to it here. For example, you may not be able to publish information that is politically or commercially sensitive. <br><br><a href=\'https://iatistandard.org/en/guidance/standard-overview/preparing-your-organisation-data-publication/information-and-data-you-cant-publish-exclusions/\' target=\'_blank\'>Click here for more information</a>',
+      'administrator_description'                   => 'This will create an admin account for you as an individual',
+      'password_help_text'                          => 'Minimum length: 8 characters',
+      'confirm_password_help_text'                  => 'This should match the password on the left',
     ],
-    'not_registered_page' => [
-        'heading'             => 'Create IATI Publisher Account and IATI Registry Account',
-        'start_journey'       => 'Start your IATI publishing journey by creating accounts in both IATI Publisher and the IATI Registry',
-        'step_count_out_of_5' => 'Step :count out of 5',
-        'register_section'    => [
-            // 1st Form
-            'publisher_information_description'            => 'This information will be used to register your organisation as an IATI publisher',
-            'publisher_information_hover_text'             => 'We refer to organisations who publish IATI data as \'Publishers\'. Before publishing data, all organisations need their own \'Publisher Account\' on the IATI Registry (iatiregistry.org). Enter your organisation\'s data here and we\'ll create your organisation\'s Publisher Account for you. These details will also be saved here in IATI Publisher.',
-            'publisher_name_placeholder'                   => 'Type your organisation name here',
-            'publisher_name_hover_text'                    => 'The name of your organisation publishing the data.',
-            'publisher_id_hover_text'                      => 'Provide a unique ID for your organisation. It must be at least two characters long and use lower case letters. You can include letters, numbers and also - (dash) and _ (underscore). Where possible use a short abbreviation of your organisation\'s name, for example: \'nef_mali\' for Near East Foundation Mali.',
-            'organisation_registration_agency_hover_text'  => 'Select the agency in your country where your organisation is registered. If you do not know this information please email <a href=\'mailto:support@iatistandard.org\' target=\'_blank\'>support@iatistandard.org</a>',
-            'registration_number_hover_text'               => 'Provide the registration number for your organisation that has been provided by organisation registration agency. If you do not know this please email <a href=\'mailto:support@iatistandard.org\' target=\'_blank\'>support@iatistandard.org</a>.',
-            'identifier_hover_text'                        => 'The Organisation Identifier is a unique code for your organisation. This is genereated from the Organisation Registration Agency and Registration Number. For more information read:  <a href="http://iatistandard.org/en/guidance/preparing-organisation/organisation-account/how-to-create-your-iati-organisation-identifier/" target="_blank">How to create your IATI organisation identifier.</a>',
-            'organisation_type'                            => 'Organisation Type',
-            'organisation_type_hover_text'                 => 'Select the type that best describes your organisation.  <a href="https://iatistandard.org/en/iati-standard/203/codelists/organisationtype/" target="_blank"> Read more on Organisation types.</a>',
-            'data_licence'                                 => 'Data Licence',
-            'data_licence_hover_text'                      => 'Select the License under which your data is being published. IATI is an open data standard and requires you to make your data available under an open licence so it can be freely used. One of the most frequently used licenses is Creative Commons Attribution. <a href=\'https://iatistandard.org/en/guidance/standard-overview/preparing-your-organisation-data-publication/how-to-license-your-data/\' target=\'_blank\' > For more information read: How to license your data.</a>',
-            'publisher_logo_url'                           => 'Publisher Logo URL',
-            'publisher_logo_url_placeholder'               => 'E.g. http://mylogo.com ',
-            'publisher_logo_url_hover_text'                => 'Provide a link to an image to your organisation\'s logo (Optimum size: 200 x 120 px)',
-            'organisation_description'                     => 'Organisation Description',
-            'organisation_description_hover_text'          => 'Provide a short description about your organisation.',
-            // 2nd Form
-            'heading_two'                                  => 'Contact Information',
-            'contact_information_description'              => 'This is your organisation\'s contact information',
-            'contact_email'                                => 'Contact Email',
-            'contact_hover_text'                           => 'Please add a contact email address for your organisation. Please note that IATI is an open data standard and the email provided here will be visible to others on the IATI Registry.',
-            'website_placeholder'                          => 'E.g. http://mywebsite.com',
-            'website_hover_text'                           => 'Add the URL to your organisation\'s website.',
-            'address'                                      => 'Address',
-            'address_hover_text'                           => 'Provide a contact address for your organisation.',
-            // 3rd Form
-            'heading_three'                                => 'Publishing Additional Information',
-            'publishing_description'                       => 'This is about how your organisation will publish data',
-            'source'                                       => 'Source',
-            'source_hover_text'                            => 'Select an option:<br>Primary - your organisation is publishing its own or (associated organisations\') data <br>Secondary - your organisation is reproducing data on the activities of another organisation',
-            'record_exclusions'                            => 'Record Exclusions',
-            'record_exclusions_hover_text'                 => 'Does your organisation have an exclusion policy that provide details on what data that it cannot publish? For example an organisation may not be able to publish data because of political sensitivity issues or if information is commercially restricted. Please provide details here about what data your organisation needs to exclude (if any), and a URL to your organisation\'s exclusion policy (if it has one).<a href=\'https://iatistandard.org/en/guidance/standard-overview/preparing-your-organisation-data-publication/information-and-data-you-cant-publish-exclusions/\' target=\'_blank\'> For more information read: Information and data you can\'t publish (exclusions)</a>',
-            // 4th Form
-            'administrator_description'                    => 'This will create an admin account for you as an individual',
-            'password_help_text'                           => 'Minimum length: 8 characters',
-            'confirm_password_help_text'                   => 'This should match the password on the left',
-            // 5th Form
-        ],
-
-        'verification_email' => [
-            'please_verify_your_account'  => 'Please verify your account',
-            'verification_email_sent_to'  => 'A verification email has been sent to',
-            'please_click_link_to_verify' => 'Please click on the link in the email to verify and activate your new IATI publisher account.',
-        ],
+    'verification_email'  => [
+      'please_verify_your_account'  => 'Please verify your account',
+      'verification_email_sent_to'  => 'A verification email has been sent to',
+      'please_click_link_to_verify' => 'Please click on the link in the email to verify your new IATI Publisher account.',
     ],
-    'registered_page'     => [
-        'heading'             => 'Create IATI Publisher Account',
-        'start_journey'       => 'Start your IATI publishing journey by creating an account in IATI Publisher',
-        'step_count_out_of_3' => 'Step :count out of 3',
-        'register_section'    => [
-            // Form 1
-            'publisher_information_description'            => 'This information will be used to register your organisation',
-            'publisher_information_hover_text'             => 'Provide information about your organisation. You will need to provide the same information that you used to create your Publisher Account on the IATI Registry (iatiregistry.org).',
-            'publisher_name_placeholder'                   => 'Enter your organisation name',
-            'publisher_name_hover_text'                    => 'The name of the organisation that data is being published about.',
-            'publisher_id_hover_text'                      => 'This is the unique ID for your organisation that you created when you set up your IATI Registry Publisher Account. It should be a shorter version of your organisation\'s name, which will include lowercase letters and may include numbers, - (dash) or _ (underscore). For example nef_mali\' for Near East Foundation Mali.',
-            'organisation_registration_agency_hover_text'  => 'Provide the name of the agency in your country where you organisation is registered. If you do not know this information please email support@iatistandard.org.',
-            'organisation_registration_number'             => 'Organisation Registration Number',
-            'organisation_registration_number_hover_text'  => 'Provide your organisation\'s registration number from the agency you have selected.',
-            'iati_organisation_identifier_hover_text'      => 'The Organisation Identifier is a unique code for your organisation. This is generated from the Organisation Registration Agency and Registration Number. For more information read: <a href="http://iatistandard.org/en/guidance/preparing-organisation/organisation-account/how-to-create-your-iati-organisation-identifier/" target="_blank">How to create your IATI organisation identifier.</a>',
-            // Form 2
-            'administrator_description'                    => 'This will create an admin account for you as an individual',
-            'administrator_hover_text'                     => 'Provide your information to create an admin account here on IATI Publisher.',
-            // Error
-            'info_doesnt_match_iati_registry'              => 'Sorry, the information you provided doesn’t match your IATI Registry information.',
-            'make_sure_account_holder'                     => 'Please note that if you\’re an account holder in, <a href="https://iatiregistry.org/">IATI Registry</a>, make sure your <span class="font-bold">Publisher Name, Publisher ID and IATI Organisation ID</span> match your IATI Registry Information. Contact <a class="text-bluecoral" href="mailto:support@iatistandard.org">support@iatistandard.org</a>',
-
-        ],
+  ],
+  'registered_page'     => [
+    'heading'             => 'Create IATI Publisher account',
+    'start_journey'       => 'Start your IATI publishing journey by creating an account in IATI Publisher',
+    'step_count_out_of_3' => 'Step :count out of 3',
+    'register_section'    => [
+      'publisher_information_description'           => 'This information will be used to register your organisation',
+      'publisher_information_hover_text'            => 'You will need to provide the same name, Publisher ID, Registration Agency and Number that you used when registering your organisation on the IATI Registry (iatiregistry.org).',
+      'organisation_registration_agency_hover_text' => 'Select the registration agency that you used to register your organisation with IATI.',
+      'organisation_registration_number'            => 'Organisation Registration Number',
+      'iati_organisation_identifier_hover_text'     => 'This is a unique code for your organisation generated from the Registration Agency and Registration Number entered. <br><br><a href=\"http://iatistandard.org/en/guidance/preparing-organisation/organisation-account/how-to-create-your-iati-organisation-identifier/\" target=\"_blank\">Click here for more information.</a>',
+      'administrator_hover_text'                    => 'Provide your information to create an IATI Publisher admin account.',
+      'info_doesnt_match_iati_registry'             => 'Sorry - the information provided doesn’t match your IATI Registry account.',
+      'make_sure_account_holder'                    => 'If your organisation already has an <a href=\"https://iatiregistry.org/\">IATI Registry</a> publisher account, make sure that your <span class=\"font-bold\">Publisher Name, Publisher ID and IATI Organisation Identifier</span> match your IATI Registry Information.',
     ],
+  ],
 ];

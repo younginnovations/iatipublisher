@@ -170,7 +170,7 @@ class SettingController extends Controller
                      ],
                 ]);
             }
-            $translatedMessage = trans('settings/setting_controller.error_occurred_while_verify_publisher');
+            $translatedMessage = trans('settings/setting_controller.error_occurred_while_verifying_publisher');
 
             return response()->json([
                 'success' => false,

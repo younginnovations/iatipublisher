@@ -268,7 +268,7 @@ class ActivityController extends Controller
             );
         } catch (Exception $e) {
             logger()->error($e);
-            $translatedMessage = trans('common/common.error_has_occurred_while_opening_form');
+            $translatedMessage = trans('common/common.error_opening_data_entry_form');
 
             return redirect()->route('admin.activities.index')->with('error', $translatedMessage);
         }

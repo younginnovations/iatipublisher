@@ -30,7 +30,7 @@ class GeneralController extends Controller
             $mimeType = '';
 
             if (empty($fileUrl)) {
-                $translatedMessage = trans('api/general_controller.please_enter_file_url_to_get_mimetype');
+                $translatedMessage = 'Please enter file url to get mimetype.';
 
                 return response()->json([
                     'success' => false,
@@ -89,7 +89,7 @@ class GeneralController extends Controller
             if (!array_key_exists($mimeType, $fileFormat)) {
                 $mimeType = '';
             }
-            $translatedMessage = trans('api/general_controller.mimetype_fetched_successfully');
+            $translatedMessage = 'Mimetype Fetched Successfully.';
 
             return response()->json([
                 'success' => true,
@@ -100,7 +100,7 @@ class GeneralController extends Controller
             ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('api/general_controller.error_occurred_while_mapping_the_file_extension');
+            $translatedMessage = 'Error Occurred While Mapping The File Extension.';
 
             return response()->json(['success' => false, 'message' => $translatedMessage]);
         }

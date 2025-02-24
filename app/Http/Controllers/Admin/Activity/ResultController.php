@@ -181,7 +181,7 @@ class ResultController extends Controller
             return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('common/common.error_has_occurred_while_opening_form');
+            $translatedMessage = trans('common/common.error_opening_data_entry_form');
 
             return redirect()->route('admin.activity.result.index', $id)->with(
                 'error',
@@ -290,7 +290,7 @@ class ResultController extends Controller
             return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('common/common.error_has_occurred_while_opening_form');
+            $translatedMessage = trans('common/common.error_opening_data_entry_form');
 
             return redirect()->route('admin.activity.result.index', $activityId)->with(
                 'error',

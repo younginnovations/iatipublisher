@@ -97,7 +97,7 @@ class OrganizationController extends Controller
             return view('admin.organisation.index', compact('elements', 'elementGroups', 'progress', 'organization', 'toast', 'types', 'mandatoryCompleted', 'status', 'userRole'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('common/common.error_has_occurred_while_opening_form');
+            $translatedMessage = trans('common/common.error_opening_data_entry_form');
 
             return redirect()->route('admin.activities.index')->with('error', $translatedMessage);
         }
@@ -180,14 +180,14 @@ class OrganizationController extends Controller
             $organization->delete();
 
             DB::commit();
-            $translatedMessage = trans('organisationDetail/organization_controller.organization_deleted_successfully');
+            $translatedMessage = 'Organisation Deleted Successfully';
 
             return ['success' => true, 'message' => $translatedMessage];
         } catch (Exception $e) {
             DB::rollBack();
 
             logger()->error($e->getMessage());
-            $translatedMessage = trans('organisationDetail/organization_controller.error_occurred_while_deleting_organisation');
+            $translatedMessage = 'Error deleting organisation.';
 
             return ['success' => false, 'message' => $translatedMessage];
         }

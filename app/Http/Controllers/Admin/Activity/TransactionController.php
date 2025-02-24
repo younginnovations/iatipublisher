@@ -243,7 +243,7 @@ class TransactionController extends Controller
             return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {
             logger()->error($e);
-            $translatedMessage = trans('common/common.error_has_occurred_while_opening_form');
+            $translatedMessage = trans('common/common.error_opening_data_entry_form');
 
             return redirect()->route('admin.activity.show', $activityId)->with(
                 'error',
@@ -320,7 +320,7 @@ class TransactionController extends Controller
             return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('common/common.error_has_occurred_while_opening_form');
+            $translatedMessage = trans('common/common.error_opening_data_entry_form');
 
             return redirect()->route('admin.activity.transaction.index', $activityId)->with(
                 'error',
@@ -380,7 +380,7 @@ class TransactionController extends Controller
     {
         try {
             $this->transactionService->deleteTransaction($transactionId);
-            $translatedMessage = trans('common/common.delete_successfully');
+            $translatedMessage = trans('common/common.deleted_successfully');
 
             $activity = $this->activityService->getActivity($id);
             Session::flash('success', $translatedMessage);
@@ -421,7 +421,7 @@ class TransactionController extends Controller
             DB::beginTransaction();
             $this->transactionService->bulkDeleteTransactions($transactionIds);
             DB::commit();
-            $translatedMessage = trans('common/common.delete_successfully');
+            $translatedMessage = trans('common/common.deleted_successfully');
 
             return response()->json([
                 'status'      => true,

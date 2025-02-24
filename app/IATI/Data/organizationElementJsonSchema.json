@@ -446,7 +446,7 @@
             "required": true,
             "criteria": "mandatory",
             "add_more": true,
-            "hover_text": "common/common.enter_the_name_of_the_organisation_this_can_be_repeated_in_multiple_languages",
+            "hover_text": "common/common.enter_your_organisations_name_this_can_be_repeated_in_multiple_language",
             "help_text": "",
             "attr": {
               "row": 4
@@ -708,7 +708,7 @@
             "type": "select",
             "multiselect": false,
             "choices": "Activity/RegionVocabulary.json",
-            "placeholder": "common.common.select_an_option",
+            "placeholder": "common/common.select_an_option",
             "required": false,
             "criteria": "",
             "hover_text": "common/common.you_can_select_regions_from_the_oecd_dac_un_or_your_own_internal_codelist",
@@ -741,7 +741,7 @@
             "name": "vocabulary_uri",
             "label": "elements/label.vocabulary_uri",
             "type": "text",
-            "placeholder": "common/common.type_vocabulary_uri",
+            "placeholder": "common/common.enter_uri",
             "required": false,
             "criteria": "",
             "hover_text": "elements/org_json_schema.recipient_region_budget_sub_elements_recipient_region_attributes_vocabulary_uri_hover_text",

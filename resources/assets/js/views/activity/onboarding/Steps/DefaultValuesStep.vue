@@ -208,7 +208,7 @@
                       :name="translatedData['elements.name.humanitarian']"
                       :hover-text="
                         translatedData[
-                          'onboarding.default_values_step.whether_the_activity_is_funded_by_official_development_assistance'
+                          'common.common.flow_type_is_a_way_to_categorise'
                         ]
                       "
                       :show-iati-reference="true"
@@ -308,11 +308,6 @@
                 (value:string) => (allDefaultValue.default_aid_type = value)
               "
                 />
-                <p class="pt-2 text-xs text-n-40">
-                  If selected, then default aid type will be automatically
-                  populated in activity when created. Also, Vocabulary type
-                  "OECD DAC" will be chosen by default.
-                </p>
               </div>
               <!-- Default Aid Type End -->
               <!-- Default Tied Status Start -->
@@ -328,7 +323,7 @@
                       name="default-tied-status"
                       :hover-text="
                         translatedData[
-                          'onboarding.default_values_step.whether_the_aid_is_untied_tied_or_partially_tied'
+                          'common.common.whether_the_aid_is_untied_tied_or_partially_tied'
                         ]
                       "
                       :show-iati-reference="true"
@@ -348,10 +343,6 @@
                 (value:string) => (allDefaultValue.default_tied_status = value)
               "
                 />
-                <p class="pt-2 text-xs text-n-40">
-                  If selected, then default tied status will be automatically
-                  populated in activity when created.
-                </p>
               </div>
               <!-- Default Tied Status End -->
             </div>

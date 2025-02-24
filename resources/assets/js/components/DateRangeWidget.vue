@@ -293,35 +293,35 @@ const resetDate = async () => {
 
 const presetRanges = computed(() => [
   {
-    label: translatedData?.value['common.common.today'],
+    label: 'Today',
     range: [startOfDay(new Date()), endOfDay(new Date())],
   },
   {
-    label: translatedData?.value['common.common.this_week'],
+    label: 'This Week',
     range: [startOfWeek(new Date()), endOfDay(new Date())],
   },
   {
-    label: translatedData?.value['common.common.last_7_days'],
+    label: 'Last 7 Days',
     range: [subDays(new Date(), 6), endOfDay(new Date())],
   },
   {
-    label: translatedData?.value['common.common.this_month'],
+    label: 'This Month',
     range: [startOfMonth(new Date()), endOfMonth(new Date())],
   },
   {
-    label: translatedData?.value['common.common.last_6_month'],
+    label: 'Last 6 Month',
     range: [startOfMonth(subMonths(new Date(), 6)), endOfMonth(new Date())],
   },
   {
-    label: translatedData?.value['common.common.this_year'],
+    label: 'This Year',
     range: [startOfYear(new Date()), endOfDay(new Date())],
   },
   {
-    label: translatedData?.value['common.common.last_12_months'],
+    label: 'Last 12 Months',
     range: [startOfMonth(subMonths(new Date(), 12)), endOfDay(new Date())],
   },
   {
-    label: translatedData?.value['common.common.all_time'],
+    label: 'All Time',
     range: [new Date(initialDate.value), endOfDay(new Date())],
   },
 ]);

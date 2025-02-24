@@ -179,7 +179,7 @@ class ImportXlsController extends Controller
             $xlsType = $status['template'];
 
             if ($xlsType === 'activity' && !ImportCacheHelper::organisationHasCompletedValidatingData(Auth::user()->organization_id)) {
-                $translatedMessage = trans('workflow_backend/import_xls_controller.error_has_occurred_while_importing_the_data');
+                $translatedMessage = trans('workflow_backend/import_activity_controller.error_has_occurred_while_importing_activities');
 
                 return response()->json(['success' => false, 'message' =>  $translatedMessage, 'type' => $xlsType]);
             }
@@ -242,7 +242,7 @@ class ImportXlsController extends Controller
             $status = $this->importXlsService->getImportStatus();
 
             if (empty($status)) {
-                $translatedMessage = trans('workflow_backend/import_xls_controller.please_upload_xls_file_to_import_activity');
+                $translatedMessage = trans('workflow_backend/import_xls_controller.please_ensure_that_you_have_uploaded_xls_file');
 
                 return response()->json(['status' => 'error', 'message' => $translatedMessage]);
             }
@@ -337,7 +337,7 @@ class ImportXlsController extends Controller
             );
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('common/common.error_has_occurred_while_opening_form');
+            $translatedMessage = trans('common/common.error_opening_data_entry_form');
 
             return redirect()->route('admin.activities.index')->with('error', $translatedMessage);
         }

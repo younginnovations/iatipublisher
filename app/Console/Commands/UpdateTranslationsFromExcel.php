@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -34,12 +35,12 @@ class UpdateTranslationsFromExcel extends Command
     {
         try {
             $this->info('Retrieving files from S3');
-            $latestFile = $this->getLatestFileFromS3();
+            //            $latestFile = $this->getLatestFileFromS3();
 
             // Download the file locally
             $this->info('Downloading latest file from S3');
-            $tempFilePath = storage_path('app/temp_translation_file.xlsx');
-            Storage::put('temp_translation_file.xlsx', Storage::disk('s3')->get($latestFile));
+            $tempFilePath = public_path('temp_translation_file.xlsx');
+            //            Storage::put('temp_translation_file.xlsx', Storage::disk('s3')->get($latestFile));
 
             // Load the Excel file
             $spreadsheet = IOFactory::load($tempFilePath);
@@ -59,7 +60,6 @@ class UpdateTranslationsFromExcel extends Command
 
                 foreach ($sheetData as $index => $row) {
                     if ($index === 0) {
-                        // Skip the header row
                         continue;
                     }
 
@@ -86,7 +86,7 @@ class UpdateTranslationsFromExcel extends Command
 
                 $this->info("Updated language files for {$folderName}");
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error($e->getMessage());
             logger()->error($e);
         }
@@ -125,24 +125,26 @@ class UpdateTranslationsFromExcel extends Command
      */
     protected function updateLanguageFile($filePath, $translationData): void
     {
+        if (str_ends_with($filePath, '/.php')) {
+            return;
+        }
+
+        $directory = dirname($filePath);
+        if (!is_dir($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
         if (!file_exists($filePath)) {
-            // Initialize file with an empty array if it doesn't exist
             file_put_contents($filePath, "<?php\n\nreturn [];\n");
         }
 
-        // Load the language file as an array
-        $languageArray = include $filePath;
+        $languageArray = is_file($filePath) ? include $filePath : [];
 
         foreach ($translationData as $key => $translation) {
-            // Update the translation key using your setDotNotationValue method
             $this->setDotNotationValue($languageArray, $key, $translation);
         }
 
-        // Prepare the contents to write back to the file
-//        $fileContents = "<?php\n\nreturn " . var_export($languageArray, true) . ";\n";
         $fileContents = "<?php\n\nreturn " . $this->arrayToPhpString($languageArray) . ";\n";
-
-        // Save the updated language array back to the file
         file_put_contents($filePath, $fileContents);
     }
 
@@ -156,17 +158,19 @@ class UpdateTranslationsFromExcel extends Command
      */
     protected function arrayToPhpString(array $array, int $indentation = 0): string
     {
-        $indent = str_repeat('    ', $indentation); // Four spaces for indentation
+        $indent = str_repeat('    ', $indentation);
         $result = "[\n";
 
         foreach ($array as $key => $value) {
-            $formattedKey = is_string($key) ? "'$key'" : $key; // Handle keys
+            $formattedKey = is_string($key) ? "'$key'" : $key;
 
             if (is_array($value)) {
                 $result .= $indent . "    $formattedKey => " . $this->arrayToPhpString($value, $indentation + 1) . ",\n";
             } else {
-                $escapedValue = $this->escapeString($value); // Escape the value
-                $result .= $indent . "    $formattedKey => '$escapedValue',\n";
+                if ($value) {
+                    $escapedValue = $this->escapeString($value);
+                    $result .= $indent . "    $formattedKey => '$escapedValue',\n";
+                }
             }
         }
 

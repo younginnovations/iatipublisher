@@ -55,8 +55,6 @@
           <span v-if="defaultError.default_currency" class="error" role="alert">
             {{ defaultError.default_currency }}
           </span>
-
-          <p v-if="!defaultError.default_currency"></p>
         </div>
         <div>
           <div class="flex justify-between">
@@ -91,8 +89,6 @@
           <span v-if="defaultError.default_language" class="error" role="alert">
             {{ defaultError.default_language }}
           </span>
-
-          <p v-if="!defaultError.default_language"></p>
         </div>
       </div>
     </div>
@@ -157,7 +153,7 @@
                 :name="translatedData['elements.label.humanitarian']"
                 :hover-text="
                   translatedData[
-                    'settings.setting_default_form.add_a_humanitarian_flag_to_every_activity_that_your_organisation'
+                    'common.common.add_a_humanitarian_flag_to_every_activity'
                   ]
                 "
                 :show-iati-reference="true"
@@ -193,7 +189,7 @@
                 :name="translatedData['elements.name.default_flow_type']"
                 :hover-text="
                   translatedData[
-                    'settings.setting_default_form.whether_the_activity_is_funded_by_official_development_assistance_oda'
+                    'common.common.flow_type_is_a_way_to_categorise'
                   ]
                 "
                 :show-iati-reference="true"
@@ -218,10 +214,6 @@
           >
             {{ defaultError.default_flow_type }}
           </span>
-          <p v-if="!defaultError.default_flow_type">
-            If selected, then default flow type will be automatically populated
-            in activity when created.
-          </p>
         </div>
         <!-- Default Flow Type -->
 
@@ -262,10 +254,6 @@
           >
             {{ defaultError.default_finance_type }}
           </span>
-          <p v-if="!defaultError.default_finance_type">
-            If selected, then default finance type will be automatically
-            populated in activity when created.
-          </p>
         </div>
         <!-- Default Finance Type -->
 
@@ -302,11 +290,6 @@
           <span v-if="defaultError.default_aid_type" class="error" role="alert">
             {{ defaultError.default_aid_type }}
           </span>
-          <p v-if="!defaultError.default_aid_type">
-            If selected, then default aid type will be automatically populated
-            in activity when created. Also, Vocabulary type "OECD DAC" will be
-            chosen by default.
-          </p>
         </div>
         <!-- Default Aid Type -->
 
@@ -322,7 +305,7 @@
                 :name="translatedData['elements.name.default_tied_status']"
                 :hover-text="
                   translatedData[
-                    'settings.setting_default_form.whether_the_aid_is_untied_tied_or_partially_tied'
+                    'common.common.whether_the_aid_is_untied_tied_or_partially_tied'
                   ]
                 "
                 :show-iati-reference="true"
@@ -347,13 +330,6 @@
           >
             {{ defaultError.default_tied_status }}
           </span>
-          <p v-if="!defaultError.default_tied_status">
-            {{
-              translatedData[
-                'common.common.if_selected_then_default_tied_status_will_be_automatically_populated'
-              ]
-            }}
-          </p>
         </div>
         <!-- Default Tied Status -->
       </div>
@@ -377,9 +353,7 @@
                 width="w-72"
                 :name="translatedData['elements.label.budget_not_provided']"
                 :hover-text="
-                  translatedData[
-                    'settings.setting_default_form.a_code_indicating_the_reason_why_this_activity_does_not_contain'
-                  ]
+                  translatedData['common.common.a_code_indicating_the_reason']
                 "
               />
             </button>
@@ -430,7 +404,7 @@
             :disabled="userRole !== 'admin'"
             class="register__input mb-2"
             type="text"
-            :placeholder="translatedData['common.common.type_vocabulary_uri']"
+            :placeholder="translatedData['common.common.enter_uri']"
             @input="updateStore('linked_data_uri')"
           />
           <span v-if="defaultError.linked_data_uri" class="error" role="alert">
@@ -476,7 +450,6 @@
           >
             {{ defaultError.default_collaboration_type }}
           </span>
-          <p v-if="!defaultError.default_collaboration_type"></p>
         </div>
         <!-- Default Collaboration Type -->
       </div>

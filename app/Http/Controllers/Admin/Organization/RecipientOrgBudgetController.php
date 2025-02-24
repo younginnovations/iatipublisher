@@ -45,12 +45,12 @@ class RecipientOrgBudgetController extends Controller
             $organization = $this->recipientOrgBudgetService->getOrganizationData($id);
             $form = $this->recipientOrgBudgetService->formGenerator($id, Arr::get($organization->deprecation_status_map, 'recipient_org_budget', []));
             $data = ['title' => $element['recipient_org_budget']['label'], 'name' => 'recipient_org_budget'];
-            $translatedMessage = trans('common/common.error_has_occurred_while_opening_form');
+            $translatedMessage = trans('common/common.error_opening_data_entry_form');
 
             return view('admin.organisation.forms.recipientOrgBudget.recipientOrgBudget', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('common/common.error_has_occurred_while_opening_form');
+            $translatedMessage = trans('common/common.error_opening_data_entry_form');
 
             return redirect()->route('admin.organisation.index')->with('error', $translatedMessage);
         }

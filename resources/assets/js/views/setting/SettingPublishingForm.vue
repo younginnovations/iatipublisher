@@ -2,12 +2,12 @@
   <div>
     <div class="registry__info">
       <div class="mb-4 text-sm font-bold text-n-50">
-        {{ translatedData['settings.setting.registry_information'] }}
+        {{ translatedData['settings.setting.iati_registry_information'] }}
       </div>
       <div class="mb-4 flex items-center text-xs text-n-50">
         <button>
           <HoverText
-            :name="translatedData['settings.setting.registry_information']"
+            :name="translatedData['settings.setting.iati_registry_information']"
             :hover-text="
               translatedData[
                 'settings.setting_publishing_form.iati_publisher_needs_to_add_your_organisations'
@@ -31,7 +31,7 @@
                   :name="translatedData['common.common.publisher_id']"
                   :hover-text="
                     translatedData[
-                      'settings.setting_publishing_form.this_is_the_unique_id_for_your_organisation_that_you_created'
+                      'common.common.this_is_the_unique_id_for_your_organisation'
                     ]
                   "
                   :show-iati-reference="true"
@@ -48,9 +48,7 @@
               }"
               type="text"
               :placeholder="
-                translatedData[
-                  'settings.setting_publishing_form.type_publisher_id_here'
-                ]
+                translatedData['common.common.type_your_publisher_id_here']
               "
               :disabled="!isSuperadmin"
               @input="updateStore('publisher_id')"
@@ -71,7 +69,7 @@
                   :name="translatedData['common.common.api_token']"
                   :hover-text="
                     translatedData[
-                      'settings.setting_publishing_form.the_api_token_is_a_unique_key_that_is_generated_from_your_organisation'
+                      'common.common.the_api_token_is_a_unique_key_that_is_generated_from_your_organisation'
                     ]
                   "
                   :show-iati-reference="true"
@@ -90,9 +88,7 @@
                 :disabled="userRole !== 'admin'"
                 type="text"
                 :placeholder="
-                  translatedData[
-                    'settings.setting_publishing_form.type_api_token_here'
-                  ]
+                  translatedData['common.common.enter_api_token_here']
                 "
                 @input="updateStore('api_token')"
               />

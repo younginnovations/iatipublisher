@@ -463,13 +463,13 @@ export default defineComponent({
             name: 'publisher_name',
             placeholder:
               props.translatedData[
-                'public.register.not_registered_page.register_section.publisher_name_placeholder'
+                'common.common.enter_your_organisation_name'
               ],
             id: 'publisher-name',
             required: true,
             hover_text:
               props.translatedData[
-                'public.register.not_registered_page.register_section.publisher_name_hover_text'
+                'common.common.the_name_of_your_organisation_publishing_the_data'
               ],
             type: 'text',
             class: 'col-span-2 mb-4 lg:mb-2',
@@ -493,7 +493,7 @@ export default defineComponent({
           country: {
             label: props.translatedData['common.common.country'],
             name: 'country',
-            placeholder: props.translatedData['common.common.select_a_country'],
+            placeholder: props.translatedData['common.common.select_an_option'],
             id: 'country_select',
             required: false,
             type: 'select',
@@ -511,10 +511,7 @@ export default defineComponent({
                 'elements.label.organisation_registration_agency'
               ],
             name: 'registration_agency',
-            placeholder:
-              props.translatedData[
-                'common.common.select_an_organisation_registration_agency'
-              ],
+            placeholder: props.translatedData['common.common.select_an_option'],
             id: 'registration-agency',
             required: true,
             hover_text:
@@ -534,7 +531,9 @@ export default defineComponent({
             id: 'registration-number',
             required: true,
             hover_text:
-              props.translatedData['common.common.registration_number'],
+              props.translatedData[
+                'common.common.provide_your_organisations_registration_number'
+              ],
             type: 'text',
             class: 'mb-4 lg:mb-2',
             help_text: props.translatedData['common.common.for_example_123456'],
@@ -566,10 +565,7 @@ export default defineComponent({
                 'public.register.not_registered_page.register_section.organisation_type'
               ],
             name: 'publisher_type',
-            placeholder:
-              props.translatedData[
-                'public.register.not_registered_page.register_section.organisation_type_placeholder'
-              ],
+            placeholder: props.translatedData['common.common.select_an_option'],
             id: 'publisher-type',
             required: true,
             hover_text:
@@ -587,10 +583,7 @@ export default defineComponent({
                 'public.register.not_registered_page.register_section.data_licence'
               ],
             name: 'license_id',
-            placeholder:
-              props.translatedData[
-                'public.register.not_registered_page.register_section.data_licence_placeholder'
-              ],
+            placeholder: props.translatedData['common.common.select_an_option'],
             id: 'data-license',
             required: true,
             hover_text:
@@ -628,10 +621,7 @@ export default defineComponent({
                 'public.register.not_registered_page.register_section.organisation_description'
               ],
             name: 'description',
-            placeholder:
-              props.translatedData[
-                'public.register.not_registered_page.register_section.organisation_description_placeholder'
-              ],
+            placeholder: '',
             id: 'organization-description',
             required: false,
             hover_text:
@@ -693,10 +683,7 @@ export default defineComponent({
                 'public.register.not_registered_page.register_section.address'
               ],
             name: 'address',
-            placeholder:
-              props.translatedData[
-                'public.register.not_registered_page.register_section.address_placeholder'
-              ],
+            placeholder: '',
             id: 'address',
             required: false,
             hover_text:
@@ -752,10 +739,7 @@ export default defineComponent({
                 'public.register.not_registered_page.register_section.record_exclusions'
               ],
             name: 'record_exclusions',
-            placeholder:
-              props.translatedData[
-                'public.register.not_registered_page.register_section.record_exclusions_placeholder'
-              ],
+            placeholder: '',
             id: 'record-exclusions',
             required: false,
             hover_text:
@@ -772,7 +756,7 @@ export default defineComponent({
         is_complete: false,
         description:
           props.translatedData[
-            'public.register.not_registered_page.register_section.administrator_information_description'
+            'common.common.this_will_create_an_admin_account_for_you_as_an_individual'
           ],
         fields: {
           full_name: {

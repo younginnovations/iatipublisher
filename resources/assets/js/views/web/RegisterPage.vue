@@ -433,13 +433,13 @@ export default defineComponent({
             name: 'publisher_name',
             placeholder:
               props.translatedData[
-                'public.register.registered_page.register_section.publisher_name_placeholder'
+                'common.common.enter_your_organisation_name'
               ],
             id: 'publisher-name',
             required: true,
             hover_text:
               props.translatedData[
-                'public.register.registered_page.register_section.publisher_name_hover_text'
+                'common.common.the_name_of_your_organisation_publishing_the_data'
               ],
             type: 'text',
             class: 'col-span-2 mb-4 lg:mb-2',
@@ -454,7 +454,7 @@ export default defineComponent({
             required: true,
             hover_text:
               props.translatedData[
-                'public.register.registered_page.register_section.publisher_id_hover_text'
+                'common.common.this_is_the_unique_id_for_your_organisation'
               ],
             type: 'text',
             class: 'mb-4 lg:mb-2',
@@ -463,7 +463,7 @@ export default defineComponent({
           country: {
             label: props.translatedData['common.common.country'],
             name: 'country',
-            placeholder: props.translatedData['common.common.select_a_country'],
+            placeholder: props.translatedData['common.common.select_an_option'],
             id: 'country_select',
             required: false,
             type: 'select',
@@ -481,10 +481,7 @@ export default defineComponent({
                 'elements.label.organisation_registration_agency'
               ],
             name: 'registration_agency',
-            placeholder:
-              props.translatedData[
-                'common.common.select_an_organisation_registration_agency'
-              ],
+            placeholder: props.translatedData['common.common.select_an_option'],
             id: 'registration-agency',
             required: true,
             hover_text:
@@ -510,7 +507,7 @@ export default defineComponent({
             required: true,
             hover_text:
               props.translatedData[
-                'public.register.registered_page.register_section.organisation_registration_number_hover_text'
+                'common.common.provide_your_organisations_registration_number'
               ],
             type: 'text',
             class: 'mb-4 lg:mb-2',
@@ -541,7 +538,7 @@ export default defineComponent({
         is_complete: false,
         description:
           props.translatedData[
-            'public.register.registered_page.register_section.administrator_description'
+            'common.common.this_will_create_an_admin_account_for_you_as_an_individual'
           ],
         hover_text:
           props.translatedData[

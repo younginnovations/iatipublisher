@@ -169,15 +169,6 @@
                   <span class="text-xs">{{ error }}</span>
                 </div>
               </div>
-              <p
-                v-if="defaultErrors.hierarchy.length === 0"
-                class="text-xs text-n-40"
-              >
-                IATI allows for activities to be reported hierarchically (eg.
-                parent - child ; programme - project - sub-project, etc). For
-                activities at lower levels, their hierarchy can be edited as you
-                are entering them.
-              </p>
             </div>
 
             <div>
@@ -206,11 +197,7 @@
                 id="budget_not_provided"
                 v-model="defaultValues.budget_not_provided"
                 class="vue__select"
-                :placeholder="
-                  translatedData[
-                    'common.common.select_budget_not_provided_type_here'
-                  ]
-                "
+                :placeholder="translatedData['common.common.select_an_option']"
                 :options="budgetNotProvided"
                 :searchable="true"
               />

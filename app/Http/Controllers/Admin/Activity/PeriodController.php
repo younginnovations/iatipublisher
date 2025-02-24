@@ -168,7 +168,7 @@ class PeriodController extends Controller
             return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('common/common.error_has_occurred_while_opening_form');
+            $translatedMessage = trans('common/common.error_opening_data_entry_form');
 
             return redirect()->route('admin.indicator.period.index', $indicatorId)->with(
                 'error',
@@ -281,7 +281,7 @@ class PeriodController extends Controller
             return view('admin.activity.period.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            $translatedMessage = trans('common/common.error_has_occurred_while_opening_form');
+            $translatedMessage = trans('common/common.error_opening_data_entry_form');
 
             return redirect()->route('admin.indicator.period.index', $indicatorId)->with('error', $translatedMessage);
         }
@@ -339,7 +339,7 @@ class PeriodController extends Controller
     {
         try {
             $this->periodService->deletePeriod($periodId);
-            $translatedMessage = trans('common/common.delete_successfully');
+            $translatedMessage = trans('common/common.deleted_successfully');
 
             Session::flash('success', $translatedMessage);
 

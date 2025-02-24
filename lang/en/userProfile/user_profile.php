@@ -1,4 +1,5 @@
 <?php
+
 return [
     'edit_your_profile'                          => 'Edit your profile',
     'current_password'                           => 'Current Password',
@@ -6,7 +7,7 @@ return [
     'new_password'                               => 'New Password ',
     'language_preference'                        => 'Language Preference',
     'your_information'                           => 'Your Information',
-    'organization'                               => 'Organization',
-    'you_havent_verified_your_email_address_yet' => 'You haven\'t verified your email address yet . Please check for verification email sent to you and verify your account,',
+    'organization'                               => 'Organisation',
+    'you_havent_verified_your_email_address_yet' => 'You haven\'t verified your email address yet. Please check for the verification email sent to you when you registered.',
     'change_your_password'                       => 'Change your password',
 ];

@@ -276,7 +276,7 @@ class ImportActivityController extends Controller
             $schema_error = awsGetFile(sprintf('%s/%s/%s/%s', $filetype === 'xml' ? $this->xml_data_storage_path : $this->csv_data_storage_path, $orgId, $userId, 'schema_error.log'));
 
             if (!$status) {
-                $translatedMessage = trans('workflow_backend/import_activity_controller.status_json_file_not_present_in_aws_please_try_again');
+                $translatedMessage = 'status.json file not present in AWS. Please try again.';
 
                 Session::put('error', $translatedMessage);
                 $this->importStatusService->deleteOngoingImports($orgId);

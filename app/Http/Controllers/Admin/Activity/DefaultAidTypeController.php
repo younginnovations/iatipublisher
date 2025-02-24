@@ -73,7 +73,7 @@ class DefaultAidTypeController extends Controller
             return view('admin.activity.defaultAidType.edit', compact('form', 'activity', 'data'));
         } catch (Exception $e) {
             logger()->error($e);
-            $translatedMessage = trans('common/common.error_has_occurred_while_opening_form');
+            $translatedMessage = trans('common/common.error_opening_data_entry_form');
 
             return redirect()->route('admin.activity.show', $id)->with(
                 'error',

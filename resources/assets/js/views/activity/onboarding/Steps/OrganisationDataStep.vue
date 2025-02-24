@@ -93,7 +93,7 @@
                   :name="translatedData['elements.name.reporting_org']"
                   :hover-text="
                     translatedData[
-                      'onboarding.organisation_data_step.the_organisation_issuing_the_report'
+                      'common.common.the_organisation_issuing_the_report'
                     ]
                   "
                   :show-iati-reference="true"
@@ -114,7 +114,7 @@
                       :name="translatedData['elements.label.reference']"
                       :hover-text="
                         translatedData[
-                          'onboarding.organisation_data_step.machine_readable_identification_string_for_the_organisation'
+                          'common.common.provide_your_organisations_iati_identifier'
                         ]
                       "
                       :show-iati-reference="true"
@@ -134,12 +134,6 @@
                 <span v-if="hasReferenceError" class="text-danger error">{{
                   referenceErrorMessage
                 }}</span>
-                <button
-                  class="pt-2 text-xs text-n-40 hover:text-spring-50"
-                  @click="showHelp(`reference`)"
-                >
-                  {{ translatedData['onboarding.organisation_data_step.help'] }}
-                </button>
               </div>
 
               <!-- Type -->
@@ -154,7 +148,7 @@
                       :name="translatedData['elements.label.reference']"
                       :hover-text="
                         translatedData[
-                          'onboarding.organisation_data_step.the_type_of_organisation_issuing_the_report'
+                          'common.common.select_the_type_that_best_describes_your_organisation'
                         ]
                       "
                       :show-iati-reference="true"
@@ -173,12 +167,6 @@
                 (value:string) => (organizationData.type = value)
               "
                 />
-                <button
-                  class="pt-2 text-xs text-n-40 hover:text-spring-50"
-                  @click="showHelp(`type`)"
-                >
-                  {{ translatedData['onboarding.organisation_data_step.help'] }}
-                </button>
               </div>
 
               <!-- Secondary reporter -->
@@ -195,7 +183,7 @@
                       "
                       :hover-text="
                         translatedData[
-                          'onboarding.organisation_data_step.a_flag_indicating_that_the_reporting_organisation_of_this_activity'
+                          'common.common.if_you_are_publishing_data_about_your_own_organisation'
                         ]
                       "
                       :show-iati-reference="true"
@@ -216,12 +204,6 @@
                 (value:string) => (organizationData.secondary_reporter = value)
               "
                 />
-                <button
-                  class="pt-2 text-xs text-n-40 hover:text-spring-50"
-                  @click="showHelp(`secondary-reporter`)"
-                >
-                  {{ translatedData['onboarding.organisation_data_step.help'] }}
-                </button>
               </div>
             </div>
           </div>
@@ -410,13 +392,6 @@ const contentValues = [
   },
 ];
 
-const showHelp = (title: string) => {
-  helpTitle.value = title;
-  helpContent.value = contentValues.find((content) => content.title === title)
-    ?.content as string;
-  helpVisible.value = true;
-};
-
 const resendVerificationEmail = () => {
   isLoaderVisible.value = true;
   axios
@@ -447,7 +422,7 @@ const transformMessages = (messages: string[]): string[] => {
   return messages.map((message) => {
     switch (message) {
       case translatedData.value[
-        'onboarding.organisation_data_step.you_have_not_verified_your_email_address'
+        'common.common.your_email_address_has_not_been_verified'
       ]: {
         const text_p1 =
           translatedData.value[

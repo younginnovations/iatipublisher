@@ -46,7 +46,7 @@
                       :name="translatedData['common.common.api_token']"
                       :hover-text="
                         translatedData[
-                          'onboarding.publishing_setting_step.the_api_token_is_a_unique_key_that_is_generated_from_your_organisation'
+                          'common.common.the_api_token_is_a_unique_key_that_is_generated_from_your_organisation'
                         ]
                       "
                       :show-iati-reference="true"
@@ -60,9 +60,7 @@
                     type="text"
                     class="mt-2 h-12 w-full rounded-[4px] border border-n-30 py-[13px] px-4 text-sm focus-within:outline-0 focus:outline-0"
                     :placeholder="
-                      translatedData[
-                        'onboarding.publishing_setting_step.type_your_api_token_here'
-                      ]
+                      translatedData['common.common.enter_api_token_here']
                     "
                   />
                   <ShimmerLoading

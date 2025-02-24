@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'importing'                           => 'Importing',
-    'multiple_activities'                 => 'Multiple Activities',
-    'upload_failed'                       => 'upload failed:',
-    'file_upload_complete'                => 'file upload complete',
-    'uploading'                           => 'Uploading',
-    'proceed'                             => 'Proceed',
+  'importing'            => 'Importing',
+  'multiple_activities'  => 'Multiple activities',
+  'upload_failed'        => 'Upload failed:',
+  'file_upload_complete' => 'File upload complete',
+  'uploading'            => 'Uploading',
+  'proceed'              => 'Continue',
 ];

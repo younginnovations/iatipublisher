@@ -55,11 +55,7 @@
                     error__input: errorData.narrative != '',
                   }"
                   type="text"
-                  :placeholder="
-                    translatedData[
-                      'common.common.location_sub_elements_name_sub_elements_narrative_placeholder'
-                    ]
-                  "
+                  :placeholder="translatedData['common.common.enter_narrative']"
                 />
                 <span
                   v-if="errorData.narrative != ''"
