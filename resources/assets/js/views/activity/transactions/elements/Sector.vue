@@ -137,7 +137,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, inject, Ref } from 'vue';
+import { defineComponent, toRefs, inject } from 'vue';
 import {
   getTranslatedElement,
   getTranslatedLanguage,
@@ -146,11 +146,6 @@ import {
 
 export default defineComponent({
   name: 'TransactionSector',
-  methods: {
-    getTranslatedMissing,
-    getTranslatedElement,
-    getTranslatedLanguage,
-  },
   components: {},
   props: {
     data: {
@@ -183,13 +178,18 @@ export default defineComponent({
     const sector = data.value as ArrayObject[];
 
     const type = inject('types') as Sector;
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
 
     return {
       sector,
       type,
       translatedData,
     };
+  },
+  methods: {
+    getTranslatedMissing,
+    getTranslatedElement,
+    getTranslatedLanguage,
   },
 });
 </script>

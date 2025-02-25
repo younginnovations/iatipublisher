@@ -97,13 +97,12 @@ import {
   inject,
   ref,
   computed,
-  Ref,
 } from 'vue';
 import spinnerLoader from './spinnerLoader.vue';
 import axios from 'axios';
 
 const currentActivity = ref(null);
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 defineEmits(['close']);
 
@@ -134,13 +133,13 @@ const props = defineProps({
 const mapActivityName = (name) => {
   switch (name) {
     case 'activity':
-      return translatedData.value['common.common.basic_activity_elements'];
+      return translatedData['common.common.basic_activity_elements'];
     case 'period':
       return 'Period';
     case 'indicator':
-      return translatedData.value['common.common.indicators_except_period'];
+      return translatedData['common.common.indicators_except_period'];
     case 'result':
-      return translatedData.value[
+      return translatedData[
         'workflow_frontend.import.result_except_indicator_and_period'
       ];
     default:

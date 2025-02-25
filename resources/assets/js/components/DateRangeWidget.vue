@@ -177,7 +177,7 @@ const dateType = ref('');
 const dateDropdown = ref();
 const dateTypeName = ref(props.dateName);
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 dateType.value = props.dropdownRange && Object.values(props.dropdownRange)[0];
 

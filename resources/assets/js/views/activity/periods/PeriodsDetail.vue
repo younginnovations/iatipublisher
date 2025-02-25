@@ -160,8 +160,6 @@ import {
   onUnmounted,
   watch,
   reactive,
-  inject,
-  Ref,
   watchEffect,
 } from 'vue';
 
@@ -176,11 +174,9 @@ import { TargetValue, ActualValue } from './elements/Index';
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
 import { getTranslatedElement, toTitleCase } from '../../../composable/utils';
-import LanguageService from 'Services/language';
 
 export default defineComponent({
   name: 'PeriodDetail',
-  methods: { getTranslatedElement },
   components: {
     TargetValue,
     ActualValue,
@@ -374,5 +370,6 @@ export default defineComponent({
       istopVisible,
     };
   },
+  methods: { getTranslatedElement },
 });
 </script>

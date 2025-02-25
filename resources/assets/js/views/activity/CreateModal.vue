@@ -228,7 +228,6 @@ import {
   inject,
   onMounted,
   reactive,
-  Ref,
   ref,
   computed,
 } from 'vue';
@@ -284,7 +283,7 @@ export default defineComponent({
 
     const languages = reactive({});
     const organization: ObjectType = reactive({});
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
     const defaultLanguage = inject('defaultLanguage');
 
     onMounted(async () => {

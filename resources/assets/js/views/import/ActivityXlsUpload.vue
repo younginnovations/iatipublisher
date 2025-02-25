@@ -593,7 +593,6 @@ import {
   watch,
   Ref,
   onUnmounted,
-  inject,
 } from 'vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import HoverText from 'Components/HoverText.vue';
@@ -609,9 +608,6 @@ import { useStorage } from '@vueuse/core';
 import PublishSelected from 'Activity/bulk-publish/PublishSelected.vue';
 import { getTranslatedElement } from 'Composable/utils';
 import { defineProps } from 'vue';
-
-import { tr } from 'date-fns/locale';
-import LanguageService from 'Services/language';
 
 interface ActivitiesInterface {
   last_page: number;

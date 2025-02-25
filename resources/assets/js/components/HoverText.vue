@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, Ref } from 'vue';
+import { defineComponent, inject } from 'vue';
 
 export default defineComponent({
   props: {

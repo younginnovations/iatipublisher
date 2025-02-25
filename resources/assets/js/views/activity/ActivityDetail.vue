@@ -496,7 +496,6 @@ import {
   getTranslatedUntitled,
   onlyDeprecatedStatusMap,
 } from 'Composable/utils';
-import LanguageService from 'Services/language';
 
 export default defineComponent({
   components: {

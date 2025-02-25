@@ -110,7 +110,6 @@ import {
   ref,
   computed,
   onMounted,
-  Ref,
 } from 'vue';
 import { useToggle } from '@vueuse/core';
 
@@ -125,7 +124,7 @@ const props = defineProps({
 
 // toggle issues
 const [errorValue, errorToggle] = useToggle();
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 const importErrors = inject('importActivityError') as object;
 const activityId = inject('activityId');
 const issueType = ref();

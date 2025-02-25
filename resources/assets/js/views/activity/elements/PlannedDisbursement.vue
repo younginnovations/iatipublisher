@@ -203,7 +203,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject, Ref } from 'vue';
+import { defineProps, inject } from 'vue';
 import moment from 'moment';
 import {
   getTranslatedElement,
@@ -230,5 +230,5 @@ function formatDate(date: Date) {
 }
 
 const types = inject('types') as Types;
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 </script>

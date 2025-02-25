@@ -890,7 +890,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, Ref, toRefs } from 'vue';
+import { defineComponent, inject, toRefs } from 'vue';
 
 //composable
 import dateFormat from 'Composable/dateFormat';
@@ -935,7 +935,7 @@ export default defineComponent({
   },
   setup(props) {
     let { result } = toRefs(props);
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
 
     const indicatorData = result.value.indicators.reverse();
 

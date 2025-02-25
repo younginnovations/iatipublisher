@@ -136,7 +136,7 @@ interface RefreshToastMsgTypeface {
   refreshMessage: string;
 }
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 const refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
 const toastMessage = inject('toastData') as ToastInterface;
 const errorData = inject('errorData') as ErrorInterface;
@@ -160,7 +160,7 @@ const checkPublish = () => {
 const publishedSelectedMessage = computed(() => {
   const length = store.state.selectedActivities.length;
   let baseMessage =
-    translatedData.value['activity_index.page_title.publish_selected'];
+    translatedData['activity_index.page_title.publish_selected'];
   baseMessage = replaceCountPlaceHolderWithCount(baseMessage, length);
 
   return baseMessage;
@@ -172,17 +172,17 @@ function replaceCountPlaceHolderWithCount(text: string, count: number) {
 
 function getYouCanOnlyPublish100ActivitiesAtATimeMessage(length: number) {
   const baseMessage =
-    translatedData.value[
+    translatedData[
       'activity_index.page_title.you_can_only_publish_up_to_100_activities_at_a_time'
     ];
   let dynamicMessage =
-    translatedData.value[
+    translatedData[
       'activity_index.page_title.please_remove_activities_from_selection_to_publish'
     ];
 
   if (length > 1) {
     dynamicMessage =
-      translatedData.value[
+      translatedData[
         'activity_index.page_title.please_remove_activity_from_selection_to_publish'
       ];
   }

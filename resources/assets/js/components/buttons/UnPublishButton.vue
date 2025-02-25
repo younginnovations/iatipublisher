@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, reactive, inject, onUpdated, toRefs, Ref } from 'vue';
+import { defineProps, reactive, inject, onUpdated, toRefs } from 'vue';
 import { useToggle } from '@vueuse/core';
 import axios from 'axios';
 
@@ -77,7 +77,7 @@ const store = detailStore();
 
 //activity id
 const id = activityId.value;
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 // display/hide validator loader
 interface LoaderTypeface {

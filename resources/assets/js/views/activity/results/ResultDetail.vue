@@ -212,8 +212,6 @@ import {
   watch,
   onUnmounted,
   reactive,
-  inject,
-  Ref,
   watchEffect,
   provide,
 } from 'vue';
@@ -228,22 +226,11 @@ import Toast from 'Components/ToastMessage.vue';
 //composable
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
-import {
-  getTranslatedElement,
-  toKebabCase,
-  toTitleCase,
-} from 'Composable/utils';
+import { getTranslatedElement, toKebabCase } from 'Composable/utils';
 import transactionElement from '../transactions/TransactionElement.vue';
-import LanguageService from 'Services/language';
 
 export default defineComponent({
   name: 'ResultDetail',
-  computed: {
-    transactionElement() {
-      return transactionElement;
-    },
-  },
-  methods: { toKebabCase, getTranslatedElement },
   components: {
     ResultElement,
     Indicator,
@@ -409,5 +396,11 @@ export default defineComponent({
       isMandatoryForResult,
     };
   },
+  computed: {
+    transactionElement() {
+      return transactionElement;
+    },
+  },
+  methods: { toKebabCase, getTranslatedElement },
 });
 </script>

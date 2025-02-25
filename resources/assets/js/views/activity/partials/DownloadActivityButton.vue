@@ -178,7 +178,7 @@
 <script lang="ts">
 import { useStore } from 'Store/activities/index';
 
-import { reactive, defineComponent, ref, onMounted, inject, Ref } from 'vue';
+import { reactive, defineComponent, ref, onMounted, inject } from 'vue';
 import CreateModal from '../CreateModal.vue';
 import { useToggle } from '@vueuse/core';
 import Toast from '../../../components/ToastMessage.vue';
@@ -214,7 +214,7 @@ export default defineComponent({
     const downloadingInProcess = ref(false);
     const isLoading = ref(false);
 
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
 
     const toggleModel = (value: boolean) => {
       modelVisible.value = value;

@@ -94,7 +94,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, inject, Ref } from 'vue';
+import { defineComponent, toRefs, inject } from 'vue';
 import {
   getTranslatedElement,
   getTranslatedLanguage,
@@ -103,11 +103,6 @@ import {
 
 export default defineComponent({
   name: 'TransactionProviderOrganisation',
-  methods: {
-    getTranslatedMissing,
-    getTranslatedLanguage,
-    getTranslatedElement,
-  },
   components: {},
   props: {
     data: {
@@ -135,9 +130,14 @@ export default defineComponent({
     const PoData = data.value as ArrayObject;
 
     const type = inject('types') as TypesInterface;
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
 
     return { PoData, type, translatedData };
+  },
+  methods: {
+    getTranslatedMissing,
+    getTranslatedLanguage,
+    getTranslatedElement,
   },
 });
 </script>

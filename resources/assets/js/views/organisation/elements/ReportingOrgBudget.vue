@@ -210,7 +210,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject, Ref } from 'vue';
+import { defineProps, inject } from 'vue';
 import moment from 'moment';
 import {
   getTranslatedElement,
@@ -229,7 +229,7 @@ interface TypesInterface {
 }
 
 const types = inject('orgTypes') as TypesInterface;
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 function formatDate(date: Date) {
   return date

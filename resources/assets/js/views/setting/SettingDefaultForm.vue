@@ -458,7 +458,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, inject, Ref } from 'vue';
+import { defineComponent, computed, inject } from 'vue';
 import Multiselect from '@vueform/multiselect';
 import { useStore } from '../../store';
 import { ActionTypes } from '../../store/setting/actions';
@@ -509,7 +509,7 @@ export default defineComponent({
   },
 
   setup(props) {
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
     const userRole = inject('userRole');
     const store = useStore();
 

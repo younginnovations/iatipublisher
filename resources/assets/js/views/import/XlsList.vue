@@ -249,20 +249,12 @@ import XlsListError from 'Components/XlsListError.vue';
 import Modal from 'Components/PopupModal.vue';
 import axios from 'axios';
 import Toast from 'Components/ToastMessage.vue';
-import {
-  defineProps,
-  onMounted,
-  ref,
-  nextTick,
-  onUnmounted,
-  inject,
-  Ref,
-} from 'vue';
+import { defineProps, onMounted, ref, nextTick, onUnmounted } from 'vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import { getTranslatedElement } from 'Composable/utils';
 
-// const translatedData = inject('translatedData') as Ref;
+// const translatedData = inject('translatedData') as Record<string, string>;
 const selectAll = ref(false);
 const sortOrder = ref('ascending');
 

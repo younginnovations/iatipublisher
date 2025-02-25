@@ -616,7 +616,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject, Ref } from 'vue';
+import { defineProps, inject } from 'vue';
 import { useToggle } from '@vueuse/core';
 import moment from 'moment';
 import axios from 'axios';
@@ -712,7 +712,7 @@ interface ToastDataTypeface {
   type: boolean;
   visibility: boolean;
 }
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 const toastData = inject('toastData') as ToastDataTypeface;
 const elements = inject('elements') as object;
 

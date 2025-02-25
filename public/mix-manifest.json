@@ -1,10 +1,20 @@
 {
+<<<<<<< Updated upstream
     "/js/app.js": "/js/app.js?id=bc01b0cb814c4cf1748c0f9255226eb7",
+=======
+    "/js/app.js": "/js/app.js?id=27278d4feb6bb61bbd76cb5a9c91ce0c",
+>>>>>>> Stashed changes
     "/js/script.js": "/js/script.js?id=3c76a186055f6358307e48bdd9ead790",
     "/js/webportal-script.js": "/js/webportal-script.js?id=1bcae4271c042a8b79b241f34a1653fc",
     "/js/formbuilder.js": "/js/formbuilder.js?id=61b98dc742ffedfa84ee6995cd9691c5",
     "/manifest.js": "/manifest.js?id=3ed1124c8f4dcb98acc36de67cb80349",
+<<<<<<< Updated upstream
     "/css/webportal-app.css": "/css/webportal-app.css?id=fd31d2ca83908509380616a9aef63fa9",
     "/css/app.css": "/css/app.css?id=02b72774af6701ae88101110e6ec725c",
     "/js/vendor.js": "/js/vendor.js?id=1d9dc84f31934bcf90e4083803feee6b"
+=======
+    "/css/webportal-app.css": "/css/webportal-app.css?id=2a59c8d7e1312114606cb2554d9be034",
+    "/css/app.css": "/css/app.css?id=cd0146fe6b684de0edcdb9abebd63bfe",
+    "/js/vendor.js": "/js/vendor.js?id=ed1c31dcbb447c0573f733649c0506dc"
+>>>>>>> Stashed changes
 }

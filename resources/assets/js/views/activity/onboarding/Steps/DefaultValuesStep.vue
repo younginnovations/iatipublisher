@@ -439,7 +439,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, watchEffect, ref, Ref, inject } from 'vue';
+import { defineProps, defineEmits, watchEffect, ref, inject } from 'vue';
 
 import Multiselect from '@vueform/multiselect';
 import HoverText from 'Components/HoverText.vue';
@@ -506,7 +506,7 @@ const allDefaultValue = ref({
   default_tied_status: '',
 });
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 const isSavingStarted = ref(false);
 const isSaved = ref(false);
 const hierarchyErrors = ref([]);

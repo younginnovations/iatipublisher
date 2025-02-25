@@ -109,10 +109,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, onMounted, reactive, Ref, ref } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import axios from 'axios';
 import Loader from 'Components/Loader.vue';
-import LanguageService from 'Services/language';
 
 export default defineComponent({
   components: {

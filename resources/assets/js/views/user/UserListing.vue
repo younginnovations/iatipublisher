@@ -782,7 +782,6 @@ import Pagination from 'Components/TablePagination.vue';
 import { watchIgnorable } from '@vueuse/core';
 import DateRangeWidget from 'Components/DateRangeWidget.vue';
 import { generateUsername, kebabCaseToSnakecase } from 'Composable/utils';
-import LanguageService from 'Services/language';
 
 const props = defineProps({
   organizations: { type: Object, required: true },
@@ -905,12 +904,6 @@ const clearDateFilter = () => {
 };
 
 onMounted(async () => {
-  const response = await LanguageService.getTranslatedData(
-    'common,user,userProfile'
-  );
-  // props.translatedData= response.data;
-  const translatedData = reactive(response.data);
-
   dropdownRange.value.created_at =
     props.translatedData['common.common.user_created_date'];
   dropdownRange.value.last_logged_in =

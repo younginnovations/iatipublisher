@@ -286,11 +286,9 @@ import {
 
 //composable
 import getActivityTitle from 'Composable/title';
-import LanguageService from 'Services/language';
 
 export default defineComponent({
   name: 'IndicatorDetail',
-  methods: { toKebabCase },
   components: {
     TitleElement,
     Measure,
@@ -505,5 +503,6 @@ export default defineComponent({
       isEveryValueNull,
     };
   },
+  methods: { toKebabCase },
 });
 </script>

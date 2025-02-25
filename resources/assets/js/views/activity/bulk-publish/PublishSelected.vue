@@ -121,7 +121,7 @@ defineProps({
 const store = useStore();
 const sharedMinimize = useSharedMinimize();
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 const bulkPublishStatus = reactive({});
 const isLoading = ref(false);
 const startPublish = ref(false);

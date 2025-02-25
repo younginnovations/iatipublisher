@@ -104,10 +104,10 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, inject, Ref } from 'vue';
+import { defineProps, inject } from 'vue';
 import { useStore } from 'Store/activities';
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 const store = useStore();
 const steps = [
   {

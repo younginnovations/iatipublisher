@@ -104,11 +104,9 @@ import SettingDefaultForm from './SettingDefaultForm.vue';
 import SettingPublishingForm from './SettingPublishingForm.vue';
 import Loader from '../../components/Loader.vue';
 import Toast from 'Components/ToastMessage.vue';
-import LanguageService from 'Services/language';
 import { toTitleCase } from '../../composable/utils';
 
 export default defineComponent({
-  methods: { toTitleCase },
   components: {
     SettingDefaultForm,
     SettingPublishingForm,
@@ -428,5 +426,6 @@ export default defineComponent({
       showTokenTag,
     };
   },
+  methods: { toTitleCase },
 });
 </script>

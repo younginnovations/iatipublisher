@@ -126,7 +126,7 @@ import axios from 'axios';
 import { useStore } from 'Store/activities';
 const store = useStore();
 const showXlsStatus = ref(true);
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 import { useStorage, useElementSize } from '@vueuse/core';
 import ShimmerLoading from './ShimmerLoading.vue';

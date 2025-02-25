@@ -193,7 +193,6 @@ import {
   watchEffect,
   onMounted,
   inject,
-  Ref,
 } from 'vue';
 import WizardIndex from '../wizardSteps/WizardIndex.vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
@@ -249,7 +248,7 @@ const isChecking = ref(true);
 const dataChanged = ref(false);
 const showSlideIn = ref(false);
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 provide('newSelectedActivities', newSelectedActivities);
 

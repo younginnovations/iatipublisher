@@ -124,7 +124,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, computed, inject, watch, Ref } from 'vue';
+import { defineComponent, ref, computed, inject, watch } from 'vue';
 import { useStore } from '../../store';
 import { ActionTypes } from '../../store/setting/actions';
 import HoverText from './../../components/HoverText.vue';
@@ -152,7 +152,7 @@ export default defineComponent({
   emits: ['submitPublishing'],
 
   setup(props, { emit }) {
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
     const tab = ref('publish');
     const store = useStore();
     const userRole = inject('userRole');

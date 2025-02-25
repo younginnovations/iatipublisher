@@ -239,7 +239,7 @@ class OrganizationOnboardingService
             $onboardingStep['title'] = match ($onboardingStep['step']) {
                 1 => Str::title(trans('common/common.publishing_settings')),
                 2 => Str::title(trans('common/common.default_values')),
-                3 => Str::title(trans('adminHeader/admin_header.organization_data')),
+                3 => Str::title(trans('adminHeader/admin_header.organisation_data')),
                 4 => Str::title(trans('common/common.activity')),
             };
         }

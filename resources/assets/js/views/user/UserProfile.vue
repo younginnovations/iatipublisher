@@ -414,7 +414,6 @@ import PopupModal from 'Components/PopupModal.vue';
 
 import Multiselect from '@vueform/multiselect';
 import { watchIgnorable } from '@vueuse/core';
-import LanguageService from 'Services/language';
 import { toTitleCase } from '../../composable/utils';
 
 const props = defineProps({

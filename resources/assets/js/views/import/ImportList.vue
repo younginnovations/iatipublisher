@@ -148,16 +148,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ref,
-  onMounted,
-  reactive,
-  nextTick,
-  onUnmounted,
-  inject,
-  Ref,
-  provide,
-} from 'vue';
+import { ref, onMounted, reactive, nextTick, onUnmounted, provide } from 'vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import Placeholder from './ImportPlaceholder.vue';
@@ -166,7 +157,6 @@ import axios from 'axios';
 import { defineProps } from 'vue';
 import Toast from 'Components/ToastMessage.vue';
 import { getTranslatedElement } from 'Composable/utils';
-import LanguageService from 'Services/language';
 
 let activities = reactive({});
 const selectedActivities: Array<string> = reactive([]);

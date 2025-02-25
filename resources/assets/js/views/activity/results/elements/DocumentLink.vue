@@ -173,11 +173,10 @@ import {
   getTranslatedLanguage,
   isEveryValueNull,
 } from 'Composable/utils';
-import { defineComponent, inject, Ref, toRefs } from 'vue';
+import { defineComponent, inject, toRefs } from 'vue';
 
 export default defineComponent({
   name: 'ResultDocumentLink',
-  methods: { getTranslatedElement, getTranslatedLanguage },
   components: {},
   props: {
     data: {
@@ -191,10 +190,11 @@ export default defineComponent({
   },
   setup(props) {
     let { data } = toRefs(props);
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
     const dlData = data.value;
 
     return { dlData, isEveryValueNull, translatedData };
   },
+  methods: { getTranslatedElement, getTranslatedLanguage },
 });
 </script>

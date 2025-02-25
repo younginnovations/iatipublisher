@@ -16,14 +16,14 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject, Ref, ref } from 'vue';
+import { defineProps, inject, ref } from 'vue';
 
 const props = defineProps({
   message: { type: String, required: true },
   type: { type: Boolean, required: true },
 });
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 const className = ref('');
 className.value = props.type

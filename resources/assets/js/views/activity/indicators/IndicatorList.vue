@@ -145,9 +145,6 @@ import {
   ref,
   onMounted,
   provide,
-  Ref,
-  inject,
-  computed,
   watchEffect,
 } from 'vue';
 import axios from 'axios';
@@ -163,11 +160,9 @@ import DeleteAction from 'Components/sections/DeleteAction.vue';
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
 import { getTranslatedElement, getTranslatedMissing } from 'Composable/utils';
-import LanguageService from 'Services/language';
 
 export default defineComponent({
   name: 'IndicatorList',
-  methods: { getTranslatedElement, getTranslatedMissing },
   components: {
     Btn,
     Pagination,
@@ -324,5 +319,6 @@ export default defineComponent({
       handleNavigate,
     };
   },
+  methods: { getTranslatedElement, getTranslatedMissing },
 });
 </script>

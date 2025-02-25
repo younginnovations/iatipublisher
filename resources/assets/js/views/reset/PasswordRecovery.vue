@@ -13,7 +13,6 @@
 </template>
 <script lang="ts" setup>
 import { defineProps } from 'vue';
-import LanguageService from 'Services/language';
 
 defineProps({
   translatedData: {

@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, defineComponent, ref, onMounted, inject, Ref } from 'vue';
+import { reactive, defineComponent, ref, onMounted, inject } from 'vue';
 import CreateModal from '../CreateModal.vue';
 import { useToggle } from '@vueuse/core';
 
@@ -55,7 +55,7 @@ export default defineComponent({
     CreateModal,
   },
   setup() {
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
 
     const state = reactive({
       isVisible: false,

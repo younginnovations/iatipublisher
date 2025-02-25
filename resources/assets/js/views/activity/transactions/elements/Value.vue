@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, Ref, toRefs } from 'vue';
+import { defineComponent, inject, toRefs } from 'vue';
 import dateFormat from './../../../../composable/dateFormat';
 
 export default defineComponent({
@@ -38,7 +38,7 @@ export default defineComponent({
   },
   setup(props) {
     const { data } = toRefs(props);
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
 
     interface ArrayObject {
       [index: number]: { amount: string; currency: string; date: Date };

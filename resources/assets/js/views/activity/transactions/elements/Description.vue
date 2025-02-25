@@ -26,12 +26,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, inject, Ref } from 'vue';
+import { defineComponent, toRefs, inject } from 'vue';
 import { getTranslatedLanguage } from 'Composable/utils';
 
 export default defineComponent({
   name: 'TransactionDescription',
-  methods: { getTranslatedLanguage },
   components: {},
   props: {
     data: {
@@ -57,9 +56,10 @@ export default defineComponent({
     const tdData = data.value as Narratives;
 
     const type = inject('types');
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
 
     return { tdData, type, translatedData };
   },
+  methods: { getTranslatedLanguage },
 });
 </script>

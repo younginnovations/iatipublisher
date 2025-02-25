@@ -289,8 +289,6 @@ import {
   provide,
   computed,
   ref,
-  inject,
-  Ref,
   watchEffect,
 } from 'vue';
 import axios from 'axios';
@@ -310,15 +308,13 @@ import moment from 'moment';
 import { useStore } from 'Store/activities';
 import ButtonComponent from 'Components/ButtonComponent.vue';
 import PopupModal from 'Components/PopupModal.vue';
-import { getTranslatedElement, toTitleCase } from 'Composable/utils';
-import LanguageService from 'Services/language';
+import { getTranslatedElement } from 'Composable/utils';
 
 // toggle state for modal popup
 let [deleteValue, deleteToggle] = useToggle();
 
 export default defineComponent({
   name: 'TransactionList',
-  methods: { getTranslatedElement },
   components: {
     Btn,
     Pagination,
@@ -732,5 +728,6 @@ export default defineComponent({
       return moment;
     },
   },
+  methods: { getTranslatedElement },
 });
 </script>

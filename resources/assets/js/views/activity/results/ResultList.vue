@@ -235,8 +235,6 @@ import {
   reactive,
   provide,
   computed,
-  inject,
-  Ref,
   watchEffect,
 } from 'vue';
 import axios from 'axios';
@@ -256,11 +254,9 @@ import ButtonComponent from 'Components/ButtonComponent.vue';
 import PopupModal from 'Components/PopupModal.vue';
 import { useToggle } from '@vueuse/core';
 import { getTranslatedElement, getTranslatedMissing } from 'Composable/utils';
-import LanguageService from 'Services/language';
 
 export default defineComponent({
   name: 'ResultsList',
-  methods: { getTranslatedMissing, getTranslatedElement },
   components: {
     Btn,
     Pagination,
@@ -736,6 +732,7 @@ export default defineComponent({
       confirmDelete,
     };
   },
+  methods: { getTranslatedMissing, getTranslatedElement },
 });
 </script>
 <style scoped>

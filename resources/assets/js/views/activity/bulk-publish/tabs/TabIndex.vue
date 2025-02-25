@@ -54,7 +54,7 @@ type Tab = {
   name: string;
 };
 
-import { ref, defineProps, defineEmits, inject, Ref } from 'vue';
+import { ref, defineProps, defineEmits, inject } from 'vue';
 const props = defineProps({
   tabs: {
     type: Array as () => Tab[],
@@ -68,7 +68,7 @@ const props = defineProps({
   },
 });
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 const activeTab = ref(1);
 
 const emit = defineEmits(['activeTab']);

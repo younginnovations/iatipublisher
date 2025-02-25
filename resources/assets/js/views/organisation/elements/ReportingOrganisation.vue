@@ -36,7 +36,7 @@
                   ? translatedData['common.common.true']
                   : reporting_org.secondary_reporter === '0'
                   ? translatedData['common.common.false']
-                  : getTranslatedMissing(translatedData.value)
+                  : getTranslatedMissing(translatedData)
               }}
             </td>
           </tr>
@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject, Ref } from 'vue';
+import { defineProps, inject } from 'vue';
 import {
   getTranslatedElement,
   getTranslatedLanguage,
@@ -95,5 +95,5 @@ interface TypesInterface {
 }
 
 const types = inject('orgTypes') as TypesInterface;
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 </script>

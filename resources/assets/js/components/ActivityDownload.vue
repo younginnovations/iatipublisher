@@ -169,5 +169,5 @@ const percentageWidth = computed(() => {
 const fileCount = inject('fileCount');
 const xlsDownloadStatus = inject('xlsDownloadStatus') as Ref;
 const downloadApiUrl = inject('downloadApiUrl');
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 </script>

@@ -89,7 +89,6 @@ import { getTranslatedElement } from '../../../composable/utils';
 
 export default defineComponent({
   name: 'ActivitySector',
-  methods: { getTranslatedElement },
   props: {
     data: {
       type: Object,
@@ -114,5 +113,6 @@ export default defineComponent({
 
     return { types, roundFloat };
   },
+  methods: { getTranslatedElement },
 });
 </script>

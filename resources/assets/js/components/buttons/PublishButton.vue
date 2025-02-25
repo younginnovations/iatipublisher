@@ -124,7 +124,6 @@ import {
   toRefs,
   computed,
   inject,
-  Ref,
 } from 'vue';
 import { useToggle } from '@vueuse/core';
 import axios from 'axios';
@@ -205,7 +204,7 @@ const loader = ref(false);
 
 const coreElementStatus = coreCompleted.value;
 const hasDeprecatedValueInUse = checkIfHasDeprecatedValueInUse();
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 function checkIfHasDeprecatedValueInUse(): boolean {
   function recursiveCheck(item): boolean {

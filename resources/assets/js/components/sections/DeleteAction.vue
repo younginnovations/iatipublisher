@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject, Ref } from 'vue';
+import { defineProps, inject } from 'vue';
 import { useToggle } from '@vueuse/core';
 import axios from 'axios';
 
@@ -95,7 +95,7 @@ const props = defineProps({
   itemType: { type: String, required: true },
 });
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 // toggle state for modal popup
 let [deleteValue, deleteToggle] = useToggle();

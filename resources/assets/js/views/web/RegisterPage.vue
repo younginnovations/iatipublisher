@@ -13,7 +13,11 @@
         </p>
       </div>
       <div class="section__wrapper flex justify-center">
-        <EmailVerification v-if="checkStep('3')" :email="formData['email']" />
+        <EmailVerification
+          v-if="checkStep('3')"
+          :email="formData['email']"
+          :translated-data="translatedData"
+        />
         <div v-else class="form input__field" @keyup.enter="goToNextForm">
           <aside class="mb-4 block border-b border-b-n-10 pb-4 xl:hidden">
             <span class="text-base font-bold">
@@ -253,15 +257,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  reactive,
-  ref,
-  toRefs,
-  watch,
-} from 'vue';
+import { computed, defineComponent, reactive, ref, toRefs, watch } from 'vue';
 import axios from 'axios';
 import EmailVerification from './EmailVerification.vue';
 import HoverText from './../../components/HoverText.vue';
@@ -269,7 +265,6 @@ import Multiselect from '@vueform/multiselect';
 import Loader from '../../components/Loader.vue';
 
 import { generateUsername } from 'Composable/utils';
-import LanguageService from 'Services/language';
 
 export default defineComponent({
   components: {

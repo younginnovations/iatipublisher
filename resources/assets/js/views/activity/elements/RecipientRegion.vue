@@ -96,12 +96,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject, Ref } from 'vue';
-import {
-  getTranslatedElement,
-  getTranslatedLanguage,
-  getTranslatedMissing,
-} from 'Composable/utils';
+import { defineProps, inject } from 'vue';
+import { getTranslatedLanguage, getTranslatedMissing } from 'Composable/utils';
 
 defineProps({
   data: {
@@ -117,7 +113,7 @@ interface Types {
 }
 
 const types = inject('types') as Types;
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 function roundFloat(num: string) {
   return parseFloat(num).toFixed(2);

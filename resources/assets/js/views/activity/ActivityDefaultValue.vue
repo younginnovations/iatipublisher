@@ -277,7 +277,6 @@ import axios from 'axios';
 import Loader from 'Components/Loader.vue';
 import Toast from 'Components/ToastMessage.vue';
 import { getTranslatedElement, getTranslatedLanguage } from 'Composable/utils';
-import LanguageService from 'Services/language';
 
 /**
  * Props

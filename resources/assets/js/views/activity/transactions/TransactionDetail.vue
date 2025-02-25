@@ -166,12 +166,9 @@ import {
   toKebabCase,
   toTitleCase,
 } from 'Composable/utils';
-import LanguageService from 'Services/language';
-import { BreadCrumbItem } from 'Composable/typeDef';
 
 export default defineComponent({
   name: 'TransactionDetail',
-  methods: { toKebabCase, getTranslatedElement, getTranslatedUntitled },
   components: {
     TransactionElement,
     Btn,
@@ -342,5 +339,6 @@ export default defineComponent({
       istopVisible,
     };
   },
+  methods: { toKebabCase, getTranslatedElement, getTranslatedUntitled },
 });
 </script>

@@ -82,7 +82,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, watch, inject, Ref } from 'vue';
+import { defineComponent, computed, ref, watch, inject } from 'vue';
 
 export default defineComponent({
   name: 'PaginationComponent',
@@ -103,7 +103,7 @@ export default defineComponent({
     const active_page = ref(1);
     const last_pagelist = ref();
     const mid_pagelist = ref();
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
 
     watch(
       () => props.reset,

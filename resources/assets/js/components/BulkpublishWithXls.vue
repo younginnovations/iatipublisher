@@ -151,7 +151,6 @@ import {
   inject,
   defineEmits,
   onUnmounted,
-  Ref,
 } from 'vue';
 import { useStore } from 'Store/activities';
 import axios from 'axios';
@@ -196,7 +195,7 @@ const emit = defineEmits([
 ]);
 
 let refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 onMounted(() => {
   setTimeout(() => {
@@ -245,13 +244,13 @@ const pollingForBulkpublishData = () => {
             refreshToastMsg.visibility = true;
             refreshToastMsg.refreshMessageType = false;
             refreshToastMsg.refreshMessage =
-              translatedData.value[
+              translatedData[
                 'workflow_frontend.bulk_publish.some_activities_have_failed_to_publish_refresh_to_see_changes'
               ];
           } else {
             refreshToastMsg.visibility = true;
             refreshToastMsg.refreshMessage =
-              translatedData.value[
+              translatedData[
                 'common.common.activity_has_been_published_successfully_refresh_to_see_changes'
               ];
             setTimeout(() => {
@@ -363,7 +362,7 @@ const failedActivities = (nestedObject: object) => {
       failedActivitiesData as actElements;
     refreshToastMsg.refreshMessageType = false;
     refreshToastMsg.refreshMessage =
-      translatedData.value[
+      translatedData[
         'workflow_frontend.bulk_publish.some_activities_have_failed_to_publish_refresh_to_see_changes'
       ];
   } else {

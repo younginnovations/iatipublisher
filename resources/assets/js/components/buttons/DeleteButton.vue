@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, inject, Ref } from 'vue';
+import { reactive, inject } from 'vue';
 import { useToggle } from '@vueuse/core';
 import axios from 'axios';
 
@@ -61,7 +61,7 @@ import Loader from 'Components/sections/ProgressLoader.vue';
 // Vuex Store
 import { useStore } from 'Store/activities/index';
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 const store = useStore();
 
@@ -90,7 +90,7 @@ const toastMessage = inject('toastMessage') as ToastMessageTypeface;
 
 const deleteFunction = () => {
   loader.value = true;
-  loader.text = translatedData.value['activity_index.delete_button.deleting'];
+  loader.text = translatedData['activity_index.delete_button.deleting'];
   deleteValue.value = false;
   const deleteEndPoint = `/activity/${store.state.selectedActivities}`;
 

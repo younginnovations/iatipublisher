@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject, Ref } from 'vue';
+import { defineProps, inject } from 'vue';
 
 defineProps({
   coreInCompletedActivities: {
@@ -48,5 +48,5 @@ defineProps({
   },
 });
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 </script>

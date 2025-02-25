@@ -105,7 +105,6 @@ import {
   onMounted,
   onUnmounted,
   inject,
-  Ref,
 } from 'vue';
 
 const emit = defineEmits(['close-popup']);
@@ -121,7 +120,7 @@ const props = defineProps({
   },
 });
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 const close = () => {
   emit('close-popup', 'closed');
 };

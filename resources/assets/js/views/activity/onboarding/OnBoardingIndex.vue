@@ -135,7 +135,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, watchEffect, onMounted, inject, Ref } from 'vue';
+import { ref, defineProps, watchEffect, onMounted, inject } from 'vue';
 import { useStorage } from '@vueuse/core';
 
 import StepBar from 'Components/StepBar.vue';

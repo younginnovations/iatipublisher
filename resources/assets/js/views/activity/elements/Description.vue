@@ -35,12 +35,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, Ref } from 'vue';
+import { defineComponent, inject } from 'vue';
 import { getTranslatedLanguage, getTranslatedMissing } from 'Composable/utils';
 
 export default defineComponent({
   name: 'ActivityDescription',
-  methods: { getTranslatedMissing, getTranslatedLanguage },
   components: {},
   props: {
     data: {
@@ -54,9 +53,10 @@ export default defineComponent({
       languages: [];
     }
     const types = inject('types') as Types;
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
 
     return { types, translatedData };
   },
+  methods: { getTranslatedMissing, getTranslatedLanguage },
 });
 </script>

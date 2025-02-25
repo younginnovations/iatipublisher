@@ -104,7 +104,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed, inject, Ref } from 'vue';
+import { reactive, ref, computed, inject } from 'vue';
 import { useToggle } from '@vueuse/core';
 import axios from 'axios';
 //component

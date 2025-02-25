@@ -60,7 +60,6 @@ import {
   onBeforeUnmount,
   computed,
   inject,
-  Ref,
 } from 'vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 
@@ -80,7 +79,7 @@ interface TempItem {
   show: boolean;
 }
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 let tempListItems = ref<TempItem[]>([]);
 const publisherTypeMultiselect = ref();

@@ -143,7 +143,6 @@ import ErrorMessage from 'Components/ErrorMessage.vue';
 import { useStore } from 'Store/activities';
 import { detailStore } from 'Store/activities/show';
 import { useStorage } from '@vueuse/core';
-import Language from 'Services/language';
 
 const store = useStore();
 const activityStore = detailStore();
@@ -263,7 +262,6 @@ export default defineComponent({
 
     const paginationReset = ref(false);
     const isDisabledPublish = ref(false);
-    const translatedData = ref({});
 
     // local storage for publishing
     interface paType {
@@ -468,12 +466,6 @@ export default defineComponent({
           isEmpty.value = !response.data.data.length;
         }
       });
-
-      // LanguageService.getTranslatedData('workflow_frontend,common,activity')
-      //   .then((response) => {
-      //     translatedData.value = response.data;
-      //   })
-      //   .catch((error) => console.log(error));
     });
     watch(
       () => toastData.visibility,
@@ -534,7 +526,7 @@ export default defineComponent({
       visibility: false,
       refreshMessageType: true,
       refreshMessage:
-        translatedData.value[
+        props.translatedData[
           'common.common.activity_has_been_published_successfully_refresh_to_see_changes'
         ],
     });

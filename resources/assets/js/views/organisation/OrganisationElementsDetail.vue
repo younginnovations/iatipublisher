@@ -180,7 +180,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject, provide, Ref } from 'vue';
+import { defineProps, inject, provide } from 'vue';
 import HoverText from 'Components/HoverText.vue';
 import { orgMandatoryElements } from 'Composable/coreElements';
 

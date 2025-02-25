@@ -93,11 +93,11 @@
 <script setup lang="ts">
 import RollingLoader from '../RollingLoaderComponent.vue';
 import { useStore } from 'Store/activities';
-import { inject, Ref } from 'vue';
+import { inject } from 'vue';
 import { toTitleCase } from 'Composable/utils';
 
 const store = useStore();
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 const retryPublishing = () => {
   store.dispatch('updatePublishRetry', !store.state.startPublishingRetry);

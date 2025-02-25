@@ -60,11 +60,10 @@
 
 <script lang="ts">
 import { getTranslatedElement, isEveryValueNull } from 'Composable/utils';
-import { defineComponent, toRefs, inject, Ref } from 'vue';
+import { defineComponent, toRefs, inject } from 'vue';
 
 export default defineComponent({
   name: 'TransactionAidType',
-  methods: { getTranslatedElement },
   components: {},
   props: {
     data: {
@@ -93,7 +92,7 @@ export default defineComponent({
     const atData = data.value as ArrayObject[];
 
     const type = inject('types') as TypesInterface;
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
 
     return {
       atData,
@@ -102,5 +101,6 @@ export default defineComponent({
       translatedData,
     };
   },
+  methods: { getTranslatedElement },
 });
 </script>

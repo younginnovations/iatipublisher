@@ -324,11 +324,10 @@ import {
   getTranslatedLanguage,
   isEveryValueNull,
 } from 'Composable/utils';
-import { defineComponent, inject, Ref } from 'vue';
+import { defineComponent, inject } from 'vue';
 
 export default defineComponent({
   name: 'ActivityLocation',
-  methods: { getTranslatedElement, getTranslatedLanguage },
   components: {},
   props: {
     data: {
@@ -347,9 +346,10 @@ export default defineComponent({
       languages: [];
     }
     const types = inject('types') as Types;
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
 
     return { types, isEveryValueNull, translatedData };
   },
+  methods: { getTranslatedElement, getTranslatedLanguage },
 });
 </script>

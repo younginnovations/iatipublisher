@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, defineEmits, inject, Ref } from 'vue';
+import { defineProps, defineEmits, inject } from 'vue';
 import ButtonComponent from './ButtonComponent.vue';
 
 defineProps({
@@ -57,7 +57,7 @@ defineProps({
 });
 
 const emit = defineEmits(['cancel', 'reverify']);
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 </script>
 
 <style scoped>

@@ -212,7 +212,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, computed, ref, inject, Ref } from 'vue';
+import { defineProps, computed, ref, inject } from 'vue';
 import { getTranslatedElement, getTranslatedUntitled } from 'Composable/utils';
 const showErrors = ref(false);
 const showCritical = ref(false);
@@ -254,21 +254,21 @@ const errorLength = (currentError) => {
   return count;
 };
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 const title = computed(() => {
   switch (props.status['template']) {
     case 'activity':
       return props.activity.data.title
         ? props.activity.data.title[0].narrative ??
-            getTranslatedUntitled(translatedData.value)
-        : getTranslatedUntitled(translatedData.value);
+            getTranslatedUntitled(translatedData)
+        : getTranslatedUntitled(translatedData);
 
     case 'result':
       return props.activity.data.title
         ? props.activity.data.title[0].narrative[0]['narrative'] ??
-            getTranslatedUntitled(translatedData.value)
-        : getTranslatedUntitled(translatedData.value);
+            getTranslatedUntitled(translatedData)
+        : getTranslatedUntitled(translatedData);
     case 'period':
       return (
         (props.activity.data.period_start &&
@@ -280,10 +280,10 @@ const title = computed(() => {
     case 'indicator':
       return props.activity.data.title
         ? props.activity.data.title[0].narrative[0]['narrative'] ??
-            getTranslatedUntitled(translatedData.value)
-        : getTranslatedUntitled(translatedData.value);
+            getTranslatedUntitled(translatedData)
+        : getTranslatedUntitled(translatedData);
     default:
-      return getTranslatedUntitled(translatedData.value);
+      return getTranslatedUntitled(translatedData);
   }
 });
 

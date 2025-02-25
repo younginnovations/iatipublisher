@@ -124,15 +124,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  computed,
-  defineProps,
-  inject,
-  onMounted,
-  reactive,
-  Ref,
-  ref,
-} from 'vue';
+import { computed, defineProps, inject, onMounted, reactive, ref } from 'vue';
 import { useToggle } from '@vueuse/core';
 import { orgMandatoryElements } from 'Composable/coreElements';
 
@@ -159,7 +151,7 @@ const [searchBtnValue, searchBtnToggle] = useToggle();
 const dropdown = ref();
 const dropdownBtn = ref();
 const userRole = inject('userRole');
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 /**
  * Search functionality

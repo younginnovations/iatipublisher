@@ -25,14 +25,14 @@
 
 <script setup lang="ts">
 import { useStorage } from '@vueuse/core';
-import { onMounted, watch, ref, reactive, inject, defineEmits, Ref } from 'vue';
+import { onMounted, watch, ref, reactive, inject, defineEmits } from 'vue';
 import { useStore } from 'Store/activities';
 import axios from 'axios';
 import { isJson } from 'Composable/utils';
 import ShimmerLoading from './ShimmerLoading.vue';
 
 const store = useStore();
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 let pa = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
@@ -120,13 +120,13 @@ const pollingForBulkpublishData = () => {
             refreshToastMsg.visibility = true;
             refreshToastMsg.refreshMessageType = false;
             refreshToastMsg.refreshMessage =
-              translatedData.value[
+              translatedData[
                 'workflow_frontend.bulk_publish.some_activities_have_failed_to_publish_refresh_to_see_changes'
               ];
           } else {
             refreshToastMsg.visibility = true;
             refreshToastMsg.refreshMessage =
-              translatedData.value[
+              translatedData[
                 'common.common.activity_has_been_published_successfully_refresh_to_see_changes'
               ];
             setTimeout(() => {
@@ -223,7 +223,7 @@ const failedActivities = (nestedObject: object) => {
     hasFailedActivities.data = failedActivitiesData as actElements;
     refreshToastMsg.refreshMessageType = false;
     refreshToastMsg.refreshMessage =
-      translatedData.value[
+      translatedData[
         'workflow_frontend.bulk_publish.some_activities_have_failed_to_publish_refresh_to_see_changes'
       ];
   } else {

@@ -147,7 +147,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, inject, Ref } from 'vue';
+import { defineComponent, toRefs, inject } from 'vue';
 
 // component
 import { DocumentLink } from 'Activity/indicators/elements/Index';
@@ -162,7 +162,6 @@ import {
 
 export default defineComponent({
   name: 'TargetValue',
-  methods: { getTranslatedLanguage, getTranslatedElement },
   components: { DocumentLink },
   props: {
     data: {
@@ -173,7 +172,7 @@ export default defineComponent({
   setup(props) {
     let { data } = toRefs(props);
 
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
     const dlType = inject('types');
 
     const elementSpacing = 'mb-1';
@@ -189,5 +188,6 @@ export default defineComponent({
       translatedData,
     };
   },
+  methods: { getTranslatedLanguage, getTranslatedElement },
 });
 </script>

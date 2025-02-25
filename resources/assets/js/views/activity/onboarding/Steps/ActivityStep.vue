@@ -65,7 +65,7 @@
 
 <script setup lang="ts">
 import axios from 'axios';
-import { defineEmits, inject, Ref } from 'vue';
+import { defineEmits, inject } from 'vue';
 
 const translatedData = inject('translatedData') as Record<string, string>;
 const emit = defineEmits(['proceedStep', 'previousStep']);

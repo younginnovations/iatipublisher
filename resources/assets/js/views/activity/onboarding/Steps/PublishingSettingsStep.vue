@@ -233,7 +233,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps, inject, Ref, ref, watchEffect } from 'vue';
+import { defineEmits, defineProps, inject, ref, watchEffect } from 'vue';
 import LinesLoader from 'Components/LinesLoader.vue';
 import axios from 'axios';
 import ShimmerLoading from 'Components/ShimmerLoading.vue';
@@ -277,7 +277,7 @@ const emit = defineEmits([
   'removeCompletedStep',
 ]);
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 const apiToken = ref('');
 const isVerifyingToken = ref(false);
 const isSaving = ref(false);

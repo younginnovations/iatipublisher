@@ -45,11 +45,10 @@
 
 <script lang="ts">
 import { getTranslatedElement, isEveryValueNull } from 'Composable/utils';
-import { defineComponent, inject, Ref, toRefs } from 'vue';
+import { defineComponent, inject, toRefs } from 'vue';
 
 export default defineComponent({
   name: 'ResultReference',
-  methods: { getTranslatedElement },
   components: {},
   props: {
     data: {
@@ -73,11 +72,12 @@ export default defineComponent({
       };
     }
 
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
     let { data } = toRefs(props);
     const referenceData = data.value as ReferenceArray;
 
     return { referenceData, isEveryValueNull, translatedData };
   },
+  methods: { getTranslatedElement },
 });
 </script>

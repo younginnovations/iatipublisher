@@ -233,7 +233,7 @@ const props = defineProps({
 });
 
 const newSelectedActivities = inject('newSelectedActivities') as Ref<number[]>;
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 const activeTab = ref(1);
 

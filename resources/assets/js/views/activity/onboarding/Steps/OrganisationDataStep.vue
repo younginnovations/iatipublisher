@@ -310,7 +310,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps, inject, Ref, ref } from 'vue';
+import { defineEmits, defineProps, inject, ref } from 'vue';
 
 import Multiselect from '@vueform/multiselect';
 import HoverText from 'Components/HoverText.vue';
@@ -421,25 +421,25 @@ document.addEventListener('click', (e) => {
 const transformMessages = (messages: string[]): string[] => {
   return messages.map((message) => {
     switch (message) {
-      case translatedData.value[
+      case translatedData[
         'common.common.your_email_address_has_not_been_verified'
       ]: {
         const text_p1 =
-          translatedData.value[
+          translatedData[
             'onboarding.organisation_data_step.your_email_address_has_not_been_verified'
           ];
         const text_p2 =
           '<span class="resend-verification text-bluecoral cursor-pointer hover:text-spring-50 underline transition-all duration-[400ms]">';
         const text_p3 =
-          translatedData.value['common.common.resend_verification_email'];
+          translatedData['common.common.resend_verification_email'];
         const text_p4 = '</span>';
 
         return `${text_p1} ${text_p2} ${text_p3} ${text_p4}`;
       }
-      case translatedData.value[
+      case translatedData[
         'onboarding.organisation_data_step.the_publisher_id_is_not_verified_in_iati_registry'
       ]:
-        return translatedData.value[
+        return translatedData[
           'onboarding.organisation_data_step.your_iati_registry_account_is_pending_approval'
         ];
 

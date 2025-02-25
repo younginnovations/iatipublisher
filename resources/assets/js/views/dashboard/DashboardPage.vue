@@ -78,7 +78,6 @@ import ButtonComponent from 'Components/ButtonComponent.vue';
 import axios from 'axios';
 import moment from 'moment';
 import { kebabCaseToSnakecase } from 'Composable/utils';
-import LanguageService from 'Services/language';
 interface tableDaypeteType {
   data?: object;
   codeList?: object;

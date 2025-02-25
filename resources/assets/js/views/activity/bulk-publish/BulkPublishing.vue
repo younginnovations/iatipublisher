@@ -69,7 +69,6 @@ import {
   inject,
   onUnmounted,
   defineEmits,
-  Ref,
 } from 'vue';
 import axios from 'axios';
 import { detailStore } from 'Store/activities/show';
@@ -89,7 +88,7 @@ interface RefreshToastMsgTypeface {
   refreshMessage: string;
 }
 
-let translatedData = inject('translatedData') as Ref;
+let translatedData = inject('translatedData') as Record<string, string>;
 let refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
 
 interface paInterface {
@@ -310,7 +309,7 @@ const failedActivities = (nestedObject: actElements) => {
     hasFailedActivities.data = failedActivitiesData as actElements;
     refreshToastMsg.refreshMessageType = false;
     refreshToastMsg.refreshMessage =
-      translatedData.value[
+      translatedData[
         'workflow_frontend.bulk_publish.some_activities_have_failed_to_publish_refresh_to_see_changes'
       ];
   } else {

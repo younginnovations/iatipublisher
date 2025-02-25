@@ -198,7 +198,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject, Ref, ref, watch } from 'vue';
+import { defineProps, inject, ref, watch } from 'vue';
 import moment from 'moment';
 
 // Vuex Store
@@ -215,7 +215,7 @@ const props = defineProps({
   currentPage: { type: Number, required: true, default: 1 },
 });
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 const isAllValueSelected = ref(false);
 const store = useStore();
 

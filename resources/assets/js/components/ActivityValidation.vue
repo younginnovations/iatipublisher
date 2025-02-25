@@ -160,7 +160,6 @@ import {
   defineExpose,
   watchEffect,
   inject,
-  Ref,
 } from 'vue';
 import { useStore } from 'Store/activities';
 import axios from 'axios';
@@ -183,7 +182,7 @@ const props = defineProps({
   },
 });
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 const emit = defineEmits(['stopValidation', 'proceed']);
 const isAllCriticalErrors = ref(false);
 

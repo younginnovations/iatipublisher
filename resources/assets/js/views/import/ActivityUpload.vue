@@ -136,7 +136,6 @@ import HoverText from 'Components/HoverText.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import axios from 'axios';
 import { defineProps } from 'vue';
-import LanguageService from 'Services/language';
 
 const file = ref(),
   error = ref(''),

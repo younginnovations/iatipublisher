@@ -83,7 +83,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, Ref } from 'vue';
+import { defineComponent, inject } from 'vue';
 import {
   getTranslatedElement,
   getTranslatedLanguage,
@@ -92,11 +92,6 @@ import {
 
 export default defineComponent({
   name: 'OtherIdentifier',
-  methods: {
-    getTranslatedLanguage,
-    getTranslatedElement,
-    getTranslatedMissing,
-  },
   props: {
     data: {
       type: Object,
@@ -109,9 +104,14 @@ export default defineComponent({
       languages: [];
     }
     const types = inject('types') as Types;
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
 
     return { types, translatedData };
+  },
+  methods: {
+    getTranslatedLanguage,
+    getTranslatedElement,
+    getTranslatedMissing,
   },
 });
 </script>

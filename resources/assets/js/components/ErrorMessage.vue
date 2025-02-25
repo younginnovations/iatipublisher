@@ -243,7 +243,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject, onMounted, reactive, Ref, ref } from 'vue';
+import { defineProps, inject, onMounted, reactive, ref } from 'vue';
 import { TransitionRoot } from '@headlessui/vue';
 import Loader from '../components/Loader.vue';
 import axios from 'axios';
@@ -339,7 +339,7 @@ onMounted(async () => {
     );
 });
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 </script>
 
 <style lang="scss" scoped>

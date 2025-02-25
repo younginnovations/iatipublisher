@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { computed, defineComponent, ref, toRef } from 'vue';
+import { defineComponent, ref } from 'vue';
 import SignIn from './partials/SignIn.vue';
 import JoinNow from './partials/JoinNow.vue';
 

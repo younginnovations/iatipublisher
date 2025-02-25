@@ -32,7 +32,6 @@ import { getTranslatedMissing } from 'Composable/utils';
 
 export default defineComponent({
   name: 'RelatedActivity',
-  methods: { getTranslatedMissing },
   props: {
     data: {
       type: Object,
@@ -49,5 +48,6 @@ export default defineComponent({
 
     return { types, dateFormat };
   },
+  methods: { getTranslatedMissing },
 });
 </script>

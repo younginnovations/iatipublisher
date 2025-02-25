@@ -335,7 +335,6 @@ import {
   onUnmounted,
   provide,
   Ref,
-  watchEffect,
 } from 'vue';
 import { detailStore } from 'Store/activities/show';
 import axios from 'axios';

@@ -37,12 +37,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, Ref } from 'vue';
+import { defineComponent, inject } from 'vue';
 import { getTranslatedLanguage, getTranslatedMissing } from 'Composable/utils';
 
 export default defineComponent({
   name: 'ActivityRecipientCountry',
-  methods: { getTranslatedLanguage, getTranslatedMissing },
   props: {
     data: {
       type: Object,
@@ -56,7 +55,7 @@ export default defineComponent({
     }
 
     const types = inject('types') as Types;
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
 
     function roundFloat(num: string) {
       return parseFloat(num).toFixed(2);
@@ -64,5 +63,6 @@ export default defineComponent({
 
     return { types, roundFloat, translatedData };
   },
+  methods: { getTranslatedLanguage, getTranslatedMissing },
 });
 </script>

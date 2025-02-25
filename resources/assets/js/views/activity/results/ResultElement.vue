@@ -67,7 +67,6 @@ import { toKebabCase } from 'Composable/utils';
 
 export default defineComponent({
   name: 'ActivityElement',
-  methods: { toKebabCase },
   components: {
     HoverText,
     TitleDescription,
@@ -112,5 +111,6 @@ export default defineComponent({
 
     return { elementData, resultType, resultVocabulary, language };
   },
+  methods: { toKebabCase },
 });
 </script>

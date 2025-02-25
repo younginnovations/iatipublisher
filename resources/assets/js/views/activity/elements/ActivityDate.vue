@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, Ref } from 'vue';
+import { defineComponent, inject } from 'vue';
 
 import moment from 'moment';
 import {
@@ -63,11 +63,6 @@ import {
 
 export default defineComponent({
   name: 'ActivityDate',
-  methods: {
-    getTranslatedLanguage,
-    getTranslatedElement,
-    getTranslatedMissing,
-  },
   components: {},
   props: {
     data: {
@@ -85,9 +80,14 @@ export default defineComponent({
     }
 
     const types = inject('types') as Types;
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
 
     return { types, formatDate, translatedData };
+  },
+  methods: {
+    getTranslatedLanguage,
+    getTranslatedElement,
+    getTranslatedMissing,
   },
 });
 </script>

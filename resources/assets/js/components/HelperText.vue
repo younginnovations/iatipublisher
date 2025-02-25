@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject, Ref, ref } from 'vue';
+import { defineProps, inject, ref } from 'vue';
 
 const props = defineProps({
   helperText: {
@@ -59,7 +59,7 @@ const props = defineProps({
   },
 });
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 const showAccordianItems = ref(false);
 const hasTruePath = typeof props.helperText === 'string';

@@ -179,15 +179,6 @@ export default defineComponent({
 
     provide('types', types);
 
-    /**
-     * Joins data from array with a comma
-     * @param language
-     */
-
-    interface Entry {
-      [key: string]: string;
-    }
-
     return {
       elementData,
       dateFormat,

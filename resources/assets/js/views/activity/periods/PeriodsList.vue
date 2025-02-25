@@ -104,10 +104,6 @@ import {
   ref,
   reactive,
   provide,
-  inject,
-  Ref,
-  computed,
-  watchEffect,
 } from 'vue';
 import axios from 'axios';
 // components
@@ -123,13 +119,10 @@ import getActivityTitle from 'Composable/title';
 import {
   getTranslatedElement,
   getTranslatedMissing,
-  toTitleCase,
 } from '../../../composable/utils';
-import LanguageService from 'Services/language';
 
 export default defineComponent({
   name: 'PeriodList',
-  methods: { getTranslatedMissing, getTranslatedElement },
   components: {
     Btn,
     Pagination,
@@ -154,17 +147,12 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    translatedData: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
-    const translatedData = ref({});
-    LanguageService.getTranslatedData(
-      'workflow_frontend,common,activity_detail,activity_index,elements'
-    )
-      .then((response) => {
-        translatedData.value = response.data;
-      })
-      .catch((error) => console.log(error));
-
     const { activity, parentData } = toRefs(props);
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
@@ -209,7 +197,7 @@ export default defineComponent({
      */
     const breadcrumbData = reactive([
       {
-        title: 'Your activities',
+        title: props.translatedData['common.common.your_activities'],
         link: '/activity',
       },
       {
@@ -217,7 +205,7 @@ export default defineComponent({
         link: activityLink,
       },
       {
-        title: 'Result List',
+        title: props.translatedData['common.common.result_list'],
         link: `/activity/${activityId}/result`,
       },
       {
@@ -225,7 +213,7 @@ export default defineComponent({
         link: resultLink,
       },
       {
-        title: 'Indicator List',
+        title: props.translatedData['common.common.indicator_list'],
         link: `/result/${resultId}/indicator`,
       },
       {
@@ -233,42 +221,10 @@ export default defineComponent({
         link: indicatorLink,
       },
       {
-        title: 'Period List',
+        title: props.translatedData['common.common.period_list'],
         link: '',
       },
     ]);
-
-    /**
-     * Using Translated Breadcrumb titles
-     */
-    watchEffect(() => {
-      if (translatedData.value) {
-        breadcrumbData[0].title =
-          translatedData.value['common.common.your_activities'];
-        breadcrumbData[2].title =
-          translatedData.value['common.common.result_list'];
-        breadcrumbData[4].title =
-          translatedData.value['common.common.indicator_list'];
-        breadcrumbData[6].title =
-          translatedData.value['common.common.period_list'];
-      }
-    });
-
-    /**
-     * Using Translated Breadcrumb titles
-     */
-    watchEffect(() => {
-      if (translatedData.value) {
-        breadcrumbData[0].title =
-          translatedData.value['common.common.your_activities'];
-        breadcrumbData[2].title =
-          translatedData.value['common.common.result_list'];
-        breadcrumbData[4].title =
-          translatedData.value['common.common.indicator_list'];
-        breadcrumbData[6].title =
-          translatedData.value['common.common.period_list'];
-      }
-    });
 
     onMounted(async () => {
       axios.get(`/indicator/${indicatorId}/periods/page/1`).then((res) => {
@@ -314,8 +270,8 @@ export default defineComponent({
       indicatorId,
       toastData,
       handleNavigate,
-      translatedData,
     };
   },
+  methods: { getTranslatedMissing, getTranslatedElement },
 });
 </script>

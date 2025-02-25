@@ -49,7 +49,7 @@
 
 <script setup lang="ts">
 import axios from 'axios';
-import { defineProps, ref, watch, defineEmits, inject, Ref } from 'vue';
+import { defineProps, ref, watch, defineEmits, inject } from 'vue';
 
 const props = defineProps({
   currentStep: {
@@ -68,7 +68,7 @@ const props = defineProps({
 
 const emit = defineEmits(['change-step']);
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 const checkMark = ref(false);
 
 watch(checkMark, async (newVal) => {

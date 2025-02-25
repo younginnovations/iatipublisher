@@ -8,9 +8,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject, Ref, computed } from 'vue';
+import { defineProps, inject, computed } from 'vue';
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 const props = defineProps({
   text: { type: String, default: '' },

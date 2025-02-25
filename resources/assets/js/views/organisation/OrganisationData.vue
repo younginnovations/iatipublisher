@@ -354,12 +354,10 @@ import PublishUnpublish from 'Components/sections/OrganizationPublishUnpublishBu
 import { useToggle } from '@vueuse/core';
 import { watchIgnorable } from '@vueuse/core';
 import ErrorPopupForPublish from 'Components/ErrorPopupForPublish.vue';
-import LanguageService from 'Services/language';
 import { getTranslatedUntitled } from 'Composable/utils';
 
 export default defineComponent({
   name: 'OrganisationData',
-  methods: { getTranslatedUntitled },
   components: {
     HoverText,
     RadialProgressBar,
@@ -597,6 +595,7 @@ export default defineComponent({
       organizationProps,
     };
   },
+  methods: { getTranslatedUntitled },
 });
 </script>
 

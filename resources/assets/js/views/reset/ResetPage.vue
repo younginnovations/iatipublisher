@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted } from 'vue';
+import { defineComponent, ref, reactive } from 'vue';
 import Loader from '../../components/Loader.vue';
 import axios from 'axios';
 import { toTitleCase } from 'Composable/utils';
@@ -53,7 +53,7 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  setup() {
     const formData = reactive({
       email: '',
     });

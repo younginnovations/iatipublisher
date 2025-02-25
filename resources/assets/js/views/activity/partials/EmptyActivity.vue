@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, reactive, Ref } from 'vue';
+import { defineComponent, inject, reactive } from 'vue';
 import ActivityButton from './AddActivityButton.vue';
 
 export default defineComponent({
@@ -37,7 +37,7 @@ export default defineComponent({
     ActivityButton,
   },
   setup() {
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
 
     const state = reactive({
       dismiss: true,

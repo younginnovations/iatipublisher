@@ -61,14 +61,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, inject, Ref, ref } from 'vue';
+import { defineProps, inject, ref } from 'vue';
 
 defineProps({
   data: { type: Object, required: true },
   message: { type: String, default: '' },
 });
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 const selectedActivities = inject('selectedActivities') as number[];
 
 const toggle = ref(false);
