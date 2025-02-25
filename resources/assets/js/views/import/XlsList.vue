@@ -262,7 +262,7 @@ import Loader from 'Components/sections/ProgressLoader.vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import { getTranslatedElement } from 'Composable/utils';
 
-const translatedData = inject('translatedData') as Ref;
+// const translatedData = inject('translatedData') as Ref;
 const selectAll = ref(false);
 const sortOrder = ref('ascending');
 
@@ -297,6 +297,10 @@ const props = defineProps({
     required: true,
   },
   errorCount: {
+    type: Object,
+    required: true,
+  },
+  translatedData: {
     type: Object,
     required: true,
   },

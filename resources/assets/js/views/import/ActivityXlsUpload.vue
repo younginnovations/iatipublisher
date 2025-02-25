@@ -608,6 +608,8 @@ import { useStore } from 'Store/activities';
 import { useStorage } from '@vueuse/core';
 import PublishSelected from 'Activity/bulk-publish/PublishSelected.vue';
 import { getTranslatedElement } from 'Composable/utils';
+import { defineProps } from 'vue';
+
 import { tr } from 'date-fns/locale';
 import LanguageService from 'Services/language';
 
@@ -661,15 +663,12 @@ const direction = ref('');
 const processing = ref();
 const hasOngoingImportWarning = ref(false);
 const ongoingImportType = ref('');
-
-const translatedData = ref({});
-LanguageService.getTranslatedData(
-  'workflow_frontend,common,activity_detail,activity_index,elements'
-)
-  .then((response) => {
-    translatedData.value = response.data;
-  })
-  .catch((error) => console.log(error));
+const props = defineProps({
+  translatedData: {
+    type: Object,
+    required: true,
+  },
+});
 
 const sortingDirection = () => {
   direction.value === 'asc'
@@ -697,13 +696,13 @@ watch(
 const mapActivityName = (name) => {
   switch (name) {
     case 'activity':
-      return translatedData.value['common.common.basic_activity_elements'];
+      return props.translatedData['common.common.basic_activity_elements'];
     case 'period':
       return 'Period';
     case 'indicator':
-      return translatedData.value['common.common.indicators_except_period'];
+      return props.translatedData['common.common.indicators_except_period'];
     case 'result':
-      return translatedData.value[
+      return props.translatedData[
         'workflow_frontend.import.result_except_indicator_and_period'
       ];
     default:
@@ -987,7 +986,7 @@ const checkXlsStatus = () => {
 
 const getTranslatedAnotherImportInProgress = (ongoingImportType: string) => {
   let message =
-    translatedData.value['common.common.another_import_in_progress'];
+    props.translatedData['common.common.another_import_in_progress'];
 
   const url = ongoingImportType === 'xls' ? '/import/xls/list' : '/import/list';
 

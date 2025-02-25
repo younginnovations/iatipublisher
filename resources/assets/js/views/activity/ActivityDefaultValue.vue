@@ -300,16 +300,12 @@ const props = defineProps({
     type: [String, Object],
     required: true,
   },
+  translatedData: {
+    type: Object,
+    required: true,
+  },
 });
 
-const translatedData = ref({});
-LanguageService.getTranslatedData(
-  'workflow_frontend,common,activity_detail,activity_index,elements'
-)
-  .then((response) => {
-    translatedData.value = response.data;
-  })
-  .catch((error) => console.log(error));
 /**
  * Reactive variables
  */

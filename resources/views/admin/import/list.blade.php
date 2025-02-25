@@ -1,5 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <import-list></import-list>
+    <import-list>
+        :translated-data='{{json_encode($translatedData)}}'
+    </import-list>
 @endsection

@@ -253,7 +253,7 @@ provide('orgTypes', props.types);
 const getTranslatedElementName = (string) => {
   const translationKey = `elements.name.${string}`;
 
-  return translatedData.value[translationKey];
+  return translatedData[translationKey];
 };
 
 let notDeletableElements = ['organisation_identifier', 'name', 'reporting_org'];
@@ -264,7 +264,7 @@ interface ToastDataTypeface {
   visibility: boolean;
 }
 const toastData = inject('toastData') as ToastDataTypeface;
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 const deleteElement = (element) => {
   deleteValue.value = false;

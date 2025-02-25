@@ -406,10 +406,12 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    translatedData: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
-    const translatedData = ref({});
-
     const toastData = reactive({
       visibility: false,
       message: '',
@@ -440,15 +442,6 @@ export default defineComponent({
 
     onMounted(() => {
       window.addEventListener('resize', calcWidth);
-
-      LanguageService.getTranslatedData(
-        'workflow_frontend,common,organisationDetail,elements'
-      )
-        .then((response) => {
-          translatedData.value = response.data;
-          console.log(translatedData.value);
-        })
-        .catch((error) => console.log(error));
 
       window.addEventListener('scroll', handleScroll);
 
@@ -581,7 +574,7 @@ export default defineComponent({
     provide('publishStatus', publishStatus);
     provide('errorData', errorData);
     provide('userRole', props.userRole);
-    provide('translatedData', translatedData);
+    provide('translatedData', props.translatedData);
 
     return {
       groupedData,
@@ -602,7 +595,6 @@ export default defineComponent({
       showSidebar,
       istopVisible,
       organizationProps,
-      translatedData,
     };
   },
 });

@@ -135,6 +135,7 @@ import BtnComponent from 'Components/ButtonComponent.vue';
 import HoverText from 'Components/HoverText.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import axios from 'axios';
+import { defineProps } from 'vue';
 import LanguageService from 'Services/language';
 
 const file = ref(),
@@ -144,16 +145,15 @@ const file = ref(),
   hasOngoingImportWarning = ref(false),
   ongoingImportType = ref('');
 
-const translatedData = ref({});
-LanguageService.getTranslatedData(
-  'workflow_frontend,common,activity_detail,activity_index,elements'
-)
-  .then((response) => {
-    translatedData.value = response.data;
-  })
-  .catch((error) => console.log(error));
+const props = defineProps({
+  translatedData: {
+    type: Object,
+    required: true,
+  },
+});
 
-loaderText.value = translatedData.value['common.common.please_wait'];
+loaderText.value =
+  props.translatedData['common.common.please_wait'] ?? 'Please Wait';
 async function checkOngoingImports() {
   try {
     const response = await axios.get('/import/check-ongoing-import');
@@ -180,7 +180,7 @@ function showHasOngoingImportWarning(importType: null | string) {
 async function uploadFile() {
   loader.value = true;
   loaderText.value =
-    translatedData.value['workflow_frontend.import.uploading_csv_xml_file'];
+    props.translatedData['workflow_frontend.import.uploading_csv_xml_file'];
   let activity = file.value.files.length ? file.value.files[0] : '';
   const config = {
     headers: {
@@ -237,7 +237,7 @@ function openZendeskLauncher() {
 
 const getTranslatedAnotherImportInProgress = (ongoingImportType: string) => {
   let message =
-    translatedData.value['common.common.another_import_in_progress'];
+    props.translatedData['common.common.another_import_in_progress'];
 
   const url = ongoingImportType === 'xls' ? '/import/xls/list' : '/import/list';
 

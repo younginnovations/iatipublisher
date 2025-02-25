@@ -163,6 +163,7 @@ import Loader from 'Components/sections/ProgressLoader.vue';
 import Placeholder from './ImportPlaceholder.vue';
 import ListElement from './ListElement.vue';
 import axios from 'axios';
+import { defineProps } from 'vue';
 import Toast from 'Components/ToastMessage.vue';
 import { getTranslatedElement } from 'Composable/utils';
 import LanguageService from 'Services/language';
@@ -181,13 +182,6 @@ const toastType = ref(false);
 const toastVisibility = ref(false);
 
 let timer;
-
-const translatedData = ref({});
-LanguageService.getTranslatedData('workflow_frontend,common,elements')
-  .then((response) => {
-    translatedData.value = response.data;
-  })
-  .catch((error) => console.log(error));
 
 const getDimensions = async () => {
   await nextTick();
@@ -296,6 +290,13 @@ function selectAllActivities() {
   }
 }
 
+const props = defineProps({
+  translatedData: {
+    type: Object,
+    required: true,
+  },
+});
+
 function importActivities() {
   loaderText.value = 'Importing .csv/.xml file';
   loader.value = true;
@@ -313,7 +314,7 @@ function importActivities() {
     });
 }
 
-provide('translatedData', translatedData);
+provide('translatedData', props.translatedData);
 </script>
 <style lang="scss" scoped>
 .upload-error {

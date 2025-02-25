@@ -83,7 +83,7 @@ export default defineComponent({
     },
   },
   setup() {
-    const translatedData = inject('translatedData') as Ref;
+    const translatedData = inject('translatedData') as Record<string, string>;
 
     return {
       translatedData,

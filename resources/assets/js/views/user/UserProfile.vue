@@ -420,6 +420,7 @@ import { toTitleCase } from '../../composable/utils';
 const props = defineProps({
   user: { type: Object, required: true },
   languagePreference: { type: Object, required: true },
+  translatedData: { type: Object, required: true },
 });
 
 const toastData = reactive({
@@ -580,13 +581,4 @@ const updateProfile = () => {
       isLoaderVisible.value = false;
     });
 };
-const translatedData = ref({});
-
-onMounted(() => {
-  LanguageService.getTranslatedData('workflow_frontend,common,userProfile')
-    .then((response) => {
-      translatedData.value = response.data;
-    })
-    .catch((error) => console.log(error));
-});
 </script>

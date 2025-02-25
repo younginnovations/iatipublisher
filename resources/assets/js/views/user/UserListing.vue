@@ -791,6 +791,7 @@ const props = defineProps({
   currentUserId: { type: Object, required: true },
   userRole: { type: String, required: true },
   oldestDates: { type: String, required: true },
+  translatedData: { type: Object, required: true },
 });
 
 const toastData = reactive({
@@ -837,8 +838,6 @@ const dateType = ref('All Time');
 const isSuperadmin = ref(false);
 isSuperadmin.value =
   props.userRole === 'superadmin' || props.userRole === 'iati_admin';
-
-const translatedData = ref({});
 
 const dropdownRange = ref({
   created_at: 'User created date',
@@ -909,12 +908,14 @@ onMounted(async () => {
   const response = await LanguageService.getTranslatedData(
     'common,user,userProfile'
   );
-  translatedData.value = response.data;
+  // props.translatedData= response.data;
+  const translatedData = reactive(response.data);
+
   dropdownRange.value.created_at =
-    translatedData.value['common.common.user_created_date'];
+    props.translatedData['common.common.user_created_date'];
   dropdownRange.value.last_logged_in =
-    translatedData.value['common.common.last_login_date'];
-  dateType.value = translatedData.value['common.common.all_time'];
+    props.translatedData['common.common.last_login_date'];
+  dateType.value = props.translatedData['common.common.all_time'];
 
   let filterParams = getFilterParamsFromPreviousPage();
   if (filterParams) {
@@ -1390,7 +1391,7 @@ function getTranslatedTotalNumberOfUsers(
   );
 }
 
-provide('translatedData', translatedData);
+provide('translatedData', props.translatedData);
 </script>
 <style scoped>
 @keyframes spinner {

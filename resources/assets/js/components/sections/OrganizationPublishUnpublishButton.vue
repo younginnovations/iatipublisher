@@ -115,7 +115,7 @@ import Loader from 'Components/sections/ProgressLoader.vue';
 let [publishValue, publishToggle] = useToggle();
 let [unpublishValue, unpublishToggle] = useToggle();
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 // display/hide validator loader
 const loader = ref(false);
@@ -125,7 +125,7 @@ const loader = ref(false);
 const mandatoryElementStatus = inject('mandatoryCompleted') as boolean;
 // Dynamic text for loader
 const loaderText = ref('Please Wait');
-loaderText.value = translatedData.value['common.common.please_wait'];
+loaderText.value = translatedData['common.common.please_wait'];
 
 // computed function to change content of modal
 const publishStateChange = computed(() => {
@@ -137,18 +137,17 @@ const publishStateChange = computed(() => {
   });
   // different content for step 1 based on coreElement status
   if (mandatoryElementStatus) {
-    publishState.title =
-      translatedData.value['common.common.core_elements_complete'];
+    publishState.title = translatedData['common.common.core_elements_complete'];
     publishState.description =
-      translatedData.value[
+      translatedData[
         'common.common.congratulations_all_the_core_elements_are_complete'
       ];
     publishState.icon = 'tick';
   } else {
     publishState.title =
-      translatedData.value['common.common.core_elements_not_complete'];
+      translatedData['common.common.core_elements_not_complete'];
     publishState.description =
-      translatedData.value[
+      translatedData[
         'common.common.there_is_missing_data_in_some_of_the_core_elements'
       ];
     publishState.icon = 'warning-fill';
@@ -183,7 +182,7 @@ const checkPublish = () => {
 
 const publishFunction = () => {
   loader.value = true;
-  loaderText.value = translatedData.value['common.common.publishing'];
+  loaderText.value = translatedData['common.common.publishing'];
   publishValue.value = false;
 
   axios.post(`/organisation/publish`).then((res) => {
@@ -206,7 +205,7 @@ const unPublishFunction = () => {
   unpublishValue.value = false;
 
   loader.value = true;
-  loaderText.value = translatedData.value['common.common.unpublishing'];
+  loaderText.value = translatedData['common.common.unpublishing'];
   axios.post(`/organisation/unpublish`).then((res) => {
     const response = res.data;
     toastData.message = response.message;
@@ -230,9 +229,9 @@ const publishStatus = inject('publishStatus') as PublishStatusTypeface;
 
 const btnText = computed(() => {
   if (publishStatus.is_published && publishStatus.status === 'draft') {
-    return translatedData.value['common.common.republish'];
+    return translatedData['common.common.republish'];
   } else {
-    return translatedData.value['common.common.publish'];
+    return translatedData['common.common.publish'];
   }
 });
 </script>

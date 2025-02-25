@@ -585,20 +585,11 @@ export default defineComponent({
       };
     }
 
-    const translatedData = ref({});
-    LanguageService.getTranslatedData(
-      'workflow_frontend,common,activity_detail,activity_index,elements'
-    )
-      .then((response) => {
-        translatedData.value = response.data;
-      })
-      .catch((error) => console.log(error));
-
     const refreshToastMsg = reactive({
       visibility: false,
       refreshMessageType: true,
       refreshMessage:
-        translatedData.value[
+        props.translatedData[
           'common.common.activity_has_been_published_successfully_refresh_to_see_changes'
         ],
     });
@@ -659,7 +650,7 @@ export default defineComponent({
           toastData.type = true;
           toastData.visibility = true;
           toastData.message =
-            translatedData.value[
+            props.translatedData[
               'activity_detail.activity_detail.removed_successfully'
             ];
           sessionStorage.clear();
@@ -872,7 +863,7 @@ export default defineComponent({
     provide('elements', props.elements);
     provide('activities', publishingActivities as Ref);
     provide('refreshToastMsg', refreshToastMsg);
-    provide('translatedData', translatedData);
+    provide('translatedData', props.translatedData);
 
     indexStore.dispatch('updateSelectedActivities', [activity.value.id]);
 

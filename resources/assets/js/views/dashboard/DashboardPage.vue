@@ -108,15 +108,7 @@ const dateLabel = {
 const currentView = ref('publisher');
 const completeNess = ref();
 const registrationType = ref();
-const translatedData = ref({});
 
-LanguageService.getTranslatedData(
-  'workflow_frontend,common,activity_detail,activity_index'
-)
-  .then((response) => {
-    translatedData.value = response.data;
-  })
-  .catch((error) => console.log(error));
 const handleChangeTableNav = (item, filter, page, tabChange = true) => {
   if (tabChange) {
     filter.value.orderBy = '';
@@ -136,6 +128,10 @@ onMounted(() => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps({
   oldestDates: {
+    type: Object,
+    required: true,
+  },
+  translatedData: {
     type: Object,
     required: true,
   },
@@ -282,5 +278,5 @@ provide('graphTotal', graphTotal);
 provide('showTableLoader', showTableLoader);
 provide('showGraphLoader', showGraphLoader);
 provide('currentView', currentView);
-provide('translatedData', translatedData);
+provide('translatedData', props.translatedData);
 </script>
