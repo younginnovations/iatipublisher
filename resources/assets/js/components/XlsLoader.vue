@@ -82,7 +82,7 @@
           href="/import/xls/list"
           class="text-xs font-bold uppercase text-spring-50 hover:text-spring-50"
         >
-          {{ translatedData['activity_index.xls_loader.proceed'] }}
+          {{ translatedData['common.common.continue'] }}
         </a>
         <spinnerLoader v-else />
       </div>
@@ -141,7 +141,7 @@ const mapActivityName = (name) => {
       return translatedData.value['common.common.indicators_except_period'];
     case 'result':
       return translatedData.value[
-        'common.common.result_except_indicators_and_period'
+        'workflow_frontend.import.result_except_indicator_and_period'
       ];
     default:
       return name;

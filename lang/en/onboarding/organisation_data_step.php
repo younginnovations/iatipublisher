@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'organization_data'                                                    => 'organisation data',
     'verification_required'                                                => 'Verification Required',
     'you_can_skip_this_step_for_now'                                       => 'You can skip this step for now and come back to it once your account has been approved.',
     'publish_organisation_data'                                            => 'Publish Organisation Data',

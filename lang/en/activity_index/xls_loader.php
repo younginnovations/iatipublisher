@@ -6,5 +6,4 @@ return [
   'upload_failed'        => 'Upload failed:',
   'file_upload_complete' => 'File upload complete',
   'uploading'            => 'Uploading',
-  'proceed'              => 'Continue',
 ];

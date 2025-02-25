@@ -81,7 +81,7 @@
                   <span class="font-bold text-bluecoral">
                     {{
                       translatedData[
-                        'common.common.result_except_indicators_and_period'
+                        'workflow_frontend.import.result_except_indicator_and_period'
                       ]
                     }}
                   </span>
@@ -311,7 +311,7 @@
                 >
                   {{
                     translatedData[
-                      'common.common.result_except_indicators_and_period'
+                      'workflow_frontend.import.result_except_indicator_and_period'
                     ]
                   }}.xls
                 </a>
@@ -704,7 +704,7 @@ const mapActivityName = (name) => {
       return translatedData.value['common.common.indicators_except_period'];
     case 'result':
       return translatedData.value[
-        'common.common.result_except_indicators_and_period'
+        'workflow_frontend.import.result_except_indicator_and_period'
       ];
     default:
       return name;

@@ -19,9 +19,7 @@
             <HoverText
               :name="translatedData['elements.label.title']"
               :hover-text="
-                translatedData[
-                  'activity_index.create_modal.a_short_human_readable_title'
-                ]
+                translatedData['elements/element_json_schema.title_hover_text']
               "
               position="right"
               :show-iati-reference="true"
@@ -42,7 +40,7 @@
                     :name="translatedData['elements.label.narrative']"
                     :hover-text="
                       translatedData[
-                        'activity_index.create_modal.the_free_text_name_or_description_of_the_item_being_described'
+                        'elements/element_json_schema.title_sub_elements_narrative_hover_text'
                       ]
                     "
                     :show-iati-reference="true"

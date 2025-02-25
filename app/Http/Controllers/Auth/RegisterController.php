@@ -150,7 +150,7 @@ class RegisterController extends Controller
             }
 
             if ($postData['registration_agency'] . '-' . $postData['registration_number'] !== $response->publisher_iati_id) {
-                $errors['identifier'] = [trans('register/register_controller.publisher_iati_id_doesnt_match_your_iati_registry_information')];
+                $errors['identifier'] = [trans('common/common.publisher_id_doesnt_match_your_iati_registry_information')];
             }
 
             if (!empty($errors)) {

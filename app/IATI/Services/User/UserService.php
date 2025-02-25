@@ -246,7 +246,7 @@ class UserService
         $response = json_decode($res->getBody()->getContents())->result;
 
         if (!in_array($publisher_id, $response) && $exists) {
-            $errors['publisher_id'] = [trans('user/user_service.publisher_id_doesnt_match_your_iati_registry_information')];
+            $errors['publisher_id'] = [trans('common/common.publisher_id_doesnt_match_your_iati_registry_information')];
         }
 
         if (in_array($publisher_id, $response) && !$exists) {

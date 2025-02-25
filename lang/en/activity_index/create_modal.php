@@ -2,8 +2,6 @@
 
 return [
     'add_a_title_and_identifier_for_the_activity'                                       => 'Add a title and identifier for the activity',
-    'a_short_human_readable_title'                                                      => 'A short title that contains a meaningful summary of the activity.',
-    'the_free_text_name_or_description_of_the_item_being_described'                     => 'Enter a title for this activity. For example: \"Water for Women Malawi\"',
     'a_code_specifying_the_language_of_text_in_this_element'                            => 'Titles in additional languages can be added after you have created your activity.',
     'a_globally_unique_identifier_for_the_activity'                                     => 'A unique identifier for the activity. Once an IATI activity has been published, its identifier cannot change in subsequent updates.',
     'type_activity_identifier_here'                                                     => 'Type identifier here',

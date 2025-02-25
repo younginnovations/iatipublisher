@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'publisher_id_doesnt_match_your_iati_registry_information'       => 'Publisher ID doesn\'t match your IATI Registry information',
     'publisher_id_already_exists_in_iati_registry'                   => 'Publisher ID already exists in the IATI Registry',
     'iati_organizational_identifier_already_exists_in_iati_registry' => 'IATI organisation identifier already exists in the IATI Registry',
     'user_doesnt_exist_in_iati_registry'                             => 'User doesn\'t exist in the IATI Registry',

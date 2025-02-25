@@ -395,7 +395,7 @@
             >
               {{
                 translatedData[
-                  'onboarding.default_values_step.default_values_have_been_saved_successfully'
+                  'settings.setting_controller.default_setting_stored_successfully'
                 ]
               }}
             </span>

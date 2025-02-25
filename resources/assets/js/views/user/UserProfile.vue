@@ -385,9 +385,7 @@
         class="flex space-x-2 border-b border-n-20 py-6"
       >
         <div class="text-base font-bold text-n-40">
-          {{
-            toTitleCase(translatedData['userProfile.user_profile.organization'])
-          }}
+          {{ toTitleCase(translatedData['common.common.organization']) }}
         </div>
         <div class="text-base">
           {{ userData['organization_name'] }}

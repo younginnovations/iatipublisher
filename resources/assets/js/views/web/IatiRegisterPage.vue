@@ -552,7 +552,7 @@ export default defineComponent({
             required: true,
             hover_text:
               props.translatedData[
-                'public.register.not_registered_page.register_section.identifier_hover_text'
+                'common.common.this_is_a_unique_code_for_your_organisation'
               ],
             type: 'text',
             class: 'mb-4 lg:mb-6',
