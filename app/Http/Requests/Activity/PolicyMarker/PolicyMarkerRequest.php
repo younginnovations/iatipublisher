@@ -145,9 +145,9 @@ class PolicyMarkerRequest extends ActivityBaseRequest
                 $policyMarkerForm
             )]
                 = 'The policy marker vocabulary is invalid.';
-            $messages[sprintf('%s.significance.in', $policyMarkerForm)] = trans('validation.activity_policy_marker.invalid_significance');
+            $messages[sprintf('%s.significance.in', $policyMarkerForm)] = trans('validation.this_field_is_invalid');
             $messages[sprintf('%s.policy_marker.in', $policyMarkerForm)] = trans('validation.activity_policy_marker.invalid_code');
-            $messages[sprintf('%s.vocabulary_uri.url', $policyMarkerForm)] = trans('validation.vocabulary_uri_url');
+            $messages[sprintf('%s.vocabulary_uri.url', $policyMarkerForm)] = trans('validation.url_valid');
 
             foreach (
                 $this->getMessagesForNarrative(

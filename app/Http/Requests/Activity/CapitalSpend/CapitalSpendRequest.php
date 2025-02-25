@@ -66,8 +66,8 @@ class CapitalSpendRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'numeric' => trans('validation.activity_capital_spend.numeric'),
-            'between' => trans('validation.activity_capital_spend.between'),
+            'numeric' => trans('validation.the_capital_spend_must_be_a_number_between_0_and_100'),
+            'between' => trans('validation.the_capital_spend_must_be_a_number_between_0_and_100'),
             'size'    => trans('validation.activity_capital_spend.size'),
         ];
     }

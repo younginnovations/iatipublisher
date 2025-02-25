@@ -148,21 +148,21 @@ class LocationRequest extends ActivityBaseRequest
                 '%s.ref.not_regex',
                 $locationForm
             )]
-                = 'The location reference field shouldn\'t contain the symbols /, &, | or ?.';
+                = trans('validation.reference_should_not_contain_symbol');
             $messages[sprintf('%s.location_reach.0.code.in', $locationForm)] = trans(
-                'validation.activity_location.invalid_reach_code'
+                'validation.this_field_is_invalid'
             );
             $messages[sprintf('%s.exactness.0.code.in', $locationForm)] = trans(
-                'validation.activity_location.invalid_location_exactness'
+                'validation.this_field_is_invalid'
             );
             $messages[sprintf('%s.location_class.0.code.in', $locationForm)] = trans(
-                'validation.activity_location.invalid_location_class'
+                'validation.this_field_is_invalid'
             );
             $messages[sprintf(
                 '%s.feature_designation.0.code.in',
                 $locationForm
             )]
-                = trans('validation.activity_location.invalid_feature_designation');
+                = trans('validation.this_field_is_invalid');
             $tempMessages = [
                 $this->getMessagesForLocationId($location['location_id'], $locationForm),
                 $this->getMessagesForName($location['name'], $locationForm),
@@ -189,6 +189,7 @@ class LocationRequest extends ActivityBaseRequest
      * @param $formBase
      *
      * @return array
+     * @throws \JsonException
      */
     public function getWarningForLocationId($formFields, $formBase): array
     {
@@ -226,7 +227,7 @@ class LocationRequest extends ActivityBaseRequest
         foreach ($formFields as $locationIdIndex => $locationId) {
             $locationIdForm = sprintf('%s.location_id.%s', $formBase, $locationIdIndex);
             $messages[sprintf('%s.vocabulary.in', $locationIdForm)] = trans(
-                'validation.activity_location.invalid_vocabulary'
+                'validation.vocabulary_is_invalid'
             );
         }
 
@@ -268,6 +269,7 @@ class LocationRequest extends ActivityBaseRequest
      * @param $formBase
      *
      * @return array
+     * @throws \JsonException
      */
     public function getErrorsForName($formFields, $formBase): array
     {
@@ -538,9 +540,9 @@ class LocationRequest extends ActivityBaseRequest
                 '%s.vocabulary.in',
                 $administrativeForm
             )]
-                = trans('validation.activity_location.administrative.invalid_vocabulary');
+                = trans('validation.this_field_is_invalid');
             $messages[sprintf('%s.code.in', $administrativeForm)] = trans(
-                'validation.activity_location.administrative.invalid_code'
+                'validation.this_field_is_invalid'
             );
             $messages[sprintf(
                 '%s.level.min',

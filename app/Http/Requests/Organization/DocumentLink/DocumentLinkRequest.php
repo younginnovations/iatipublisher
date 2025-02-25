@@ -188,7 +188,7 @@ class DocumentLinkRequest extends OrganizationBaseRequest
                 $formIndex,
                 $documentCategoryIndex
             )]
-                = trans('validation.organization_document_link.category_code.required');
+                = trans('validation.this_field_is_required');
         }
 
         return $messages;
@@ -245,7 +245,7 @@ class DocumentLinkRequest extends OrganizationBaseRequest
                 $formIndex,
                 $documentCategoryIndex
             )]
-                = trans('validation.organization_document_link.category_code.required');
+                = trans('validation.this_field_is_required');
         }
 
         return $messages;

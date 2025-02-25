@@ -162,7 +162,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
             )]
                 = trans('validation.activity_participating_org.invalid_role');
             $messages[sprintf('%s.type.in', $participatingOrgForm)] = trans(
-                'validation.activity_participating_org.invalid_type'
+                'validation.organisation_type_is_invalid'
             );
             $messages[sprintf(
                 '%s.ref.required_when_narrative_is_empty',

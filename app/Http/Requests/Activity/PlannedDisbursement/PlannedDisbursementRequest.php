@@ -275,12 +275,12 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
                 '%s.type.in',
                 $providerOrgForm
             )]
-                = trans('validation.activity_planned_disbursement.provider_org.invalid_type');
+                = trans('validation.organisation_type_is_invalid');
             $message[sprintf(
                 '%s.ref.not_regex',
                 $providerOrgForm
             )]
-                = trans('validation.activity_planned_disbursement.provider_org.regex');
+                = trans('validation.reference_should_not_contain_symbol');
 
             foreach (
                 $this->getMessagesForNarrative(
@@ -380,12 +380,12 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
                 '%s.type.in',
                 $receiverOrgForm
             )]
-                = trans('validation.activity_planned_disbursement.receiver_org.invalid_type');
+                = trans('validation.organisation_type_is_invalid');
             $message[sprintf(
                 '%s.ref.not_regex',
                 $receiverOrgForm
             )]
-                = trans('validation.activity_planned_disbursement.receiver_org.regex');
+                = trans('validation.reference_should_not_contain_symbol');
 
             foreach (
                 $this->getMessagesForNarrative(
@@ -415,22 +415,22 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('%s.value.%s', $formBase, $valueIndex);
             $messages[sprintf('%s.amount.required', $valueForm)] = trans(
-                'validation.activity_planned_disbursement.value.amount.required'
+                'validation.amount_required'
             );
             $messages[sprintf('%s.amount.numeric', $valueForm)] = trans(
-                'validation.activity_planned_disbursement.value.amount.numeric'
+                'validation.amount_number'
             );
             $messages[sprintf('%s.amount.min', $valueForm)] = trans(
-                'validation.activity_planned_disbursement.value.amount.min'
+                'validation.amount_negative'
             );
             $messages[sprintf('%s.currency.in', $valueForm)] = trans(
                 'validation.invalid_currency'
             );
             $messages[sprintf('%s.value_date.required', $valueForm)] = trans(
-                'validation.activity_planned_disbursement.value.date.required'
+                'validation.amount_required'
             );
             $messages[sprintf('%s.value_date.date', $valueForm)] = trans(
-                'validation.activity_planned_disbursement.value.date.invalid_date'
+                'validation.date_is_invalid'
             );
         }
 
@@ -492,16 +492,16 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
                 ['attribute' => trans(' elements/label.period_start')]
             );
             $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = trans(
-                'validation.activity_planned_disbursement.period_end.date'
+                'validation.date_is_invalid'
             );
             $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date_greater_than'] = trans(
-                'validation.activity_planned_disbursement.period_end.gt_1900'
+                'validation.date_must_be_after_1900'
             );
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = trans(
                 'validation.activity_planned_disbursement.date.period_start_end'
             );
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date'] = trans(
-                'validation.activity_planned_disbursement.period_start.date'
+                'validation.date_is_invalid'
             );
         }
 
@@ -567,16 +567,16 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required'] = trans(
-                'validation.activity_planned_disbursement.period_end.required'
+                'validation.period_end_required'
             );
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = trans(
-                'validation.activity_planned_disbursement.period_end.date'
+                'validation.date_is_invalid'
             );
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after_or_equal'] = trans(
-                'validation.activity_planned_disbursement.period_end.after_or_equal'
+                'validation.period_end_after'
             );
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date_greater_than'] = trans(
-                'validation.activity_planned_disbursement.period_end.gt_1900'
+                'validation.date_must_be_after_1900'
             );
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.period_start_end'] = trans(
                 'validation.activity_planned_disbursement.date.period_start_end'

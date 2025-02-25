@@ -187,16 +187,16 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
                 'validation.amount_required'
             );
             $messages[$valueForm . '.amount.numeric'] = trans(
-                'validation.amount_numeric'
+                'validation.amount_number'
             );
             $messages[$valueForm . '.amount.min'] = trans(
-                'validation.amount_min'
+                'validation.amount_negative'
             );
             $messages[$valueForm . '.value_date.required'] = trans(
                 'validation.value_date_required'
             );
             $messages[$valueForm . '.value_date.date'] = trans(
-                'validation.value_date_date'
+                'validation.date_is_invalid'
             );
             $messages[sprintf(
                 '%s.value_date.after_or_equal',

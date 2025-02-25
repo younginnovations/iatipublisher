@@ -119,13 +119,13 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
         foreach ($formFields as $humanitarianScopeIndex => $humanitarianScope) {
             $humanitarianScopeForm = 'humanitarian_scope.' . $humanitarianScopeIndex;
             $messages[sprintf('%s.type.in', $humanitarianScopeForm)] = trans(
-                'validation.activity_humanitarian_scope.invalid_code'
+                'validation.type_is_invalid'
             );
             $messages[sprintf(
                 '%s.vocabulary.in',
                 $humanitarianScopeForm
             )]
-                = trans('validation.activity_humanitarian_scope.invalid_vocabulary');
+                = trans('validation.vocabulary_is_invalid');
             $messages[sprintf(
                 '%s.code.string',
                 $humanitarianScopeForm
@@ -135,7 +135,7 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
                 '%s.vocabulary_uri.url',
                 $humanitarianScopeForm
             )]
-                = trans('validation.activity_humanitarian_scope.vocabulary_uri_url');
+                = trans('validation.url_valid');
 
             foreach (
                 $this->getMessagesForNarrative(

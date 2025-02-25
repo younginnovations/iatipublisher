@@ -225,19 +225,19 @@ class SectorRequest extends ActivityBaseRequest
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
             $messages[sprintf('%s.sector_vocabulary.in', $sectorForm)] = trans(
-                'validation.activity_sector.invalid_vocabulary'
+                'validation.vocabulary_is_invalid'
             );
             $messages[sprintf('%s.code.in', $sectorForm)] = trans(
-                'validation.activity_sector.invalid_code'
+                'validation.sector_code_is_invalid'
             );
             $messages[sprintf('%s.category_code.in', $sectorForm)] = trans(
-                'validation.activity_sector.invalid_code'
+                'validation.sector_code_is_invalid'
             );
             $messages[sprintf('%s.sdg_goal.in', $sectorForm)] = trans(
-                'validation.activity_sector.invalid_code'
+                'validation.sector_code_is_invalid'
             );
             $messages[sprintf('%s.sdg_target.in', $sectorForm)] = trans(
-                'validation.activity_sector.invalid_code'
+                'validation.sector_code_is_invalid'
             );
             $messages[sprintf(
                 '%s.vocabulary_uri.url',
@@ -254,7 +254,7 @@ class SectorRequest extends ActivityBaseRequest
                 '%s.percentage.sector_total_percent',
                 $sectorForm
             )]
-                = trans('validation.activity_sector.percentage.sector_total_percent');
+                = trans('validation.sum');
 
             $messageNarratives = $this->getMessagesForNarrative($sector['narrative'], $sectorForm);
 

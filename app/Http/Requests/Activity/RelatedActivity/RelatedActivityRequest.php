@@ -95,7 +95,7 @@ class RelatedActivityRequest extends ActivityBaseRequest
                 '%s.relationship_type.in',
                 $baseForm
             )]
-                = trans('validation.activity_related_activity.invalid_relationship_type');
+                = trans('validation.this_field_is_invalid');
         }
 
         return $messages;

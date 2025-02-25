@@ -121,7 +121,7 @@ class TagRequest extends ActivityBaseRequest
         foreach ($formFields as $tagIndex => $tag) {
             $tagForm = sprintf('tag.%s', $tagIndex);
             $messages[sprintf('%s.tag_vocabulary.in', $tagForm)] = trans(
-                'validation.activity_tag.invalid_vocabulary'
+                'validation.vocabulary_is_invalid'
             );
             $messages[sprintf('%s.goals_tag_code.in', $tagForm)] = trans(
                 'validation.activity_tag.invalid_sdg_code'
@@ -130,7 +130,7 @@ class TagRequest extends ActivityBaseRequest
                 'validation.activity_tag.invalid_sdg_targets_code'
             );
             $messages[sprintf('%s.vocabulary_uri.url', $tagForm)] = trans(
-                'validation.vocabulary_uri_url'
+                'validation.url_valid'
             );
 
             foreach (

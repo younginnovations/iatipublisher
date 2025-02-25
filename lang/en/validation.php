@@ -1,79 +1,79 @@
 <?php
 
 return [
-    'after'                                      => 'The :attribute must be a date after :date.',
-    'after_or_equal'                             => 'The :attribute must be a date after or equal to :date.',
-    'before'                                     => 'The :attribute must be a date before :date.',
-    'before_or_equal'                            => 'The :attribute must be a date before or equal to :date.',
-    'between'                                    => [
+    'after'                                                => 'The :attribute must be a date after :date.',
+    'after_or_equal'                                       => 'The :attribute must be a date after or equal to :date.',
+    'before'                                               => 'The :attribute must be a date before :date.',
+    'before_or_equal'                                      => 'The :attribute must be a date before or equal to :date.',
+    'between'                                              => [
         'numeric' => 'The :attribute must be between :min and :max.',
         'file'    => 'The :attribute must be between :min and :max kilobytes.',
         'string'  => 'The :attribute must be between :min and :max characters.',
         'array'   => 'The :attribute must have between :min and :max items.',
     ],
-    'confirmed'                                  => 'The :attribute confirmation does not match.',
-    'current_password'                           => 'Password is incorrect.',
-    'date'                                       => 'The :attribute is not a valid date.',
-    'date_format'                                => 'The :attribute does not match the format :format.',
-    'digits'                                     => 'The :attribute must be :digits digits.',
-    'email'                                      => 'The :attribute must be a valid email address.',
-    'exists'                                     => 'The selected :attribute is invalid.',
-    'gte'                                        => [
+    'confirmed'                                            => 'The :attribute confirmation does not match.',
+    'current_password'                                     => 'Password is incorrect.',
+    'date'                                                 => 'The :attribute is not a valid date.',
+    'date_format'                                          => 'The :attribute does not match the format :format.',
+    'digits'                                               => 'The :attribute must be :digits digits.',
+    'email'                                                => 'The :attribute must be a valid email address.',
+    'exists'                                               => 'The selected :attribute is invalid.',
+    'gte'                                                  => [
         'numeric' => 'The :attribute must be greater than or equal to :value.',
         'file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
         'string'  => 'The :attribute must be greater than or equal to :value characters.',
         'array'   => 'The :attribute must have :value items or more.',
     ],
-    'in'                                         => 'The selected :attribute is invalid.',
-    'integer'                                    => 'The :attribute must be an integer.',
-    'lte'                                        => [
+    'in'                                                   => 'The selected :attribute is invalid.',
+    'integer'                                              => 'The :attribute must be an integer.',
+    'lte'                                                  => [
         'numeric' => 'The :attribute must be less than or equal to :value.',
         'file'    => 'The :attribute must be less than or equal to :value kilobytes.',
         'string'  => 'The :attribute must be less than or equal to :value characters.',
         'array'   => 'The :attribute must not have more than :value items.',
     ],
-    'max'                                        => [
+    'max'                                                  => [
         'numeric' => 'The :attribute must not be greater than :max.',
         'file'    => 'The :attribute must not be greater than :max kilobytes.',
         'string'  => 'The :attribute must not be greater than :max characters.',
         'array'   => 'The :attribute must not have more than :max items.',
     ],
-    'min'                                        => [
+    'min'                                                  => [
         'numeric' => 'The :attribute must be at least :min.',
         'file'    => 'The :attribute must be at least :min kilobytes.',
         'string'  => 'The :attribute must be at least :min characters.',
         'array'   => 'The :attribute must have at least :min items.',
     ],
-    'not_regex'                                  => 'The :attribute format is invalid.',
-    'numeric'                                    => 'The :attribute must be a number.',
-    'password'                                   => 'Password is incorrect.',
-    'regex'                                      => 'The :attribute format is invalid.',
-    'required'                                   => 'The :attribute field is required.',
-    'required_with'                              => 'The :attribute field is required when :values is present.',
-    'required_without'                           => 'The :attribute field is required when :values is not present.',
-    'size'                                       => [
+    'not_regex'                                            => 'The :attribute format is invalid.',
+    'numeric'                                              => 'The :attribute must be a number.',
+    'password'                                             => 'Password is incorrect.',
+    'regex'                                                => 'The :attribute format is invalid.',
+    'required'                                             => 'The :attribute field is required.',
+    'required_with'                                        => 'The :attribute field is required when :values is present.',
+    'required_without'                                     => 'The :attribute field is required when :values is not present.',
+    'size'                                                 => [
         'numeric' => 'The :attribute must be :size.',
         'file'    => 'The :attribute must be :size kilobytes.',
         'string'  => 'The :attribute must be :size characters.',
         'array'   => 'The :attribute must contain :size items.',
     ],
-    'unique'                                     => 'The :attribute has already been taken.',
-    'url'                                        => 'The :attribute must be a valid URL.',
-    'sum'                                        => 'Percentages within the same vocabulary must add up to 100%',
-    'total'                                      => ':attribute should be 100 when there is only one :values.',
-    'year_value_narrative_validation'            => ':year and :value is required if :narrative is not empty.',
-    'code_list'                                  => ':attribute is not valid.',
-    'string'                                     => ':attribute should be a text string',
-    'negative'                                   => ':attribute cannot be negative',
-    'actual_date'                                => 'Actual start and end dates cannot be in the future.',
-    'multiple_activity_date'                     => 'Multiple activity dates of the same type are not allowed.',
-    'start_end_date'                             => 'Start dates must be before end dates.',
-    'multiple_values'                            => 'Multiple :attribute are not allowed.',
-    'required_only_one_among'                    => 'Either :attribute or :values is required.',
-    'recipient_country_region_percentage_sum'    => 'Percentages across Recipient Country and Recipient Region must add up to 100%.',
-    'unique_lang'                                => 'Repeated :attribute in the same language is not allowed.',
-    'not_in_spam_emails'                         => 'This email has been flagged as spam and cannot be used.',
-    'attributes'                                 => [
+    'unique'                                               => 'The :attribute has already been taken.',
+    'url'                                                  => 'The :attribute must be a valid URL.',
+    'sum'                                                  => 'Percentages within the same vocabulary must add up to 100%',
+    'total'                                                => ':attribute should be 100 when there is only one :values.',
+    'year_value_narrative_validation'                      => ':year and :value is required if :narrative is not empty.',
+    'code_list'                                            => ':attribute is not valid.',
+    'string'                                               => ':attribute should be a text string',
+    'negative'                                             => ':attribute cannot be negative',
+    'actual_date'                                          => 'Actual start and end dates cannot be in the future.',
+    'multiple_activity_date'                               => 'Multiple activity dates of the same type are not allowed.',
+    'start_end_date'                                       => 'Start dates must be before end dates.',
+    'multiple_values'                                      => 'Multiple :attribute are not allowed.',
+    'required_only_one_among'                              => 'Either :attribute or :values is required.',
+    'recipient_country_region_percentage_sum'              => 'Percentages across Recipient Country and Recipient Region must add up to 100%.',
+    'unique_lang'                                          => 'Repeated :attribute in the same language is not allowed.',
+    'not_in_spam_emails'                                   => 'This email has been flagged as spam and cannot be used.',
+    'attributes'                                           => [
         'username'              => 'username',
         'full_name'             => 'full name',
         'email'                 => 'email',
@@ -104,329 +104,191 @@ return [
         'activity_identifier'   => 'activity identifier',
         'iati_identifier_text'  => 'iati identifier text',
     ],
-    'date_greater_than'                          => 'The date must be later than :value',
-    'logged_in_verify'                           => 'You must be signed in to verify your email.',
-    'attribute_exists'                           => 'The :attribute already exists.',
-    'narrative_required_with_lang'               => 'Narrative is required when language is populated.',
-    'narrative_required_with_xml_lang'           => 'Narrative is required when language is populated.',
-    'title_unique_lang'                          => 'You cannot enter two narratives in the same language',
-    'first_title_required'                       => 'The first title is required.',
-    'xml_lang_unique'                            => 'You cannot enter two narratives in the same language',
-    'narrative_language_unique'                  => 'You cannot enter two narratives in the same language',
-    'narrative_with_language'                    => 'Narrative is required when language is populated.',
-    'xml_lang_invalid'                           => 'Language is invalid.',
-    'narrative_is_required'                      => 'Narrative is required.',
-    'period_end_date'                            => 'This must be a valid date.',
-    'period_end_gt_1900'                         => 'Date must be after 1900.',
-    'period_end_required'                        => 'Period end is a required field',
-    'period_end_after'                           => 'Period end must be after period start.',
-    'document_link_format_invalid'               => 'Document link format is invalid',
-    'url_valid'                                  => 'Please enter a valid URL.',
-    'document_link_category_unique'              => 'Document category code must be unique.',
-    'document_link_category_invalid'             => 'Category code is invalid.',
-    'document_link_language_unique'              => 'Document language must be unique.',
-    'document_link_language_invalid'             => 'Language is invalid.',
-    'iso_proper_date'                            => 'This must be a valid date.',
-    'iso_gt_1900'                                => 'Date must be after 1900.',
-    'iso_date_required'                          => 'This field is required.',
-    'iso_date_after'                             => 'Date must be after period start.',
-    'period_longer'                              => 'Period cannot be longer than one year.',
-    'description_type_invalid'                   => 'Description type is invalid.',
-    'vocabulary_uri_url'                         => 'Please enter a valid URL.',
-    'name_narrative_required'                    => 'Narrative is required.',
-    'registration_number_regex'                  => 'Registration number is invalid.',
-    'invalid_currency'                           => 'Currency is invalid.',
-    'invalid_ref'                                => 'Reference is invalid.',
-    'reporting_org_ref_must_match'               => 'Reporting organisation reference must match your organisation\'s IATI identifier.',
-    'language_required_with_narrative'           => 'Language is required when narrative is populated.',
-    'amount_required'                            => 'Amount is required.',
-    'amount_numeric'                             => 'Amount must be a number.',
-    'amount_min'                                 => 'Amount cannot be negative.',
-    'amount_with_value'                          => 'Amount is required when value is populated.',
-    'amount_number'                              => 'Amount must be a number.',
-    'amount_negative'                            => 'Amount cannot be negative.',
-    'username_regex'                             => 'The username is invalid. Usernames can only contain lowercase letters, numbers, hyphens (-) and underscores (_)',
-    'email_unique'                               => 'Email address is already in use in IATI Publisher.',
-    'other_identifier'                           => [
-        'regex'        => 'Reference should not contain the symbols /, &, | or ?.',
-        'type_invalid' => 'Type is invalid.',
-        'owner_org'    => [
-            'reference_regex' => 'Reference should not contain the symbols /, &, | or ?.',
-        ],
-    ],
-    'activity_status'                            => [
+    'date_greater_than'                                    => 'The date must be later than :value',
+    'logged_in_verify'                                     => 'You must be signed in to verify your email.',
+    'attribute_exists'                                     => 'The :attribute already exists.',
+    'first_title_required'                                 => 'The first title is required.',
+    'narrative_language_unique'                            => 'You cannot enter two narratives in the same language',
+    'narrative_is_required'                                => 'Narrative is required.',
+    'period_end_required'                                  => 'Period end is a required field',
+    'period_end_after'                                     => 'Period end must be after period start.',
+    'document_link_format_invalid'                         => 'Document link format is invalid',
+    'url_valid'                                            => 'Please enter a valid URL.',
+    'document_link_category_unique'                        => 'Document category code must be unique.',
+    'document_link_category_invalid'                       => 'Category code is invalid.',
+    'document_link_language_unique'                        => 'Document language must be unique.',
+    'iso_date_after'                                       => 'Date must be after period start.',
+    'period_longer'                                        => 'Period cannot be longer than one year.',
+    'description_type_invalid'                             => 'Description type is invalid.',
+    'registration_number_regex'                            => 'Registration number is invalid.',
+    'invalid_currency'                                     => 'Currency is invalid.',
+    'invalid_ref'                                          => 'Reference is invalid.',
+    'reporting_org_ref_must_match'                         => 'Reporting organisation reference must match your organisation\'s IATI identifier.',
+    'language_required_with_narrative'                     => 'Language is required when narrative is populated.',
+    'amount_required'                                      => 'Amount is required.',
+    'amount_with_value'                                    => 'Amount is required when value is populated.',
+    'amount_number'                                        => 'Amount must be a number.',
+    'amount_negative'                                      => 'Amount cannot be negative.',
+    'username_regex'                                       => 'The username is invalid. Usernames can only contain lowercase letters, numbers, hyphens (-) and underscores (_)',
+    'email_unique'                                         => 'Email address is already in use in IATI Publisher.',
+    'activity_status'                                      => [
         'in'   => 'Activity status does not exist.',
         'size' => 'Activity cannot have more than one status.',
     ],
-    'activity_date'                              => [
-        'invalid'              => 'Date is invalid.',
+    'activity_date'                                        => [
         'date_before'          => 'Actual start and end dates cannot be in the future.',
         'end_later_than_start' => 'End date must be later than start date.',
-        'invalid_type'         => 'Type is invalid.',
     ],
-    'activity_scope'                             => [
+    'activity_scope'                                       => [
         'in'   => 'Activity scope does not exist.',
         'size' => 'Activity scope cannot have more than one value.',
     ],
-    'activity_recipient_country'                 => [
+    'activity_recipient_country'                           => [
         'already_in_transaction' => 'Recipient Country is already populated at transaction level. You can add Recipient Country at either activity or transaction level, but not both.',
-        'invalid_code'           => 'Country code is invalid.',
         'duplicate_country_code' => 'The same country cannot appear twice.',
         'percentage'             => [
-            'numeric'                    => 'Percentage must be a number.',
-            'max'                        => 'Percentage cannot be greater than 100.',
             'sum_exceeded'               => 'Recipient Country percentages cannot total more than 100%.',
-            'min'                        => 'Percentage must be at least 0.',
             'region_percentage_complete' => 'Recipient Region percentage is already 100%. Percentages across Recipient Country and Recipient Region cannot exceed 100%.',
-            'allocated_country_percent'  => 'Percentages across Recipient Country and Recipient Region must add up to 100%.',
         ],
     ],
-    'activity_recipient_region'                  => [
+    'activity_recipient_region'                            => [
         'already_in_transaction' => 'Recipient Region is already populated at transaction level. You can add Recipient Region at either activity or transaction level, but not both.',
-        'invalid_vocabulary'     => 'Vocabulary is invalid.',
-        'invalid_code'           => 'Region code is invalid.',
-        'vocabulary_uri_url'     => 'Please enter a valid URL.',
         'percentage'             => [
-            'numeric'                                => 'Percentage must be a number.',
             'country_percentage_complete'            => 'Recipient Country percentage is already 100%. Percentages across Recipient Country and Recipient Region cannot exceed 100%.',
-            'in'                                     => 'Percentages across Recipient Country and Recipient Region must add up to 100%.',
-            'allocated_region_total_mismatch'        => 'Percentages across Recipient Country and Recipient Region must add up to 100%.',
             'sum_greater_than'                       => 'Percentages within the same vocabulary cannot total more than 100%.',
-            'percentage_within_vocabulary'           => 'Percentages across Recipient Country and Recipient Region must add up to 100%.',
-            'min'                                    => 'Percentage must be at least 0.',
-            'single_allocated_region_total_mismatch' => 'Percentages across Recipient Country and Recipient Region must add up to 100%.',
+            'single_allocated_region_total_mismatch' => 'Percentages across  Country and Recipient Region must add up to 100%.',
         ],
     ],
-    'activity_sector'                            => [
+    'activity_sector'                                      => [
         'already_in_transactions' => 'Sector has already been populated at transaction level. You can\'t also populate it at activity level.',
-        'invalid_vocabulary'      => 'Vocabulary is invalid.',
-        'invalid_code'            => 'Sector code is invalid.',
         'percentage'              => [
-            'numeric'              => 'The percentage must be 100% or left empty, which is assumed as 100%.',
-            'sector_total_percent' => 'Percentages within the same vocabulary must add up to 100%',
+            'numeric' => 'The percentage must be 100% or left empty, which is assumed as 100%.',
         ],
     ],
-    'activity_tag'                               => [
-        'invalid_vocabulary'       => 'Vocabulary is invalid.',
+    'activity_tag'                                         => [
         'invalid_sdg_code'         => 'SDG code is invalid',
         'invalid_sdg_targets_code' => 'SDG targets code is invalid.',
     ],
-    'activity_policy_marker'                     => [
-        'invalid_significance' => 'This field is invalid.',
-        'invalid_code'         => 'Policy marker code is invalid.',
-        'narrative_required'   => 'Narrative is required when vocabulary \'reporting organisation\' is selected.',
+    'activity_policy_marker'                               => [
+        'invalid_code'       => 'Policy marker code is invalid.',
+        'narrative_required' => 'Narrative is required when vocabulary \'reporting organisation\' is selected.',
     ],
-    'activity_collaboration_type'                => [
+    'activity_collaboration_type'                          => [
         'in'   => 'The collaboration type does not exist.',
         'size' => 'The collaboration type cannot have more than one value.',
     ],
-    'activity_default_flow_type'                 => [
+    'activity_default_flow_type'                           => [
         'in'   => 'Default flow type does not exist.',
         'size' => 'Default flow type cannot have more than one value.',
     ],
-    'activity_default_finance_type'              => [
+    'activity_default_finance_type'                        => [
         'in'   => 'Default finance type does not exist.',
         'size' => 'Default finance type cannot have more than one value.',
     ],
-    'activity_default_aid_type'                  => [
-        'invalid_vocabulary'                  => 'Vocabulary is invalid.',
-        'invalid'                             => 'Default aid type is invalid.',
-        'invalid_earmarking_category'         => 'Category is invalid.',
-        'invalid_earmarking_modality'         => 'This field is invalid.',
-        'invalid_cash_and_voucher_modalities' => 'This field is invalid.',
+    'activity_default_aid_type'                            => [
+        'invalid'                     => 'Default aid type is invalid.',
+        'invalid_earmarking_category' => 'Category is invalid.',
     ],
-    'activity_default_tied_status'               => [
+    'activity_default_tied_status'                         => [
         'in'   => 'The default tied status does not exist.',
         'size' => 'The default tied status cannot have more than one value.',
     ],
-    'activity_country_budget_items'              => [
-        'invalid_vocabulary' => 'Vocabulary is invalid.',
-        'invalid_code'       => 'Budget item code in invalid.',
-        'percentage'         => [
-            'numeric' => 'Percentage must be a number.',
-            'max'     => 'Percentage cannot be greater than 100.',
-            'sum'     => 'Percentages must add up to 100%.',
-            'total'   => 'Percentage should be 100% when there is only one budget item.',
+    'activity_country_budget_items'                        => [
+        'invalid_code' => 'Budget item code in invalid.',
+        'percentage'   => [
+            'sum'   => 'Percentages must add up to 100%.',
+            'total' => 'Percentage should be 100% when there is only one budget item.',
         ],
     ],
-    'activity_humanitarian_scope'                => [
-        'invalid_code'       => 'Type is invalid.',
-        'invalid_vocabulary' => 'Vocabulary is invalid.',
-        'code_string'        => 'The humanitarian scope code must be a string.',
-        'vocabulary_uri_url' => 'Please enter a valid URL.',
+    'activity_humanitarian_scope'                          => [
+        'code_string' => 'The humanitarian scope code must be a string.',
     ],
-    'activity_capital_spend'                     => [
-        'numeric' => 'The capital spend must be a number between 0 and 100',
-        'between' => 'The capital spend must be a number between 0 and 100',
-        'size'    => 'The capital spend cannot have more than one value.',
+    'activity_capital_spend'                               => [
+        'size' => 'The capital spend cannot have more than one value.',
     ],
-    'activity_related_activity'                  => [
-        'invalid_relationship_type' => 'This field is invalid.',
-    ],
-    'activity_conditions'                        => [
+    'activity_conditions'                                  => [
         'invalid_type' => 'Condition type is invalid.',
     ],
-    'activity_contact_info'                      => [
+    'activity_contact_info'                                => [
         'telephone' => [
             'numeric' => 'Telephone number can only contain numbers and the symbols + ( ) -',
             'regex'   => 'Telephone number format is invalid.',
             'min'     => 'Telephone number must have at least 7 digits.',
             'max'     => 'Telephone number must not have more than 20 digits.',
         ],
-        'email'     => [
-            'valid'          => 'Email address format is invalid.',
-            'invalid_format' => 'Email address format is invalid.',
-        ],
-        'website'   => [
-            'invalid_url' => 'Please enter a valid URL.',
-        ],
     ],
-    'activity_location'                          => [
-        'invalid_reach_code'          => 'This field is invalid.',
-        'invalid_location_exactness'  => 'This field is invalid.',
-        'invalid_location_class'      => 'This field is invalid.',
-        'invalid_feature_designation' => 'This field is invalid.',
-        'invalid_vocabulary'          => 'Vocabulary is invalid.',
-        'administrative'              => [
-            'invalid_vocabulary' => 'This field is invalid.',
-            'invalid_code'       => 'This field is invalid.',
-            'level_min'          => 'Administrative level cannot have a negative value.',
-            'level_int'          => 'Administrative level must be an integer.',
+    'activity_location'                                    => [
+        'administrative' => [
+            'level_min' => 'Administrative level cannot have a negative value.',
+            'level_int' => 'Administrative level must be an integer.',
         ],
-        'point'                       => [
+        'point'          => [
             'latitude_numeric'  => 'Latitude must be numeric.',
             'longitude_numeric' => 'Longitude must be numeric.',
         ],
     ],
-    'activity_planned_disbursement'              => [
+    'activity_planned_disbursement'                        => [
         'invalid_type' => 'Disbursement type is invalid.',
-        'provider_org' => [
-            'invalid_type' => 'Organisation type is invalid.',
-            'regex'        => 'Reference should not contain the symbols /, &, | or ?.',
-        ],
-        'receiver_org' => [
-            'invalid_type' => 'Organisation type is invalid.',
-            'regex'        => 'Reference should not contain the symbols /, &, | or ?.',
-        ],
         'value'        => [
-            'amount' => [
-                'required' => 'Amount is required',
-                'numeric'  => 'Amount must be a number.',
-                'min'      => 'Amount cannot be negative.',
-            ],
             'date'   => [
-                'required'     => 'Value date is a required field',
-                'invalid_date' => 'Date is invalid.',
+                'required' => 'Value date is a required field',
             ],
-        ],
-        'period_end'   => [
-            'date'           => 'Date is invalid.',
-            'gt_1900'        => 'Date must be after 1900.',
-            'required'       => 'Period end is a required field',
-            'after_or_equal' => 'Period end must be after period start',
-        ],
-        'period_start' => [
-            'date' => 'Date is invalid.',
         ],
         'date'         => [
             'period_start_end' => 'The disbursement period cannot be longer than three months',
         ],
     ],
-    'activity_participating_org'                 => [
+    'activity_participating_org'                           => [
         'invalid_identifier'       => 'The identifier must not contain symbols or blank space',
         'invalid_role'             => 'Organisation role is invalid.',
-        'invalid_type'             => 'Organisation type is invalid.',
         'reference_required'       => 'Organisation reference is required if organisation name is not populated.',
         'invalid_crs_channel_code' => 'CRS Channel Code is invalid.',
         'name_required'            => 'Organisation name is required if organisation reference is not populated.',
     ],
-    'activity_budget'                            => [
-        'budget'     => [
+    'activity_budget'                                      => [
+        'budget' => [
             'budgets_identical' => 'The periods of multiple budgets with the same type should not be the same',
             'invalid_type'      => 'Budget type is invalid.',
             'invalid_status'    => 'Budget status is invalid.',
         ],
-        'period_end' => [
-            'before' => 'Period end cannot be more than one year after period start.',
-        ],
-        'date'       => [
-            'date'             => 'Date is invalid.',
+        'date'   => [
             'period_start_end' => 'Budget period cannot be longer than one year',
-            'gt_1900'          => 'Date must be after 1900.',
-            'after'            => 'Period end must be after period start',
-        ],
-        'value'      => [
-            'date' => 'Date is invalid.',
         ],
     ],
-    'activity_transactions'                      => [
+    'activity_transactions'                                => [
         'transaction_id'             => [
             'same_activity' => 'All transactions must belong to the same activity.',
             'mismatch'      => 'Transaction IDs do not match the specified activity.',
             'unpublish'     => 'Please unpublish activity before deleting transactions.',
         ],
-        'invalid_type'               => 'Type is invalid.',
-        'invalid_flow_type'          => 'This field is invalid.',
-        'invalid_finance_type'       => 'This field is invalid.',
         'country_or_region'          => 'You must add either Recipient Country or Recipient Region.',
         'country_region_in_activity' => 'Recipient Country or Region is already populated at activity level. You can add this information at either activity or transaction level, but not both.',
         'sector_in_activity'         => 'Sector is already populated at activity level. You can add this information at either activity or transaction level, but not both.',
         'aid_type'                   => [
-            'invalid_vocabulary'  => 'Vocabulary is invalid.',
-            'invalid_code'        => 'This field is invalid.',
             'invalid_status_code' => 'Status code is invalid.',
         ],
-        'date'                       => [
-            'before' => 'Date cannot be in the future.',
-            'date'   => 'Date is invalid.',
-        ],
-        'value'                      => [
-            'numeric_amount' => 'Amount must be a number.',
-            'date'           => [
-                'before' => 'Date cannot be in the future.',
-                'date'   => 'Date is invalid.',
-            ],
-        ],
         'sector'                     => [
-            'required'           => 'You must populate Sector for all transactions.',
-            'invalid_code'       => 'Sector code is invalid.',
-            'vocabulary_uri_url' => 'Please enter a valid URL.',
-        ],
-        'provider_org'               => [
-            'invalid' => 'Organisation type is invalid.',
+            'required' => 'You must populate Sector for all transactions.',
         ],
         'receiver_org'               => [
             'exclude_operators' => 'The transaction receiver-activity-id field is not valid.',
-            'invalid_type'      => 'Organisation type is invalid.',
-        ],
-        'recipient_region'           => [
-            'invalid_vocabulary'        => 'Vocabulary is invalid.',
-            'invalid_region_code'       => 'Region code is invalid.',
-            'vocabulary_uri_url'        => 'Please enter a valid URL.',
-            'region_vocabulary_uri_url' => 'Please enter a valid URL.',
-        ],
-        'recipient_country'          => [
-            'invalid_code' => 'Country code is invalid.',
         ],
     ],
-    'activity_results'                           => [
+    'activity_results'                                     => [
         'result_id' => [
             'same_activity' => 'All results must belong to the same activity.',
             'no_match'      => 'Results identifiers do not match the specified activity.',
             'unpublish'     => 'Please unpublish the activity before deleting results.',
         ],
         'reference' => [
-            'vocabulary_uri_url' => 'Please enter a valid URL.',
             'code_present'       => 'The code is already defined in its indicators',
             'vocabulary_present' => 'The vocabulary is already defined in its indicators',
         ],
     ],
-    'activity_indicators'                        => [
+    'activity_indicators'                                  => [
         'invalid_measure'            => 'Indicator measure is invalid.',
         'invalid_aggregation_status' => 'Indicator aggregation status is invalid.',
-        'invalid_ascending'          => 'This field is invalid.',
         'reference'                  => [
-            'uri_url'                       => 'Please enter a valid URL.',
             'result_ref_code_present'       => 'The code is already defined in its result',
             'result_ref_vocabulary_present' => 'The vocabulary is already defined in its result',
         ],
@@ -442,12 +304,9 @@ return [
             ],
         ],
     ],
-    'activity_periods'                           => [
+    'activity_periods'                                     => [
         'date'  => [
-            'date'             => 'Date is invalid.',
-            'after'            => 'Period end date must be after start date',
-            'gte_1900'         => 'Date must be after 1900.',
-            'period_start_end' => 'Period end cannot be more than one year after period start.',
+            'after' => 'Period end date must be after start date',
         ],
         'value' => [
             'numeric'           => 'Value must be numeric.',
@@ -456,32 +315,64 @@ return [
             'actual_required'   => 'Actual value is required if target value is not provided.',
         ],
     ],
-    'activity_upload'                            => [
+    'activity_upload'                                      => [
         'required'          => 'Activity file must be uploaded',
         'activity_file'     => 'File must be in XML or CSV format.',
         'max'               => 'File size cannot be larger than 10MB.',
         'xls_required'      => 'XLS file must be uploaded',
         'xls_activity_file' => 'File must be in XLS format.',
     ],
-    'organization_document_link'                 => [
+    'organization_document_link'                           => [
         'category_code' => [
-            'unique'   => 'The category code field must be unique.',
-            'required' => 'This field is required.',
+            'unique' => 'The category code field must be unique.',
         ],
         'language'      => [
             'unique' => 'The language field must be unique.',
         ],
     ],
-    'value_date_required'                        => 'Value date is required',
-    'value_date_date'                            => 'Date is invalid.',
-    'value_date_after_or_equal'                  => 'Value date must be between period start and end',
-    'value_date_with_value'                      => 'Value date is required when value is populated.',
-    'value_date_after_equal'                     => 'Value date must be between period start and end',
-    'activity_not_exist'                         => 'Activity does not exist',
-    'result_not_exist'                           => 'Result does not exist',
-    'transaction_not_exist'                      => 'Transaction does not exist',
-    'indicator_not_exist'                        => 'Indicator does not exist',
-    'period_not_exist'                           => 'Period does not exist',
-    'these_credentials_do_not_match_our_records' => 'These credentials do not match our records.',
-    'your_account_is_inactive'                   => 'Your account is inactive. Please contact your organisation admin user or IATI Support.',
+    'value_date_required'                                  => 'Value date is required',
+    'value_date_after_or_equal'                            => 'Value date must be between period start and end',
+    'value_date_with_value'                                => 'Value date is required when value is populated.',
+    'activity_not_exist'                                   => 'Activity does not exist',
+    'result_not_exist'                                     => 'Result does not exist',
+    'transaction_not_exist'                                => 'Transaction does not exist',
+    'indicator_not_exist'                                  => 'Indicator does not exist',
+    'period_not_exist'                                     => 'Period does not exist',
+    'your_account_is_inactive'                             => 'Your account is inactive. Please contact your organisation admin user or IATI Support.',
+    'country_code'                                         => 'Country code is invalid.',
+    'future_date'                                          => 'Date cannot be in the future.',
+    'date_is_invalid'                                      => 'Date is invalid.',
+    'date_must_be_after_1900'                              => 'Date must be after 1900.',
+    'email_address_format_is_invalid'                      => 'Email address format is invalid.',
+    'language_is_invalid'                                  => 'Language is invalid.',
+    'narrative_is_required_when_language_is_populated'     => 'Narrative is required when language is populated.',
+    'organisation_type_is_invalid'                         => 'Organisation type is invalid.',
+    'percentage_cannot_be_greater_than_100'                => 'Percentage cannot be greater than 100.',
+    'percentage_must_be_a_number'                          => 'Percentage must be a number.',
+    'percentage_must_be_at_least_0'                        => 'Percentage must be at least 0.',
+    'vocabulary_is_invalid'                                => 'Vocabulary is invalid.',
+    'type_is_invalid'                                      => 'Type is invalid.',
+    'this_field_is_invalid'                                => 'This field is invalid.',
+    'this_field_is_required'                               => 'This field is required.',
+    'period_end_cannot_be_more_than_one_year'              => 'Period end cannot be more than one year after period start.',
+    'reference_should_not_contain_symbol'                  => 'Reference should not contain the symbols /, &, | or ?.',
+    'region_code_is_invalid'                               => 'Region code is invalid.',
+    'sector_code_is_invalid'                               => 'Sector code is invalid.',
+    'the_capital_spend_must_be_a_number_between_0_and_100' => 'The capital spend must be a number between 0 and 100',
+    'this_must_be_a_valid_date'                            => 'This must be a valid date.',
+
+    'the_reporting_organisation_should_not_have_multiple_values_or_narratives'             => 'The reporting organisation should not have multiple values or narratives.',
+    'the_reference_of_reporting_org_must_match_reference_of_reporting_org_in_organisation' => 'The reference of reporting-org must match reference of reporting-org in organisation',
+    'the_reference_format_for_reporting_organisation_is_invalid'                           => 'The reference format for reporting organisation is invalid.',
+    'the_type_of_reporting_org_must_match_type_of_reporting_org_in_organisation'           => 'The type of reporting-org must match type of reporting-org in organisation',
+    'the_type_for_reporting_organisation_is_invalid'                                       => 'The type for reporting organisation is invalid.',
+    'narrative_must_match_narrative_in_organisations_reporting_org'                        => 'Narrative must match Narrative in organisations reporting-org',
+    'language_must_match_language_in_organisations_reporting_org'                          => 'Language must match Language in organisations reporting-org',
 ];
+
+
+
+
+
+
+

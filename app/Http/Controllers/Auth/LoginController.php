@@ -210,7 +210,7 @@ class LoginController extends Controller
 
         if (!Auth::attempt($credentials)) {
             throw ValidationException::withMessages([
-                'emailOrUsername' => [trans('auth.inactive_user')],
+                'emailOrUsername' => [trans('validation.your_account_is_inactive')],
             ]);
         }
 

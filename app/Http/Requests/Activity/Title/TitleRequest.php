@@ -121,15 +121,15 @@ class TitleRequest extends ActivityBaseRequest
             $titles = request()->get('narrative');
         }
 
-        $messages[sprintf('%s.unique_lang', $name)] = trans('validation.title_unique_lang');
-        $messages[sprintf('%s.unique_default_lang', $name)] = trans('validation.title_unique_lang');
+        $messages[sprintf('%s.unique_lang', $name)] = trans('validation.narrative_language_unique');
+        $messages[sprintf('%s.unique_default_lang', $name)] = trans('validation.narrative_language_unique');
         $messages[sprintf('%s.0.narrative.required', $name)] = trans('validation.first_title_required');
 
         if (is_array($titles) && count($titles)) {
             foreach ($titles as $key => $title) {
                 if ($key !== 0) {
                     $messages[sprintf('%s.%s.narrative.required_with_language', $name, $key)] = trans(
-                        'validation.narrative_required_with_lang'
+                        'validation.narrative_is_required_when_language_is_populated'
                     );
                 }
             }

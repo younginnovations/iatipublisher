@@ -226,7 +226,7 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
     {
         $messages = $this->getBudgetItemMessages(Arr::get($formFields, 'budget_item', []));
         $messages['country_budget_vocabulary.in'] = trans(
-            'validation.activity_country_budget_items.invalid_vocabulary'
+            'validation.vocabulary_is_invalid'
         );
 
         return $messages;
@@ -253,13 +253,13 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
                 $budgetItemForm,
                 'numeric'
             )]
-                = trans('validation.activity_country_budget_items.percentage.numeric');
+                = trans('validation.percentage_must_be_a_number');
             $messages[sprintf(
                 '%s.percentage.%s',
                 $budgetItemForm,
                 'max'
             )]
-                = trans('validation.activity_country_budget_items.percentage.max');
+                = trans('validation.percentage_cannot_be_greater_than_100');
             $messages[sprintf(
                 '%s.percentage.sum',
                 $budgetItemForm

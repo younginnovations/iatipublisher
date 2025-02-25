@@ -121,12 +121,12 @@ class OtherIdentifierRequest extends ActivityBaseRequest
                 '%s.reference.not_regex',
                 $otherIdentifierForm
             )]
-                = trans('validation.other_identifier.regex');
+                = trans('validation.reference_should_not_contain_symbol');
             $messages[sprintf(
                 '%s.reference_type.in',
                 $otherIdentifierForm
             )]
-                = trans('validation.other_identifier.type_invalid');
+                = trans('validation.type_is_invalid');
 
             foreach (
                 $this->getMessagesForOwnerOrg(
@@ -212,7 +212,7 @@ class OtherIdentifierRequest extends ActivityBaseRequest
                 $formBase,
                 $ownerOrgIndex
             )]
-                = trans('validation.other_identifier.owner_org.reference_regex');
+                = trans('validation.reference_should_not_contain_symbol');
 
             foreach (
                 $this->getMessagesForNarrative(

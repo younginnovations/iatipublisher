@@ -313,7 +313,7 @@ class ResultRequest extends ActivityBaseRequest
                 '%s.vocabulary_uri.url',
                 $referenceForm
             )]
-                = trans('validation.activity_results.reference.vocabulary_uri_url');
+                = trans('validation.url_valid');
 
             if (!empty($reference['code']) && $hasResultId) {
                 $messages[sprintf(

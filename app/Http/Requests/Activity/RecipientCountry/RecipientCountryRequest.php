@@ -204,7 +204,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
             $messages[sprintf('%s.country_code.in', $recipientCountryForm)] = trans(
-                'validation.activity_recipient_country.invalid_code'
+                'validation.country_code'
             );
             $messages[sprintf(
                 '%s.country_code.duplicate_country_code',
@@ -212,16 +212,16 @@ class RecipientCountryRequest extends ActivityBaseRequest
             )]
                 = trans('validation.activity_recipient_country.duplicate_country_code');
             $messages[$recipientCountryForm . '.percentage.numeric'] = trans(
-                'validation.activity_recipient_country.percentage.numeric'
+                'validation.percentage_must_be_a_number'
             );
             $messages[$recipientCountryForm . '.percentage.max'] = trans(
-                'validation.activity_recipient_country.percentage.max'
+                'validation.percentage_cannot_be_greater_than_100'
             );
             $messages[$recipientCountryForm . '.percentage.sum_exceeded'] = trans(
                 'validation.activity_recipient_country.percentage.sum_exceeded'
             );
             $messages[$recipientCountryForm . '.percentage.min'] = trans(
-                'validation.activity_recipient_country.percentage.min'
+                'validation.percentage_must_be_at_least_0'
             );
             $messages[$recipientCountryForm . '.percentage.region_percentage_complete'] = trans(
                 'validation.activity_recipient_country.percentage.region_percentage_complete'
@@ -232,10 +232,10 @@ class RecipientCountryRequest extends ActivityBaseRequest
                 $messages[$key] = $item;
             }
             $messages[$recipientCountryForm . '.percentage.in'] = trans(
-                'validation.activity_recipient_country.percentage.allocated_country_percent'
+                'validation.recipient_country_region_percentage_sum'
             );
             $messages[$recipientCountryForm . '.percentage.allocated_country_percent'] = trans(
-                'validation.activity_recipient_country.percentage.allocated_country_percent'
+                'validation.recipient_country_region_percentage_sum'
             );
         }
 

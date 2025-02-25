@@ -315,7 +315,7 @@ class ActivityBaseRequest extends FormRequest
     public function getMessagesForRequiredNarrative($formFields, $formBase): array
     {
         $messages = [];
-        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = trans('validation.xml_lang_unique');
+        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = trans('validation.narrative_language_unique');
 
         return $messages;
     }
@@ -401,13 +401,13 @@ class ActivityBaseRequest extends FormRequest
                 $formBase,
                 $narrativeIndex
             )]
-                = trans('validation.narrative_required_with_xml_lang');
+                = trans('validation.narrative_is_required_when_language_is_populated');
             $messages[sprintf(
                 '%s.narrative.%s.language.in',
                 $formBase,
                 $narrativeIndex
             )]
-                = trans('validation.xml_lang_invalid');
+                = trans('validation.language_is_invalid');
             $messages[sprintf(
                 '%s.narrative.%s.narrative.required',
                 $formBase,
@@ -451,9 +451,9 @@ class ActivityBaseRequest extends FormRequest
         $messages = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = trans('validation.period_end_date');
+            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = trans('validation.this_must_be_a_valid_date');
             $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date_greater_than'] = trans(
-                'validation.period_end_gt_1900'
+                'validation.date_must_be_after_1900'
             );
         }
 
@@ -500,13 +500,13 @@ class ActivityBaseRequest extends FormRequest
                 'validation.period_end_required'
             );
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = trans(
-                'validation.period_end_gt_1900'
+                'validation.date_must_be_after_1900'
             );
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = trans(
                 'validation.period_end_after'
             );
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date_greater_than'] = trans(
-                'validation.period_end_gt_1900'
+                'validation.date_must_be_after_1900'
             );
         }
 
@@ -761,7 +761,7 @@ class ActivityBaseRequest extends FormRequest
                 '%s.language.0.code.in',
                 $documentLinkForm
             )]
-                = trans('validation.document_link_language_invalid');
+                = trans('validation.language_is_invalid');
             $narrativeTitleMessages = $this->getMessagesForNarrative(
                 $documentLink['title'][0]['narrative'],
                 sprintf('%s.title.0', $documentLinkForm)
@@ -798,9 +798,9 @@ class ActivityBaseRequest extends FormRequest
 
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
             $messages[sprintf('%s.document_date.%s.date.date', $formIndex, $documentCategoryIndex)]
-                = trans('validation.iso_proper_date');
+                = trans('validation.this_must_be_a_valid_date');
             $messages[sprintf('%s.document_date.%s.date.date_greater_than', $formIndex, $documentCategoryIndex)]
-                = trans('validation.iso_gt_1900');
+                = trans('validation.date_must_be_after_1900');
         }
 
         return $messages;

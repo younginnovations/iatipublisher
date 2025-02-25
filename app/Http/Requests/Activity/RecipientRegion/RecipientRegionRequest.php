@@ -232,18 +232,18 @@ class RecipientRegionRequest extends ActivityBaseRequest
                 '%s.region_vocabulary.in',
                 $recipientRegionForm
             )]
-                = trans('validation.activity_recipient_region.invalid_vocabulary');
+                = trans('validation.vocabulary_is_invalid');
             $messages[sprintf('%s.region_code.in', $recipientRegionForm)] = trans(
-                'validation.activity_recipient_region.invalid_code'
+                'validation.region_code_is_invalid'
             );
             $messages[$recipientRegionForm . '.percentage.numeric'] = trans(
-                'validation.activity_recipient_region.percentage.numeric'
+                'validation.percentage_must_be_a_number'
             );
             $messages[sprintf(
                 '%s.vocabulary_uri.url',
                 $recipientRegionForm
             )]
-                = trans('validation.activity_recipient_region.vocabulary_uri_url');
+                = trans('validation.url_valid');
             $messages[sprintf(
                 '%s.percentage.country_percentage_complete',
                 $recipientRegionForm
@@ -256,22 +256,22 @@ class RecipientRegionRequest extends ActivityBaseRequest
             }
 
             $messages[$recipientRegionForm . '.percentage.in'] = trans(
-                'validation.activity_recipient_region.percentage.in'
+                'validation.recipient_country_region_percentage_sum'
             );
             $messages[$recipientRegionForm . '.percentage.allocated_region_total_mismatch'] = trans(
-                'validation.activity_recipient_region.percentage.allocated_region_total_mismatch'
+                'validation.recipient_country_region_percentage_sum'
             );
             $messages[$recipientRegionForm . '.percentage.sum_greater_than'] = trans(
                 'validation.activity_recipient_region.percentage.sum_greater_than'
             );
             $messages[$recipientRegionForm . '.percentage.percentage_within_vocabulary'] = trans(
-                'validation.activity_recipient_region.percentage.percentage_within_vocabulary'
+                'validation.recipient_country_region_percentage_sum'
             );
             $messages[$recipientRegionForm . '.percentage.min'] = trans(
-                'validation.activity_recipient_region.percentage.min'
+                'validation.percentage_must_be_at_least_0'
             );
             $messages[$recipientRegionForm . '.percentage.single_allocated_region_total_mismatch'] = trans(
-                'validation.activity_recipient_region.percentage.single_allocated_region_total_mismatch'
+                'validation.recipient_country_region_percentage_sum'
             );
         }
 

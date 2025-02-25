@@ -166,7 +166,7 @@ class OrganizationBaseRequest extends FormRequest
         $validator->addReplacer(
             'unique_default_lang',
             function ($message) use ($validator, $defaultLanguage) {
-                return trans('validation.xml_lang_unique');
+                return trans('validation.narrative_language_unique');
             }
         );
 
@@ -236,7 +236,7 @@ class OrganizationBaseRequest extends FormRequest
     public function getMessagesForNarrative($formFields, $formBase): array
     {
         $messages = [];
-        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = trans('validation.xml_lang_unique');
+        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = trans('validation.narrative_language_unique');
         $messages[sprintf(
             '%s.narrative.unique_default_lang',
             $formBase
@@ -307,10 +307,10 @@ class OrganizationBaseRequest extends FormRequest
         foreach ($formFields as $valueKey => $valueVal) {
             $valueForm = $formBase . '.value.' . $valueKey;
             $messages[$valueForm . '.amount.required'] = trans('validation.amount_required');
-            $messages[$valueForm . '.amount.numeric'] = trans('validation.amount_numeric');
-            $messages[$valueForm . '.amount.min'] = trans('validation.amount_min');
+            $messages[$valueForm . '.amount.numeric'] = trans('validation.amount_number');
+            $messages[$valueForm . '.amount.min'] = trans('validation.amount_negative');
             $messages[$valueForm . '.value_date.required'] = trans('validation.value_date_required');
-            $messages[$valueForm . '.value_date.date'] = trans('validation.value_date_date');
+            $messages[$valueForm . '.value_date.date'] = trans('validation.date_is_invalid');
             $messages[$valueForm . '.currency.in'] = trans('validation.invalid_currency');
         }
 
@@ -423,10 +423,10 @@ class OrganizationBaseRequest extends FormRequest
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.required'] = trans(
-                'validation.iso_date_required'
+                'validation.this_field_is_required'
             );
             $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = trans(
-                'validation.iso_proper_date'
+                'validation.this_must_be_a_valid_date'
             );
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = trans(
                 'validation.period_longer'
@@ -474,10 +474,10 @@ class OrganizationBaseRequest extends FormRequest
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required'] = trans(
-                'validation.iso_date_required'
+                'validation.this_field_is_required'
             );
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = trans(
-                'validation.iso_proper_date'
+                'validation.this_must_be_a_valid_date'
             );
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = trans(
                 'validation.iso_date_after'
@@ -555,7 +555,7 @@ class OrganizationBaseRequest extends FormRequest
                 $formBase,
                 $budgetLineIndex
             )]
-                = trans('validation.value_date_date');
+                = trans('validation.date_is_invalid');
             $messages[sprintf(
                 '%s.value.%s.value_date.required_with',
                 $formBase,
@@ -567,13 +567,13 @@ class OrganizationBaseRequest extends FormRequest
                 $formBase,
                 $budgetLineIndex
             )]
-                = trans('validation.value_date_after_equal');
+                = trans('validation.value_date_after_or_equal');
             $messages[sprintf(
                 '%s.value.%s.value_date.before_or_equal',
                 $formBase,
                 $budgetLineIndex
             )]
-                = trans('validation.value_date_after_equal');
+                = trans('validation.value_date_after_or_equal');
         }
 
         return $messages;
@@ -636,7 +636,7 @@ class OrganizationBaseRequest extends FormRequest
                 $formBase,
                 $narrativeIndex
             )]
-                = trans('validation.narrative_with_language');
+                = trans('validation.narrative_is_required_when_language_is_populated');
         }
 
         return $messages;

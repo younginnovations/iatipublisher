@@ -284,28 +284,28 @@ class TransactionRequest extends ActivityBaseRequest
     {
         $messages = [];
         $messages['transaction_type.0.transaction_type_code.in'] = trans(
-            'validation.activity_transactions.invalid_type'
+            'validation.type_is_invalid'
         );
         $messages['flow_type.0.flow_type.in'] = trans(
-            'validation.activity_transactions.invalid_flow_type'
+            'validation.this_field_is_invalid'
         );
         $messages['finance_type.0.finance_type.in'] = trans(
-            'validation.activity_transactions.invalid_finance_type'
+            'validation.this_field_is_invalid'
         );
         $messages['aid_type.0.aid_type_vocabulary.in'] = trans(
-            'validation.activity_transactions.aid_type.invalid_vocabulary'
+            'validation.vocabulary_is_invalid'
         );
         $messages['aid_type.0.aid_type_code.in'] = trans(
-            'validation.activity_transactions.aid_type.invalid_code'
+            'validation.this_field_is_invalid'
         );
         $messages['aid_type.0.earmarking_category.in'] = trans(
-            'validation.activity_transactions.aid_type.invalid_code'
+            'validation.this_field_is_invalid'
         );
         $messages['aid_type.0.earmarking_modality.in'] = trans(
-            'validation.activity_transactions.aid_type.invalid_code'
+            'validation.this_field_is_invalid'
         );
         $messages['aid_type.0.cash_and_voucher_modalities.in'] = trans(
-            'validation.activity_transactions.aid_type.invalid_code'
+            'validation.this_field_is_invalid'
         );
         $messages['tied_status.0.tied_status_code.in'] = trans(
             'validation.activity_transactions.aid_type.invalid_status_code'
@@ -382,10 +382,10 @@ class TransactionRequest extends ActivityBaseRequest
         foreach ($formFields as $dateIndex => $date) {
             $dateForm = sprintf('transaction_date.%s', $dateIndex);
             $messages[sprintf('%s.date.before', $dateForm)] = trans(
-                'validation.activity_transactions.date.before'
+                'validation.future_date'
             );
             $messages[sprintf('%s.date.date', $dateForm)] = trans(
-                'validation.activity_transactions.date.date'
+                'validation.date_is_invalid'
             );
         }
 
@@ -455,13 +455,13 @@ class TransactionRequest extends ActivityBaseRequest
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('value.%s', $valueIndex);
             $messages[sprintf('%s.amount.numeric', $valueForm)] = trans(
-                'validation.activity_transactions.value.numeric_amount'
+                'validation.amount_number'
             );
             $messages[sprintf('%s.date.before', $valueForm)] = trans(
-                'validation.activity_transactions.value.date.before'
+                'validation.future_date'
             );
             $messages[sprintf('%s.date.date', $valueForm)] = trans(
-                'validation.activity_transactions.value.date.date'
+                'validation.date_is_invalid'
             );
             $messages[sprintf('%s.currency.in', $valueForm)] = trans(
                 'validation.invalid_currency'
@@ -710,21 +710,21 @@ class TransactionRequest extends ActivityBaseRequest
             )]
                 = 'The transaction sector vocabulary is invalid.';
             $messages[sprintf('%s.code.in', $sectorForm)] = trans(
-                'validation.activity_transactions.sector.invalid_code'
+                'validation.sector_code_is_invalid'
             );
             $messages[sprintf('%s.category_code.in', $sectorForm)] = trans(
-                'validation.activity_transactions.sector.invalid_code'
+                'validation.sector_code_is_invalid'
             );
             $messages[sprintf('%s.sdg_goal.in', $sectorForm)] = trans(
-                'validation.activity_transactions.sector.invalid_code'
+                'validation.sector_code_is_invalid'
             );
             $messages[sprintf('%s.sdg_target.in', $sectorForm)] = trans(
-                'validation.activity_transactions.sector.invalid_code'
+                'validation.sector_code_is_invalid'
             );
 
             if (isset($sector['sector_vocabulary']) && $sector['sector_vocabulary'] === '99') {
                 $messages[sprintf('%s.vocabulary_uri.url', $sectorForm)]
-                    = trans('validation.activity_transactions.sector.vocabulary_uri_url');
+                    = trans('validation.url_valid');
             }
 
             $narrativeMessages = $this->getMessagesForNarrative($sector['narrative'], $sectorForm);
@@ -814,7 +814,7 @@ class TransactionRequest extends ActivityBaseRequest
             )]
                 = 'The transaction provider-activity-id field is not valid.';
             $messages[sprintf('%s.%s.in', $providerOrgForm, 'type')]
-                = trans('validation.activity_transactions.provider_org.invalid');
+                = trans('validation.organisation_type_is_invalid');
             $narrativeMessages = $this->getMessagesForNarrative($providerOrg['narrative'], $providerOrgForm);
 
             foreach ($narrativeMessages as $key => $item) {
@@ -902,7 +902,7 @@ class TransactionRequest extends ActivityBaseRequest
             )]
                 = trans('validation.activity_transactions.receiver_org.exclude_operators');
             $messages[sprintf('%s.%s.in', $receiverOrgForm, 'type')]
-                = trans('validation.activity_transactions.receiver_org.invalid_type');
+                = trans('validation.organisation_type_is_invalid');
             $narrativeMessages = $this->getMessagesForNarrative($receiverOrg['narrative'], $receiverOrgForm);
 
             foreach ($narrativeMessages as $key => $item) {
@@ -1030,21 +1030,21 @@ class TransactionRequest extends ActivityBaseRequest
                 '%s.region_vocabulary.in',
                 $recipientRegionForm
             )]
-                = trans('validation.activity_transactions.recipient_region.invalid_vocabulary');
+                = trans('validation.vocabulary_is_invalid');
             $messages[sprintf(
                 '%s.region_code.in',
                 $recipientRegionForm
             )]
-                = trans('validation.activity_transactions.recipient_region.invalid_region_code');
+                = trans('validation.region_code_is_invalid');
             $messages[sprintf(
                 '%s.vocabulary_uri.url',
                 $recipientRegionForm
             )]
-                = trans('validation.activity_transactions.recipient_region.vocabulary_uri_url');
+                = trans('validation.url_valid');
 
             if (Arr::get($recipientRegion, 'region_vocabulary', 1) === '99') {
                 $messages[sprintf('%s.vocabulary_uri.url', $recipientRegionForm)]
-                    = trans('validation.activity_transactions.recipient_region.region_vocabulary_uri_url');
+                    = trans('validation.url_valid');
             }
 
             $narrativeMessages = $this->getMessagesForNarrative($recipientRegion['narrative'], $recipientRegionForm);
@@ -1167,7 +1167,7 @@ class TransactionRequest extends ActivityBaseRequest
                 '%s.country_code.in',
                 $recipientCountryForm
             )]
-                = trans('validation.activity_transactions.recipient_country.invalid_code');
+                = trans('validation.country_code');
             $narrativeMessages = $this->getMessagesForNarrative(
                 Arr::get($recipientCountry, 'narrative', []),
                 $recipientCountryForm

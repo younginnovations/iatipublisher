@@ -345,7 +345,7 @@ class BudgetRequest extends ActivityBaseRequest
 
             $messages[$budgetForm . '.budget_type.in'] = trans('validation.activity_budget.budget.invalid_type');
             $messages[$budgetForm . '.budget_status.in'] = trans('validation.activity_budget.budget.invalid_status');
-            $messages[$budgetForm . '.period_end.0.date.before'] = trans('validation.activity_budget.period_end.before');
+            $messages[$budgetForm . '.period_end.0.date.before'] = trans('validation.period_end_cannot_be_more_than_one_year');
             $messages[$budgetForm . '.period_end.0.date.period_start_end'] = trans(
                 'activity_budget.date.gt_1900'
             );
@@ -368,10 +368,10 @@ class BudgetRequest extends ActivityBaseRequest
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date'] = trans(
-                'validation.activity_budget.date.date'
+                'validation.date_is_invalid'
             );
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date_greater_than'] = trans(
-                'validation.activity_budget.date.gt_1900'
+                'validation.date_must_be_after_1900'
             );
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = trans(
                 'validation.activity_budget.date.period_start_end'
@@ -395,13 +395,13 @@ class BudgetRequest extends ActivityBaseRequest
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = trans(
-                'validation.activity_budget.date.date'
+                'validation.date_is_invalid'
             );
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date_greater_than'] = trans(
-                'validation.activity_budget.date.gt_1900'
+                'validation.date_must_be_after_1900'
             );
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = trans(
-                'validation.activity_budget.date.after'
+                'validation.period_end_after'
             );
         }
 
@@ -429,7 +429,7 @@ class BudgetRequest extends ActivityBaseRequest
                 'validation.amount_negative'
             );
             $messages[sprintf('%s.value_date.date', $valueForm)] = trans(
-                'validation.activity_budget.value.date'
+                'validation.date_is_invalid'
             );
             $messages[sprintf('%s.currency.in', $valueForm)] = trans(
                 'validation.invalid_currency'

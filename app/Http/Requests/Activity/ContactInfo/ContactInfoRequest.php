@@ -697,13 +697,13 @@ class ContactInfoRequest extends ActivityBaseRequest
                 $formBase,
                 $emailIndex
             )]
-                = trans('validation.activity_contact_info.email.valid');
+                = trans('validation.email_address_format_is_invalid');
             $messages[sprintf(
                 '%s.email.%s.email.regex',
                 $formBase,
                 $emailIndex
             )]
-                = trans('validation.activity_contact_info.email.invalid_format');
+                = trans('validation.email_address_format_is_invalid');
         }
 
         return $messages;
@@ -727,7 +727,7 @@ class ContactInfoRequest extends ActivityBaseRequest
                 $formBase,
                 $websiteIndex
             )]
-                = trans('validation.activity_contact_info.website.invalid_url');
+                = trans('validation.url_valid');
         }
 
         return $messages;

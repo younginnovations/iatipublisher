@@ -185,18 +185,18 @@ class DateRequest extends ActivityBaseRequest
 
         foreach ($formFields as $activityDateIndex => $activityDate) {
             $activityDateForm = sprintf('activity_date.%s', $activityDateIndex);
-            $messages[sprintf('%s.date.date', $activityDateForm)] = trans('validation.activity_date.invalid');
+            $messages[sprintf('%s.date.date', $activityDateForm)] = trans('validation.date_is_invalid');
             $messages[sprintf(
                 '%s.date.before',
                 $activityDateForm
             )]
-                = trans('validation.activity_date.date_before');
+                = trans('validation.actual_date');
             $messages[sprintf(
                 '%s.date.end_later_than_start',
                 $activityDateForm
             )]
                 = trans('validation.activity_date.end_later_than_start');
-            $messages[sprintf('%s.type.in', $activityDateForm)] = trans('validation.activity_date.invalid_type');
+            $messages[sprintf('%s.type.in', $activityDateForm)] = trans('validation.type_is_invalid');
             $messages += $this->getMessagesForNarrative($activityDate['narrative'], $activityDateForm);
         }
 

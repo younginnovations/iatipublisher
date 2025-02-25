@@ -267,7 +267,7 @@ class PeriodRequest extends ActivityBaseRequest
                 $periodType,
                 $periodStartKey
             )]
-                = trans('validation.activity_periods.date.date');
+                = trans('validation.date_is_invalid');
 
             $messages[sprintf(
                 '%s.%s.date.after',
@@ -281,14 +281,14 @@ class PeriodRequest extends ActivityBaseRequest
                 $periodType,
                 $periodStartKey
             )]
-                = trans('validation.activity_periods.date.gte_1900');
+                = trans('validation.date_must_be_after_1900');
 
             $messages[sprintf(
                 '%s.%s.date.period_start_end',
                 $periodType,
                 $periodStartKey
             )]
-                = trans('validation.activity_periods.date.period_start_end');
+                = trans('validation.period_end_cannot_be_more_than_one_year');
         }
 
         return $messages;

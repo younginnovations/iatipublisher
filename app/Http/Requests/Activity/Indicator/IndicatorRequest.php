@@ -152,7 +152,7 @@ class IndicatorRequest extends ActivityBaseRequest
         $messages = [];
         $messages['measure.in'] = trans('validation.activity_indicators.invalid_measure');
         $messages['aggregation_status.in'] = trans('validation.activity_indicators.invalid_aggregation_status');
-        $messages['ascending.in'] = trans('validation.activity_indicators.invalid_ascending');
+        $messages['ascending.in'] = trans('validation.this_field_is_invalid');
 
         $tempMessages = [
             $this->getMessagesForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
@@ -299,7 +299,7 @@ class IndicatorRequest extends ActivityBaseRequest
                 '%s.indicator_uri.url',
                 $referenceForm
             )]
-                = trans('validation.activity_indicators.reference.uri_url');
+                = trans('validation.url_valid');
 
             if (!empty($reference['code'])) {
                 $messages[sprintf(

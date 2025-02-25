@@ -127,7 +127,7 @@ class DefaultAidTypeRequest extends ActivityBaseRequest
                 '%s.default_aid_type_vocabulary.in',
                 $baseForm
             )]
-                = trans('validation.activity_default_aid_type.invalid_vocabulary');
+                = trans('validation.vocabulary_is_invalid');
             $messages[sprintf('%s.default_aid_type.in', $baseForm)] = trans(
                 'validation.activity_default_aid_type.invalid'
             );
@@ -140,12 +140,12 @@ class DefaultAidTypeRequest extends ActivityBaseRequest
                 '%s.earmarking_modality.in',
                 $baseForm
             )]
-                = trans('validation.activity_default_aid_type.invalid_earmarking_modality');
+                = trans('validation.this_field_is_invalid');
             $messages[sprintf(
                 '%s.cash_and_voucher_modalities.in',
                 $baseForm
             )]
-                = trans('validation.activity_default_aid_type.invalid_cash_and_voucher_modalities');
+                = trans('validation.this_field_is_invalid');
         }
 
         return $messages;
