@@ -515,14 +515,14 @@ export default defineComponent({
             id: 'registration-agency',
             required: true,
             hover_text:
-              props.translatedData['common/common.registration_number'],
+              props.translatedData['common.common.registration_number'],
             type: 'select',
             options: registration_agency,
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
           registration_number: {
-            label: props.translatedData['common/common.registration_number'],
+            label: props.translatedData['common.common.registration_number'],
             name: 'registration_number',
             placeholder:
               props.translatedData[

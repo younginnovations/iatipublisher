@@ -105,7 +105,7 @@
                     (onboardingStep) => onboardingStep.step === 3
                   )?.complete ?? false
                 "
-                @proceed-step="proceedStep"
+                @proceed-step="proceedSteRefp"
                 @previous-step="previousStep"
                 @complete-step="completeStep"
                 @remove-completed-step="removeCompletedStep"
@@ -198,7 +198,7 @@ const props = defineProps({
   },
 });
 
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 const step = ref(1);
 const modalState = ref(true);
 const initialRender = ref(true);

@@ -375,7 +375,7 @@ const toastType = ref(false);
 
 const hasReferenceError = ref(false);
 const referenceErrorMessage = ref('');
-const translatedData = inject('translatedData') as Ref;
+const translatedData = inject('translatedData') as Record<string, string>;
 
 const contentValues = [
   {
