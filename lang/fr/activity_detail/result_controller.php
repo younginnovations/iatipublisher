@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'activity_result_created_successfully' => 'fr_ Result created successfully',
+    'activity_result_created_successfully' => 'fr_Result created successfully',
 ];

@@ -120,7 +120,7 @@ export function getTranslatedUntitled(translatedData): string {
 
 export function getTranslatedMissing(translatedData, element = ''): string {
   if (!translatedData) {
-    return toTitleCase(element) + ' ' + 'Missing';
+    return toTitleCase(element) + ' ' + 'Not Entered';
   }
 
   let returnValue = translatedData['common.common.missing'];
@@ -170,10 +170,4 @@ export function toTitleCase(word: string): string {
 
 export function toKebabCase(word: string): string {
   return word.replace(/_/g, '-').toLowerCase();
-}
-
-export function getTranslatedHelperText(translatedData, key) {
-  const correctKey = key.replace('/', '.');
-
-  return translatedData[correctKey];
 }

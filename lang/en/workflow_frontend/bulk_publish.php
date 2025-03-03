@@ -26,5 +26,4 @@ return [
     'publishing_activities'                                          => 'Publishing Activities',
     'some_activities_have_failed_to_publish_refresh_to_see_changes'  => 'Some activities failed to publish. Refresh to see changes.',
     'this_element_uses_deprecated_codelist_values'                   => 'This element uses deprecated codelist values.',
-    'validating_your_data_before_publication'                        => 'Validating your data before publication',
 ];

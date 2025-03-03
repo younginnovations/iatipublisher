@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\DefaultFinanceType;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use App\Rules\SingleCharacter;
 
 /**
  * Class DefaultFinanceTypeRequest.
@@ -28,15 +29,16 @@ class DefaultFinanceTypeRequest extends ActivityBaseRequest
     /**
      * Get the critical validation rules that apply to the request.
      *
-     * @param $finance_type
+     * @param null $finance_type
      *
      * @return array
+     * @throws \JsonException
      */
     public function getErrorsForDefaultFinanceType($finance_type = null): array
     {
         if ($finance_type && is_array($finance_type)) {
             return [
-                'default_finance_type' => 'nullable|size:1',
+                'default_finance_type' => ['nullable', new SingleCharacter('default_finance_type')],
             ];
         }
 

@@ -243,8 +243,10 @@ class SectorRequest extends ActivityBaseRequest
                 '%s.vocabulary_uri.url',
                 $sectorForm
             )]
-                = 'The sector vocabulary-uri field must be a valid url.';
-            $messages[sprintf('%s.percentage.numeric', $sectorForm)] = 'The sector percentage field must be a number.';
+                = trans('validation.url_valid');
+            // TODO : check this
+            // $messages[sprintf('%s.percentage.numeric', $sectorForm)] = trans('common/common.the_sector_percentage_field_must_be_a_number');
+            $messages[sprintf('%s.percentage.numeric', $sectorForm)] = trans('validation.percentage_must_be_a_number');
             $messages[sprintf(
                 '%s.percentage.in',
                 $sectorForm

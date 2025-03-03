@@ -22,7 +22,7 @@
     </div>
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      :title="`${indicatorTitle} - Indicator Detail`"
+      :title="`${indicatorTitle} - ${translatedData['common.common.indicator_detail']}`"
       :back-link="`${indicatorLink}`"
     >
       <div class="flex justify-end">
@@ -34,25 +34,26 @@
         />
         <!-- <Status class="mr-2.5" :data="false" /> -->
         <Btn
-          text="Add Indicator"
+          :text="translatedData['common.common.add_indicator']"
           icon="add"
           :link="`${indicatorLink}/create`"
           class="mr-2.5"
         />
         <Btn
-          text="Add Period"
+          :text="translatedData['common.common.add_period']"
           icon="add"
           :link="`/indicator/${indicator.id}/period/create`"
           class="mr-2.5"
         />
         <Btn
-          text="Edit Indicator"
+          :text="translatedData['common.common.edit_indicator']"
           :link="`${indicatorLink}/${indicator.id}/edit`"
         />
       </div>
     </PageTitle>
     <div class="-mt-6 mb-8 ml-[26px] text-n-40">
-      Indicator number: {{ indicator.indicator_code }}
+      {{ translatedData['common.common.indicator_number'] }} :
+      {{ indicator.indicator_code }}
     </div>
     <div
       class="sidebar-open-icon"
@@ -338,14 +339,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    // const translatedData = ref({});
-    // LanguageService.getTranslatedData(
-    //   'workflow_frontend,common,activity_detail,activity_index,elements'
-    // )
-    //   .then((response) => {
-    //     props.translatedData = response.data;
-    //   })
-    //   .catch((error) => console.log(error));
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
 

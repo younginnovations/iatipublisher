@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
@@ -74,7 +75,8 @@ if (!function_exists('readElementJsonSchema')) {
      */
     function readElementJsonSchema(): array
     {
-        $cacheKey = 'elementJsonSchema';
+        $currentLanguage = App::getLocale();
+        $cacheKey = "elementJsonSchema_$currentLanguage";
 
         if (Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
@@ -85,7 +87,7 @@ if (!function_exists('readElementJsonSchema')) {
         $jsonContentAsFlattenedArray = Arr::dot($jsonContentAsAssocArray);
 
         foreach ($jsonContentAsFlattenedArray as $key => &$value) {
-            if (preg_match('/label|placeholder|hover_text|help_text/', $key)) {
+            if (preg_match('/label|placeholder|hover_text|help_text|helper_text/', $key)) {
                 $value = trans($value);
             }
         }
@@ -107,7 +109,8 @@ if (!function_exists('readOrganizationElementJsonSchema')) {
      */
     function readOrganizationElementJsonSchema(): array
     {
-        $cacheKey = 'organizationElementJsonSchema';
+        $currentLanguage = App::getLocale();
+        $cacheKey = "organizationElementJsonSchema_$currentLanguage";
 
         if (Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
@@ -1170,7 +1173,7 @@ if (!function_exists('addAdditionalLabel')) {
             $elementName = 'name';
         }
 
-        return "Add additional $elementName";
+        return trans('common/common.add_additional') . ' ' . $elementName;
     }
 }
 

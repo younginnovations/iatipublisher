@@ -21,7 +21,7 @@
             {{
               translatedData['common.common.show_count_issues'].replace(
                 ':count',
-                countErrors()
+                String(countErrors())
               )
             }}</span
           >

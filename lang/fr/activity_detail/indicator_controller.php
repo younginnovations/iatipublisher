@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'result_indicator_created_successfully' => 'fr_ Indicator created successfully',
+    'result_indicator_created_successfully' => 'fr_Indicator created successfully',
 ];

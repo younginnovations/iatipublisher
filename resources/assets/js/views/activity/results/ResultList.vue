@@ -61,7 +61,7 @@
               <span>{{ translatedData['common.common.result_number'] }}</span>
             </th>
             <th id="transaction_value" scope="col">
-              <span>{{ translatedData['common.common.result_type'] }}</span>
+              <span>Result Type</span>
             </th>
             <th id="transaction_date" scope="col">
               <span>{{
@@ -686,6 +686,7 @@ export default defineComponent({
 
     // Provide
     provide('parentItemId', activityId);
+    provide('translatedData', props.translatedData);
 
     return {
       breadcrumbData,

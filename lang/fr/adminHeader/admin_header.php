@@ -1,10 +1,9 @@
 <?php
 
 return [
-    'activity_data'       => 'fr_ Activity Data',
-    'organisation_data'   => 'fr_ Organisation Data',
-    'add_import_activity' => 'fr_ Add or Import Activity',
-    'your_profile'        => 'fr_ Your Profile',
-    'logout'              => 'fr_ Sign Out',
-    'search_activity'     => 'fr_ Search activity...',
+    'activity_data'       => 'fr_Activity Data',
+    'organisation_data'   => 'fr_Organisation Data',
+    'add_import_activity' => 'fr_Add or Import Activity',
+    'your_profile'        => 'fr_Your Profile',
+    'logout'              => 'fr_Sign Out',
 ];

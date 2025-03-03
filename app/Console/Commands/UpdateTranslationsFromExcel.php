@@ -140,8 +140,13 @@ class UpdateTranslationsFromExcel extends Command
 
         $languageArray = is_file($filePath) ? include $filePath : [];
 
-        foreach ($translationData as $key => $translation) {
-            $this->setDotNotationValue($languageArray, $key, $translation);
+        logger($filePath);
+        try {
+            foreach ($translationData as $key => $translation) {
+                $this->setDotNotationValue($languageArray, $key, $translation);
+            }
+        } catch (Exception $e) {
+            dd($e->getMessage(), $languageArray, $key, $translation);
         }
 
         $fileContents = "<?php\n\nreturn " . $this->arrayToPhpString($languageArray) . ";\n";
@@ -207,6 +212,8 @@ class UpdateTranslationsFromExcel extends Command
 
         foreach ($keys as $part) {
             if (!isset($temp[$part])) {
+                logger($temp);
+                logger($part);
                 $temp[$part] = [];
             }
 

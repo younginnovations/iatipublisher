@@ -145,7 +145,6 @@ import {
   ref,
   onMounted,
   provide,
-  watchEffect,
 } from 'vue';
 import axios from 'axios';
 
@@ -290,6 +289,7 @@ export default defineComponent({
 
     // provide
     provide('parentItemId', resultId);
+    provide('translatedData', props.translatedData);
 
     return {
       activityId,

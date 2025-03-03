@@ -502,7 +502,7 @@ export default defineComponent({
           registration_agency: {
             label:
               props.translatedData[
-                'elements.label.organisation_registration_agency'
+                'elements.org_json_schema.organisation_identifier_attributes_organization_registration_agency_label'
               ],
             name: 'registration_agency',
             placeholder: props.translatedData['common.common.select_an_option'],
@@ -656,7 +656,7 @@ export default defineComponent({
             class: 'mb-4 lg:mb-6',
           },
           website: {
-            label: props.translatedData['elements.label.website'],
+            label: props.translatedData['common.common.website'],
             name: 'website',
             placeholder:
               props.translatedData[
@@ -715,7 +715,7 @@ export default defineComponent({
             class: 'mb-4 lg:mb-6',
           },
           default_language: {
-            label: props.translatedData['elements.label.default_language'],
+            label: props.translatedData['common.common.default_language'],
             name: 'default_language',
             placeholder:
               props.translatedData[

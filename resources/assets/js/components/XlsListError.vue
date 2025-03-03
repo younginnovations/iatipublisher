@@ -34,7 +34,7 @@
           {{
             translatedData['common.common.show_count_errors'].replace(
               ':count',
-              countErrors(index)
+              String(countErrors(index))
             )
           }}
         </span>

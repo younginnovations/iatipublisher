@@ -502,7 +502,7 @@
         "name": "custom_code",
         "label": "elements/label.code",
         "type": "text",
-        "placeholder": "common.common.enter_code",
+        "placeholder": "common/common.enter_code",
         "required": true,
         "criteria": "mandatory",
         "hidden": true,
@@ -643,7 +643,7 @@
         "name": "text",
         "label": "elements/label.code",
         "type": "text",
-        "placeholder": "common.common.enter_code",
+        "placeholder": "common/common.enter_code",
         "required": true,
         "criteria": "mandatory",
         "hover_text": "elements/element_json_schema.sector_attributes_code_hover_text",
@@ -826,7 +826,7 @@
         "name": "tag_text",
         "label": "elements/label.code",
         "type": "text",
-        "placeholder": "common.common.enter_code",
+        "placeholder": "common/common.enter_code",
         "required": true,
         "criteria": "mandatory",
         "hidden": true,
@@ -966,7 +966,7 @@
         "name": "policy_marker_text",
         "label": "elements/label.code",
         "type": "text",
-        "placeholder": "common.common.enter_code",
+        "placeholder": "common/common.enter_code",
         "required": true,
         "criteria": "mandatory",
         "hidden": true,
@@ -1349,7 +1349,7 @@
         "name": "code",
         "label": "elements/label.code",
         "type": "text",
-        "placeholder": "common.common.enter_code",
+        "placeholder": "common/common.enter_code",
         "required": true,
         "criteria": "mandatory",
         "hover_text": "elements/element_json_schema.humanitarian_scope_attributes_code_hover_text",
@@ -1800,7 +1800,7 @@
         "placeholder": "common/common.select_type",
         "choices": "Activity/ContactType.json",
         "required": false,
-        "criteria": "",
+        "criteria": "mandatory",
         "hover_text": "elements/element_json_schema.contact_info_attributes_type_hover_text",
         "help_text": ""
       }
@@ -1823,7 +1823,7 @@
             "type": "textarea",
             "placeholder": "common/common.enter_narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -1838,7 +1838,7 @@
                 "placeholder": "common/common.select_language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "common/common.if_no_language_is_selected_your_default_language_is_assumed"
               }
@@ -1864,7 +1864,7 @@
             "type": "textarea",
             "placeholder": "common/common.enter_narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -1879,7 +1879,7 @@
                 "placeholder": "common/common.select_language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "common/common.if_no_language_is_selected_your_default_language_is_assumed"
               }
@@ -1946,7 +1946,7 @@
             "type": "textarea",
             "placeholder": "common/common.enter_narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -1961,7 +1961,7 @@
                 "placeholder": "common/common.select_language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "common/common.if_no_language_is_selected_your_default_language_is_assumed"
               }
@@ -2057,7 +2057,7 @@
             "type": "textarea",
             "placeholder": "common/common.enter_narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -2072,7 +2072,7 @@
                 "placeholder": "common/common.select_language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "common/common.if_no_language_is_selected_your_default_language_is_assumed"
               }
@@ -2124,7 +2124,7 @@
             "placeholder": "common/common.select_code",
             "choices": "Activity/GeographicLocationReach.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "",
             "help_text": ""
           }
@@ -2150,7 +2150,7 @@
             "placeholder": "common/common.select_an_option",
             "choices": "Activity/GeographicVocabulary.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "elements/element_json_schema.location_sub_elements_location_id_attributes_vocabulary_hover_text",
             "help_text": ""
           },
@@ -2158,9 +2158,9 @@
             "name": "code",
             "label": "elements/label.code",
             "type": "text",
-            "placeholder": "common.common.enter_code",
+            "placeholder": "common/common.enter_code",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "elements/element_json_schema.location_sub_elements_location_id_attributes_code_hover_text",
             "help_text": ""
           }
@@ -2184,7 +2184,7 @@
             "type": "textarea",
             "placeholder": "common/common.enter_narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -2199,7 +2199,7 @@
                 "placeholder": "common/common.select_language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "common/common.if_no_language_is_selected_your_default_language_is_assumed"
               }
@@ -2224,7 +2224,7 @@
             "type": "textarea",
             "placeholder": "common/common.enter_narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -2239,7 +2239,7 @@
                 "placeholder": "common/common.select_language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "common/common.if_no_language_is_selected_your_default_language_is_assumed"
               }
@@ -2265,7 +2265,7 @@
             "type": "textarea",
             "placeholder": "common/common.enter_narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -2280,7 +2280,7 @@
                 "placeholder": "common/common.select_language",
                 "choices": "Activity/Language.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "common/common.if_no_language_is_selected_your_default_language_is_assumed"
               }
@@ -2307,7 +2307,7 @@
             "placeholder": "common/common.select_an_option",
             "choices": "Activity/GeographicVocabulary.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "elements/element_json_schema.location_sub_elements_administrative_attributes_vocabulary_hover_text",
             "help_text": ""
           },
@@ -2318,7 +2318,7 @@
             "placeholder": "common/common.select_code",
             "choices": "Activity/Country.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "elements/element_json_schema.location_sub_elements_administrative_attributes_code_hover_text",
             "help_text": ""
           },
@@ -2352,7 +2352,7 @@
             "type": "text",
             "placeholder": "",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "elements/element_json_schema.location_sub_elements_point_attributes_srs_name_hover_text",
             "help_text": ""
           }
@@ -2370,7 +2370,7 @@
                 "type": "text",
                 "placeholder": "",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": ""
               },
@@ -2380,7 +2380,7 @@
                 "type": "text",
                 "placeholder": "",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": ""
               }
@@ -2406,7 +2406,7 @@
             "placeholder": "common/common.select_code",
             "choices": "Activity/GeographicExactness.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "elements/element_json_schema.location_sub_elements_exactness_attributes_code_hover_text",
             "help_text": ""
           }
@@ -2430,7 +2430,7 @@
             "placeholder": "common/common.select_code",
             "choices": "Activity/GeographicLocationClass.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "",
             "help_text": ""
           }
@@ -2454,7 +2454,7 @@
             "placeholder": "common/common.select_code",
             "choices": "Activity/LocationType.json",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "elements/element_json_schema.location_sub_elements_feature_designation_attributes_code_hover_text",
             "help_text": ""
           }
@@ -2525,7 +2525,7 @@
             "type": "date",
             "placeholder": "common/common.yyyy_mm_dd",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "",
             "help_text": ""
           }
@@ -3297,7 +3297,7 @@
             "name": "code",
             "label": "elements/label.code",
             "type": "text",
-            "placeholder": "common.common.enter_code",
+            "placeholder": "common/common.enter_code",
             "required": true,
             "criteria": "",
             "hover_text": "elements/element_json_schema.result_sub_elements_reference_attributes_code_hover_text",
@@ -5165,7 +5165,7 @@
             "name": "text",
             "label": "elements/label.code",
             "type": "text",
-            "placeholder": "common.common.enter_code",
+            "placeholder": "common/common.enter_code",
             "required": false,
             "criteria": "",
             "hover_text": "elements/element_json_schema.transactions_sub_elements_sector_attributes_code_hover_text",

@@ -144,7 +144,7 @@ class PolicyMarkerRequest extends ActivityBaseRequest
                 '%s.policy_marker_vocabulary.in',
                 $policyMarkerForm
             )]
-                = 'The policy marker vocabulary is invalid.';
+                = trans('validation.vocabulary_is_invalid');
             $messages[sprintf('%s.significance.in', $policyMarkerForm)] = trans('validation.this_field_is_invalid');
             $messages[sprintf('%s.policy_marker.in', $policyMarkerForm)] = trans('validation.activity_policy_marker.invalid_code');
             $messages[sprintf('%s.vocabulary_uri.url', $policyMarkerForm)] = trans('validation.url_valid');

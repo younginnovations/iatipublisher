@@ -25,7 +25,7 @@
           {{
             translatedData[
               'workflow_frontend.download.preparing_filecount_files_for_download'
-            ].replace(':fileCount', fileCount ?? 0)
+            ].replace(':fileCount', String(fileCount) ?? 0)
           }}
         </p>
         <p v-if="xlsDownloadStatus == 'cancelled'" class="text-sm text-n-40">

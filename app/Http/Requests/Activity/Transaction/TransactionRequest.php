@@ -708,7 +708,7 @@ class TransactionRequest extends ActivityBaseRequest
                 '%s.sector_vocabulary.in',
                 $sectorForm
             )]
-                = 'The transaction sector vocabulary is invalid.';
+                = trans('validation.vocabulary_is_invalid');
             $messages[sprintf('%s.code.in', $sectorForm)] = trans(
                 'validation.sector_code_is_invalid'
             );

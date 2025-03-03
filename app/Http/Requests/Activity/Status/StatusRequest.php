@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Status;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use App\Rules\SingleCharacter;
 
 /**
  * Class StatusRequest.
@@ -48,7 +49,7 @@ class StatusRequest extends ActivityBaseRequest
     {
         if ($status && is_array($status)) {
             return [
-                'activity_status' => 'nullable|size:1',
+                'activity_status' => ['nullable', new SingleCharacter('activity_status')],
             ];
         }
 

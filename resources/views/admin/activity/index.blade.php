@@ -16,5 +16,6 @@
             :organization-type='{{ json_encode($organizationType) }}'
             :is-first-time='{{ json_encode($isFirstTime) }}'
             :translated-data='{{json_encode($translatedData)}}'
+            :current-language='{{json_encode($currentLanguage)}}'
 ></activity-template>
 @endsection

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\CollaborationType;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use App\Rules\SingleCharacter;
 
 /**
  * Class CollaborationTypeRequest.
@@ -51,7 +52,7 @@ class CollaborationTypeRequest extends ActivityBaseRequest
     {
         if ($collaboration && is_array($collaboration)) {
             return [
-                'collaboration_type' => 'nullable|size:1',
+                'collaboration_type' => ['nullable', new SingleCharacter('collaboration_type')],
             ];
         }
 

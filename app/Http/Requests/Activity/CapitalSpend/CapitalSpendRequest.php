@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\CapitalSpend;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use App\Rules\SingleCharacter;
 
 /**
  * Class CapitalSpendRequest.
@@ -37,7 +38,7 @@ class CapitalSpendRequest extends ActivityBaseRequest
     {
         if ($capital_spend && is_array($capital_spend)) {
             return [
-                'capital_spend' => 'nullable|size:1',
+                'capital_spend' => ['nullable', new SingleCharacter('capital_spend')],
             ];
         }
 
@@ -66,7 +67,7 @@ class CapitalSpendRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'numeric' => trans('validation.the_capital_spend_must_be_a_number_between_0_and_100'),
+            'numeric' => trans('validation.amount_number'),
             'between' => trans('validation.the_capital_spend_must_be_a_number_between_0_and_100'),
             'size'    => trans('validation.activity_capital_spend.size'),
         ];

@@ -123,7 +123,7 @@
           </td>
 
           <td class="text-n-40">
-            {{ formatDate(datum.updated_at) }}
+            {{ formatDate(datum.updated_at, currentLanguage) }}
           </td>
 
           <td>
@@ -141,7 +141,11 @@
                   "
                 />
               </span>
-              <span class="text-sm leading-relaxed">{{ datum['status'] }}</span>
+              <span class="text-sm leading-relaxed">{{
+                datum['status'] === 'draft'
+                  ? translatedData['common.common.status']
+                  : translatedData['common.common.published']
+              }}</span>
             </button>
           </td>
 
@@ -204,7 +208,7 @@ import { defineProps, inject, ref, watch } from 'vue';
 import moment from 'moment';
 
 // Vuex Store
-import { useStore } from 'Store/activities/index';
+import { useStore } from 'Store/activities';
 
 import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
 import Publish from 'Components/buttons/PublishButton.vue';
@@ -218,11 +222,13 @@ const props = defineProps({
 });
 
 const translatedData = inject('translatedData') as Record<string, string>;
+const currentLanguage = inject('currentLanguage') as string;
+
 const isAllValueSelected = ref(false);
 const store = useStore();
 
-function formatDate(date: Date) {
-  return moment(date).fromNow();
+function formatDate(date: Date, currentLocale: string) {
+  return moment(date).locale(currentLocale).fromNow();
 }
 
 function toggleSelectAll(activities: {

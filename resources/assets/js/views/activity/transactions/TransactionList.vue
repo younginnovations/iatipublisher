@@ -244,7 +244,9 @@
       <div class="mb-4">
         <div class="title mb-6 flex">
           <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
-          <b>{{ translatedData['common.common.delete_transaction'] }}</b>
+          <b>{{
+            toTitleCase(translatedData['common.common.delete_transaction'])
+          }}</b>
         </div>
         <div class="rounded-lg bg-rose p-4">
           <p>
@@ -308,7 +310,7 @@ import moment from 'moment';
 import { useStore } from 'Store/activities';
 import ButtonComponent from 'Components/ButtonComponent.vue';
 import PopupModal from 'Components/PopupModal.vue';
-import { getTranslatedElement } from 'Composable/utils';
+import { getTranslatedElement, toTitleCase } from 'Composable/utils';
 
 // toggle state for modal popup
 let [deleteValue, deleteToggle] = useToggle();
@@ -716,6 +718,6 @@ export default defineComponent({
       return moment;
     },
   },
-  methods: { getTranslatedElement },
+  methods: { toTitleCase, getTranslatedElement },
 });
 </script>

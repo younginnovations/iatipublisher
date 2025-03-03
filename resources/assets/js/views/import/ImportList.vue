@@ -98,13 +98,11 @@
         <thead>
           <tr class="bg-n-10">
             <th id="title" scope="col">
-              <span>{{
-                getTranslatedElement(translatedData, 'activity_title')
-              }}</span>
+              <span>{{ translatedData['common.common.activity_title'] }}</span>
             </th>
             <th id="status" scope="col">
               <span class="block text-left">{{
-                getTranslatedElement(translatedData, 'status')
+                translatedData['common.common.status']
               }}</span>
             </th>
             <th id="cb" scope="col">

@@ -47,7 +47,10 @@
     </div>
     <div class="">
       <div
-        :class="{ empty: !selectedDate[0], 'all-time': fixed === 'All time ' }"
+        :class="{
+          empty: !selectedDate[0],
+          'all-time': fixed === translatedData['common.common.all_time'],
+        }"
         class="relative flex"
       >
         <VueDatePicker
@@ -55,7 +58,7 @@
           v-model="selectedDate"
           range
           month-name-format="long"
-          placeholder="Select date"
+          :placeholder="translatedData['common.common.select_date']"
           mode-height="650"
           :clearable="true"
           :format="format"
@@ -287,41 +290,41 @@ const resetDate = async () => {
   triggerSetDateRange('', '');
   selectedDate.value[0] = '';
   selectedDate.value[1] = '';
-  fixed.value = 'All time';
+  fixed.value = translatedData['common.common.all_time'];
   return { success: true };
 };
 
 const presetRanges = computed(() => [
   {
-    label: 'Today',
+    label: translatedData['common.common.today'],
     range: [startOfDay(new Date()), endOfDay(new Date())],
   },
   {
-    label: 'This Week',
+    label: translatedData['common.common.this_week'],
     range: [startOfWeek(new Date()), endOfDay(new Date())],
   },
   {
-    label: 'Last 7 Days',
+    label: translatedData['common.common.last_7_days'],
     range: [subDays(new Date(), 6), endOfDay(new Date())],
   },
   {
-    label: 'This Month',
+    label: translatedData['common.common.this_month'],
     range: [startOfMonth(new Date()), endOfMonth(new Date())],
   },
   {
-    label: 'Last 6 Month',
+    label: translatedData['common.common.last_6_month'],
     range: [startOfMonth(subMonths(new Date(), 6)), endOfMonth(new Date())],
   },
   {
-    label: 'This Year',
+    label: translatedData['common.common.this_year'],
     range: [startOfYear(new Date()), endOfDay(new Date())],
   },
   {
-    label: 'Last 12 Months',
+    label: translatedData['common.common.last_12_months'],
     range: [startOfMonth(subMonths(new Date(), 12)), endOfDay(new Date())],
   },
   {
-    label: 'All Time',
+    label: translatedData['common.common.all_time'],
     range: [new Date(initialDate.value), endOfDay(new Date())],
   },
 ]);
@@ -421,7 +424,7 @@ watch(
   () => {
     selectedDate.value[0] = '';
     selectedDate.value[1] = '';
-    fixed.value = 'All time';
+    fixed.value = translatedData['common.common.all_time'];
   },
   { deep: true }
 );

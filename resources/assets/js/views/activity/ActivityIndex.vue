@@ -215,6 +215,10 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    currentLanguage: {
+      type: String,
+      required: true,
+    },
   },
   setup(props) {
     interface ActivitiesInterface {
@@ -610,6 +614,7 @@ export default defineComponent({
     provide('completed', uploadComplete);
     provide('defaultLanguage', props.defaultLanguage);
     provide('translatedData', props.translatedData);
+    provide('currentLanguage', props.currentLanguage);
 
     return {
       store,

@@ -527,7 +527,7 @@
                     />
                   </span>
 
-                  <span>Users</span>
+                  <span>{{ translatedData['common.common.users'] }}</span>
                 </span>
               </th>
               <th id="measure" scope="col" style="width: 210px">
@@ -771,6 +771,7 @@ import {
   watch,
   onMounted,
   provide,
+  watchEffect,
 } from 'vue';
 import Loader from '../../components/Loader.vue';
 import Toast from 'Components/ToastMessage.vue';
@@ -833,7 +834,13 @@ const checklist = ref([]);
 const currentpageData = ref([]);
 const clearDate = ref(false);
 const editUserId = ref('');
-const dateType = ref('All Time');
+
+const dateType = ref('');
+
+watchEffect(() => {
+  dateType.value = props.translatedData?.['common.common.all_time'] || '';
+});
+
 const isSuperadmin = ref(false);
 isSuperadmin.value =
   props.userRole === 'superadmin' || props.userRole === 'iati_admin';

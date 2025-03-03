@@ -325,7 +325,7 @@
                 "type": "text",
                 "placeholder": "common/common.type_value_here",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": ""
               },
@@ -336,7 +336,7 @@
                 "multiselect": false,
                 "choices": "Activity/Currency.json",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "placeholder": "common/common.select_currency",
                 "hover_text": "",
                 "help_text": "common/common.if_no_currency_is_selected_your_default_currency_is_assumed"
@@ -347,7 +347,7 @@
                 "type": "date",
                 "placeholder": "common/common.yyyy_mm_dd",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "common/common.the_date_used_to_determine_the_exchange_rate_for_currency_conversions",
                 "help_text": ""
               }
@@ -360,7 +360,7 @@
             "type": "textarea",
             "placeholder": "common/common.enter_narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "form_has_borders": true,
             "label_has_borders": true,
@@ -378,7 +378,7 @@
                 "choices": "Activity/Language.json",
                 "placeholder": "common/common.select_language",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "common/common.if_no_language_is_selected_your_default_language_is_assumed"
               }
@@ -601,7 +601,7 @@
                 "type": "text",
                 "placeholder": "common/common.type_value_here",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": ""
               },
@@ -613,7 +613,7 @@
                 "choices": "Activity/Currency.json",
                 "placeholder": "common/common.select_currency",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "common/common.if_no_currency_is_selected_your_default_currency_is_assumed"
               },
@@ -623,7 +623,7 @@
                 "type": "date",
                 "placeholder": "common/common.yyyy_mm_dd",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "common/common.the_date_used_to_determine_the_exchange_rate_for_currency_conversions",
                 "help_text": ""
               }
@@ -636,7 +636,7 @@
             "type": "textarea",
             "placeholder": "common/common.enter_narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "form_has_borders": true,
             "label_has_borders": true,
@@ -654,7 +654,7 @@
                 "choices": "Activity/Language.json",
                 "placeholder": "common/common.select_language",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "common/common.if_no_language_is_selected_your_default_language_is_assumed"
               }
@@ -683,8 +683,8 @@
         "multiselect": false,
         "choices": "Activity/BudgetStatus.json",
         "placeholder": "common/common.select_status",
-        "required": true,
-        "criteria": "mandatory",
+        "required": false,
+        "criteria": "",
         "hover_text": "common/common.select_a_status_that_best_describes_this_budget",
         "help_text": ""
       }
@@ -698,7 +698,7 @@
         "form_has_borders": true,
         "label_has_borders": true,
         "is_collapsable": true,
-        "label_indicator": "optional_text",
+        "label_indicator": "required_icon",
         "element_criteria": "mandatory",
         "hover_text": "elements/org_json_schema.recipient_region_budget_sub_elements_recipient_region_hover_text",
         "attributes": {
@@ -914,7 +914,7 @@
                 "type": "text",
                 "placeholder": "common/common.type_value_here",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": ""
               },
@@ -926,7 +926,7 @@
                 "choices": "Activity/Currency.json",
                 "placeholder": "common/common.select_currency",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "common/common.if_no_currency_is_selected_your_default_currency_is_assumed"
               },
@@ -936,7 +936,7 @@
                 "type": "date",
                 "placeholder": "common/common.yyyy_mm_dd",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "common/common.the_date_used_to_determine_the_exchange_rate_for_currency_conversions",
                 "help_text": ""
               }
@@ -949,7 +949,7 @@
             "type": "textarea",
             "placeholder": "common/common.enter_narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "hover_text": "elements/org_json_schema.total_budget_sub_elements_budget_line_sub_elements_narrative_hover_text",
             "help_text": "",
@@ -965,7 +965,7 @@
                 "choices": "Activity/Language.json",
                 "placeholder": "common/common.select_language",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "common/common.if_no_language_is_selected_your_default_language_is_assumed"
               }
@@ -1192,7 +1192,7 @@
                 "type": "text",
                 "placeholder": "common/common.type_value_here",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": ""
               },
@@ -1204,7 +1204,7 @@
                 "choices": "Activity/Currency.json",
                 "placeholder": "common/common.select_currency",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "common/common.if_no_currency_is_selected_your_default_currency_is_assumed"
               },
@@ -1214,7 +1214,7 @@
                 "type": "date",
                 "placeholder": "common/common.yyyy_mm_dd",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "common/common.the_date_used_to_determine_the_exchange_rate_for_currency_conversions",
                 "help_text": ""
               }
@@ -1227,7 +1227,7 @@
             "type": "textarea",
             "placeholder": "common/common.select_language",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "hover_text": "elements/org_json_schema.total_budget_sub_elements_budget_line_sub_elements_narrative_hover_text",
             "help_text": "",
@@ -1243,7 +1243,7 @@
                 "choices": "Activity/Language.json",
                 "placeholder": "common/common.select_language",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "common/common.if_no_language_is_selected_your_default_language_is_assumed"
               }
@@ -1399,7 +1399,7 @@
                 "type": "text",
                 "placeholder": "common/common.type_value_here",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": ""
               },
@@ -1411,7 +1411,7 @@
                 "choices": "Activity/Currency.json",
                 "placeholder": "common/common.select_currency",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "common/common.if_no_currency_is_selected_your_default_currency_is_assumed"
               },
@@ -1421,7 +1421,7 @@
                 "type": "date",
                 "placeholder": "common/common.yyyy_mm_dd",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "common/common.the_date_used_to_determine_the_exchange_rate_for_currency_conversions",
                 "help_text": ""
               }
@@ -1434,7 +1434,7 @@
             "type": "textarea",
             "placeholder": "common/common.enter_narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "hover_text": "elements/org_json_schema.total_expenditure_sub_elements_expense_line_sub_elements_narrative_hover_text",
             "help_text": "",
@@ -1450,7 +1450,7 @@
                 "choices": "Activity/Language.json",
                 "placeholder": "common/common.select_language",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "common/common.if_no_language_is_selected_your_default_language_is_assumed"
               }
@@ -1679,7 +1679,7 @@
             "choices": "Activity/Country.json",
             "placeholder": "common/common.select_code",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "hover_text": "elements/org_json_schema.document_link_sub_elements_recipient_country_attributes_code_hover_text",
             "help_text": ""
           }
@@ -1691,7 +1691,7 @@
             "type": "textarea",
             "placeholder": "common/common.enter_narrative",
             "required": true,
-            "criteria": "mandatory",
+            "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
@@ -1707,7 +1707,7 @@
                 "choices": "Activity/Language.json",
                 "placeholder": "common/common.select_language",
                 "required": true,
-                "criteria": "mandatory",
+                "criteria": "",
                 "hover_text": "",
                 "help_text": "common/common.if_no_language_is_selected_your_default_language_is_assumed"
               }

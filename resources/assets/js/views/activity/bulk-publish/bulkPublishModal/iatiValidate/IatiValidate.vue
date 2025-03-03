@@ -7,9 +7,7 @@
   >
     <RollingLoader
       :header="
-        translatedData[
-          'workflow_frontend.bulk_publish.validating_your_data_before_publication'
-        ]
+        translatedData['common.common.checking_your_data_before_publication']
       "
     />
     <p

@@ -484,7 +484,9 @@
               </div>
             </td>
             <td class="px-6 py-4 text-xs text-n-40">
-              {{ dateFormat(activity['updated_at'], 'fromNow') }}
+              {{
+                dateFormat(activity['updated_at'], 'fromNow', currentLanguage)
+              }}
             </td>
             <td>
               <button
@@ -666,6 +668,10 @@ const ongoingImportType = ref('');
 const props = defineProps({
   translatedData: {
     type: Object,
+    required: true,
+  },
+  currentLanguage: {
+    type: String,
     required: true,
   },
 });

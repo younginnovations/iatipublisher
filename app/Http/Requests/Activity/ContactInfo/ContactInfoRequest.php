@@ -468,7 +468,7 @@ class ContactInfoRequest extends ActivityBaseRequest
 
         foreach ($formFields as $contactInfoIndex => $contactInfo) {
             $contactInfoForm = sprintf('contact_info.%s', $contactInfoIndex);
-            $messages[sprintf('%s.type.in', $contactInfoForm)] = 'The contact info type is invalid.';
+            $messages[sprintf('%s.type.in', $contactInfoForm)] = trans('validation.type_is_invalid');
             $tempMessages = [
                 $this->getMessagesForDepartment(Arr::get($contactInfo, 'department', []), $contactInfoForm),
                 $this->getMessagesForOrganisation(Arr::get($contactInfo, 'organisation', []), $contactInfoForm),

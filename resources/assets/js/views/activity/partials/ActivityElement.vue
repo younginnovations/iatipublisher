@@ -128,12 +128,7 @@
         <!-- eslint-disable vue/no-v-html -->
         <div
           class="text-xs font-normal text-n-50"
-          v-html="
-            getTranslatedHelperText(
-              translatedData,
-              elements['reporting_org']['helper_text']
-            )
-          "
+          v-html="elements['reporting_org']['helper_text']"
         ></div>
       </div>
 
@@ -653,7 +648,6 @@ import HoverText from 'Components/HoverText.vue';
 import Modal from 'Components/PopupModal.vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import HelperText from 'Components/HelperText.vue';
-import { getTranslatedHelperText } from 'Composable/utils';
 
 // toggle state for modal popup
 let [deleteValue, deleteToggle] = useToggle();

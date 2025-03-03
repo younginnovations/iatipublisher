@@ -184,7 +184,7 @@
             class="search__input mr-3.5"
             type="text"
             :placeholder="
-              translatedData['adminHeader.admin_header.search_activity']
+              translatedData['workflow_frontend.import.search_activity']
             "
             @keyup.enter="searchFunction('/activities')"
           />
