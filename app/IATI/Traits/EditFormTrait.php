@@ -176,10 +176,13 @@ trait EditFormTrait
 
     public function getTranslatedUntitledIndicator(): string
     {
-        return Str::title(sprintf('%s Result', trans('common/common.untitled')));
+        return Str::title(sprintf('%s Indicator', trans('common/common.untitled')));
     }
 
-    public function getTranslatedNewPeriod()
+    /**
+     * @return string
+     */
+    public function getTranslatedNewPeriod(): string
     {
         return Str::title(sprintf('%s Period', trans('common/common.new')));
     }

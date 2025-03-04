@@ -368,7 +368,7 @@ return [
     'the_type_for_reporting_organisation_is_invalid'                                       => 'Reporting organisation type is invalid.',
     'narrative_must_match_narrative_in_organisations_reporting_org'                        => 'Narrative must match your reporting organisation information',
     'language_must_match_language_in_organisations_reporting_org'                          => 'Language must match your reporting organisation information',
-    'exclude_operators'                                                                    => 'Should not contain the symbols /, &, | or ?.',
+    'exclude_operators'                                                                    => 'This field should not contain the symbols /, &, | or ?',
     'contact_info_telephone_is_invalid'                                                    => 'The contact info telephone number is invalid.',
     'no_spaces_in_between_in_activity_identifier'                                          => 'The activity-identifier must only contain letters, numbers, and hyphens, with no spaces or other special characters.',
     'no_leading_white_space_in_activity_identifier'                                        => 'The activity-identifier must not start with space.',
