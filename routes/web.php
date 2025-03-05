@@ -21,7 +21,7 @@ Route::middleware(RedirectIfAuthenticated::class)->name('web.')->group(function 
     Route::get('/register', [App\Http\Controllers\Web\WebController::class, 'register'])->name('register');
     Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
     Route::get('/password/email', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.email');
-    Route::post('/password/email', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email.post');
+    Route::post('/password/email', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendCustomPasswordResetNotification'])->name('password.email.post');
     Route::get('/password/confirm', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showEmailSentMessage'])->name('password.confirm');
     Route::get('/iati/register', [App\Http\Controllers\Auth\IatiRegisterController::class, 'showRegistrationForm'])->name('iati.register');
 });
