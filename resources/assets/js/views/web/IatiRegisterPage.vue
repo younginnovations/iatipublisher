@@ -834,6 +834,7 @@ export default defineComponent({
      * Update Validation errors from api into errorData array
      */
     function updateValidationErrors(errorResponse) {
+      console.log(errorResponse);
       cleanValidationErrors();
       for (const field in errorData) {
         errorData[field] = errorResponse[field] ? errorResponse[field][0] : '';

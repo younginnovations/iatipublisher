@@ -614,7 +614,6 @@ import { useStorage } from '@vueuse/core';
 import PublishSelected from 'Activity/bulk-publish/PublishSelected.vue';
 import { getTranslatedElement } from 'Composable/utils';
 import { defineProps } from 'vue';
-import transactionDate from 'Activity/transactions/elements/TransactionDate.vue';
 
 interface ActivitiesInterface {
   last_page: number;

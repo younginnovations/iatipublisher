@@ -66,8 +66,8 @@ class UpdateTranslationsFromExcel extends Command
                     [$key, $filename, $englishTranslation, $spanishTranslation, $frenchTranslation] = $row;
 
                     $translations[$filename]['en'][$key] = $englishTranslation;
-                    $translations[$filename]['es'][$key] = $spanishTranslation;
-                    $translations[$filename]['fr'][$key] = $frenchTranslation;
+//                    $translations[$filename]['es'][$key] = $spanishTranslation;
+//                    $translations[$filename]['fr'][$key] = $frenchTranslation;
                 }
 
                 $this->info("Updating language files for {$folderName}");
