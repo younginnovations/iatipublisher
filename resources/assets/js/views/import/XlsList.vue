@@ -61,7 +61,7 @@
             </th>
             <th id="status" scope="col">
               <span class="block text-left">{{
-                getTranslatedElement(translatedData, 'status')
+                translatedData['common.common.status']
               }}</span>
             </th>
             <th id="cb" scope="col">
@@ -125,6 +125,7 @@
   <Loader
     v-if="loader"
     :text="loaderText"
+    :translated-data="translatedData"
     :class="{ 'animate-loader': loader }"
   />
   <Modal
@@ -264,6 +265,7 @@ const showIdentifierErrorModel = ref(false);
 
 const loader = ref(false),
   loaderText = ref('Adding activities');
+
 const showCriticalErrorMessage = ref(false);
 const showGlobalError = ref(true);
 const selectedCount = ref(0);
@@ -301,6 +303,10 @@ const getDimensions = async () => {
   await nextTick();
   tableWidth.value = tableRow?.value['0']?.clientWidth;
 };
+
+loaderText.value = props.translatedData[
+  'common.common.adding_template'
+].replace(':template', props.status.template);
 
 const sort = () => {
   sortOrder.value === 'ascending'
@@ -370,7 +376,9 @@ onMounted(() => {
     showIdentifierErrorModel.value = true;
   }
   activitiesLength.value = props.importData.length;
-  loaderText.value = `Adding ${props.status.template}`;
+  loaderText.value = props.translatedData[
+    'common.common.adding_template'
+  ].replace(':template', props.status.template);
 });
 
 const cancelImport = () => {

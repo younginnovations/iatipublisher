@@ -125,6 +125,7 @@
   <Loader
     v-if="loader"
     :text="loaderText"
+    :translated-data="translatedData"
     :class="{ 'animate-loader': loader }"
   />
 </template>

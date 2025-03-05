@@ -72,6 +72,7 @@
     <Loader
       v-if="loader"
       :text="loaderText"
+      :translated-data="translatedData"
       :class="{ 'animate-loader': loader }"
     />
   </div>
@@ -131,7 +132,7 @@ const published = ref(false);
 
 // display/hide validator loader
 const loader = ref(false);
-const loaderText = ref('Please Wait');
+const loaderText = ref(translatedData['common.common.please_wait']);
 const coreElementLoader = ref(false);
 
 // reset step to zero after closing modal

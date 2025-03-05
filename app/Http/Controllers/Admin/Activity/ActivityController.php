@@ -363,9 +363,11 @@ class ActivityController extends Controller
             }
 
             if ($this->activityService->deleteActivity($activity)) {
-                Session::put('success', 'Activity has been deleted successfully.');
+                $translatedData = trans('common/common.deleted_successfully');
 
-                return response()->json(['success' => true, 'message' => 'Activity has been deleted successfully.']);
+                Session::put('success', $translatedData);
+
+                return response()->json(['success' => true, 'message' => $translatedData]);
             }
 
             return response()->json(['success' => false, 'message' => 'Activity delete failed.']);

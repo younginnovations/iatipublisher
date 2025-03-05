@@ -43,6 +43,7 @@
   <Loader
     v-if="loader.value"
     :text="loader.text"
+    :translated-data="translatedData"
     :class="{ 'animate-loader': loader }"
   />
 </template>

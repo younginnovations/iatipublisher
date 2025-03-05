@@ -99,6 +99,7 @@
   <Loader
     v-if="loader"
     :text="loaderText"
+    :translated-data="translatedData"
     :class="{ 'animate-loader': loader }"
   />
 </template>
@@ -124,8 +125,7 @@ const loader = ref(false);
 // true for completed and false for not completed
 const mandatoryElementStatus = inject('mandatoryCompleted') as boolean;
 // Dynamic text for loader
-const loaderText = ref('Please Wait');
-loaderText.value = translatedData['common.common.please_wait'];
+const loaderText = ref(translatedData['common.common.please_wait']);
 
 // computed function to change content of modal
 const publishStateChange = computed(() => {

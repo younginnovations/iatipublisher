@@ -355,5 +355,6 @@ return [
     'this_year'                                                                                                                                                       => 'This Year',
     'last_12_months'                                                                                                                                                  => 'Last 12 Months',
     'optional'                                                                                                                                                        => 'Optional',
-
+    'adding_template'                                                                                                                                                 => 'Adding :template',
+    'almost_there'                                                                                                                                                    => 'Almost there!',
 ];

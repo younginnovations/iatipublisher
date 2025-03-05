@@ -24,6 +24,7 @@
     <Loader
       v-if="loader.status"
       :text="loader.text"
+      :translated-data="translatedData"
       :class="{ 'animate-loader': loader.status }"
     />
   </div>

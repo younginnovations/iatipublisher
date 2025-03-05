@@ -111,6 +111,7 @@
   <Loader
     v-if="loader"
     :text="loaderText"
+    :translated-data="translatedData"
     :class="{ 'animate-loader': loader }"
   />
 </template>
@@ -229,7 +230,7 @@ function checkIfHasDeprecatedValueInUse(): boolean {
   return recursiveCheck(props.deprecationStatusMap);
 }
 // Dynamic text for loader
-const loaderText = ref('Please Wait');
+const loaderText = ref(translatedData['common.common.please_wait']);
 
 // reset step to zero after closing modal
 const resetPublishStep = () => {

@@ -140,13 +140,22 @@
   <Loader
     v-if="loader"
     :text="loaderText"
+    :translated-data="translatedData"
     :class="{ 'animate-loader': loader }"
     :change-text="false"
   />
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive, nextTick, onUnmounted, provide } from 'vue';
+import {
+  ref,
+  onMounted,
+  reactive,
+  nextTick,
+  onUnmounted,
+  provide,
+  computed,
+} from 'vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import Placeholder from './ImportPlaceholder.vue';
@@ -154,7 +163,6 @@ import ListElement from './ListElement.vue';
 import axios from 'axios';
 import { defineProps } from 'vue';
 import Toast from 'Components/ToastMessage.vue';
-import { getTranslatedElement } from 'Composable/utils';
 
 let activities = reactive({});
 const selectedActivities: Array<string> = reactive([]);
@@ -190,7 +198,7 @@ onUnmounted(() => {
 onMounted(() => {
   window.addEventListener('resize', getDimensions);
   loader.value = true;
-  loaderText.value = 'Please Wait';
+  loaderText.value = props.translatedData['common.common.please_wait'];
   let count = 0;
   timer = setInterval(() => {
     axios
@@ -287,7 +295,8 @@ function selectAllActivities() {
 }
 
 function importActivities() {
-  loaderText.value = 'Importing .csv/.xml file';
+  loaderText.value =
+    props.translatedData['workflow_frontend.import.uploading_csv_xml_file'];
   loader.value = true;
 
   axios

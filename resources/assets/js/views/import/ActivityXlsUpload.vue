@@ -366,6 +366,7 @@
   <Loader
     v-if="loader"
     :text="loaderText"
+    :translated-data="translatedData"
     :class="{ 'animate-loader': loader }"
   />
   <Modal :no-padding="true" :modal-active="showDownloadCode" width="1220">
@@ -658,7 +659,7 @@ const processedCount = ref(0);
 const file = ref();
 const error = ref('');
 const loader = ref(false);
-const loaderText = ref('Please Wait');
+const loaderText = ref(props.translatedData['common.common.please_wait']);
 const store = useStore();
 const searchValue: Ref<string | null> = ref('');
 const direction = ref('');
