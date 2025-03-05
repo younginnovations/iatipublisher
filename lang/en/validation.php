@@ -57,7 +57,7 @@ return [
         'string'  => 'The :attribute must be :size characters.',
         'array'   => 'The :attribute must contain :size items.',
     ],
-    'unique'                                                                               => 'The :attribute has already been taken.',
+//    'unique'                                                                               => 'The :attribute has already been taken.',
     'url'                                                                                  => 'The :attribute must be a valid URL.',
     'sum'                                                                                  => 'Percentages within the same vocabulary must add up to 100%',
     'total'                                                                                => ':attribute should be 100 when there is only one :values.',

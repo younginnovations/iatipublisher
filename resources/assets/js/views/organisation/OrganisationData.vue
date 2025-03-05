@@ -142,7 +142,11 @@
                 :is-percent="true"
                 :percent="progress"
               ></RadialProgressBar>
-              <span>Complete all core elements to get 100% score</span>
+              <span>{{
+                translatedData[
+                  'activity_detail.activity_detail.complete_all_core_elements_to_get_100_score'
+                ]
+              }}</span>
             </div>
             <div class="activities__card elements">
               <div class="mb-7 flex items-center justify-between">
@@ -235,7 +239,11 @@
                   :is-percent="true"
                   :percent="progress"
                 ></RadialProgressBar>
-                <span>Complete all core elements to get 100% score</span>
+                <span>{{
+                  translatedData[
+                    'activity_detail.activity_detail.complete_all_core_elements_to_get_100_score'
+                  ]
+                }}</span>
               </div>
               <div class="activities__card elements">
                 <div class="mb-7 flex items-center justify-between">
