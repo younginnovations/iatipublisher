@@ -103,12 +103,16 @@
               <div class="w-full max-w-[335px]">
                 <div class="flex justify-between pb-2">
                   <label for="reference" class="text-[14px]">
-                    reference
+                    {{
+                      toTitleCase(translatedData['elements.label.reference'])
+                    }}
                     <span class="required-icon"> *</span>
                   </label>
                   <button>
                     <HoverText
-                      :name="translatedData['elements.label.reference']"
+                      :name="
+                        toTitleCase(translatedData['elements.label.reference'])
+                      "
                       :hover-text="
                         translatedData[
                           'common.common.provide_your_organisations_iati_identifier'
@@ -137,12 +141,12 @@
               <div class="w-full max-w-[335px]">
                 <div class="flex justify-between pb-2">
                   <label for="type" class="text-[14px]">
-                    {{ translatedData['elements.label.type'] }}
+                    {{ toTitleCase(translatedData['elements.label.type']) }}
                     <span class="required-icon"> *</span>
                   </label>
                   <button>
                     <HoverText
-                      :name="translatedData['elements.label.type']"
+                      :name="toTitleCase(translatedData['elements.label.type'])"
                       :hover-text="
                         translatedData[
                           'common.common.select_the_type_that_best_describes_your_organisation'
@@ -170,13 +174,19 @@
               <div class="w-full max-w-[335px] pt-6">
                 <div class="flex justify-between pb-2">
                   <label for="secondary-reporter" class="text-[14px]">
-                    {{ translatedData['elements.label.secondary_reporter'] }}
+                    {{
+                      toTitleCase(
+                        translatedData['elements.label.secondary_reporter']
+                      )
+                    }}
                   </label>
                   <button>
                     <HoverText
                       position="top-left"
                       :name="
-                        translatedData['elements.label.secondary_reporter']
+                        toTitleCase(
+                          translatedData['elements.label.secondary_reporter']
+                        )
                       "
                       :hover-text="
                         translatedData[
@@ -316,6 +326,7 @@ import axios from 'axios';
 import LinesLoader from 'Components/LinesLoader.vue';
 import ToastMessage from 'Components/ToastMessage.vue';
 import Loader from 'Components/Loader.vue';
+import { toTitleCase } from 'Composable/utils';
 
 const props = defineProps({
   organizationTypeOptions: {
