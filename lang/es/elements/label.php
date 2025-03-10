@@ -169,9 +169,9 @@ return [
     'owner_organisation_narrative'     => 'owner organisation narrative',
     'region_code'                      => 'region code',
     'iati_identifier_block'            => 'IATI identifier',
-    'vocabulary_uri_block'             => 'vocabulary URI',
-    'linked_data_uri_block'            => 'linked data URI',
-    'indicator_uri_block'              => 'indicator URI',
+    'vocabulary_uri_block'             => 'Vocabulary URI',
+    'linked_data_uri_block'            => 'Linked Data URI',
+    'indicator_uri_block'              => 'Indicator URI',
 ];
 
 
