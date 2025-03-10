@@ -518,7 +518,7 @@
       },
       "vocabulary_uri": {
         "name": "vocabulary_uri",
-        "label": "elements/label.vocabulary_uri",
+        "label": "elements/label.vocabulary_uri_block",
         "type": "text",
         "placeholder": "common/common.enter_uri",
         "required": false,
@@ -607,7 +607,7 @@
       },
       "vocabulary_uri": {
         "name": "vocabulary_uri",
-        "label": "elements/label.vocabulary_uri",
+        "label": "elements/label.vocabulary_uri_block",
         "type": "text",
         "placeholder": "common/common.enter_uri",
         "required": false,
@@ -842,7 +842,7 @@
       },
       "vocabulary_uri": {
         "name": "vocabulary_uri",
-        "label": "elements/label.vocabulary_uri",
+        "label": "elements/label.vocabulary_uri_block",
         "type": "text",
         "placeholder": "common/common.enter_uri",
         "required": false,
@@ -919,7 +919,7 @@
       },
       "vocabulary_uri": {
         "name": "vocabulary_uri",
-        "label": "elements/label.vocabulary_uri",
+        "label": "elements/label.vocabulary_uri_block",
         "type": "text",
         "placeholder": "common/common.enter_uri",
         "required": false,
@@ -1330,7 +1330,7 @@
       },
       "vocabulary_uri": {
         "name": "vocabulary_uri",
-        "label": "elements/label.vocabulary_uri",
+        "label": "elements/label.vocabulary_uri_block",
         "type": "text",
         "placeholder": "common/common.enter_uri",
         "required": false,
@@ -3305,7 +3305,7 @@
           },
           "vocabulary_uri": {
             "name": "vocabulary_uri",
-            "label": "elements/label.vocabulary_uri",
+            "label": "elements/label.vocabulary_uri_block",
             "type": "text",
             "placeholder": "common/common.enter_uri",
             "required": false,
@@ -3679,7 +3679,7 @@
           },
           "indicator_uri": {
             "name": "indicator_uri",
-            "label": "elements/label.indicator_uri",
+            "label": "elements/label.indicator_uri_block",
             "type": "text",
             "placeholder": "common/common.enter_uri",
             "required": false,
@@ -5129,7 +5129,7 @@
           },
           "vocabulary_uri": {
             "name": "vocabulary_uri",
-            "label": "elements/label.vocabulary_uri",
+            "label": "elements/label.vocabulary_uri_block",
             "type": "text",
             "placeholder": "common/common.enter_uri",
             "required": false,
@@ -5381,7 +5381,7 @@
           },
           "vocabulary_uri": {
             "name": "vocabulary_uri",
-            "label": "elements/label.vocabulary_uri",
+            "label": "elements/label.vocabulary_uri_block",
             "type": "text",
             "placeholder": "common/common.enter_uri",
             "required": false,

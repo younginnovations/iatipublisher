@@ -49,7 +49,7 @@
           </tr>
           <tr v-if="post.region_vocabulary == '99'">
             <td>
-              {{ translatedData['elements.label.vocabulary_uri'] }}
+              {{ translatedData['elements.label.vocabulary_uri_block'] }}
             </td>
             <td>
               <a

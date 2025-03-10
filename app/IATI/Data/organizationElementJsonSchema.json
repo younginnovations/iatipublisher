@@ -739,7 +739,7 @@
           },
           "vocabulary-uri": {
             "name": "vocabulary_uri",
-            "label": "elements/label.vocabulary_uri",
+            "label": "elements/label.vocabulary_uri_block",
             "type": "text",
             "placeholder": "common/common.enter_uri",
             "required": false,

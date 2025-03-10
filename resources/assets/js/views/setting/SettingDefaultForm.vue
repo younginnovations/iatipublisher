@@ -404,14 +404,12 @@
         <div>
           <div class="flex justify-between">
             <label for="default-hierarchy">{{
-              toTitleCase(translatedData['elements.label.linked_data_uri'])
+              translatedData['elements.label.linked_data_uri_block']
             }}</label>
             <button>
               <HoverText
                 width="w-64"
-                :name="
-                  toTitleCase(translatedData['elements.label.linked_data_uri'])
-                "
+                :name="translatedData['elements.label.linked_data_uri_block']"
                 :hover-text="
                   translatedData[
                     'settings.setting_default_form.if_a_publisher_chooses_to_publish_linked_data'
