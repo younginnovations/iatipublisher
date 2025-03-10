@@ -87,9 +87,11 @@ class Result
 
         if (($indicators && !empty($indicators)) || implode('', Arr::flatten($indicatorAttributes)) !== '') {
             foreach ($indicators as $key => $indicator) {
+                logger('$indicatorAttributes[$key]');
+                logger($indicatorAttributes[$key]);
                 $indicator = $indicator['indicator'];
                 $indicatorData[$key]['measure'] = $indicatorAttributes[$key]['measure'];
-                $indicatorData[$key]['ascending'] = $this->setBooleanField($indicatorAttributes[$key]['ascending']);
+                $indicatorData[$key]['ascending'] = $this->setBooleanField(Arr::get($indicatorAttributes, "$key.ascending"));
                 $indicatorData[$key]['aggregation_status'] = $this->setBooleanField(Arr::get($indicatorAttributes[$key], 'aggregation-status', ''));
 
                 if (!empty($indicator) && $indicator !== '') {
