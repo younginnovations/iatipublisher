@@ -110,10 +110,10 @@
                 <div class="mb-2 flex items-center justify-between">
                   <label :for="field.id" class="label"
                     >{{ field['label'] }}
-                    <span v-if="field.required" class="text-salmon-40"> *</span>
+                    <span v-if="field.required" class="required-icon"> *</span>
                   </label>
                   <HoverText
-                    v-if="field.hover_text !== ''"
+                    v-if="'hover_text' in field && field.hover_text !== ''"
                     :hover-text="field.hover_text"
                     :name="field.label"
                   />
@@ -509,7 +509,9 @@ export default defineComponent({
             id: 'registration-agency',
             required: true,
             hover_text:
-              props.translatedData['common.common.registration_number'],
+              props.translatedData[
+                'public.register.not_registered_page.register_section.organisation_registration_agency_hover_text'
+              ],
             type: 'select',
             options: registration_agency,
             class: 'mb-4 lg:mb-2 relative',
@@ -650,7 +652,7 @@ export default defineComponent({
             required: true,
             hover_text:
               props.translatedData[
-                'public.register.not_registered_page.register_section.contact_email_hover_text'
+                'public.register.not_registered_page.register_section.contact_hover_text'
               ],
             type: 'text',
             class: 'mb-4 lg:mb-6',

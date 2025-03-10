@@ -433,7 +433,7 @@
             "placeholder": "common/common.type_reference",
             "required": false,
             "criteria": "",
-            "hover_text": "elements/org_json_schema.recipient_org_budget_sub_elements_recipient_org_attributes_ref_hover_text",
+            "hover_text": "common/common.enter_the_organisations_iati_organisation_identifier",
             "help_text": ""
           }
         },

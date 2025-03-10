@@ -19,7 +19,7 @@
             <HoverText
               :name="translatedData['elements.label.title']"
               :hover-text="
-                translatedData['elements/element_json_schema.title_hover_text']
+                translatedData['elements.element_json_schema.title_hover_text']
               "
               position="right"
               :show-iati-reference="true"
@@ -40,7 +40,7 @@
                     :name="translatedData['elements.label.narrative']"
                     :hover-text="
                       translatedData[
-                        'elements/element_json_schema.title_sub_elements_narrative_hover_text'
+                        'elements.element_json_schema.title_sub_elements_narrative_hover_text'
                       ]
                     "
                     :show-iati-reference="true"
@@ -135,7 +135,7 @@
               <div>
                 <div class="label-field">
                   <label class="label" for=""
-                    >{{ translatedData['elements.label.activity_identifiers'] }}
+                    >{{ translatedData['elements.label.activity_identifier'] }}
                     <span class="required-icon"> *</span>
                   </label>
                 </div>
@@ -170,7 +170,9 @@
               <div>
                 <div class="label-field">
                   <label class="label" for=""
-                    >{{ translatedData['elements.name.iati_identifier'] }}
+                    >{{
+                      translatedData['elements.label.iati_identifier_block']
+                    }}
                     <span class="required-icon"> *</span>
                   </label>
                 </div>

@@ -27,11 +27,19 @@
               <div class="w-full max-w-[335px]">
                 <div class="flex justify-between pb-2">
                   <label for="default-currency" class="text-[14px]">
-                    {{ translatedData['elements.label.default_currency'] }}
+                    {{
+                      toTitleCase(
+                        translatedData['elements.label.default_currency']
+                      )
+                    }}
                   </label>
                   <button>
                     <HoverText
-                      :name="translatedData['elements.label.default_currency']"
+                      :name="
+                        toTitleCase(
+                          translatedData['elements.label.default_currency']
+                        )
+                      "
                       :hover-text="
                         translatedData[
                           'common.common.the_currency_in_which_you_report_your_financial_transactions'
@@ -68,11 +76,19 @@
               <div class="w-full max-w-[335px]">
                 <div class="flex justify-between pb-2">
                   <label for="default-language" class="text-[14px]">
-                    {{ translatedData['elements.label.default_language'] }}
+                    {{
+                      toTitleCase(
+                        translatedData['elements.label.default_language']
+                      )
+                    }}
                   </label>
                   <button>
                     <HoverText
-                      :name="translatedData['elements.label.default_currency']"
+                      :name="
+                        toTitleCase(
+                          translatedData['elements.label.default_language']
+                        )
+                      "
                       :hover-text="
                         translatedData[
                           'common.common.the_language_in_which_you_provide_data_on_your_activities'
@@ -121,12 +137,20 @@
               <div class="w-full max-w-[335px]">
                 <div class="flex justify-between pb-2">
                   <label for="default-hierarchy" class="text-[14px]">
-                    {{ translatedData['elements.label.default_hierarchy'] }}
+                    {{
+                      toTitleCase(
+                        translatedData['elements.label.default_hierarchy']
+                      )
+                    }}
                   </label>
                   <button>
                     <HoverText
                       width="w-64"
-                      :name="translatedData['elements.label.default_hierarchy']"
+                      :name="
+                        toTitleCase(
+                          translatedData['elements.label.default_hierarchy']
+                        )
+                      "
                       :hover-text="
                         translatedData[
                           'common.common.if_you_are_reporting_both_programmes'
@@ -153,25 +177,24 @@
                 >
                   {{ hierarchyErrors[0] }}
                 </p>
-                <p v-else class="pt-2 text-xs text-n-40">
-                  {{
-                    translatedData[
-                      'common.common.if_hierarchy_is_not_reported_then_1_is_assumed'
-                    ]
-                  }}
-                </p>
               </div>
               <!-- Default Heirarchy End -->
               <!-- Humanitarian Start -->
               <div class="w-full max-w-[335px]">
                 <div class="flex justify-between pb-2">
                   <label for="humanitarian" class="text-[14px]">
-                    {{ translatedData['elements.label.humanitarian'] }}
+                    {{
+                      toTitleCase(translatedData['elements.label.humanitarian'])
+                    }}
                   </label>
                   <button>
                     <HoverText
                       width="w-72"
-                      :name="translatedData['elements.label.humanitarian']"
+                      :name="
+                        toTitleCase(
+                          translatedData['elements.label.humanitarian']
+                        )
+                      "
                       :hover-text="
                         translatedData[
                           'common.common.add_a_humanitarian_flag_to_every_activity'
@@ -200,12 +223,18 @@
               <div class="w-full max-w-[335px]">
                 <div class="flex justify-between pb-2">
                   <label for="default-flow-type" class="text-[14px]">{{
-                    translatedData['elements.label.humanitarian']
+                    toTitleCase(
+                      translatedData['elements.label.default_flow_type']
+                    )
                   }}</label>
                   <button>
                     <HoverText
                       width="w-72"
-                      :name="translatedData['elements.name.humanitarian']"
+                      :name="
+                        toTitleCase(
+                          translatedData['elements.label.default_flow_type']
+                        )
+                      "
                       :hover-text="
                         translatedData[
                           'common.common.flow_type_is_a_way_to_categorise'
@@ -235,13 +264,19 @@
               <div class="w-full max-w-[335px]">
                 <div class="flex justify-between pb-2">
                   <label for="default-finance-type" class="text-[14px]">
-                    {{ translatedData['elements.label.default_finance_type'] }}
+                    {{
+                      toTitleCase(
+                        translatedData['elements.label.default_finance_type']
+                      )
+                    }}
                   </label>
                   <button>
                     <HoverText
                       width="w-72"
                       :name="
-                        translatedData['elements.name.default_finance_type']
+                        toTitleCase(
+                          translatedData['elements.label.default_finance_type']
+                        )
                       "
                       :hover-text="
                         translatedData[
@@ -265,31 +300,31 @@
                 (value:string) => (allDefaultValue.default_finance_type = value)
               "
                 />
-                <p
-                  class="pt-2 text-xs text-n-40"
-                  v-html="
-                    translatedData[
-                      'common.common.the_type_of_aid_being_supplied_project_type_intervention'
-                    ]
-                  "
-                ></p>
               </div>
               <!-- Default Finance Type End -->
               <!-- Default Aid Type Start -->
               <div class="w-full max-w-[335px]">
                 <div class="flex justify-between pb-2">
                   <label for="default-aid-type" class="text-[14px]">
-                    {{ translatedData['elements.label.default_aid_type'] }}
+                    {{
+                      toTitleCase(
+                        translatedData['elements.label.default_aid_type']
+                      )
+                    }}
                   </label>
                   <button>
                     <HoverText
                       width="w-72"
                       position="top-left"
                       :name="
-                        translatedData['elements.name.default_finance_type']
+                        toTitleCase(
+                          translatedData['elements.label.default_aid_type']
+                        )
                       "
                       :hover-text="
-                        translatedData['common.common.select_an_option']
+                        translatedData[
+                          'common.common.the_type_of_aid_being_supplied_project_type_intervention'
+                        ]
                       "
                       :show-iati-reference="true"
                     />
@@ -314,13 +349,21 @@
               <div class="w-full max-w-[335px]">
                 <div class="flex justify-between pb-2">
                   <label for="default-tied-status" class="text-[14px]">
-                    {{ translatedData['elements.name.default_tied_status'] }}
+                    {{
+                      toTitleCase(
+                        translatedData['elements.label.default_tied_status']
+                      )
+                    }}
                   </label>
                   <button>
                     <HoverText
                       width="w-72"
                       position="top-left"
-                      name="default-tied-status"
+                      :name="
+                        toTitleCase(
+                          translatedData['elements.label.default_tied_status']
+                        )
+                      "
                       :hover-text="
                         translatedData[
                           'common.common.whether_the_aid_is_untied_tied_or_partially_tied'
@@ -351,12 +394,13 @@
         </div>
         <div class="flex items-center gap-1 pt-3 text-xs text-n-40">
           <svg-vue icon="message-icon" />
-          <span>
-            {{
+          <span
+            v-html="
               translatedData[
                 'onboarding.default_values_step.you_can_adjust_these_values_later_from_the_default_values_section'
               ]
-            }}
+            "
+          >
           </span>
         </div>
       </div>
@@ -445,6 +489,7 @@ import Multiselect from '@vueform/multiselect';
 import HoverText from 'Components/HoverText.vue';
 import axios from 'axios';
 import LinesLoader from 'Components/LinesLoader.vue';
+import { toTitleCase } from 'Composable/utils';
 
 const props = defineProps({
   currencies: {

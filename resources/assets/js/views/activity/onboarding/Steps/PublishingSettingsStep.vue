@@ -125,12 +125,13 @@
 
           <div class="flex items-center gap-1 pt-3 text-xs text-n-40">
             <svg-vue icon="message-icon" />
-            <span>
-              {{
+            <span
+              v-html="
                 translatedData[
                   'onboarding.publishing_setting_step.you_can_always_revisit_and_adjust_these_settings_later'
                 ]
-              }}
+              "
+            >
             </span>
           </div>
         </div>

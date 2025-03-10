@@ -75,7 +75,7 @@
                 icon="organisation-elements/building"
               ></svg-vue>
               <span class="ml-1 mr-[10px]">{{
-                translatedData['elements.label.reporting_org']
+                translatedData['elements.name.reporting_org']
               }}</span>
               <svg-vue class="text-base text-camel-50" icon="core"></svg-vue>
             </p>
@@ -86,9 +86,6 @@
                 {{ translatedData['elements.name.reporting_org'] }}
               </p>
               <p class="flex items-center gap-1">
-                <span class="text-xs text-n-50">{{
-                  translatedData['onboarding.organisation_data_step.help']
-                }}</span>
                 <HoverText
                   :name="translatedData['elements.name.reporting_org']"
                   :hover-text="
@@ -140,12 +137,12 @@
               <div class="w-full max-w-[335px]">
                 <div class="flex justify-between pb-2">
                   <label for="type" class="text-[14px]">
-                    {{ translatedData['elements.label.reference'] }}
+                    {{ translatedData['elements.label.type'] }}
                     <span class="required-icon"> *</span>
                   </label>
                   <button>
                     <HoverText
-                      :name="translatedData['elements.label.reference']"
+                      :name="translatedData['elements.label.type']"
                       :hover-text="
                         translatedData[
                           'common.common.select_the_type_that_best_describes_your_organisation'
@@ -159,7 +156,7 @@
                 <Multiselect
                   id="type"
                   class="vue__select"
-                  placeholder="translatedData['common.common.select_type']"
+                  :placeholder="translatedData['common.common.select_type']"
                   :searchable="true"
                   :options="props.organizationTypeOptions"
                   :value="organizationData.type"

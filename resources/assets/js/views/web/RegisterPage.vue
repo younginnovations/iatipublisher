@@ -108,10 +108,10 @@
                 <div class="mb-2 flex items-center justify-between">
                   <label :for="field.id" class="label"
                     >{{ field['label'] }}
-                    <span v-if="field.required" class="text-salmon-40"> *</span>
+                    <span v-if="field.required" class="required-icon"> *</span>
                   </label>
                   <HoverText
-                    v-if="field.hover_text !== ''"
+                    v-if="'hover_text' in field && field.hover_text !== ''"
                     :hover-text="field.hover_text"
                     :name="field.label"
                   />
@@ -264,9 +264,10 @@ import HoverText from './../../components/HoverText.vue';
 import Multiselect from '@vueform/multiselect';
 import Loader from '../../components/Loader.vue';
 
-import { generateUsername } from 'Composable/utils';
+import { generateUsername, toTitleCase } from 'Composable/utils';
 
 export default defineComponent({
+  methods: { toTitleCase },
   components: {
     EmailVerification,
     HoverText,
@@ -464,7 +465,7 @@ export default defineComponent({
             type: 'select',
             hover_text:
               props.translatedData[
-                'public.register.registered_page.register_section.country_hover_tezt'
+                'common.common.add_the_location_of_your_organisation'
               ],
             options: props.country,
             class: 'mb-4 lg:mb-2 relative',
@@ -473,7 +474,7 @@ export default defineComponent({
           organization_registration_agency: {
             label:
               props.translatedData[
-                'elements.label.organisation_registration_agency'
+                'common.common.organisation_registration_agency'
               ],
             name: 'registration_agency',
             placeholder: props.translatedData['common.common.select_an_option'],

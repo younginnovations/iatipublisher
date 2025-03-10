@@ -168,6 +168,7 @@ return [
     'owner_organisation_reference'     => 'owner organisation reference',
     'owner_organisation_narrative'     => 'owner organisation narrative',
     'region_code'                      => 'region code',
+    'iati_identifier_block'            => 'IATI identifier',
 ];
 
 
