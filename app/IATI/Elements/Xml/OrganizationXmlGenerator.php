@@ -140,11 +140,11 @@ class OrganizationXmlGenerator
         $activity_default_values = $settings->activity_default_values;
 
         $xmlData['iati-organisation'] = $this->getXmlData($organization);
-        $xmlData['iati-organisation']['@attributes'] = [
+        $xmlData['iati-organisation']['@attributes'] = array_filter([
             'last-updated-datetime' => $refreshTimestamp ? gmdate('c', time()) : getTimestampFromOrganizationXml($organization->publisher_id, $organization),
             'xml:lang'              => Arr::get($default_values, 'default_language', null),
             'default-currency'      => Arr::get($default_values, 'default_currency', null),
-        ];
+        ]);
 
         return $this->arrayToXml->createXml('iati-organisations', $xmlData);
     }
