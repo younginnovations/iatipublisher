@@ -10,7 +10,7 @@ spec:
     matchLabels:
       tier: backend
       layer: webserver
-  replicas: 1
+  replicas: 0
   template:
     metadata:
       labels:
