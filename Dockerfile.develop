@@ -2,7 +2,7 @@ ARG PHP_EXTS="bcmath pdo_mysql pdo_pgsql pcntl gd zip"
 ARG PHP_PECL_EXTS="redis"
 ARG MIX_ENCRYPTION_KEY
 
-FROM php:8.4.25-alpine as composer_base
+FROM php:8.4.27-alpine as composer_base
 
 ARG PHP_EXTS
 ARG PHP_PECL_EXTS
@@ -49,7 +49,7 @@ RUN npm install && \
 
 RUN ./getNodeInfo.sh
 
-FROM php:8.4.25-alpine as cli
+FROM php:8.4.27-alpine as cli
 
 ARG PHP_EXTS
 ARG PHP_PECL_EXTS
@@ -72,7 +72,7 @@ RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-ce
 COPY --from=composer_base /opt/apps/laravel-in-kubernetes /opt/apps/laravel-in-kubernetes
 COPY --from=frontend /opt/apps/laravel-in-kubernetes/public /opt/apps/laravel-in-kubernetes/public
 
-FROM php:8.4.25-fpm-alpine as fpm_server
+FROM php:8.4.27-fpm-alpine as fpm_server
 
 ARG PHP_EXTS
 ARG PHP_PECL_EXTS
